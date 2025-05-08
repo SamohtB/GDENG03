@@ -10,6 +10,9 @@
     <Filter Include="Engine\GraphicsEngine">
       <UniqueIdentifier>{78549e93-7567-4ad7-bdc0-6b1af7544047}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GraphicsEngine\SwapChain">
+      <UniqueIdentifier>{a974f9e7-b98f-40da-b246-25133e0e13c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -18,21 +21,39 @@
     <ClCompile Include="Window.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="AppWindow.cpp">
+    <ClCompile Include="App.cpp">
       <Filter>App</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsEngine.cpp">
       <Filter>Engine\GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="ABaseRenderer.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="SwapChainManager.cpp">
+      <Filter>Engine\GraphicsEngine\SwapChain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="AppWindow.h">
+    <ClInclude Include="App.h">
       <Filter>App</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsEngine.h">
+      <Filter>Engine\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="ABaseRenderer.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="SwapChainManager.h">
+      <Filter>Engine\GraphicsEngine\SwapChain</Filter>
+    </ClInclude>
+    <ClInclude Include="Helper.h">
       <Filter>Engine\GraphicsEngine</Filter>
     </ClInclude>
   </ItemGroup>

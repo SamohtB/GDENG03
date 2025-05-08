@@ -1,23 +1,26 @@
 #pragma once
-#include <Windows.h>
+#include "ABaseRenderer.h"
 
-class Window
+class Window : public ABaseRenderer
 {
 public:
-	Window();
-	~Window();
+	Window(UINT width, UINT height, std::wstring name);
+	virtual ~Window();
 
-	void start();
-	void stop();
-
-	bool broadcast();
-	bool isRun();
-
-	virtual void onUpdate() = 0;
+	virtual void OnInit();
+	virtual void OnUpdate();
+	virtual void OnRender();
+	virtual void OnDestroy();
 
 private:
-	HWND m_hwnd{};
-	bool m_isRun = true;
+	
+	/* Pipeline Objects */
+	/* add swap chains, command queues, etc. here */
+
+	void LoadPipeline();
+	void LoadAssets();
+	void PopulateCommandList();
+	void WaitForPreviousFrame();
 };
 
 

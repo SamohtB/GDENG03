@@ -138,14 +138,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AppWindow.cpp" />
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="ABaseRenderer.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SwapChainManager.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AppWindow.h" />
+    <ClInclude Include="App.h" />
+    <ClInclude Include="ABaseRenderer.h" />
     <ClInclude Include="GraphicsEngine.h" />
+    <ClInclude Include="Helper.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SwapChainManager.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,4 +1,4 @@
-#include "AppWindow.h"
+#include "App.h"
 #include <stdexcept>
 #include <iostream>
 
@@ -6,12 +6,9 @@ int main()
 {
 	try
 	{
-		AppWindow app;
+		App app = App(1024, 768);
 
-		while (app.isRun()) 
-		{
-			app.broadcast();
-		}
+		while (app.IsRun()) {}
 	}
 	catch (const std::runtime_error&)
 	{
