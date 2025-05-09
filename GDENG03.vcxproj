@@ -81,6 +81,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -96,6 +98,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -113,6 +117,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,6 +134,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,21 +146,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="App.cpp" />
-    <ClCompile Include="ABaseRenderer.cpp" />
-    <ClCompile Include="GraphicsEngine.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="SwapChainManager.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="src\ABaseRenderer.cpp" />
+    <ClCompile Include="src\App.cpp" />
+    <ClCompile Include="src\CommandQueueManager.cpp" />
+    <ClCompile Include="src\DescriptorHeapManager.cpp" />
+    <ClCompile Include="src\DeviceManager.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\RenderSystem.cpp" />
+    <ClCompile Include="src\RenderTargetManager.cpp" />
+    <ClCompile Include="src\SwapChainManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="App.h" />
-    <ClInclude Include="ABaseRenderer.h" />
-    <ClInclude Include="GraphicsEngine.h" />
-    <ClInclude Include="Helper.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="SwapChainManager.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="src\ABaseRenderer.h" />
+    <ClInclude Include="src\App.h" />
+    <ClInclude Include="src\CommandQueueManager.h" />
+    <ClInclude Include="src\DescriptorHeapManager.h" />
+    <ClInclude Include="src\DeviceManager.h" />
+    <ClInclude Include="src\Helper.h" />
+    <ClInclude Include="src\RenderSystem.h" />
+    <ClInclude Include="src\RenderTargetManager.h" />
+    <ClInclude Include="src\stdafx.h" />
+    <ClInclude Include="src\SwapChainManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

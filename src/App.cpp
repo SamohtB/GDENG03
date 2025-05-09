@@ -3,7 +3,7 @@
 
 HWND App::m_hwnd = nullptr;
 
-App::App(UINT width, UINT height) : Window(width, height, L"DirectX Application")
+App::App(UINT width, UINT height) : RenderSystem(width, height)
 {
 	WNDCLASSEX wc{};
 	wc.cbClsExtra = NULL;
@@ -88,7 +88,7 @@ HWND App::GetHWND()
 
 LRESULT App::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	Window* window = reinterpret_cast<Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+	RenderSystem* window = reinterpret_cast<RenderSystem*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
 	switch (msg)
 	{
@@ -107,7 +107,7 @@ LRESULT App::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 				window->OnRender();
 			}
 			return 0;
-		}
+		} 
 			
 		case WM_DESTROY:
 		{

@@ -1,7 +1,7 @@
 #pragma once
-#include "Window.h"
+#include "RenderSystem.h"
 
-class App : public Window
+class App : public RenderSystem
 {
 public:
 	App(UINT width, UINT height);

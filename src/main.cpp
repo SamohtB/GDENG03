@@ -7,7 +7,6 @@ int main()
 	try
 	{
 		App app = App(1024, 768);
-
 		while (app.IsRun()) {}
 	}
 	catch (const std::runtime_error&)
