@@ -18,7 +18,7 @@ RenderTargetManager::RenderTargetManager(ComPtr<ID3D12Device> device, ComPtr<IDX
     }
 }
 
-ID3D12Resource* RenderTargetManager::GetRenderTarget(UINT index) const
+ComPtr<ID3D12Resource> RenderTargetManager::GetRenderTarget(UINT index) const
 {
-	return nullptr;
+	return m_renderTargets[index];
 }

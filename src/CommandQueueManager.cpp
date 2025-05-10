@@ -15,3 +15,19 @@ ComPtr<ID3D12CommandQueue> CommandQueueManager::GetCommandQueue() const
 {
     return this->m_commandQueue;
 }
+
+ComPtr<ID3D12CommandAllocator> CommandQueueManager::GetCommandAllocator() const
+{
+    return this->m_commandAllocator;
+}
+
+ComPtr<ID3D12GraphicsCommandList> CommandQueueManager::GetCommandList() const
+{
+    return this->m_commandList;
+}
+
+void CommandQueueManager::CreateCommandLists(ComPtr<ID3D12Device> device)
+{
+    ThrowIfFailed(device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocator.Get(), nullptr, IID_PPV_ARGS(&m_commandList)));
+    ThrowIfFailed(m_commandList->Close());
+}

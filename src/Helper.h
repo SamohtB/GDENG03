@@ -1,5 +1,6 @@
 #pragma once
 #include <stdexcept>
+#include <wrl.h>
 
 inline std::string HrToString(HRESULT hr)
 {

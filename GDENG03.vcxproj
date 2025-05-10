@@ -146,8 +146,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\ABaseRenderer.cpp" />
-    <ClCompile Include="src\App.cpp" />
+    <ClCompile Include="PipelineStateManager.cpp" />
+    <ClCompile Include="src\FenceManager.cpp" />
+    <ClCompile Include="src\GraphicsEngine.cpp" />
+    <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\AppWindow.cpp" />
     <ClCompile Include="src\CommandQueueManager.cpp" />
     <ClCompile Include="src\DescriptorHeapManager.cpp" />
     <ClCompile Include="src\DeviceManager.cpp" />
@@ -157,8 +160,11 @@
     <ClCompile Include="src\SwapChainManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ABaseRenderer.h" />
-    <ClInclude Include="src\App.h" />
+    <ClInclude Include="PipelineStateManager.h" />
+    <ClInclude Include="src\FenceManager.h" />
+    <ClInclude Include="src\GraphicsEngine.h" />
+    <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\AppWindow.h" />
     <ClInclude Include="src\CommandQueueManager.h" />
     <ClInclude Include="src\DescriptorHeapManager.h" />
     <ClInclude Include="src\DeviceManager.h" />

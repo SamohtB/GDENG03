@@ -10,81 +10,111 @@
     <Filter Include="Engine\GraphicsEngine">
       <UniqueIdentifier>{78549e93-7567-4ad7-bdc0-6b1af7544047}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GraphicsEngine\SwapChain">
+    <Filter Include="Engine\GraphicsEngine\RenderSystem">
+      <UniqueIdentifier>{e0bc8f0c-6f55-4ca8-8eba-e211ce63355d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GraphicsEngine\RenderSystem\SwapChain">
       <UniqueIdentifier>{a974f9e7-b98f-40da-b246-25133e0e13c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GraphicsEngine\CommandQueue">
-      <UniqueIdentifier>{7f54f9ac-86b2-4ede-ac55-e2e576c47b40}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GraphicsEngine\Device">
-      <UniqueIdentifier>{0e84f3ea-59bf-41ed-afb3-6385e573f7d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GraphicsEngine\RenderTarget">
+    <Filter Include="Engine\GraphicsEngine\RenderSystem\RenderTarget">
       <UniqueIdentifier>{154596ba-1559-4452-b446-d31b5b61d53b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GraphicsEngine\DescriptorHeap">
+    <Filter Include="Engine\GraphicsEngine\RenderSystem\Device">
+      <UniqueIdentifier>{0e84f3ea-59bf-41ed-afb3-6385e573f7d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GraphicsEngine\RenderSystem\DescriptorHeap">
       <UniqueIdentifier>{a3d4a542-74f9-4f5c-a6d8-26df20845131}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GraphicsEngine\RenderSystem\CommandQueue">
+      <UniqueIdentifier>{7f54f9ac-86b2-4ede-ac55-e2e576c47b40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\WindowSystem">
+      <UniqueIdentifier>{fd5a76b5-3c5f-4f0b-9231-37cac94742ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GraphicsEngine\RenderSystem\Fence">
+      <UniqueIdentifier>{d5c31b89-edbf-475d-af10-a93dc78894c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GraphicsEngine\RenderSystem\PipelineStateManager">
+      <UniqueIdentifier>{50003304-a3a7-4322-befc-0dc2df23b435}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\App.cpp">
+    <ClCompile Include="src\AppWindow.cpp">
       <Filter>App</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>App</Filter>
     </ClCompile>
-    <ClCompile Include="src\ABaseRenderer.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="src\CommandQueueManager.cpp">
-      <Filter>Engine\GraphicsEngine\CommandQueue</Filter>
+      <Filter>Engine\GraphicsEngine\RenderSystem\CommandQueue</Filter>
     </ClCompile>
     <ClCompile Include="src\DescriptorHeapManager.cpp">
-      <Filter>Engine\GraphicsEngine\DescriptorHeap</Filter>
+      <Filter>Engine\GraphicsEngine\RenderSystem\DescriptorHeap</Filter>
     </ClCompile>
     <ClCompile Include="src\DeviceManager.cpp">
-      <Filter>Engine\GraphicsEngine\Device</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RenderSystem.cpp">
-      <Filter>Engine\GraphicsEngine</Filter>
+      <Filter>Engine\GraphicsEngine\RenderSystem\Device</Filter>
     </ClCompile>
     <ClCompile Include="src\RenderTargetManager.cpp">
-      <Filter>Engine\GraphicsEngine\RenderTarget</Filter>
+      <Filter>Engine\GraphicsEngine\RenderSystem\RenderTarget</Filter>
     </ClCompile>
     <ClCompile Include="src\SwapChainManager.cpp">
-      <Filter>Engine\GraphicsEngine\SwapChain</Filter>
+      <Filter>Engine\GraphicsEngine\RenderSystem\SwapChain</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderSystem.cpp">
+      <Filter>Engine\GraphicsEngine\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Window.cpp">
+      <Filter>Engine\WindowSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GraphicsEngine.cpp">
+      <Filter>Engine\GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FenceManager.cpp">
+      <Filter>Engine\GraphicsEngine\RenderSystem\Fence</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineStateManager.cpp">
+      <Filter>Engine\GraphicsEngine\RenderSystem\PipelineStateManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\App.h">
+    <ClInclude Include="src\AppWindow.h">
       <Filter>App</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ABaseRenderer.h">
-      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="src\stdafx.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="src\CommandQueueManager.h">
-      <Filter>Engine\GraphicsEngine\CommandQueue</Filter>
+      <Filter>Engine\GraphicsEngine\RenderSystem\CommandQueue</Filter>
     </ClInclude>
     <ClInclude Include="src\DescriptorHeapManager.h">
-      <Filter>Engine\GraphicsEngine\DescriptorHeap</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RenderSystem.h">
-      <Filter>Engine\GraphicsEngine</Filter>
+      <Filter>Engine\GraphicsEngine\RenderSystem\DescriptorHeap</Filter>
     </ClInclude>
     <ClInclude Include="src\RenderTargetManager.h">
-      <Filter>Engine\GraphicsEngine\RenderTarget</Filter>
+      <Filter>Engine\GraphicsEngine\RenderSystem\RenderTarget</Filter>
     </ClInclude>
     <ClInclude Include="src\SwapChainManager.h">
-      <Filter>Engine\GraphicsEngine\SwapChain</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Helper.h">
-      <Filter>Engine\GraphicsEngine</Filter>
+      <Filter>Engine\GraphicsEngine\RenderSystem\SwapChain</Filter>
     </ClInclude>
     <ClInclude Include="src\DeviceManager.h">
-      <Filter>Engine\GraphicsEngine\Device</Filter>
+      <Filter>Engine\GraphicsEngine\RenderSystem\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RenderSystem.h">
+      <Filter>Engine\GraphicsEngine\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Window.h">
+      <Filter>Engine\WindowSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Helper.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphicsEngine.h">
+      <Filter>Engine\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FenceManager.h">
+      <Filter>Engine\GraphicsEngine\RenderSystem\Fence</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineStateManager.h">
+      <Filter>Engine\GraphicsEngine\RenderSystem\PipelineStateManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

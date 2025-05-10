@@ -8,6 +8,9 @@ public:
 	~CommandQueueManager() = default;
 
 	ComPtr<ID3D12CommandQueue> GetCommandQueue() const;
+	ComPtr<ID3D12CommandAllocator> GetCommandAllocator() const;
+	ComPtr<ID3D12GraphicsCommandList> GetCommandList() const;
+	void CreateCommandLists(ComPtr<ID3D12Device> device);
 
 private:
 	ComPtr<ID3D12CommandQueue> m_commandQueue;
