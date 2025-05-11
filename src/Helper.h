@@ -27,3 +27,14 @@ inline void ThrowIfFailed(HRESULT hr)
         throw HrException(hr);
     }
 }
+
+inline std::wstring GetFullAssetPath(const std::wstring& relativePath)
+{
+    wchar_t buffer[MAX_PATH];
+    GetModuleFileName(nullptr, buffer, MAX_PATH);
+
+    std::wstring::size_type pos = std::wstring(buffer).find_last_of(L"\\/");
+    std::wstring basePath = std::wstring(buffer).substr(0, pos + 1);
+
+    return basePath + relativePath;
+}

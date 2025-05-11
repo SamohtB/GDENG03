@@ -51,7 +51,7 @@ Window::Window(UINT width, UINT height, std::wstring name) : m_width(width), m_h
 	this->m_isRun = true;
 }
 
-Window::~Window()
+Window::~Window() 
 {
 	::DestroyWindow(m_hwnd);
 }

@@ -8,6 +8,9 @@
 #include "DescriptorHeapManager.h"
 #include "RenderTargetManager.h"
 #include "FenceManager.h"
+#include "PipelineStateManager.h"
+
+#include "VertexBuffer.h"
 
 class RenderSystem
 {
@@ -31,7 +34,13 @@ private:
 	std::unique_ptr<DescriptorHeapManager> m_descriptorHeap;
 	std::unique_ptr<RenderTargetManager> m_renderTargetManager;
 	std::unique_ptr<FenceManager> m_fenceManager;
-	ComPtr<ID3D12PipelineState> m_pipelineState;
+	std::unique_ptr<PipelineStateManager> m_pipelineStateManager;
+
+	/* move vertex buffer */
+	std::unique_ptr<VertexBuffer> m_vertexBuffer;
+
+	CD3DX12_VIEWPORT m_viewport;
+	CD3DX12_RECT m_scissorRect;
 
 	void CreateFactory();
 };

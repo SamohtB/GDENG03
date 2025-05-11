@@ -146,7 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="PipelineStateManager.cpp" />
+    <ClCompile Include="src\PipelineStateManager.cpp" />
     <ClCompile Include="src\FenceManager.cpp" />
     <ClCompile Include="src\GraphicsEngine.cpp" />
     <ClCompile Include="src\Window.cpp" />
@@ -158,9 +158,10 @@
     <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\RenderTargetManager.cpp" />
     <ClCompile Include="src\SwapChainManager.cpp" />
+    <ClCompile Include="src\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PipelineStateManager.h" />
+    <ClInclude Include="src\PipelineStateManager.h" />
     <ClInclude Include="src\FenceManager.h" />
     <ClInclude Include="src\GraphicsEngine.h" />
     <ClInclude Include="src\Window.h" />
@@ -173,6 +174,23 @@
     <ClInclude Include="src\RenderTargetManager.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\SwapChainManager.h" />
+    <ClInclude Include="src\VertexBuffer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Assets\Shaders\Shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

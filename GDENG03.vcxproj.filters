@@ -37,6 +37,15 @@
     <Filter Include="Engine\GraphicsEngine\RenderSystem\PipelineStateManager">
       <UniqueIdentifier>{50003304-a3a7-4322-befc-0dc2df23b435}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GraphicsEngine\RenderSystem\VertexBuffer">
+      <UniqueIdentifier>{360f0d64-5d15-4cd8-ad2e-4114fd102877}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{702e364c-7769-430c-a8d9-a71e55ec7a82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Shaders">
+      <UniqueIdentifier>{369b47e0-e6f4-4759-af6f-3b7d5415d3d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AppWindow.cpp">
@@ -72,8 +81,11 @@
     <ClCompile Include="src\FenceManager.cpp">
       <Filter>Engine\GraphicsEngine\RenderSystem\Fence</Filter>
     </ClCompile>
-    <ClCompile Include="PipelineStateManager.cpp">
+    <ClCompile Include="src\PipelineStateManager.cpp">
       <Filter>Engine\GraphicsEngine\RenderSystem\PipelineStateManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexBuffer.cpp">
+      <Filter>Engine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -113,8 +125,16 @@
     <ClInclude Include="src\FenceManager.h">
       <Filter>Engine\GraphicsEngine\RenderSystem\Fence</Filter>
     </ClInclude>
-    <ClInclude Include="PipelineStateManager.h">
+    <ClInclude Include="src\PipelineStateManager.h">
       <Filter>Engine\GraphicsEngine\RenderSystem\PipelineStateManager</Filter>
     </ClInclude>
+    <ClInclude Include="src\VertexBuffer.h">
+      <Filter>Engine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Assets\Shaders\Shader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
