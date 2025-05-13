@@ -10,7 +10,7 @@ public:
 	ComPtr<ID3D12CommandQueue> GetCommandQueue() const;
 	ComPtr<ID3D12CommandAllocator> GetCommandAllocator() const;
 	ComPtr<ID3D12GraphicsCommandList> GetCommandList() const;
-	void CreateCommandLists(ComPtr<ID3D12Device> device);
+	void CreateCommandLists(ComPtr<ID3D12Device> device, ComPtr<ID3D12PipelineState> pipelineState);
 
 private:
 	ComPtr<ID3D12CommandQueue> m_commandQueue;

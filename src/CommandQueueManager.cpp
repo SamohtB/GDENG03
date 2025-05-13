@@ -26,8 +26,13 @@ ComPtr<ID3D12GraphicsCommandList> CommandQueueManager::GetCommandList() const
     return this->m_commandList;
 }
 
-void CommandQueueManager::CreateCommandLists(ComPtr<ID3D12Device> device)
+void CommandQueueManager::CreateCommandLists(ComPtr<ID3D12Device> device, ComPtr<ID3D12PipelineState> pipelineState)
 {
-    ThrowIfFailed(device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocator.Get(), nullptr, IID_PPV_ARGS(&m_commandList)));
+    ThrowIfFailed(device->CreateCommandList(0, 
+        D3D12_COMMAND_LIST_TYPE_DIRECT, 
+        m_commandAllocator.Get(), 
+        pipelineState.Get(), 
+        IID_PPV_ARGS(&m_commandList)));
+
     ThrowIfFailed(m_commandList->Close());
 }

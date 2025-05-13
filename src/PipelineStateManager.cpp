@@ -45,7 +45,7 @@ void PipelineStateManager::CreatePipelineState(ComPtr<ID3D12Device> device)
     ComPtr<ID3DBlob> vertexShader;
     ComPtr<ID3DBlob> pixelShader;
 
-    UINT compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+    UINT compileFlags = 0;
 
     std::wstring shaderFile = GetFullAssetPath(L"Assets\\Shaders\\Shader.hlsl");
 

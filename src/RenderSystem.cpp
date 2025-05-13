@@ -1,7 +1,7 @@
 #include "RenderSystem.h"
 #include "Helper.h"
 
-RenderSystem::RenderSystem(UINT width, UINT height) :
+RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 	m_viewport(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height)),
 	m_scissorRect(0, 0, static_cast<LONG>(width), static_cast<LONG>(height))
 {
@@ -9,21 +9,29 @@ RenderSystem::RenderSystem(UINT width, UINT height) :
 	CreateFactory();
 	this->m_deviceManager = std::make_unique<DeviceManager>(this->m_dxgiFactory);
 	this->m_commandQueueManager = std::make_unique<CommandQueueManager>(this->m_deviceManager->GetD3DDevice());
-	this->m_swapChainManager = std::make_unique<SwapChainManager>(this->m_dxgiFactory, this->m_commandQueueManager->GetCommandQueue(), width, height);
+	this->m_swapChainManager = std::make_unique<SwapChainManager>(this->m_dxgiFactory, 
+		this->m_commandQueueManager->GetCommandQueue(), width, height, hwnd);
 	this->m_descriptorHeap = std::make_unique<DescriptorHeapManager>(this->m_deviceManager->GetD3DDevice());
-	this->m_renderTargetManager = std::make_unique<RenderTargetManager>(this->m_deviceManager->GetD3DDevice(), this->m_swapChainManager->GetSwapChain(), *m_descriptorHeap);
+	this->m_renderTargetManager = std::make_unique<RenderTargetManager>(this->m_deviceManager->GetD3DDevice(), 
+		this->m_swapChainManager->GetSwapChain(), *m_descriptorHeap);
 
 	/* Load Assets */
 	/* Pipeline State Manager Temp creates default root signature and pipeline state */
 	this->m_pipelineStateManager = std::make_unique<PipelineStateManager>(this->m_deviceManager->GetD3DDevice());
-	this->m_commandQueueManager->CreateCommandLists(this->m_deviceManager->GetD3DDevice());
-	this->m_vertexBuffer = std::make_unique<VertexBuffer>(this->m_deviceManager->GetD3DDevice(), static_cast<float>(1024 / 768)); // consider sample setup
+	this->m_commandQueueManager->CreateCommandLists(this->m_deviceManager->GetD3DDevice(), this->m_pipelineStateManager->GetPipelineState());
+	this->m_vertexBuffer = std::make_unique<VertexBuffer>(this->m_deviceManager->GetD3DDevice(), static_cast<float>(width) / static_cast<float>(height));
 	this->m_fenceManager = std::make_unique<FenceManager>(this->m_deviceManager->GetD3DDevice());
 
 	// Wait for the command list to execute; we are reusing the same command 
-		// list in our main loop but for now, we just want to wait for setup to 
-		// complete before continuing.
+	// list in our main loop but for now, we just want to wait for setup to 
+	// complete before continuing.
 	WaitForPreviousFrame();
+}
+
+RenderSystem::~RenderSystem()
+{
+	WaitForPreviousFrame();
+	this->m_fenceManager->CloseEvent();
 }
 
 void RenderSystem::CreateFactory()
@@ -62,6 +70,7 @@ void RenderSystem::PopulateCommandList()
 		currentFrameIndex, 
 		this->m_descriptorHeap->GetRTVDescriptorSize()
 	);
+	list->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 
 	const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
 	list->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
@@ -80,6 +89,7 @@ void RenderSystem::PopulateCommandList()
 		);
 
 	list->ResourceBarrier(1, &barrierToPresent);
+	ThrowIfFailed(list->Close());
 }
 
 void RenderSystem::ExecuteCommandList()
@@ -116,10 +126,4 @@ void RenderSystem::WaitForPreviousFrame()
 	}
 
 	this->m_swapChainManager->SetFrameIndex();
-}
-
-void RenderSystem::Destroy()
-{
-	WaitForPreviousFrame();
-	this->m_fenceManager->CloseEvent();
 }

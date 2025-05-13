@@ -1,13 +1,18 @@
-#include "AppWindow.h"
+#include "Win32App.h"
+#include "GameWindow.h"
 #include <stdexcept>
-#include <iostream>
 
 int main() 
 {
 	try
 	{
-		AppWindow app = AppWindow(1024, 768);
-		while (app.IsRun()) {}
+		GameWindow game = GameWindow(1024, 768);
+		Win32App app = Win32App(&game, L"DirectX Application");
+
+		while (app.IsRun()) 
+		{
+			app.Broadcast();
+		}
 	}
 	catch (...)
 	{

@@ -19,6 +19,7 @@
 #include <string>
 #include <wrl.h>
 #include <shellapi.h>
+#include <stdexcept>
 
 using Microsoft::WRL::ComPtr;
 

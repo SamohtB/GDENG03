@@ -15,15 +15,13 @@
 class RenderSystem
 {
 public:
-	RenderSystem(UINT width, UINT height);	
-	~RenderSystem() = default;
+	RenderSystem(UINT width, UINT height, HWND hwnd);	
+	~RenderSystem();
 
 	void PopulateCommandList();
 	void ExecuteCommandList();
 	void SwapBuffers();
 	void WaitForPreviousFrame();
-
-	void Destroy();
 
 private:
 	ComPtr<IDXGIFactory6> m_dxgiFactory;

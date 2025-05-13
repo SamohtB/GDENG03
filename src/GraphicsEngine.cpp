@@ -1,33 +1,33 @@
 #include "GraphicsEngine.h"
-#include "Helper.h"
 
 GraphicsEngine* GraphicsEngine::sharedInstance = nullptr;
 
-GraphicsEngine::GraphicsEngine() {}
+GraphicsEngine::GraphicsEngine(UINT width, UINT height, HWND hwnd)
+{
+	try
+	{
+		this->m_renderSystem = std::make_unique<RenderSystem>(width, height, hwnd);
+	}
+	catch (...)
+	{
+		throw std::exception("RenderSystem not created successfully");
+	}
+}
 
 GraphicsEngine* GraphicsEngine::GetInstance()
 {
 	return sharedInstance;
 }
 
-void GraphicsEngine::Initialize(UINT width, UINT height)
+void GraphicsEngine::Initialize(UINT width, UINT height, HWND hwnd)
 {
 	try
 	{
-		sharedInstance = new GraphicsEngine();
+		sharedInstance = new GraphicsEngine(width, height, hwnd);
 	}
 	catch (...)
 	{
-		std::runtime_error("Graphics Engine not created");
-	}
-
-	try
-	{
-		sharedInstance->m_renderSystem = std::make_unique<RenderSystem>(width, height);
-	}
-	catch (...)
-	{
-		throw std::exception("RenderSystem not created successfully");
+		std::exception("Graphics Engine not created sucessfully");
 	}
 }
 
@@ -47,10 +47,5 @@ void GraphicsEngine::RenderFrame()
 	this->m_renderSystem->ExecuteCommandList();
 	this->m_renderSystem->SwapBuffers();
 	this->m_renderSystem->WaitForPreviousFrame();
-}
-
-void GraphicsEngine::CloseRenderSystem()
-{
-	this->m_renderSystem->Destroy();
 }
 

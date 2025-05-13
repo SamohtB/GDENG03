@@ -4,7 +4,7 @@
 class SwapChainManager
 {
 public:
-	SwapChainManager(ComPtr<IDXGIFactory6> factory, ComPtr<ID3D12CommandQueue> commandQueue, UINT width, UINT height);
+	SwapChainManager(ComPtr<IDXGIFactory6> factory, ComPtr<ID3D12CommandQueue> commandQueue, UINT width, UINT height, HWND hwnd);
 	~SwapChainManager() = default;
 
 	ComPtr<IDXGISwapChain3> GetSwapChain() const;

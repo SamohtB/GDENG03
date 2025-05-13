@@ -8,15 +8,14 @@ class GraphicsEngine
 {
 public:
 	static GraphicsEngine* GetInstance();
-	static void Initialize(UINT width, UINT height);
+	static void Initialize(UINT width, UINT height, HWND hwnd);
 	static void Destroy();
 
 	RenderSystem* GetRenderSystem();
 	void RenderFrame();
-	void CloseRenderSystem();
 
 private:
-	GraphicsEngine();
+	GraphicsEngine(UINT width, UINT height, HWND hwnd);
 	~GraphicsEngine() = default;
 	GraphicsEngine(GraphicsEngine const&) {}
 	GraphicsEngine& operator=(GraphicsEngine const&) {}
