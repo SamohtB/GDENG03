@@ -19,7 +19,6 @@ RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 	/* Pipeline State Manager Temp creates default root signature and pipeline state */
 	this->m_pipelineStateManager = std::make_unique<PipelineStateManager>(this->m_deviceManager->GetD3DDevice());
 	this->m_commandQueueManager->CreateCommandLists(this->m_deviceManager->GetD3DDevice(), this->m_pipelineStateManager->GetPipelineState());
-	this->m_vertexBuffer = std::make_unique<VertexBuffer>(this->m_deviceManager->GetD3DDevice(), static_cast<float>(width) / static_cast<float>(height));
 	this->m_fenceManager = std::make_unique<FenceManager>(this->m_deviceManager->GetD3DDevice());
 
 	// Wait for the command list to execute; we are reusing the same command 
@@ -40,45 +39,49 @@ void RenderSystem::CreateFactory()
 	ThrowIfFailed(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&m_dxgiFactory)));
 }
 
-void RenderSystem::PopulateCommandList()
+void RenderSystem::StartFrame()
 {
 	ID3D12CommandAllocator* allocator = this->m_commandQueueManager->GetCommandAllocator().Get();
 	ID3D12GraphicsCommandList* list = this->m_commandQueueManager->GetCommandList().Get();
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
 	ID3D12Resource* renderTarget = this->m_renderTargetManager->GetRenderTarget(currentFrameIndex).Get();
 
+	/* Reset Allocator and Command List */
 	ThrowIfFailed(allocator->Reset());
 	ThrowIfFailed(list->Reset(allocator, this->m_pipelineStateManager->GetPipelineState().Get()));
 
-	// Set necessary state.
 	list->SetGraphicsRootSignature(this->m_pipelineStateManager->GetRootSignature().Get());
+
 	list->RSSetViewports(1, &m_viewport);
 	list->RSSetScissorRects(1, &m_scissorRect);
 
 	/* Indicate that the back buffer will be used as a render target */
-	CD3DX12_RESOURCE_BARRIER barrierToRenderTarget = 
-		CD3DX12_RESOURCE_BARRIER::Transition( 
-			renderTarget, 
-			D3D12_RESOURCE_STATE_PRESENT, 
-			D3D12_RESOURCE_STATE_RENDER_TARGET 
-		); 
+	CD3DX12_RESOURCE_BARRIER barrierToRenderTarget =
+		CD3DX12_RESOURCE_BARRIER::Transition(
+			renderTarget,
+			D3D12_RESOURCE_STATE_PRESENT,
+			D3D12_RESOURCE_STATE_RENDER_TARGET
+		);
 
-	list->ResourceBarrier(1, &barrierToRenderTarget); 
+	list->ResourceBarrier(1, &barrierToRenderTarget);
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
 		this->m_descriptorHeap->GetRTVHeapStart(),
-		currentFrameIndex, 
+		currentFrameIndex,
 		this->m_descriptorHeap->GetRTVDescriptorSize()
 	);
+
 	list->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 
 	const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
 	list->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+}
 
-	/* Draw Calls */
-	list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	list->IASetVertexBuffers(0, 1, this->m_vertexBuffer->GetVertexBufferViewPointer());
-	list->DrawInstanced(3, 1, 0, 0);
+void RenderSystem::EndFrame()
+{
+	ID3D12GraphicsCommandList* list = this->m_commandQueueManager->GetCommandList().Get();
+	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	ID3D12Resource* renderTarget = this->m_renderTargetManager->GetRenderTarget(currentFrameIndex).Get();
 
 	/* Indicate that the back buffer will now be used to present */
 	CD3DX12_RESOURCE_BARRIER barrierToPresent =
@@ -90,6 +93,20 @@ void RenderSystem::PopulateCommandList()
 
 	list->ResourceBarrier(1, &barrierToPresent);
 	ThrowIfFailed(list->Close());
+
+	ExecuteCommandList();
+	SwapBuffers();
+	WaitForPreviousFrame();
+}
+
+ID3D12GraphicsCommandList* RenderSystem::GetCommandList()
+{
+	return this->m_commandQueueManager->GetCommandList().Get();
+}
+
+ComPtr<ID3D12Device> RenderSystem::GetD3DDevice()
+{
+	return this->m_deviceManager->GetD3DDevice();
 }
 
 void RenderSystem::ExecuteCommandList()

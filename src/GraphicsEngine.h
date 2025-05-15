@@ -12,7 +12,6 @@ public:
 	static void Destroy();
 
 	RenderSystem* GetRenderSystem();
-	void RenderFrame();
 
 private:
 	GraphicsEngine(UINT width, UINT height, HWND hwnd);

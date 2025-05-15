@@ -41,11 +41,3 @@ RenderSystem* GraphicsEngine::GetRenderSystem()
 	return this->m_renderSystem.get();
 }
 
-void GraphicsEngine::RenderFrame()
-{
-	this->m_renderSystem->PopulateCommandList();
-	this->m_renderSystem->ExecuteCommandList();
-	this->m_renderSystem->SwapBuffers();
-	this->m_renderSystem->WaitForPreviousFrame();
-}
-

@@ -1,16 +1,9 @@
 #include "VertexBuffer.h"
 #include "Helper.h"
 
-VertexBuffer::VertexBuffer(ComPtr<ID3D12Device> device, float aspectRatio)
+VertexBuffer::VertexBuffer(ComPtr<ID3D12Device> device, const std::vector<Vertex>& vertices)
 {
-    Vertex triangleVertices[] =
-    {
-        { { 0.0f, 0.25f * aspectRatio, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-        { { 0.25f, -0.25f * aspectRatio, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-        { { -0.25f, -0.25f * aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
-    };
-
-    const UINT vertexBufferSize = sizeof(triangleVertices);
+    const UINT vertexBufferSize = static_cast<UINT>(vertices.size() * sizeof(Vertex));
 
     // Note: using upload heaps to transfer static data like vert buffers is not 
     // recommended. Every time the GPU needs it, the upload heap will be marshalled 
@@ -31,7 +24,7 @@ VertexBuffer::VertexBuffer(ComPtr<ID3D12Device> device, float aspectRatio)
     UINT8* pVertexDataBegin;
     CD3DX12_RANGE readRange(0, 0);        // We do not intend to read from this resource on the CPU.
     ThrowIfFailed(m_vertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin)));
-    memcpy(pVertexDataBegin, triangleVertices, sizeof(triangleVertices));
+    memcpy(pVertexDataBegin, vertices.data(), vertexBufferSize);
     m_vertexBuffer->Unmap(0, nullptr);
 
     // Initialize the vertex buffer view.

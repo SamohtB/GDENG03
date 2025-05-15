@@ -18,10 +18,11 @@ public:
 	RenderSystem(UINT width, UINT height, HWND hwnd);	
 	~RenderSystem();
 
-	void PopulateCommandList();
-	void ExecuteCommandList();
-	void SwapBuffers();
-	void WaitForPreviousFrame();
+	void StartFrame();
+	void EndFrame();
+
+	ID3D12GraphicsCommandList* GetCommandList();
+	ComPtr<ID3D12Device> GetD3DDevice();
 
 private:
 	ComPtr<IDXGIFactory6> m_dxgiFactory;
@@ -34,12 +35,13 @@ private:
 	std::unique_ptr<FenceManager> m_fenceManager;
 	std::unique_ptr<PipelineStateManager> m_pipelineStateManager;
 
-	/* move vertex buffer */
-	std::unique_ptr<VertexBuffer> m_vertexBuffer;
-
 	CD3DX12_VIEWPORT m_viewport;
 	CD3DX12_RECT m_scissorRect;
 
 	void CreateFactory();
+
+	void ExecuteCommandList();
+	void SwapBuffers();
+	void WaitForPreviousFrame();
 };
 
