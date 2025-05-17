@@ -7,7 +7,7 @@ public:
     DescriptorHeapManager(ComPtr<ID3D12Device> device);
     ~DescriptorHeapManager() = default;
 
-    D3D12_CPU_DESCRIPTOR_HANDLE GetRTVHeapStart();
+    D3D12_CPU_DESCRIPTOR_HANDLE GetRTVHeapStart() const;
     UINT GetRTVDescriptorSize() const;
     ComPtr<ID3D12DescriptorHeap> GetRTVHeap() const;
 

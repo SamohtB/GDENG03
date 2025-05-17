@@ -27,7 +27,7 @@ SwapChainManager::SwapChainManager(ComPtr<IDXGIFactory6> factory, ComPtr<ID3D12C
     ThrowIfFailed(factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER));
 
     ThrowIfFailed(swapChain.As(&m_swapChain));
-    SetFrameIndex();
+    UpdateFrameIndex();
 }
 
 ComPtr<IDXGISwapChain3> SwapChainManager::GetSwapChain() const
@@ -40,7 +40,7 @@ UINT SwapChainManager::GetCurrentFrameIndex() const
     return m_frameIndex;
 }
 
-void SwapChainManager::SetFrameIndex()
+void SwapChainManager::UpdateFrameIndex()
 {
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 }

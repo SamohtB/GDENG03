@@ -12,7 +12,7 @@ DescriptorHeapManager::DescriptorHeapManager(ComPtr<ID3D12Device> device)
     m_rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetRTVHeapStart()
+D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetRTVHeapStart() const
 {
 	return m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
 }

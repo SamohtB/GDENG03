@@ -7,6 +7,11 @@ DeviceManager::DeviceManager(ComPtr<IDXGIFactory6> factory)
 	CreateDeviceFromAdapter();
 }
 
+ComPtr<ID3D12Device> DeviceManager::GetD3DDevice() const
+{
+	return this->m_d3dDevice;
+}
+
 ComPtr<IDXGIAdapter1> DeviceManager::FindHardwareAdapter(ComPtr<IDXGIFactory6> factory)
 {
 	ComPtr<IDXGIAdapter1> adapter;

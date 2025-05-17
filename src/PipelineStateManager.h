@@ -7,8 +7,8 @@ public:
 	PipelineStateManager(ComPtr<ID3D12Device> device);
 	~PipelineStateManager() = default;
 
-	ComPtr<ID3D12PipelineState> GetPipelineState();
-	ComPtr<ID3D12RootSignature> GetRootSignature();
+	ComPtr<ID3D12PipelineState> GetPipelineState() const;
+	ComPtr<ID3D12RootSignature> GetRootSignature() const;
 
 private:
 	void CreateRootSignature(ComPtr<ID3D12Device> device, 

@@ -9,7 +9,7 @@ public:
 
 	ComPtr<IDXGISwapChain3> GetSwapChain() const;
 	UINT GetCurrentFrameIndex() const;
-	void SetFrameIndex();
+	void UpdateFrameIndex();
 
 private:
 	UINT m_frameIndex;

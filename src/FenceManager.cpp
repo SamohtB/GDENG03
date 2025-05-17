@@ -1,10 +1,13 @@
 #include "FenceManager.h"
 #include "Helper.h"
+#include "SwapChainManager.h"
 
-FenceManager::FenceManager(ComPtr<ID3D12Device> device)
+FenceManager::FenceManager(ComPtr<ID3D12Device> device, SwapChainManager& swapChainManager) 
+    : m_fenceValues{}
 {
-    ThrowIfFailed(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)));
-    m_fenceValue = 1;
+    UINT frameIndex = swapChainManager.GetCurrentFrameIndex();
+    ThrowIfFailed(device->CreateFence(m_fenceValues[frameIndex], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)));
+    this->m_fenceValues[frameIndex]++;
 
     m_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 
@@ -14,24 +17,24 @@ FenceManager::FenceManager(ComPtr<ID3D12Device> device)
     }
 }
 
-UINT64 FenceManager::GetFenceValue()
+UINT64 FenceManager::GetFenceValue(UINT frameIndex) const
 {
-    return m_fenceValue;
+    return m_fenceValues[frameIndex];
 }
 
-ComPtr<ID3D12Fence> FenceManager::GetFence()
+ComPtr<ID3D12Fence> FenceManager::GetFence() const
 {
     return m_fence;
 }
 
-HANDLE FenceManager::GetFenceEvent()
+HANDLE FenceManager::GetFenceEvent() const
 {
     return m_fenceEvent;
 }
 
-void FenceManager::IncrementFence()
+void FenceManager::SetFenceValue(UINT frameIndex, UINT64 value)
 {
-    this->m_fenceValue++;
+    this->m_fenceValues[frameIndex] = value;
 }
 
 void FenceManager::CloseEvent()

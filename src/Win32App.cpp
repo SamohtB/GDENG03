@@ -1,5 +1,7 @@
 #include "Win32App.h"
 #include "stdafx.h"
+#include <thread>
+#include <chrono>
 
 Win32App::Win32App(ABaseWindow* window, std::wstring windowName) : m_window(window), m_isRun(true)
 {
@@ -68,20 +70,23 @@ LRESULT Win32App::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 	switch (msg)
 	{
+
 	case WM_PAINT:
+	{
 		if (app->m_window)
 		{
 			app->m_window->OnUpdate();
 			app->m_window->OnRender();
 		}
 		return 0;
+	}
 
 	case WM_DESTROY:
 		if (app->m_window)
 		{
+			app->m_isRun = false;
 			app->m_window->OnDestroy();
 		}
-		app->m_isRun = false;
 		::PostQuitMessage(0);
 		return 0;
 	}
@@ -93,15 +98,10 @@ void Win32App::Broadcast()
 {
 	MSG msg = {};
 
-	while (msg.message != WM_QUIT)
+	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
-		Sleep(1);
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
 	}
 }
 

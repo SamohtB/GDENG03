@@ -1,5 +1,6 @@
 #include "RenderSystem.h"
 #include "Helper.h"
+#include <iostream>
 
 RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 	m_viewport(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height)),
@@ -13,23 +14,26 @@ RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 		this->m_commandQueueManager->GetCommandQueue(), width, height, hwnd);
 	this->m_descriptorHeap = std::make_unique<DescriptorHeapManager>(this->m_deviceManager->GetD3DDevice());
 	this->m_renderTargetManager = std::make_unique<RenderTargetManager>(this->m_deviceManager->GetD3DDevice(), 
-		this->m_swapChainManager->GetSwapChain(), *m_descriptorHeap);
+		this->m_swapChainManager->GetSwapChain(), *this->m_descriptorHeap);
 
 	/* Load Assets */
 	/* Pipeline State Manager Temp creates default root signature and pipeline state */
 	this->m_pipelineStateManager = std::make_unique<PipelineStateManager>(this->m_deviceManager->GetD3DDevice());
-	this->m_commandQueueManager->CreateCommandLists(this->m_deviceManager->GetD3DDevice(), this->m_pipelineStateManager->GetPipelineState());
-	this->m_fenceManager = std::make_unique<FenceManager>(this->m_deviceManager->GetD3DDevice());
+	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	this->m_commandQueueManager->CreateCommandLists(this->m_deviceManager->GetD3DDevice(), 
+		this->m_pipelineStateManager->GetPipelineState(), currentFrameIndex);
+	this->m_fenceManager = std::make_unique<FenceManager>(this->m_deviceManager->GetD3DDevice(),
+		*this->m_swapChainManager);
 
 	// Wait for the command list to execute; we are reusing the same command 
 	// list in our main loop but for now, we just want to wait for setup to 
 	// complete before continuing.
-	WaitForPreviousFrame();
+	WaitForGPU();
 }
 
 RenderSystem::~RenderSystem()
 {
-	WaitForPreviousFrame();
+	WaitForGPU();
 	this->m_fenceManager->CloseEvent();
 }
 
@@ -41,17 +45,23 @@ void RenderSystem::CreateFactory()
 
 void RenderSystem::StartFrame()
 {
-	ID3D12CommandAllocator* allocator = this->m_commandQueueManager->GetCommandAllocator().Get();
-	ID3D12GraphicsCommandList* list = this->m_commandQueueManager->GetCommandList().Get();
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	ID3D12CommandAllocator* allocator = this->m_commandQueueManager->GetCommandAllocator(currentFrameIndex).Get();
+	ID3D12GraphicsCommandList* list = this->m_commandQueueManager->GetCommandList().Get();
 	ID3D12Resource* renderTarget = this->m_renderTargetManager->GetRenderTarget(currentFrameIndex).Get();
 
 	/* Reset Allocator and Command List */
+
+	// Command list allocators can only be reset when the associated 
+	// command lists have finished execution on the GPU; apps should use 
+	// fences to determine GPU execution progress.
 	ThrowIfFailed(allocator->Reset());
+	// However, when ExecuteCommandList() is called on a particular command 
+	// list, that command list can then be reset at any time and must be before 
+	// re-recording.
 	ThrowIfFailed(list->Reset(allocator, this->m_pipelineStateManager->GetPipelineState().Get()));
 
 	list->SetGraphicsRootSignature(this->m_pipelineStateManager->GetRootSignature().Get());
-
 	list->RSSetViewports(1, &m_viewport);
 	list->RSSetScissorRects(1, &m_scissorRect);
 
@@ -96,7 +106,7 @@ void RenderSystem::EndFrame()
 
 	ExecuteCommandList();
 	SwapBuffers();
-	WaitForPreviousFrame();
+	MoveToNextFrame();
 }
 
 ID3D12GraphicsCommandList* RenderSystem::GetCommandList()
@@ -120,27 +130,43 @@ void RenderSystem::SwapBuffers()
 	ThrowIfFailed(this->m_swapChainManager->GetSwapChain().Get()->Present(1, 0));
 }
 
-void RenderSystem::WaitForPreviousFrame()
+void RenderSystem::WaitForGPU()
 {
-	// WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST PRACTICE.
-	// This is code implemented as such for simplicity. The D3D12HelloFrameBuffering
-	// sample illustrates how to use fences for efficient resource usage and to
-	// maximize GPU utilization.
-
-	ID3D12Fence* _fence = this->m_fenceManager->GetFence().Get();
+	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	ID3D12Fence* fence = this->m_fenceManager->GetFence().Get();
+	UINT64 fenceValue = this->m_fenceManager->GetFenceValue(currentFrameIndex);
 	HANDLE fenceEvent = this->m_fenceManager->GetFenceEvent();
 
-	// Signal and increment the fence value.
-	const UINT64 fence = this->m_fenceManager->GetFenceValue();
-	ThrowIfFailed(this->m_commandQueueManager->GetCommandQueue()->Signal(_fence, fence));
-	this->m_fenceManager->IncrementFence();
+	ThrowIfFailed(this->m_commandQueueManager->GetCommandQueue()->Signal(
+		fence, fenceValue));
 
-	// Wait until the previous frame is finished.
-	if (_fence->GetCompletedValue() < fence)
+	ThrowIfFailed(fence->SetEventOnCompletion(fenceValue, fenceEvent));
+	WaitForSingleObjectEx(fenceEvent, INFINITE, FALSE);
+
+	this->m_fenceManager->SetFenceValue(currentFrameIndex, fenceValue + 1);
+}
+
+void RenderSystem::MoveToNextFrame()
+{
+	ID3D12Fence* fence = this->m_fenceManager->GetFence().Get();
+	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	UINT64 currentFenceValue = this->m_fenceManager->GetFenceValue(currentFrameIndex);
+
+	ThrowIfFailed(this->m_commandQueueManager->GetCommandQueue()->Signal(fence, currentFenceValue));
+	
+	this->m_swapChainManager->UpdateFrameIndex();
+
+	UINT nextFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	UINT64 nextFenceValue = this->m_fenceManager->GetFenceValue(nextFrameIndex); 
+	HANDLE fenceEvent = this->m_fenceManager->GetFenceEvent();
+
+	// If the next frame is not ready to be rendered yet, wait until it is ready.
+	if (fence->GetCompletedValue() < nextFenceValue)
 	{
-		ThrowIfFailed(_fence->SetEventOnCompletion(fence, fenceEvent));
-		WaitForSingleObject(fenceEvent, INFINITE);
+		ThrowIfFailed(fence->SetEventOnCompletion(nextFenceValue, fenceEvent));
+		WaitForSingleObjectEx(fenceEvent, INFINITE, FALSE);
 	}
 
-	this->m_swapChainManager->SetFrameIndex();
+	// Set the fence value for the next frame.
+	this->m_fenceManager->SetFenceValue(nextFrameIndex, currentFenceValue + 1);
 }

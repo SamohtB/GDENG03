@@ -42,6 +42,7 @@ private:
 
 	void ExecuteCommandList();
 	void SwapBuffers();
-	void WaitForPreviousFrame();
+	void WaitForGPU();
+	void MoveToNextFrame();
 };
 

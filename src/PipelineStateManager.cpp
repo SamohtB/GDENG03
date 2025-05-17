@@ -11,12 +11,12 @@ PipelineStateManager::PipelineStateManager(ComPtr<ID3D12Device> device)
     CreatePipelineState(device);
 }
 
-ComPtr<ID3D12PipelineState> PipelineStateManager::GetPipelineState()
+ComPtr<ID3D12PipelineState> PipelineStateManager::GetPipelineState() const
 {
     return this->m_pipelineState;
 }
 
-ComPtr<ID3D12RootSignature> PipelineStateManager::GetRootSignature()
+ComPtr<ID3D12RootSignature> PipelineStateManager::GetRootSignature() const
 {
     return this->m_rootSignature;
 }

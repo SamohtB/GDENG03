@@ -7,7 +7,7 @@ public:
 	DeviceManager(ComPtr<IDXGIFactory6> factory);
 	~DeviceManager() = default;
 
-	ComPtr<ID3D12Device> GetD3DDevice() const { return m_d3dDevice; }
+	ComPtr<ID3D12Device> GetD3DDevice() const;
 
 private:
 	ComPtr<ID3D12Device> m_d3dDevice;
