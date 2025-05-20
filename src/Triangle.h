@@ -19,7 +19,7 @@ public:
 	void Draw(ID3D12GraphicsCommandList* cmdList) override;
 
 private:
-	std::vector<Vertex> m_vertices;
+	std::vector<Vertex3D> m_vertices;
 	std::unique_ptr<VertexBuffer> m_vertexBuffer;
 };
 

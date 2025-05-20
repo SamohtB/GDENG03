@@ -1,9 +1,11 @@
 #include "VertexBuffer.h"
-#include "Helper.h"
+#include "VertexTypes.h"
 
-VertexBuffer::VertexBuffer(ComPtr<ID3D12Device> device, const std::vector<Vertex>& vertices)
+template <typename VertexType>
+VertexBuffer::VertexBuffer(ComPtr<ID3D12Device> device, const std::vector<VertexType>& vertices)
 {
-    const UINT vertexBufferSize = static_cast<UINT>(vertices.size() * sizeof(Vertex));
+    static_assert(std::is_base_of<IVertexType, VertexType>::value, "Invalid vertex type used!");
+    const UINT vertexBufferSize = static_cast<UINT>(vertices.size() * sizeof(VertexType));
 
     // Note: using upload heaps to transfer static data like vert buffers is not 
     // recommended. Every time the GPU needs it, the upload heap will be marshalled 
@@ -20,7 +22,7 @@ VertexBuffer::VertexBuffer(ComPtr<ID3D12Device> device, const std::vector<Vertex
         nullptr,
         IID_PPV_ARGS(&m_vertexBuffer)));
 
-    // Copy the triangle data to the vertex buffer.
+    // Copy the vertex data into upload heap
     UINT8* pVertexDataBegin;
     CD3DX12_RANGE readRange(0, 0);        // We do not intend to read from this resource on the CPU.
     ThrowIfFailed(m_vertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin)));
@@ -29,9 +31,13 @@ VertexBuffer::VertexBuffer(ComPtr<ID3D12Device> device, const std::vector<Vertex
 
     // Initialize the vertex buffer view.
     m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
-    m_vertexBufferView.StrideInBytes = sizeof(Vertex);
+    m_vertexBufferView.StrideInBytes = sizeof(VertexType);
     m_vertexBufferView.SizeInBytes = vertexBufferSize;
 }
+
+template VertexBuffer::VertexBuffer(ComPtr<ID3D12Device>, const std::vector<Vertex3D>&);
+template VertexBuffer::VertexBuffer(ComPtr<ID3D12Device>, const std::vector<TexturedVertex3D>&);
+
 
 D3D12_VERTEX_BUFFER_VIEW* VertexBuffer::GetVertexBufferViewPointer()
 {

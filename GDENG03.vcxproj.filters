@@ -7,38 +7,8 @@
     <Filter Include="Engine">
       <UniqueIdentifier>{10720cf3-623b-4447-b48c-11ad799c9ba2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GraphicsEngine">
-      <UniqueIdentifier>{78549e93-7567-4ad7-bdc0-6b1af7544047}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GraphicsEngine\RenderSystem">
-      <UniqueIdentifier>{e0bc8f0c-6f55-4ca8-8eba-e211ce63355d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GraphicsEngine\RenderSystem\SwapChain">
-      <UniqueIdentifier>{a974f9e7-b98f-40da-b246-25133e0e13c7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GraphicsEngine\RenderSystem\RenderTarget">
-      <UniqueIdentifier>{154596ba-1559-4452-b446-d31b5b61d53b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GraphicsEngine\RenderSystem\Device">
-      <UniqueIdentifier>{0e84f3ea-59bf-41ed-afb3-6385e573f7d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GraphicsEngine\RenderSystem\DescriptorHeap">
-      <UniqueIdentifier>{a3d4a542-74f9-4f5c-a6d8-26df20845131}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GraphicsEngine\RenderSystem\CommandQueue">
-      <UniqueIdentifier>{7f54f9ac-86b2-4ede-ac55-e2e576c47b40}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\WindowSystem">
       <UniqueIdentifier>{fd5a76b5-3c5f-4f0b-9231-37cac94742ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GraphicsEngine\RenderSystem\Fence">
-      <UniqueIdentifier>{d5c31b89-edbf-475d-af10-a93dc78894c4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GraphicsEngine\RenderSystem\PipelineStateManager">
-      <UniqueIdentifier>{50003304-a3a7-4322-befc-0dc2df23b435}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GraphicsEngine\RenderSystem\VertexBuffer">
-      <UniqueIdentifier>{360f0d64-5d15-4cd8-ad2e-4114fd102877}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
       <UniqueIdentifier>{702e364c-7769-430c-a8d9-a71e55ec7a82}</UniqueIdentifier>
@@ -58,40 +28,97 @@
     <Filter Include="App\Entities\Primitives">
       <UniqueIdentifier>{1d1582e5-48b1-4713-99b1-e2f55bb39140}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Graphics">
+      <UniqueIdentifier>{78549e93-7567-4ad7-bdc0-6b1af7544047}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\RenderSystem">
+      <UniqueIdentifier>{e0bc8f0c-6f55-4ca8-8eba-e211ce63355d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Pipeline">
+      <UniqueIdentifier>{b0420d11-0a92-41bd-b23e-fc0b555cb48c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Pipeline\PipelineStateManager">
+      <UniqueIdentifier>{50003304-a3a7-4322-befc-0dc2df23b435}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Pipeline\Shaders">
+      <UniqueIdentifier>{4b79f256-0ef7-4815-b271-c111cdc7a9f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Pipeline\Shaders\PixelShader">
+      <UniqueIdentifier>{5f02b7a3-35b5-485d-b0d3-2d07de71c284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Pipeline\Shaders\VertexShader">
+      <UniqueIdentifier>{ba37f6b2-da75-46e8-b742-f8cb1fd32719}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Resources">
+      <UniqueIdentifier>{876e5d23-d643-4d93-97c8-5633efad3ae2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Resources\VertexBuffer">
+      <UniqueIdentifier>{360f0d64-5d15-4cd8-ad2e-4114fd102877}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Render">
+      <UniqueIdentifier>{e36e486c-00ae-496e-8c59-0691969e363d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Render\RenderSystem">
+      <UniqueIdentifier>{0c683edb-928d-4eb1-ad6f-03d678135858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Render\SwapChain">
+      <UniqueIdentifier>{a974f9e7-b98f-40da-b246-25133e0e13c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Render\RenderTarget">
+      <UniqueIdentifier>{154596ba-1559-4452-b446-d31b5b61d53b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Render\CommandQueue">
+      <UniqueIdentifier>{7f54f9ac-86b2-4ede-ac55-e2e576c47b40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Core">
+      <UniqueIdentifier>{bdfac020-053c-4588-a39d-214d66cb0a46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Core\DescriptorHeap">
+      <UniqueIdentifier>{a3d4a542-74f9-4f5c-a6d8-26df20845131}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Core\Device">
+      <UniqueIdentifier>{0e84f3ea-59bf-41ed-afb3-6385e573f7d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Core\Fence">
+      <UniqueIdentifier>{d5c31b89-edbf-475d-af10-a93dc78894c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Core\GraphicsEngine">
+      <UniqueIdentifier>{99f0dd55-c170-47f9-936f-d9d338bfb627}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{f7fe2064-d657-4b4b-9094-2929e103b730}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Resources\Texture">
+      <UniqueIdentifier>{c25bf5b7-9184-4091-afe3-3f31036ce610}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>App</Filter>
     </ClCompile>
     <ClCompile Include="src\CommandQueueManager.cpp">
-      <Filter>Engine\GraphicsEngine\RenderSystem\CommandQueue</Filter>
+      <Filter>Engine\Graphics\Render\CommandQueue</Filter>
     </ClCompile>
     <ClCompile Include="src\DescriptorHeapManager.cpp">
-      <Filter>Engine\GraphicsEngine\RenderSystem\DescriptorHeap</Filter>
+      <Filter>Engine\Graphics\Core\DescriptorHeap</Filter>
     </ClCompile>
     <ClCompile Include="src\DeviceManager.cpp">
-      <Filter>Engine\GraphicsEngine\RenderSystem\Device</Filter>
+      <Filter>Engine\Graphics\Core\Device</Filter>
     </ClCompile>
     <ClCompile Include="src\RenderTargetManager.cpp">
-      <Filter>Engine\GraphicsEngine\RenderSystem\RenderTarget</Filter>
+      <Filter>Engine\Graphics\Render\RenderTarget</Filter>
     </ClCompile>
     <ClCompile Include="src\SwapChainManager.cpp">
-      <Filter>Engine\GraphicsEngine\RenderSystem\SwapChain</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RenderSystem.cpp">
-      <Filter>Engine\GraphicsEngine\RenderSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GraphicsEngine.cpp">
-      <Filter>Engine\GraphicsEngine</Filter>
+      <Filter>Engine\Graphics\Render\SwapChain</Filter>
     </ClCompile>
     <ClCompile Include="src\FenceManager.cpp">
-      <Filter>Engine\GraphicsEngine\RenderSystem\Fence</Filter>
+      <Filter>Engine\Graphics\Core\Fence</Filter>
     </ClCompile>
     <ClCompile Include="src\PipelineStateManager.cpp">
-      <Filter>Engine\GraphicsEngine\RenderSystem\PipelineStateManager</Filter>
+      <Filter>Engine\Graphics\Pipeline\PipelineStateManager</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexBuffer.cpp">
-      <Filter>Engine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
+      <Filter>Engine\Graphics\Resources\VertexBuffer</Filter>
     </ClCompile>
     <ClCompile Include="src\GameWindow.cpp">
       <Filter>App</Filter>
@@ -111,43 +138,40 @@
     <ClCompile Include="src\Triangle.cpp">
       <Filter>App\Entities\Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="src\RenderSystem.cpp">
+      <Filter>Engine\Graphics\Render\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GraphicsEngine.cpp">
+      <Filter>Engine\Graphics\Core\GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>Engine\Graphics\Resources\Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\stdafx.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="src\CommandQueueManager.h">
-      <Filter>Engine\GraphicsEngine\RenderSystem\CommandQueue</Filter>
+      <Filter>Engine\Graphics\Render\CommandQueue</Filter>
     </ClInclude>
     <ClInclude Include="src\DescriptorHeapManager.h">
-      <Filter>Engine\GraphicsEngine\RenderSystem\DescriptorHeap</Filter>
+      <Filter>Engine\Graphics\Core\DescriptorHeap</Filter>
     </ClInclude>
     <ClInclude Include="src\RenderTargetManager.h">
-      <Filter>Engine\GraphicsEngine\RenderSystem\RenderTarget</Filter>
+      <Filter>Engine\Graphics\Render\RenderTarget</Filter>
     </ClInclude>
     <ClInclude Include="src\SwapChainManager.h">
-      <Filter>Engine\GraphicsEngine\RenderSystem\SwapChain</Filter>
+      <Filter>Engine\Graphics\Render\SwapChain</Filter>
     </ClInclude>
     <ClInclude Include="src\DeviceManager.h">
-      <Filter>Engine\GraphicsEngine\RenderSystem\Device</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RenderSystem.h">
-      <Filter>Engine\GraphicsEngine\RenderSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Helper.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GraphicsEngine.h">
-      <Filter>Engine\GraphicsEngine</Filter>
+      <Filter>Engine\Graphics\Core\Device</Filter>
     </ClInclude>
     <ClInclude Include="src\FenceManager.h">
-      <Filter>Engine\GraphicsEngine\RenderSystem\Fence</Filter>
+      <Filter>Engine\Graphics\Core\Fence</Filter>
     </ClInclude>
     <ClInclude Include="src\PipelineStateManager.h">
-      <Filter>Engine\GraphicsEngine\RenderSystem\PipelineStateManager</Filter>
+      <Filter>Engine\Graphics\Pipeline\PipelineStateManager</Filter>
     </ClInclude>
     <ClInclude Include="src\VertexBuffer.h">
-      <Filter>Engine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
+      <Filter>Engine\Graphics\Resources\VertexBuffer</Filter>
     </ClInclude>
     <ClInclude Include="src\GameWindow.h">
       <Filter>App</Filter>
@@ -167,8 +191,26 @@
     <ClInclude Include="src\Triangle.h">
       <Filter>App\Entities\Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="src\InputLayouts.h">
+      <Filter>Engine\Graphics\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RenderSystem.h">
+      <Filter>Engine\Graphics\Render\RenderSystem</Filter>
+    </ClInclude>
     <ClInclude Include="src\VertexTypes.h">
-      <Filter>App\Entities</Filter>
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphicsEngine.h">
+      <Filter>Engine\Graphics\Core\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Helper.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stdafx.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Texture.h">
+      <Filter>Engine\Graphics\Resources\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

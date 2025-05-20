@@ -21,7 +21,7 @@ RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 	this->m_pipelineStateManager = std::make_unique<PipelineStateManager>(this->m_deviceManager->GetD3DDevice());
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
 	this->m_commandQueueManager->CreateCommandLists(this->m_deviceManager->GetD3DDevice(), 
-		this->m_pipelineStateManager->GetPipelineState(), currentFrameIndex);
+		this->m_pipelineStateManager->GetPipelineState(InputLayoutType::Pos_Color), currentFrameIndex);
 	this->m_fenceManager = std::make_unique<FenceManager>(this->m_deviceManager->GetD3DDevice(),
 		*this->m_swapChainManager);
 
@@ -59,7 +59,7 @@ void RenderSystem::StartFrame()
 	// However, when ExecuteCommandList() is called on a particular command 
 	// list, that command list can then be reset at any time and must be before 
 	// re-recording.
-	ThrowIfFailed(list->Reset(allocator, this->m_pipelineStateManager->GetPipelineState().Get()));
+	ThrowIfFailed(list->Reset(allocator, this->m_pipelineStateManager->GetPipelineState(InputLayoutType::Pos_Color).Get()));
 
 	list->SetGraphicsRootSignature(this->m_pipelineStateManager->GetRootSignature().Get());
 	list->RSSetViewports(1, &m_viewport);

@@ -4,12 +4,20 @@
 
 Triangle::Triangle(int id, String name, ComPtr<ID3D12Device> device) : AGameObject(id, name)
 {
-    m_vertices =
+    //m_vertices =
+    //{
+    //    { { 0.0f, 0.5f, 0.0f }, { 0.5f, 0.0f } , { 1.0f, 1.0f, 1.0f, 1.0f }},
+    //    { { 0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f } , { 1.0f, 1.0f, 1.0f, 1.0f }},
+    //    { { -0.5f, -0.5f, 0.0f }, { 0.0f, 1.0f } , { 1.0f, 1.0f, 1.0f, 1.0f }}
+    //};
+
+    m_vertices = 
     {
-        { { 0.0f, 0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-        { { 0.5f, -0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-        { { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+        { XMFLOAT3(0.0f, 0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
+        { XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
+        { XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) }
     };
+
 
     this->m_vertexBuffer = std::make_unique<VertexBuffer>(device, m_vertices);
 }

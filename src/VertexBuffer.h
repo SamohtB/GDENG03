@@ -1,12 +1,15 @@
 #pragma once
-#include "VertexTypes.h"
 #include "stdafx.h"
+#include "Helper.h"
 
 class VertexBuffer
 {
 public:
-    VertexBuffer(ComPtr<ID3D12Device> device, const std::vector<Vertex>& vertices);
+    VertexBuffer() = default;
 	~VertexBuffer() = default;
+
+    template <typename VertexType>
+    VertexBuffer(ComPtr<ID3D12Device> device, const std::vector<VertexType>& vertices);
 
     D3D12_VERTEX_BUFFER_VIEW* GetVertexBufferViewPointer();
 
