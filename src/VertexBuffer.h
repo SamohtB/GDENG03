@@ -9,7 +9,7 @@ public:
 	~VertexBuffer() = default;
 
     template <typename VertexType>
-    VertexBuffer(ComPtr<ID3D12Device> device, const std::vector<VertexType>& vertices);
+    VertexBuffer(ID3D12Device* device, const std::vector<VertexType>& vertices);
 
     D3D12_VERTEX_BUFFER_VIEW* GetVertexBufferViewPointer();
 

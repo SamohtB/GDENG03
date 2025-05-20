@@ -144,9 +144,6 @@
     <ClCompile Include="src\GraphicsEngine.cpp">
       <Filter>Engine\Graphics\Core\GraphicsEngine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Texture.cpp">
-      <Filter>Engine\Graphics\Resources\Texture</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CommandQueueManager.h">
@@ -208,9 +205,6 @@
     </ClInclude>
     <ClInclude Include="src\stdafx.h">
       <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Texture.h">
-      <Filter>Engine\Graphics\Resources\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

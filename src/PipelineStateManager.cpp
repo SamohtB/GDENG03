@@ -2,7 +2,7 @@
 #include "Helper.h"
 
 
-PipelineStateManager::PipelineStateManager(ComPtr<ID3D12Device> device)
+PipelineStateManager::PipelineStateManager(ID3D12Device* device)
 {
 	CreateRootSignature(device);
     LoadShaders();
@@ -17,18 +17,18 @@ PipelineStateManager::PipelineStateManager(ComPtr<ID3D12Device> device)
 
 }
 
-ComPtr<ID3D12PipelineState> PipelineStateManager::GetPipelineState(InputLayoutType type) const
+ID3D12PipelineState* PipelineStateManager::GetPipelineState(InputLayoutType type) const
 {
-    return this->m_pipelineStates.at(type);
+    return this->m_pipelineStates.at(type).Get();
 }
 
-ComPtr<ID3D12RootSignature> PipelineStateManager::GetRootSignature() const
+ID3D12RootSignature* PipelineStateManager::GetRootSignature() const
 {
-    return this->m_rootSignature;
+    return this->m_rootSignature.Get();
 }
 
 /* What resources the shaders need access to */
-void PipelineStateManager::CreateRootSignature(ComPtr<ID3D12Device> device)
+void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
 {
     D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
 
@@ -91,7 +91,7 @@ void PipelineStateManager::LoadShaders()
 {
     UINT compileFlags = 0;
 
-    std::wstring shaderFile = GetFullAssetPath(L"Assets\\Shaders\\Shader.hlsl");
+    std::wstring shaderFile = L"Assets\\Shaders\\Shader.hlsl";
 
     ThrowIfFailed(D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, nullptr));
     ThrowIfFailed(D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, nullptr));
@@ -99,9 +99,7 @@ void PipelineStateManager::LoadShaders()
 
 
 /* Input Layout and Specific Shader Combo */
-ComPtr<ID3D12PipelineState> PipelineStateManager::CreatePipelineState(
-    ComPtr<ID3D12Device> device, 
-    const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout)
+ComPtr<ID3D12PipelineState> PipelineStateManager::CreatePipelineState(ID3D12Device* device, const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout)
 {
     // Describe and create the graphics pipeline state object (PSO).
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};

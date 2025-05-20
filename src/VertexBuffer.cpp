@@ -2,7 +2,7 @@
 #include "VertexTypes.h"
 
 template <typename VertexType>
-VertexBuffer::VertexBuffer(ComPtr<ID3D12Device> device, const std::vector<VertexType>& vertices)
+VertexBuffer::VertexBuffer(ID3D12Device* device, const std::vector<VertexType>& vertices)
 {
     static_assert(std::is_base_of<IVertexType, VertexType>::value, "Invalid vertex type used!");
     const UINT vertexBufferSize = static_cast<UINT>(vertices.size() * sizeof(VertexType));
@@ -35,8 +35,8 @@ VertexBuffer::VertexBuffer(ComPtr<ID3D12Device> device, const std::vector<Vertex
     m_vertexBufferView.SizeInBytes = vertexBufferSize;
 }
 
-template VertexBuffer::VertexBuffer(ComPtr<ID3D12Device>, const std::vector<Vertex3D>&);
-template VertexBuffer::VertexBuffer(ComPtr<ID3D12Device>, const std::vector<TexturedVertex3D>&);
+template VertexBuffer::VertexBuffer(ID3D12Device*, const std::vector<Vertex3D>&);
+template VertexBuffer::VertexBuffer(ID3D12Device*, const std::vector<TexturedVertex3D>&);
 
 
 D3D12_VERTEX_BUFFER_VIEW* VertexBuffer::GetVertexBufferViewPointer()

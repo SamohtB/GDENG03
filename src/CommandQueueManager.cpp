@@ -1,7 +1,7 @@
 #include "CommandQueueManager.h"
 #include "Helper.h"
 
-CommandQueueManager::CommandQueueManager(ComPtr<ID3D12Device> device)
+CommandQueueManager::CommandQueueManager(ID3D12Device* device)
 {
     D3D12_COMMAND_QUEUE_DESC queueDesc = {};
     queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
@@ -16,27 +16,27 @@ CommandQueueManager::CommandQueueManager(ComPtr<ID3D12Device> device)
     
 }
 
-ComPtr<ID3D12CommandQueue> CommandQueueManager::GetCommandQueue() const
+ID3D12CommandQueue* CommandQueueManager::GetCommandQueue() const
 {
-    return this->m_commandQueue;
+    return this->m_commandQueue.Get();
 }
 
-ComPtr<ID3D12CommandAllocator> CommandQueueManager::GetCommandAllocator(UINT frameIndex) const
+ID3D12CommandAllocator* CommandQueueManager::GetCommandAllocator(UINT frameIndex) const
 {
-    return this->m_commandAllocators[frameIndex];
+    return this->m_commandAllocators[frameIndex].Get();
 }
 
-ComPtr<ID3D12GraphicsCommandList> CommandQueueManager::GetCommandList() const
+ID3D12GraphicsCommandList* CommandQueueManager::GetCommandList() const
 {
-    return this->m_commandList;
+    return this->m_commandList.Get();
 }
 
-void CommandQueueManager::CreateCommandLists(ComPtr<ID3D12Device> device, ComPtr<ID3D12PipelineState> pipelineState, UINT frameIndex)
+void CommandQueueManager::CreateCommandLists(ID3D12Device* device, ID3D12PipelineState* pipelineState, UINT frameIndex)
 {
     ThrowIfFailed(device->CreateCommandList(0, 
         D3D12_COMMAND_LIST_TYPE_DIRECT, 
         m_commandAllocators[frameIndex].Get(),
-        pipelineState.Get(), 
+        pipelineState, 
         IID_PPV_ARGS(&m_commandList)));
 
     ThrowIfFailed(m_commandList->Close());

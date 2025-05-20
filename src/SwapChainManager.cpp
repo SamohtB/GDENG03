@@ -1,7 +1,7 @@
 #include "SwapChainManager.h"
 #include "Helper.h"
 
-SwapChainManager::SwapChainManager(ComPtr<IDXGIFactory6> factory, ComPtr<ID3D12CommandQueue> commandQueue, UINT width, UINT height, HWND hwnd)
+SwapChainManager::SwapChainManager(IDXGIFactory6* factory, ID3D12CommandQueue* commandQueue, UINT width, UINT height, HWND hwnd)
     : m_frameIndex(0)
 {
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
@@ -16,7 +16,7 @@ SwapChainManager::SwapChainManager(ComPtr<IDXGIFactory6> factory, ComPtr<ID3D12C
     ComPtr<IDXGISwapChain1> swapChain;
 
     ThrowIfFailed(factory->CreateSwapChainForHwnd(
-        commandQueue.Get(),
+        commandQueue,
         hwnd,
         &swapChainDesc,
         nullptr,
@@ -30,9 +30,9 @@ SwapChainManager::SwapChainManager(ComPtr<IDXGIFactory6> factory, ComPtr<ID3D12C
     UpdateFrameIndex();
 }
 
-ComPtr<IDXGISwapChain3> SwapChainManager::GetSwapChain() const
+IDXGISwapChain3* SwapChainManager::GetSwapChain() const
 {
-    return m_swapChain;
+    return m_swapChain.Get();
 }
 
 UINT SwapChainManager::GetCurrentFrameIndex() const

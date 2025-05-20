@@ -6,9 +6,9 @@
 
 #include "Helper.h"
 
-RenderTargetManager::RenderTargetManager(ComPtr<ID3D12Device> device, ComPtr<IDXGISwapChain3> swapChain, DescriptorHeapManager& heapManager)
+RenderTargetManager::RenderTargetManager(ID3D12Device* device, IDXGISwapChain3* swapChain, DescriptorHeapManager& heapManager)
 {
-    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(heapManager.GetRTVHeapStart());
+    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(heapManager.GetRTVHeap()->GetCPUDescriptorHandleForHeapStart());
 
     for (UINT n = 0; n < FRAME_COUNT; n++)
     {
@@ -18,7 +18,7 @@ RenderTargetManager::RenderTargetManager(ComPtr<ID3D12Device> device, ComPtr<IDX
     }
 }
 
-ComPtr<ID3D12Resource> RenderTargetManager::GetRenderTarget(UINT index) const
+ID3D12Resource* RenderTargetManager::GetRenderTarget(UINT index) const
 {
-	return m_renderTargets[index];
+	return m_renderTargets[index].Get();
 }

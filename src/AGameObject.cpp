@@ -2,7 +2,7 @@
 
 AGameObject::AGameObject(int id, String name) : m_id(id), m_name(name), m_active(true) {}
 
-bool AGameObject::IsActive()
+bool AGameObject::IsActive() const
 {
 	return m_active;
 }
@@ -12,12 +12,12 @@ void AGameObject::SetActive(bool value)
 	this->m_active = value;
 }
 
-int AGameObject::GetId()
+int AGameObject::GetId() const
 {
 	return this->m_id;
 }
 
-AGameObject::String AGameObject::GetName()
+AGameObject::String AGameObject::GetName() const
 {
 	return this->m_name;
 }

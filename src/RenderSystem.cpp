@@ -8,9 +8,9 @@ RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 {
 	/* Load Pipeline */
 	CreateFactory();
-	this->m_deviceManager = std::make_unique<DeviceManager>(this->m_dxgiFactory);
+	this->m_deviceManager = std::make_unique<DeviceManager>(this->m_dxgiFactory.Get());
 	this->m_commandQueueManager = std::make_unique<CommandQueueManager>(this->m_deviceManager->GetD3DDevice());
-	this->m_swapChainManager = std::make_unique<SwapChainManager>(this->m_dxgiFactory, 
+	this->m_swapChainManager = std::make_unique<SwapChainManager>(this->m_dxgiFactory.Get(),
 		this->m_commandQueueManager->GetCommandQueue(), width, height, hwnd);
 	this->m_descriptorHeap = std::make_unique<DescriptorHeapManager>(this->m_deviceManager->GetD3DDevice());
 	this->m_renderTargetManager = std::make_unique<RenderTargetManager>(this->m_deviceManager->GetD3DDevice(), 
@@ -46,9 +46,9 @@ void RenderSystem::CreateFactory()
 void RenderSystem::StartFrame()
 {
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
-	ID3D12CommandAllocator* allocator = this->m_commandQueueManager->GetCommandAllocator(currentFrameIndex).Get();
-	ID3D12GraphicsCommandList* list = this->m_commandQueueManager->GetCommandList().Get();
-	ID3D12Resource* renderTarget = this->m_renderTargetManager->GetRenderTarget(currentFrameIndex).Get();
+	ID3D12CommandAllocator* allocator = this->m_commandQueueManager->GetCommandAllocator(currentFrameIndex);
+	ID3D12GraphicsCommandList* list = this->m_commandQueueManager->GetCommandList();
+	ID3D12Resource* renderTarget = this->m_renderTargetManager->GetRenderTarget(currentFrameIndex);
 
 	/* Reset Allocator and Command List */
 
@@ -59,9 +59,9 @@ void RenderSystem::StartFrame()
 	// However, when ExecuteCommandList() is called on a particular command 
 	// list, that command list can then be reset at any time and must be before 
 	// re-recording.
-	ThrowIfFailed(list->Reset(allocator, this->m_pipelineStateManager->GetPipelineState(InputLayoutType::Pos_Color).Get()));
+	ThrowIfFailed(list->Reset(allocator, this->m_pipelineStateManager->GetPipelineState(InputLayoutType::Pos_Color)));
 
-	list->SetGraphicsRootSignature(this->m_pipelineStateManager->GetRootSignature().Get());
+	list->SetGraphicsRootSignature(this->m_pipelineStateManager->GetRootSignature());
 	list->RSSetViewports(1, &m_viewport);
 	list->RSSetScissorRects(1, &m_scissorRect);
 
@@ -76,7 +76,7 @@ void RenderSystem::StartFrame()
 	list->ResourceBarrier(1, &barrierToRenderTarget);
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
-		this->m_descriptorHeap->GetRTVHeapStart(),
+		this->m_descriptorHeap->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(),
 		currentFrameIndex,
 		this->m_descriptorHeap->GetRTVDescriptorSize()
 	);
@@ -89,9 +89,9 @@ void RenderSystem::StartFrame()
 
 void RenderSystem::EndFrame()
 {
-	ID3D12GraphicsCommandList* list = this->m_commandQueueManager->GetCommandList().Get();
+	ID3D12GraphicsCommandList* list = this->m_commandQueueManager->GetCommandList();
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
-	ID3D12Resource* renderTarget = this->m_renderTargetManager->GetRenderTarget(currentFrameIndex).Get();
+	ID3D12Resource* renderTarget = this->m_renderTargetManager->GetRenderTarget(currentFrameIndex);
 
 	/* Indicate that the back buffer will now be used to present */
 	CD3DX12_RESOURCE_BARRIER barrierToPresent =
@@ -109,31 +109,31 @@ void RenderSystem::EndFrame()
 	MoveToNextFrame();
 }
 
-ID3D12GraphicsCommandList* RenderSystem::GetCommandList()
+ID3D12GraphicsCommandList* RenderSystem::GetCommandList() const
 {
-	return this->m_commandQueueManager->GetCommandList().Get();
+	return this->m_commandQueueManager->GetCommandList();
 }
 
-ComPtr<ID3D12Device> RenderSystem::GetD3DDevice()
+ID3D12Device* RenderSystem::GetD3DDevice() const 
 {
 	return this->m_deviceManager->GetD3DDevice();
 }
 
 void RenderSystem::ExecuteCommandList()
 {
-	ID3D12CommandList* ppCommandLists[] = { this->m_commandQueueManager->GetCommandList().Get() };
+	ID3D12CommandList* ppCommandLists[] = { this->m_commandQueueManager->GetCommandList() };
 	this->m_commandQueueManager->GetCommandQueue()->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 }
 
 void RenderSystem::SwapBuffers()
 {
-	ThrowIfFailed(this->m_swapChainManager->GetSwapChain().Get()->Present(1, 0));
+	ThrowIfFailed(this->m_swapChainManager->GetSwapChain()->Present(1, 0));
 }
 
 void RenderSystem::WaitForGPU()
 {
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
-	ID3D12Fence* fence = this->m_fenceManager->GetFence().Get();
+	ID3D12Fence* fence = this->m_fenceManager->GetFence();
 	UINT64 fenceValue = this->m_fenceManager->GetFenceValue(currentFrameIndex);
 	HANDLE fenceEvent = this->m_fenceManager->GetFenceEvent();
 
@@ -148,7 +148,7 @@ void RenderSystem::WaitForGPU()
 
 void RenderSystem::MoveToNextFrame()
 {
-	ID3D12Fence* fence = this->m_fenceManager->GetFence().Get();
+	ID3D12Fence* fence = this->m_fenceManager->GetFence();
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
 	UINT64 currentFenceValue = this->m_fenceManager->GetFenceValue(currentFrameIndex);
 

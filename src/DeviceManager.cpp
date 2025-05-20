@@ -1,18 +1,18 @@
 #include "DeviceManager.h"
 #include "Helper.h"
 
-DeviceManager::DeviceManager(ComPtr<IDXGIFactory6> factory)
+DeviceManager::DeviceManager(IDXGIFactory6* factory)
 {
 	m_dxgiAdapter = FindHardwareAdapter(factory);
 	CreateDeviceFromAdapter();
 }
 
-ComPtr<ID3D12Device> DeviceManager::GetD3DDevice() const
+ID3D12Device* DeviceManager::GetD3DDevice() const
 {
-	return this->m_d3dDevice;
+	return this->m_d3dDevice.Get();
 }
 
-ComPtr<IDXGIAdapter1> DeviceManager::FindHardwareAdapter(ComPtr<IDXGIFactory6> factory)
+ComPtr<IDXGIAdapter1> DeviceManager::FindHardwareAdapter(IDXGIFactory6* factory)
 {
 	ComPtr<IDXGIAdapter1> adapter;
 

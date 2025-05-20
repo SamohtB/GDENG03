@@ -21,8 +21,8 @@ public:
 	void StartFrame();
 	void EndFrame();
 
-	ID3D12GraphicsCommandList* GetCommandList();
-	ComPtr<ID3D12Device> GetD3DDevice();
+	ID3D12GraphicsCommandList* GetCommandList() const;
+	ID3D12Device* GetD3DDevice() const;
 
 private:
 	ComPtr<IDXGIFactory6> m_dxgiFactory;

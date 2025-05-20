@@ -1,7 +1,7 @@
 #include "DescriptorHeapManager.h"
 #include "Helper.h"
 
-DescriptorHeapManager::DescriptorHeapManager(ComPtr<ID3D12Device> device)
+DescriptorHeapManager::DescriptorHeapManager(ID3D12Device* device)
 {
     /* Render Target View */
     D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
@@ -20,22 +20,17 @@ DescriptorHeapManager::DescriptorHeapManager(ComPtr<ID3D12Device> device)
     m_rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetRTVHeapStart() const
-{
-	return m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
-}
-
 UINT DescriptorHeapManager::GetRTVDescriptorSize() const
 {
 	return m_rtvDescriptorSize;
 }
 
-ComPtr<ID3D12DescriptorHeap> DescriptorHeapManager::GetRTVHeap() const
+ID3D12DescriptorHeap* DescriptorHeapManager::GetRTVHeap() const
 {
-    return m_rtvHeap;
+    return m_rtvHeap.Get();
 }
 
-ComPtr<ID3D12DescriptorHeap> DescriptorHeapManager::GetSRVHeap() const
+ID3D12DescriptorHeap* DescriptorHeapManager::GetSRVHeap() const
 {
-    return m_srvHeap;
+    return m_srvHeap.Get();
 }

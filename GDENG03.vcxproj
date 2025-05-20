@@ -166,7 +166,6 @@
     <ClCompile Include="src\VertexBuffer.cpp" />
     <ClCompile Include="src\Win32App.cpp" />
     <ClCompile Include="src\Triangle.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\InputLayouts.h" />
@@ -189,7 +188,6 @@
     <ClInclude Include="src\Win32App.h" />
     <ClInclude Include="src\Triangle.h" />
     <ClInclude Include="src\VertexTypes.h" />
-    <ClInclude Include="src\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\Shader.hlsl">

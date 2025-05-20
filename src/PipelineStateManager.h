@@ -7,16 +7,16 @@ class PipelineStateManager
 {
 public:
 	using PipelineMap = std::unordered_map<InputLayoutType, ComPtr<ID3D12PipelineState>>; 
-	PipelineStateManager(ComPtr<ID3D12Device> device);
+	PipelineStateManager(ID3D12Device* device);
 	~PipelineStateManager() = default;
 
-	ComPtr<ID3D12PipelineState> GetPipelineState(InputLayoutType type) const;
-	ComPtr<ID3D12RootSignature> GetRootSignature() const;
+	ID3D12PipelineState* GetPipelineState(InputLayoutType type) const;
+	ID3D12RootSignature* GetRootSignature() const;
 
 private:
-	void CreateRootSignature(ComPtr<ID3D12Device> device);
+	void CreateRootSignature(ID3D12Device* device);
 	void LoadShaders();
-	ComPtr<ID3D12PipelineState> CreatePipelineState(ComPtr<ID3D12Device> device, 
+	ComPtr<ID3D12PipelineState> CreatePipelineState(ID3D12Device* device, 
 		const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout);
 
 	PipelineMap m_pipelineStates;

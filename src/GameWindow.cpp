@@ -12,9 +12,7 @@ void GameWindow::OnCreate(HWND hwnd)
 	GraphicsEngine::Initialize(this->m_width, this->m_height, hwnd);
 	GameObjectManager::Initialize();
 
-	auto device = GraphicsEngine::GetInstance()->GetRenderSystem()->GetD3DDevice();
-
-	std::shared_ptr<Triangle> triangle = std::make_shared<Triangle>(0, "Test Triangle", device);
+	std::shared_ptr<Triangle> triangle = std::make_shared<Triangle>(0, "Test Triangle");
 	GameObjectManager::GetInstance()->AddGameObject(triangle);
 }
 

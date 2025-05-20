@@ -2,7 +2,7 @@
 #include "VertexBuffer.h"
 #include "GraphicsEngine.h"
 
-Triangle::Triangle(int id, String name, ComPtr<ID3D12Device> device) : AGameObject(id, name)
+Triangle::Triangle(int id, String name) : AGameObject(id, name)
 {
     //m_vertices =
     //{
@@ -18,7 +18,7 @@ Triangle::Triangle(int id, String name, ComPtr<ID3D12Device> device) : AGameObje
         { XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) }
     };
 
-
+    auto device = GraphicsEngine::GetInstance()->GetRenderSystem()->GetD3DDevice();
     this->m_vertexBuffer = std::make_unique<VertexBuffer>(device, m_vertices);
 }
 

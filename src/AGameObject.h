@@ -12,12 +12,12 @@ public:
     virtual void Update() = 0;
     virtual void Draw(ID3D12GraphicsCommandList* cmdList) = 0;
 
-    bool IsActive();
+    bool IsActive() const;
     void SetActive(bool value);
 
-    int GetId();
+    int GetId() const;
 
-    String GetName();
+    String GetName() const;
     void SetName(String name);
 
 private:

@@ -11,7 +11,7 @@ class Triangle : public AGameObject
 public:
 	using String = std::string;
 
-	Triangle(int id, String name, ComPtr<ID3D12Device> device);
+	Triangle(int id, String name);
 	~Triangle() = default;
 
 	// Inherited via AGameObject
