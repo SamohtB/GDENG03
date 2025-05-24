@@ -31,9 +31,6 @@
     <Filter Include="Engine\Graphics">
       <UniqueIdentifier>{78549e93-7567-4ad7-bdc0-6b1af7544047}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Graphics\RenderSystem">
-      <UniqueIdentifier>{e0bc8f0c-6f55-4ca8-8eba-e211ce63355d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Graphics\Pipeline">
       <UniqueIdentifier>{b0420d11-0a92-41bd-b23e-fc0b555cb48c}</UniqueIdentifier>
     </Filter>
@@ -91,6 +88,9 @@
     <Filter Include="Engine\Graphics\Resources\Texture">
       <UniqueIdentifier>{c25bf5b7-9184-4091-afe3-3f31036ce610}</UniqueIdentifier>
     </Filter>
+    <Filter Include="App\Managers\TextureManager">
+      <UniqueIdentifier>{93b0d9aa-689f-434b-a657-df74fa665943}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -143,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="src\GraphicsEngine.cpp">
       <Filter>Engine\Graphics\Core\GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureManager.cpp">
+      <Filter>App\Managers\TextureManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +208,9 @@
     </ClInclude>
     <ClInclude Include="src\stdafx.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureManager.h">
+      <Filter>App\Managers\TextureManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

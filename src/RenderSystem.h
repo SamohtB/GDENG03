@@ -18,11 +18,15 @@ public:
 	RenderSystem(UINT width, UINT height, HWND hwnd);	
 	~RenderSystem();
 
+	void StartResourceUpload();
+	void EndResourceUpload();
+
 	void StartFrame();
 	void EndFrame();
 
 	ID3D12GraphicsCommandList* GetCommandList() const;
 	ID3D12Device* GetD3DDevice() const;
+	DescriptorHeapManager* GetDescriptorHeapManager() const;
 
 private:
 	ComPtr<IDXGIFactory6> m_dxgiFactory;
@@ -39,10 +43,8 @@ private:
 	CD3DX12_RECT m_scissorRect;
 
 	void CreateFactory();
-
-	void ExecuteCommandList();
 	void SwapBuffers();
-	void WaitForGPU();
 	void MoveToNextFrame();
+	void WaitForGPU();
 };
 

@@ -1,6 +1,7 @@
 #include "Texture.h"
 #include "Helper.h"
 #include "GraphicsEngine.h"
+#include "TextureManager.h"
 
 Texture::Texture(std::wstring texturePath)
 {
@@ -13,22 +14,26 @@ Texture::Texture(std::wstring texturePath)
     auto list = GraphicsEngine::GetInstance()->GetRenderSystem()->GetCommandList();
     auto desc = CreateResourceDescFromMetadata(metadata);
 
-    /* Create Resource */
+    CD3DX12_HEAP_PROPERTIES defaultHeapProps(D3D12_HEAP_TYPE_DEFAULT);
+    CD3DX12_HEAP_PROPERTIES uploadHeapProps(D3D12_HEAP_TYPE_UPLOAD);
+
     ThrowIfFailed(device->CreateCommittedResource(
-        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+        &defaultHeapProps,
         D3D12_HEAP_FLAG_NONE,
         &desc,
         D3D12_RESOURCE_STATE_COPY_DEST,
         nullptr,
         IID_PPV_ARGS(&m_texture)));
 
-    const UINT64 uploadBufferSize = GetRequiredIntermediateSize(m_texture.Get(), 0, 1);
+  
+    UINT64 uploadBufferSize = GetRequiredIntermediateSize(m_texture.Get(), 0, 1);
+    CD3DX12_RESOURCE_DESC cdDesc = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
 
-    // Create the GPU upload buffer.
+    /* TO DO: Move uploads somewhere else to that it can be cleared after GPU upload */
     ThrowIfFailed(device->CreateCommittedResource(
-        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+        &uploadHeapProps,
         D3D12_HEAP_FLAG_NONE,
-        &CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize),
+        &cdDesc,
         D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
         IID_PPV_ARGS(&m_textureUploadHeap)));
@@ -41,7 +46,14 @@ Texture::Texture(std::wstring texturePath)
     textureData.SlicePitch = img->slicePitch;
 
     UpdateSubresources(list, m_texture.Get(), m_textureUploadHeap.Get(), 0, 0, 1, &textureData);
-    list->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_texture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+
+    CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+            m_texture.Get(),
+            D3D12_RESOURCE_STATE_COPY_DEST,
+            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+        );
+
+    list->ResourceBarrier(1, &barrier);
 
     // Describe and create a SRV for the texture.
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -50,17 +62,13 @@ Texture::Texture(std::wstring texturePath)
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
     srvDesc.Texture2D.MipLevels = desc.MipLevels;
 
-    device->CreateShaderResourceView(m_texture.Get(), &srvDesc, m_srvHeap->GetCPUDescriptorHandleForHeapStart());
+    TextureManager::GetInstance()->
+    device->CreateShaderResourceView(m_texture.Get(), &srvDesc, srvHeapDesc->GetCPUDescriptorHandleForHeapStart());
 }
 
-ComPtr<ID3D12Resource> Texture::GetTexture() const
+ID3D12Resource* Texture::GetTexture() const
 {
-    return this->m_texture;
-}
-
-ComPtr<ID3D12DescriptorHeap> Texture::GetSRVHeap() const
-{
-    return this->m_srvHeap;
+    return this->m_texture.Get();
 }
 
 D3D12_RESOURCE_DESC Texture::CreateResourceDescFromMetadata(const DirectX::TexMetadata& metadata)

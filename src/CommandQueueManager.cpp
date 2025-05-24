@@ -13,7 +13,6 @@ CommandQueueManager::CommandQueueManager(ID3D12Device* device)
     {
         ThrowIfFailed(device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_commandAllocators[i])));
     }
-    
 }
 
 ID3D12CommandQueue* CommandQueueManager::GetCommandQueue() const
@@ -40,4 +39,24 @@ void CommandQueueManager::CreateCommandLists(ID3D12Device* device, ID3D12Pipelin
         IID_PPV_ARGS(&m_commandList)));
 
     ThrowIfFailed(m_commandList->Close());
+}
+
+void CommandQueueManager::ExecuteCommandList()
+{
+    ID3D12CommandList* ppCommandLists[] = { m_commandList.Get() };
+    this->m_commandQueue->ExecuteCommandLists(1, ppCommandLists);
+}
+
+void CommandQueueManager::ResetCommands(UINT frameIndex, ID3D12PipelineState* pipelineState)
+{
+    auto allocator = m_commandAllocators[frameIndex].Get();
+
+    // Command list allocators can only be reset when the associated 
+    // command lists have finished execution on the GPU; apps should use 
+    // fences to determine GPU execution progress.
+    ThrowIfFailed(allocator->Reset());
+    // However, when ExecuteCommandList() is called on a particular command 
+    // list, that command list can then be reset at any time and must be before 
+    // re-recording.
+    ThrowIfFailed(m_commandList->Reset(allocator, pipelineState));
 }

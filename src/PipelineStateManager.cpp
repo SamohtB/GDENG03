@@ -1,20 +1,23 @@
 #include "PipelineStateManager.h"
 #include "Helper.h"
-
+#include <iostream>
 
 PipelineStateManager::PipelineStateManager(ID3D12Device* device)
 {
 	CreateRootSignature(device);
     LoadShaders();
 
-    for (int i = 0; i < InputLayoutType_Count; i++)
+    /*for (int i = 0; i < InputLayoutType_Count; i++)
     {
         InputLayoutType layoutType = static_cast<InputLayoutType>(i);
         auto layout = InputLayouts::Get(layoutType);
         ComPtr<ID3D12PipelineState> pso = CreatePipelineState(device, layout);
         m_pipelineStates[layoutType] = pso;
-    }
+    }*/
 
+    auto layout = InputLayouts::Get(InputLayoutType::Pos_Tex_Color);
+    ComPtr<ID3D12PipelineState> pso = CreatePipelineState(device, layout);
+    m_pipelineStates[InputLayoutType::Pos_Tex_Color] = pso;
 }
 
 ID3D12PipelineState* PipelineStateManager::GetPipelineState(InputLayoutType type) const
@@ -40,7 +43,8 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
     }
 
     CD3DX12_DESCRIPTOR_RANGE1 ranges[1];
-    ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, // Type
+    ranges[0].Init(
+        D3D12_DESCRIPTOR_RANGE_TYPE_SRV, // Type
         1,                                          // number of descriptors (num of resources)
         0,                                          // BaseShaderRegister: register(t0)
         0,                                          // RegisterSpace : space0
@@ -57,10 +61,10 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
 
     /* Texture Sampler */
     D3D12_STATIC_SAMPLER_DESC sampler = {};
-    sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
-    sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
-    sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
-    sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+    sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+    sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
     sampler.MipLODBias = 0;
     sampler.MaxAnisotropy = 0;
     sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
@@ -90,7 +94,6 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
 void PipelineStateManager::LoadShaders()
 {
     UINT compileFlags = 0;
-
     std::wstring shaderFile = L"Assets\\Shaders\\Shader.hlsl";
 
     ThrowIfFailed(D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, nullptr));

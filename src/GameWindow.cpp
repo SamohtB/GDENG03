@@ -2,7 +2,9 @@
 
 #include "GraphicsEngine.h"
 #include "GameObjectManager.h"
+#include "TextureManager.h"
 
+#include "RenderSystem.h"
 #include "Triangle.h"
 
 GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
@@ -11,9 +13,16 @@ void GameWindow::OnCreate(HWND hwnd)
 {
 	GraphicsEngine::Initialize(this->m_width, this->m_height, hwnd);
 	GameObjectManager::Initialize();
+	TextureManager::Initialize();
+
+	auto render = GraphicsEngine::GetInstance()->GetRenderSystem();
+
+	render->StartResourceUpload();
 
 	std::shared_ptr<Triangle> triangle = std::make_shared<Triangle>(0, "Test Triangle");
 	GameObjectManager::GetInstance()->AddGameObject(triangle);
+
+	render->EndResourceUpload();
 }
 
 void GameWindow::OnUpdate()
@@ -36,6 +45,7 @@ void GameWindow::OnRender()
 
 void GameWindow::OnDestroy()
 {
-	GraphicsEngine::Destroy();
+	TextureManager::Destroy();
 	GameObjectManager::Destroy();
+	GraphicsEngine::Destroy();
 }

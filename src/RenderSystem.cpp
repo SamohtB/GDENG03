@@ -1,5 +1,6 @@
 #include "RenderSystem.h"
 #include "Helper.h"
+#include "TextureManager.h"
 #include <iostream>
 
 RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
@@ -21,14 +22,19 @@ RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 	this->m_pipelineStateManager = std::make_unique<PipelineStateManager>(this->m_deviceManager->GetD3DDevice());
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
 	this->m_commandQueueManager->CreateCommandLists(this->m_deviceManager->GetD3DDevice(), 
-		this->m_pipelineStateManager->GetPipelineState(InputLayoutType::Pos_Color), currentFrameIndex);
+		this->m_pipelineStateManager->GetPipelineState(InputLayoutType::Pos_Tex_Color), currentFrameIndex);
 	this->m_fenceManager = std::make_unique<FenceManager>(this->m_deviceManager->GetD3DDevice(),
 		*this->m_swapChainManager);
 
-	// Wait for the command list to execute; we are reusing the same command 
-	// list in our main loop but for now, we just want to wait for setup to 
-	// complete before continuing.
-	WaitForGPU();
+	UINT frameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	this->m_fenceManager->IncrementFenceValueAtIndex(frameIndex);
+
+	/* Initial Signal */
+	ThrowIfFailed(
+		this->m_commandQueueManager->GetCommandQueue()->Signal(
+			this->m_fenceManager->GetFence(),
+			this->m_fenceManager->GetFenceValue(frameIndex
+			)));
 }
 
 RenderSystem::~RenderSystem()
@@ -37,31 +43,48 @@ RenderSystem::~RenderSystem()
 	this->m_fenceManager->CloseEvent();
 }
 
-void RenderSystem::CreateFactory()
+void RenderSystem::StartResourceUpload()
 {
-	UINT dxgiFactoryFlags = 0;
-	ThrowIfFailed(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&m_dxgiFactory)));
+	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	this->m_fenceManager->WaitForFrameGPU(currentFrameIndex); // ensure safe reset
+	this->m_commandQueueManager->ResetCommands(currentFrameIndex);
+}
+
+void RenderSystem::EndResourceUpload()
+{
+	ThrowIfFailed(this->m_commandQueueManager->GetCommandList()->Close());
+
+	this->m_commandQueueManager->ExecuteCommandList();
+
+	UINT frameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	this->m_fenceManager->IncrementFenceValueAtIndex(frameIndex);
+
+	ThrowIfFailed(
+		this->m_commandQueueManager->GetCommandQueue()->Signal(
+			this->m_fenceManager->GetFence(), 
+			this->m_fenceManager->GetFenceValue(frameIndex
+			)));
 }
 
 void RenderSystem::StartFrame()
 {
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
-	ID3D12CommandAllocator* allocator = this->m_commandQueueManager->GetCommandAllocator(currentFrameIndex);
+	this->m_fenceManager->WaitForFrameGPU(currentFrameIndex);
+	this->m_commandQueueManager->ResetCommands(currentFrameIndex);
+	
 	ID3D12GraphicsCommandList* list = this->m_commandQueueManager->GetCommandList();
 	ID3D12Resource* renderTarget = this->m_renderTargetManager->GetRenderTarget(currentFrameIndex);
 
-	/* Reset Allocator and Command List */
-
-	// Command list allocators can only be reset when the associated 
-	// command lists have finished execution on the GPU; apps should use 
-	// fences to determine GPU execution progress.
-	ThrowIfFailed(allocator->Reset());
-	// However, when ExecuteCommandList() is called on a particular command 
-	// list, that command list can then be reset at any time and must be before 
-	// re-recording.
-	ThrowIfFailed(list->Reset(allocator, this->m_pipelineStateManager->GetPipelineState(InputLayoutType::Pos_Color)));
-
+	/* pipeline state and root signature can moved to game objects to have their own PSOs and Roots */
 	list->SetGraphicsRootSignature(this->m_pipelineStateManager->GetRootSignature());
+	list->SetPipelineState(m_pipelineStateManager->GetPipelineState(InputLayoutType::Pos_Tex_Color));
+
+	auto srvHeap = TextureManager::GetInstance()->GetSRVHeap();
+
+	/* Set Heaps SRV/CBV/UAV */
+	ID3D12DescriptorHeap* ppHeaps[] = { srvHeap };
+	list->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
 	list->RSSetViewports(1, &m_viewport);
 	list->RSSetScissorRects(1, &m_scissorRect);
 
@@ -81,9 +104,8 @@ void RenderSystem::StartFrame()
 		this->m_descriptorHeap->GetRTVDescriptorSize()
 	);
 
-	list->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
-
 	const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+	list->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 	list->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 }
 
@@ -104,7 +126,7 @@ void RenderSystem::EndFrame()
 	list->ResourceBarrier(1, &barrierToPresent);
 	ThrowIfFailed(list->Close());
 
-	ExecuteCommandList();
+	this->m_commandQueueManager->ExecuteCommandList();
 	SwapBuffers();
 	MoveToNextFrame();
 }
@@ -119,10 +141,15 @@ ID3D12Device* RenderSystem::GetD3DDevice() const
 	return this->m_deviceManager->GetD3DDevice();
 }
 
-void RenderSystem::ExecuteCommandList()
+DescriptorHeapManager* RenderSystem::GetDescriptorHeapManager() const
 {
-	ID3D12CommandList* ppCommandLists[] = { this->m_commandQueueManager->GetCommandList() };
-	this->m_commandQueueManager->GetCommandQueue()->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+	return m_descriptorHeap.get();
+}
+
+void RenderSystem::CreateFactory()
+{
+	UINT dxgiFactoryFlags = 0;
+	ThrowIfFailed(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&m_dxgiFactory)));
 }
 
 void RenderSystem::SwapBuffers()
@@ -130,43 +157,31 @@ void RenderSystem::SwapBuffers()
 	ThrowIfFailed(this->m_swapChainManager->GetSwapChain()->Present(1, 0));
 }
 
+void RenderSystem::MoveToNextFrame()
+{
+	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	UINT64 signaledFenceValue = this->m_fenceManager->IncrementFenceValueAtIndex(currentFrameIndex);
+
+	ThrowIfFailed(
+		this->m_commandQueueManager->GetCommandQueue()->Signal(
+			this->m_fenceManager->GetFence(), signaledFenceValue
+		));
+
+	this->m_swapChainManager->UpdateFrameIndex();
+
+	UINT nextFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	this->m_fenceManager->WaitForFrameGPU(nextFrameIndex);
+}
+
 void RenderSystem::WaitForGPU()
 {
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
 	ID3D12Fence* fence = this->m_fenceManager->GetFence();
-	UINT64 fenceValue = this->m_fenceManager->GetFenceValue(currentFrameIndex);
 	HANDLE fenceEvent = this->m_fenceManager->GetFenceEvent();
 
-	ThrowIfFailed(this->m_commandQueueManager->GetCommandQueue()->Signal(
-		fence, fenceValue));
+	UINT64 fenceValue = this->m_fenceManager->IncrementFenceValueAtIndex(currentFrameIndex);
+	ThrowIfFailed(this->m_commandQueueManager->GetCommandQueue()->Signal(fence, fenceValue));
 
 	ThrowIfFailed(fence->SetEventOnCompletion(fenceValue, fenceEvent));
 	WaitForSingleObjectEx(fenceEvent, INFINITE, FALSE);
-
-	this->m_fenceManager->SetFenceValue(currentFrameIndex, fenceValue + 1);
-}
-
-void RenderSystem::MoveToNextFrame()
-{
-	ID3D12Fence* fence = this->m_fenceManager->GetFence();
-	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
-	UINT64 currentFenceValue = this->m_fenceManager->GetFenceValue(currentFrameIndex);
-
-	ThrowIfFailed(this->m_commandQueueManager->GetCommandQueue()->Signal(fence, currentFenceValue));
-	
-	this->m_swapChainManager->UpdateFrameIndex();
-
-	UINT nextFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
-	UINT64 nextFenceValue = this->m_fenceManager->GetFenceValue(nextFrameIndex); 
-	HANDLE fenceEvent = this->m_fenceManager->GetFenceEvent();
-
-	// If the next frame is not ready to be rendered yet, wait until it is ready.
-	if (fence->GetCompletedValue() < nextFenceValue)
-	{
-		ThrowIfFailed(fence->SetEventOnCompletion(nextFenceValue, fenceEvent));
-		WaitForSingleObjectEx(fenceEvent, INFINITE, FALSE);
-	}
-
-	// Set the fence value for the next frame.
-	this->m_fenceManager->SetFenceValue(nextFrameIndex, currentFenceValue + 1);
 }
