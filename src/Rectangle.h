@@ -1,21 +1,21 @@
 #pragma once
 #include <memory>
 #include "stdafx.h"
-#include "AGameObject.h"
 #include "VertexTypes.h"
 
+#include "AGameObject.h"
 #include "VertexBuffer.h"
 #include "TextureManager.h"
 
 class VertexBuffer;
 
-class Triangle : public AGameObject
+class Rectangle : public AGameObject
 {
 public:
 	using String = std::string;
 
-	Triangle(int id, String name, XMFLOAT2 offset, std::vector<XMFLOAT4> colors);
-	~Triangle() = default;
+	Rectangle(int id, String name, XMFLOAT2 offset, std::vector<XMFLOAT4> colors);
+	~Rectangle() = default;
 
 	// Inherited via AGameObject
 	void Update() override;

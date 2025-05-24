@@ -1,11 +1,15 @@
 #include "GameWindow.h"
 
+#include "stdafx.h"
+
 #include "GraphicsEngine.h"
 #include "GameObjectManager.h"
 #include "TextureManager.h"
 
 #include "RenderSystem.h"
+#include "Rectangle.h"
 #include "Triangle.h"
+
 
 GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
 
@@ -17,9 +21,31 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	auto render = GraphicsEngine::GetInstance()->GetRenderSystem();
 
+	std::vector<XMFLOAT4> colors =
+	{
+		{1.0f, 0.0f, 0.0f, 1.0f},
+		{0.0f, 1.0f, 0.0f, 1.0f},
+		{0.0f, 0.0f, 1.0f, 1.0f},
+		{0.5f, 0.5f, 0.0f, 1.0f}
+	};
+
+	std::vector<XMFLOAT4> green =
+	{
+		{0.0f, 1.0f, 0.0f, 1.0f},
+		{0.0f, 1.0f, 0.0f, 1.0f},
+		{0.0f, 1.0f, 0.0f, 1.0f},
+		{0.0f, 1.0f, 0.0f, 1.0f},
+	};
+
 	render->StartResourceUpload();
 
-	std::shared_ptr<Triangle> triangle = std::make_shared<Triangle>(0, "Test Triangle");
+	std::shared_ptr<Rectangle> r_rectangle = std::make_shared<Rectangle>(0, "Rainbow Rectangle", XMFLOAT2(-0.66f, 0.66f), colors);
+	GameObjectManager::GetInstance()->AddGameObject(r_rectangle);
+
+	std::shared_ptr<Rectangle> g_rectangle = std::make_shared<Rectangle>(1, "Green Rectangle", XMFLOAT2(0.66f, -0.66f), green);
+	GameObjectManager::GetInstance()->AddGameObject(g_rectangle);
+
+	std::shared_ptr<Triangle> triangle = std::make_shared<Triangle>(2, "Rainbow Triangle", XMFLOAT2(0.0f, 0.0f), colors);
 	GameObjectManager::GetInstance()->AddGameObject(triangle);
 
 	render->EndResourceUpload();

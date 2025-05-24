@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Rectangle.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
     <ClCompile Include="src\GameObjectManager.cpp" />
     <ClCompile Include="src\GameWindow.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="src\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Rectangle.h" />
     <ClInclude Include="src\InputLayouts.h" />
     <ClInclude Include="src\AGameObject.h" />
     <ClInclude Include="src\GameObjectManager.h" />

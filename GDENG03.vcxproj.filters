@@ -147,6 +147,9 @@
     <ClCompile Include="src\TextureManager.cpp">
       <Filter>App\Managers\TextureManager</Filter>
     </ClCompile>
+    <ClCompile Include="src\Rectangle.cpp">
+      <Filter>App\Entities\Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CommandQueueManager.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="src\TextureManager.h">
       <Filter>App\Managers\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rectangle.h">
+      <Filter>App\Entities\Primitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
