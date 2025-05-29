@@ -9,13 +9,13 @@
 
 class VertexBuffer;
 
-class Rectangle : public AGameObject
+class Quad : public AGameObject
 {
 public:
 	using String = std::string;
 
-	Rectangle(int id, String name, XMFLOAT2 offset, std::vector<XMFLOAT4> colors);
-	~Rectangle() = default;
+	Quad(int id, String name, XMFLOAT2 offset, std::vector<XMFLOAT4> colors);
+	~Quad() = default;
 
 	// Inherited via AGameObject
 	void Update() override;

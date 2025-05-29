@@ -1,6 +1,7 @@
-#include "Rectangle.h"
+#include "Quad.h"
+#include "TextureManager.h"
 
-Rectangle::Rectangle(int id, String name, XMFLOAT2 offset, std::vector<XMFLOAT4> colors) : AGameObject(id, name)
+Quad::Quad(int id, String name, XMFLOAT2 offset, std::vector<XMFLOAT4> colors) : AGameObject(id, name)
 {
     float x = offset.x;
     float y = offset.y;
@@ -21,12 +22,15 @@ Rectangle::Rectangle(int id, String name, XMFLOAT2 offset, std::vector<XMFLOAT4>
     this->m_vertexBuffer = std::make_unique<VertexBuffer>(m_vertices);
 }
 
-void Rectangle::Update()
+void Quad::Update()
 {
 }
 
-void Rectangle::Draw(ID3D12GraphicsCommandList* cmdList)
+void Quad::Draw(ID3D12GraphicsCommandList* cmdList)
 {
+    auto handle = TextureManager::GetInstance()->GetSRVHandle(TextureManager::TextureType::CRATE);
+    cmdList->SetGraphicsRootDescriptorTable(0, handle);
+
     /* Actual Draw Calls */
     cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     cmdList->IASetVertexBuffers(0, 1, this->m_vertexBuffer->GetVertexBufferViewPointer());

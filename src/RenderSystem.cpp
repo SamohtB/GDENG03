@@ -136,6 +136,11 @@ ID3D12GraphicsCommandList* RenderSystem::GetCommandList() const
 	return this->m_commandQueueManager->GetCommandList();
 }
 
+ID3D12CommandQueue* RenderSystem::GetCommandQueue() const
+{
+	return this->m_commandQueueManager->GetCommandQueue();
+}
+
 ID3D12Device* RenderSystem::GetD3DDevice() const 
 {
 	return this->m_deviceManager->GetD3DDevice();

@@ -7,7 +7,7 @@
 #include "TextureManager.h"
 
 #include "RenderSystem.h"
-#include "Rectangle.h"
+#include "Quad.h"
 #include "Triangle.h"
 
 
@@ -39,10 +39,10 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	render->StartResourceUpload();
 
-	std::shared_ptr<Rectangle> r_rectangle = std::make_shared<Rectangle>(0, "Rainbow Rectangle", XMFLOAT2(-0.66f, 0.66f), colors);
+	std::shared_ptr<Quad> r_rectangle = std::make_shared<Quad>(0, "Rainbow Rectangle", XMFLOAT2(-0.66f, 0.66f), colors);
 	GameObjectManager::GetInstance()->AddGameObject(r_rectangle);
 
-	std::shared_ptr<Rectangle> g_rectangle = std::make_shared<Rectangle>(1, "Green Rectangle", XMFLOAT2(0.66f, -0.66f), green);
+	std::shared_ptr<Quad> g_rectangle = std::make_shared<Quad>(1, "Green Rectangle", XMFLOAT2(0.66f, -0.66f), green);
 	GameObjectManager::GetInstance()->AddGameObject(g_rectangle);
 
 	std::shared_ptr<Triangle> triangle = std::make_shared<Triangle>(2, "Rainbow Triangle", XMFLOAT2(0.0f, 0.0f), colors);

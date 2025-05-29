@@ -1,10 +1,10 @@
 #pragma once
 #include <string>
+#include <unordered_map>
 #include <vector>
 #include <memory>
 
 #include "stdafx.h"
-#include <DirectXTex.h>
 
 struct Texture 
 {
@@ -52,5 +52,4 @@ private:
     SRVMap m_srvMap;
 
     UINT AllocateSRVSlot();
-    D3D12_RESOURCE_DESC CreateResourceDescFromMetadata(const DirectX::TexMetadata& metadata);
 };

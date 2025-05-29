@@ -1,5 +1,6 @@
 #include "Triangle.h"
 #include "GraphicsEngine.h"
+#include <iostream>
 
 Triangle::Triangle(int id, String name, XMFLOAT2 offset, std::vector<XMFLOAT4> colors) : AGameObject(id, name)
 {
@@ -29,6 +30,9 @@ void Triangle::Update()
 
 void Triangle::Draw(ID3D12GraphicsCommandList* cmdList)
 {
+    auto handle = TextureManager::GetInstance()->GetSRVHandle(TextureManager::TextureType::CRATE);
+    cmdList->SetGraphicsRootDescriptorTable(0, handle);
+
     /* Actual Draw Calls */
     cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     cmdList->IASetVertexBuffers(0, 1, this->m_vertexBuffer->GetVertexBufferViewPointer());

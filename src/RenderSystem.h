@@ -25,6 +25,7 @@ public:
 	void EndFrame();
 
 	ID3D12GraphicsCommandList* GetCommandList() const;
+	ID3D12CommandQueue* GetCommandQueue() const;
 	ID3D12Device* GetD3DDevice() const;
 	DescriptorHeapManager* GetDescriptorHeapManager() const;
 

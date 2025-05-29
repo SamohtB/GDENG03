@@ -1,6 +1,10 @@
 #include "TextureManager.h"
-#include "Helper.h"
 #include "GraphicsEngine.h"
+#include "Helper.h"
+
+#include <directxtk12/ResourceUploadBatch.h>
+#include <directxtk12/WICTextureLoader.h>
+#include <directxtk12/DirectXHelpers.h>
 
 TextureManager* TextureManager::sharedInstance = nullptr;
 
@@ -30,77 +34,41 @@ TextureManager::TextureManager()
 {
     InitializeSRV();
 
-    LoadTexture(TextureType::CRATE, L"Assets/Textures/crate.png");
+    LoadTexture(TextureType::CRATE, L"Assets/Textures/brick.png");
 }
 
 void TextureManager::LoadTexture(const TextureType& type, const std::wstring& filepath)
 {
-    TexturePtr tex = std::make_shared<Texture>();
-    DirectX::TexMetadata metadata;
-    DirectX::ScratchImage scratchImage;
-
-    ThrowIfFailed(LoadFromWICFile(filepath.c_str(), DirectX::WIC_FLAGS::WIC_FLAGS_NONE, &metadata, scratchImage));
-
     auto device = GraphicsEngine::GetInstance()->GetRenderSystem()->GetD3DDevice();
-    auto list = GraphicsEngine::GetInstance()->GetRenderSystem()->GetCommandList();
-    auto desc = CreateResourceDescFromMetadata(metadata);
+    auto commandQueue = GraphicsEngine::GetInstance()->GetRenderSystem()->GetCommandQueue();
 
-    CD3DX12_HEAP_PROPERTIES defaultHeapProps(D3D12_HEAP_TYPE_DEFAULT);
-    CD3DX12_HEAP_PROPERTIES uploadHeapProps(D3D12_HEAP_TYPE_UPLOAD);
+    DirectX::ResourceUploadBatch uploadBatch(device);
+    uploadBatch.Begin();
 
-    ThrowIfFailed(device->CreateCommittedResource(
-        &defaultHeapProps,
-        D3D12_HEAP_FLAG_NONE,
-        &desc,
-        D3D12_RESOURCE_STATE_COPY_DEST,
-        nullptr,
-        IID_PPV_ARGS(&tex->resource)));
+    TexturePtr tex = std::make_shared<Texture>();
 
+    ThrowIfFailed(CreateWICTextureFromFile(
+        device,
+        uploadBatch,
+        filepath.c_str(),
+        tex->resource.ReleaseAndGetAddressOf(),
+        true // generate mipmaps
+    ));
 
-    UINT64 uploadBufferSize = GetRequiredIntermediateSize(tex->resource.Get(), 0, 1);
-    CD3DX12_RESOURCE_DESC cdDesc = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
-
-    /* TO DO: Move uploads somewhere else to that it can be cleared after GPU upload */
-    ThrowIfFailed(device->CreateCommittedResource(
-        &uploadHeapProps,
-        D3D12_HEAP_FLAG_NONE,
-        &cdDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(&tex->uploadHeap)));
-
-    const DirectX::Image* img = scratchImage.GetImage(0, 0, 0);
-
-    D3D12_SUBRESOURCE_DATA textureData = {};
-    textureData.pData = img->pixels;
-    textureData.RowPitch = img->rowPitch;
-    textureData.SlicePitch = img->slicePitch;
-
-    UpdateSubresources(list, tex->resource.Get(), tex->uploadHeap.Get(), 0, 0, 1, &textureData);
-
-    CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-        tex->resource.Get(),
-        D3D12_RESOURCE_STATE_COPY_DEST,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    );
-
-    list->ResourceBarrier(1, &barrier);
+    auto finished = uploadBatch.End(commandQueue);
+    finished.wait(); // Ensure GPU upload is complete before proceeding
 
     UINT srvIndex = AllocateSRVSlot();
     m_srvMap[type] = srvIndex;
+    m_textureList.push_back(tex);
 
-    // Describe and create a SRV for the texture.
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    srvDesc.Format = desc.Format;
-    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MipLevels = desc.MipLevels;
-    srvDesc.Texture2D.MostDetailedMip = 0;
+    CD3DX12_CPU_DESCRIPTOR_HANDLE handle(
+        m_srvHeap->GetCPUDescriptorHandleForHeapStart(),
+        srvIndex,
+        m_srvDescriptorSize
+    );
 
-    this->m_textureList.push_back(tex);
-
-    CD3DX12_CPU_DESCRIPTOR_HANDLE handle(m_srvHeap->GetCPUDescriptorHandleForHeapStart(), srvIndex, m_srvDescriptorSize);
-    device->CreateShaderResourceView(tex->resource.Get(), &srvDesc, handle);
+    DirectX::CreateShaderResourceView(device, tex->resource.Get(), handle);
 }
 
 void TextureManager::InitializeSRV()
@@ -133,20 +101,4 @@ CD3DX12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSRVHandle(TextureType type)
 ID3D12DescriptorHeap* TextureManager::GetSRVHeap()
 {
     return this->m_srvHeap.Get();
-}
-
-D3D12_RESOURCE_DESC TextureManager::CreateResourceDescFromMetadata(const DirectX::TexMetadata& metadata)
-{
-    D3D12_RESOURCE_DESC desc = {};
-    desc.MipLevels = static_cast<UINT16>(metadata.mipLevels);
-    desc.Format = metadata.format;
-    desc.Width = static_cast<UINT>(metadata.width);
-    desc.Height = static_cast<UINT>(metadata.height);
-    desc.Flags = D3D12_RESOURCE_FLAG_NONE;
-    desc.DepthOrArraySize = static_cast<UINT16>(
-        metadata.dimension == DirectX::TEX_DIMENSION_TEXTURE3D ? metadata.depth : metadata.arraySize);
-    desc.SampleDesc.Count = 1;
-    desc.SampleDesc.Quality = 0;
-    desc.Dimension = static_cast<D3D12_RESOURCE_DIMENSION>(metadata.dimension);
-    return desc;
 }

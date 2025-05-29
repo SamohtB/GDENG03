@@ -1,6 +1,5 @@
 #include "PipelineStateManager.h"
 #include "Helper.h"
-#include <iostream>
 
 PipelineStateManager::PipelineStateManager(ID3D12Device* device)
 {
@@ -42,22 +41,9 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
         featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
     }
 
-    CD3DX12_DESCRIPTOR_RANGE1 ranges[1];
-    ranges[0].Init(
-        D3D12_DESCRIPTOR_RANGE_TYPE_SRV, // Type
-        1,                                          // number of descriptors (num of resources)
-        0,                                          // BaseShaderRegister: register(t0)
-        0,                                          // RegisterSpace : space0
-        D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC
-    );
-
-    CD3DX12_ROOT_PARAMETER1 rootParameters[1];
-
-    /* index 0 exposes 1 texture in pixel shader */
-    rootParameters[0].InitAsDescriptorTable(1, 
-        &ranges[0], 
-        D3D12_SHADER_VISIBILITY_PIXEL
-    );
+    CD3DX12_DESCRIPTOR_RANGE1 srvRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+    CD3DX12_ROOT_PARAMETER1 rootParams[1];
+    rootParams[0].InitAsDescriptorTable(1, &srvRange, D3D12_SHADER_VISIBILITY_PIXEL);
 
     /* Texture Sampler */
     D3D12_STATIC_SAMPLER_DESC sampler = {};
@@ -68,7 +54,7 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
     sampler.MipLODBias = 0;
     sampler.MaxAnisotropy = 0;
     sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-    sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+    sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK_UINT;
     sampler.MinLOD = 0.0f;
     sampler.MaxLOD = D3D12_FLOAT32_MAX;
     sampler.ShaderRegister = 0;
@@ -78,8 +64,8 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
     CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
 
 	rootSignatureDesc.Init_1_1(
-        _countof(rootParameters),                                       // Params Size
-        rootParameters,                                                 // Params Data
+        _countof(rootParams),                                       // Params Size
+        rootParams,                                                 // Params Data
         1,                                                              // Static Sampler Size
         &sampler,                                                       // Static Sampler Data
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT    // Flags
@@ -94,10 +80,11 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
 void PipelineStateManager::LoadShaders()
 {
     UINT compileFlags = 0;
-    std::wstring shaderFile = L"Assets\\Shaders\\Shader.hlsl";
+    std::wstring vertex = L"Assets\\Shaders\\VertexShader.hlsl";
+    std::wstring pixel = L"Assets\\Shaders\\PixelShader.hlsl";
 
-    ThrowIfFailed(D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, nullptr));
-    ThrowIfFailed(D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, nullptr));
+    ThrowIfFailed(D3DCompileFromFile(vertex.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, nullptr));
+    ThrowIfFailed(D3DCompileFromFile(pixel.c_str(), nullptr, nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, nullptr));
 }
 
 

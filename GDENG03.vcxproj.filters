@@ -147,7 +147,7 @@
     <ClCompile Include="src\TextureManager.cpp">
       <Filter>App\Managers\TextureManager</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rectangle.cpp">
+    <ClCompile Include="src\Quad.cpp">
       <Filter>App\Entities\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
@@ -215,13 +215,18 @@
     <ClInclude Include="src\TextureManager.h">
       <Filter>App\Managers\TextureManager</Filter>
     </ClInclude>
-    <ClInclude Include="src\Rectangle.h">
+    <ClInclude Include="src\Quad.h">
       <Filter>App\Entities\Primitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Assets\Shaders\Shader.hlsl">
+    <FxCompile Include="Assets\Shaders\VertexShader.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="Assets\Shaders\PixelShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </Object>
   </ItemGroup>
 </Project>

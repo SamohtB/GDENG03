@@ -5,19 +5,16 @@ struct VSInput
     float4 color : COLOR;
 };
 
-struct PSInput
+struct VSOutput
 {
     float4 position : SV_POSITION;
     float2 texcoord : TEXCOORD;
     float4 color : COLOR;
 };
 
-Texture2D myTexture : register(t0);
-SamplerState mySampler : register(s0);
-
-PSInput VSMain(VSInput input)
+VSOutput VSMain(VSInput input)
 {
-    PSInput output;
+    VSOutput output;
 
     output.position = float4(input.position, 1.0f);;
     output.texcoord = input.texcoord;
@@ -26,7 +23,3 @@ PSInput VSMain(VSInput input)
     return output;
 }
 
-float4 PSMain(PSInput input) : SV_TARGET
-{
-    return input.color;
-}
