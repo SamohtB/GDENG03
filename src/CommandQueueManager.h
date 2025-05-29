@@ -10,7 +10,7 @@ public:
 	ID3D12CommandQueue* GetCommandQueue() const;
 	ID3D12CommandAllocator* GetCommandAllocator(UINT frameIndex) const;
 	ID3D12GraphicsCommandList* GetCommandList() const;
-	void CreateCommandLists(ID3D12Device* device, ID3D12PipelineState* pipelineState, UINT frameIndex);
+	void CreateCommandLists(ID3D12Device* device, UINT frameIndex);
 	void ExecuteCommandList();
 	void ResetCommands(UINT frameIndex, ID3D12PipelineState* pipelineState = nullptr);
 

@@ -21,8 +21,7 @@ RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 	/* Pipeline State Manager Temp creates default root signature and pipeline state */
 	this->m_pipelineStateManager = std::make_unique<PipelineStateManager>(this->m_deviceManager->GetD3DDevice());
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
-	this->m_commandQueueManager->CreateCommandLists(this->m_deviceManager->GetD3DDevice(), 
-		this->m_pipelineStateManager->GetPipelineState(InputLayoutType::Pos_Tex_Color), currentFrameIndex);
+	this->m_commandQueueManager->CreateCommandLists(this->m_deviceManager->GetD3DDevice(), currentFrameIndex);
 	this->m_fenceManager = std::make_unique<FenceManager>(this->m_deviceManager->GetD3DDevice(),
 		*this->m_swapChainManager);
 
@@ -77,7 +76,7 @@ void RenderSystem::StartFrame()
 
 	/* pipeline state and root signature can moved to game objects to have their own PSOs and Roots */
 	list->SetGraphicsRootSignature(this->m_pipelineStateManager->GetRootSignature());
-	list->SetPipelineState(m_pipelineStateManager->GetPipelineState(InputLayoutType::Pos_Tex_Color));
+	list->SetPipelineState(m_pipelineStateManager->GetPipelineState(InputLayoutType::Pos_Tex_Color, L"Default"));
 
 	auto srvHeap = TextureManager::GetInstance()->GetSRVHeap();
 

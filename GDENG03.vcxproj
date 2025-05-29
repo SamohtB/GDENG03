@@ -170,8 +170,8 @@
     <ClCompile Include="src\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Quad.h" />
     <ClInclude Include="src\InputLayouts.h" />
+    <ClInclude Include="src\Quad.h" />
     <ClInclude Include="src\AGameObject.h" />
     <ClInclude Include="src\GameObjectManager.h" />
     <ClInclude Include="src\GameWindow.h" />

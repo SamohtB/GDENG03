@@ -194,9 +194,6 @@
     <ClInclude Include="src\Triangle.h">
       <Filter>App\Entities\Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="src\InputLayouts.h">
-      <Filter>Engine\Graphics\Pipeline</Filter>
-    </ClInclude>
     <ClInclude Include="src\RenderSystem.h">
       <Filter>Engine\Graphics\Render\RenderSystem</Filter>
     </ClInclude>
@@ -217,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="src\Quad.h">
       <Filter>App\Entities\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InputLayouts.h">
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

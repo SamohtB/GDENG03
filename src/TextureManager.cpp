@@ -34,7 +34,7 @@ TextureManager::TextureManager()
 {
     InitializeSRV();
 
-    LoadTexture(TextureType::CRATE, L"Assets/Textures/brick.png");
+    LoadTexture(TextureType::CRATE, L"Assets/Textures/crate.png");
 }
 
 void TextureManager::LoadTexture(const TextureType& type, const std::wstring& filepath)
