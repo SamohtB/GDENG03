@@ -8,8 +8,8 @@ PipelineStateManager::PipelineStateManager(ID3D12Device* device)
 
     ShaderDesc defaultShaderDesc = 
     {
-        L"Assets/Shaders/VertexShader.hlsl", "VSMain", "vs_5_0",
-        L"Assets/Shaders/PixelShader.hlsl", "PSMain", "ps_5_0"
+        L"Assets/Shaders/TexturedVertexShader.hlsl", "VSMain", "vs_5_0",
+        L"Assets/Shaders/TexturedPixelShader.hlsl", "PSMain", "ps_5_0"
     };
 
     RegisterPipeline(device, InputLayoutType::Pos_Tex_Color, defaultShaderDesc, L"Default");

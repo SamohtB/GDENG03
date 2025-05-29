@@ -58,8 +58,9 @@ VertexBuffer::VertexBuffer(const std::vector<VertexType>& vertices)
     m_vertexBufferView.SizeInBytes = vertexBufferSize;
 }
 
-template VertexBuffer::VertexBuffer(const std::vector<Vertex3D>&);
-template VertexBuffer::VertexBuffer(const std::vector<TexturedVertex3D>&);
+template VertexBuffer::VertexBuffer(const std::vector<POS_COL>&);
+template VertexBuffer::VertexBuffer(const std::vector<POS_TEX_COL>&);
+template VertexBuffer::VertexBuffer(const std::vector<POS_POS_COL_COL>&);
 
 
 D3D12_VERTEX_BUFFER_VIEW* VertexBuffer::GetVertexBufferViewPointer()
