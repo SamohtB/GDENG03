@@ -9,8 +9,10 @@ public:
 
     UINT GetRTVDescriptorSize() const;
     ID3D12DescriptorHeap* GetRTVHeap() const;
+    ID3D12DescriptorHeap* GetCBVHeap() const;
 
 private:
     ComPtr<ID3D12DescriptorHeap> m_rtvHeap;
+    ComPtr<ID3D12DescriptorHeap> m_cbvHeap;
     UINT m_rtvDescriptorSize;
 };

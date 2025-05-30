@@ -27,6 +27,7 @@ RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 
 	UINT frameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
 	this->m_fenceManager->IncrementFenceValueAtIndex(frameIndex);
+	this->m_constantBuffer = std::make_shared<ConstantBuffer>(this->m_deviceManager->GetD3DDevice());
 
 	/* Initial Signal */
 	ThrowIfFailed(
@@ -84,6 +85,10 @@ void RenderSystem::StartFrame()
 	ID3D12DescriptorHeap* ppHeaps[] = { srvHeap };
 	list->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
+	/* Constant Buffer */
+	auto cbAddress = m_constantBuffer->GetVirtualAddress(currentFrameIndex);
+	list->SetGraphicsRootConstantBufferView(1, cbAddress);
+
 	list->RSSetViewports(1, &m_viewport);
 	list->RSSetScissorRects(1, &m_scissorRect);
 
@@ -130,6 +135,12 @@ void RenderSystem::EndFrame()
 	MoveToNextFrame();
 }
 
+void RenderSystem::UpdateConstantBuffer(float time)
+{
+	auto index = this->m_swapChainManager->GetCurrentFrameIndex();
+	this->m_constantBuffer->Update(time, index);
+}
+
 ID3D12GraphicsCommandList* RenderSystem::GetCommandList() const
 {
 	return this->m_commandQueueManager->GetCommandList();
@@ -143,11 +154,6 @@ ID3D12CommandQueue* RenderSystem::GetCommandQueue() const
 ID3D12Device* RenderSystem::GetD3DDevice() const 
 {
 	return this->m_deviceManager->GetD3DDevice();
-}
-
-DescriptorHeapManager* RenderSystem::GetDescriptorHeapManager() const
-{
-	return m_descriptorHeap.get();
 }
 
 void RenderSystem::CreateFactory()

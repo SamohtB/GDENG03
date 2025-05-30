@@ -11,6 +11,7 @@
 #include "PipelineStateManager.h"
 
 #include "VertexBuffer.h"
+#include "ConstantBuffer.h"
 
 class RenderSystem
 {
@@ -24,10 +25,11 @@ public:
 	void StartFrame();
 	void EndFrame();
 
+	void UpdateConstantBuffer(float time);
+
 	ID3D12GraphicsCommandList* GetCommandList() const;
 	ID3D12CommandQueue* GetCommandQueue() const;
 	ID3D12Device* GetD3DDevice() const;
-	DescriptorHeapManager* GetDescriptorHeapManager() const;
 
 private:
 	ComPtr<IDXGIFactory6> m_dxgiFactory;
@@ -39,6 +41,8 @@ private:
 	std::unique_ptr<RenderTargetManager> m_renderTargetManager;
 	std::unique_ptr<FenceManager> m_fenceManager;
 	std::unique_ptr<PipelineStateManager> m_pipelineStateManager;
+
+	std::shared_ptr<ConstantBuffer> m_constantBuffer;
 
 	CD3DX12_VIEWPORT m_viewport;
 	CD3DX12_RECT m_scissorRect;

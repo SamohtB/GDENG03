@@ -11,6 +11,9 @@
 #include "Quad.h"
 #include "Triangle.h"
 
+#include "ConstantBuffer.h"
+
+#include <iostream>
 
 GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
 
@@ -41,9 +44,20 @@ void GameWindow::OnCreate(HWND hwnd)
 
 void GameWindow::OnUpdate()
 {
-	/* get delta time here and pass to game object manager */
+	unsigned long newTime = 0;
 
+	if (m_oldTime)
+		newTime = ::GetTickCount64() - m_oldTime;
+
+	m_deltaTime = newTime / 1000.0f;
+
+	m_oldTime = ::GetTickCount64();
+	m_angle += 1.57f * m_deltaTime;
+
+	/* get delta time here and pass to game object manager */
 	GameObjectManager::GetInstance()->UpdateAll();
+
+	GraphicsEngine::GetInstance()->GetRenderSystem()->UpdateConstantBuffer(m_angle);
 }
 
 void GameWindow::OnRender()
@@ -51,7 +65,7 @@ void GameWindow::OnRender()
 	auto cmdList = GraphicsEngine::GetInstance()->GetRenderSystem()->GetCommandList();
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->StartFrame();
-	
+
 	GameObjectManager::GetInstance()->RenderAll(cmdList);
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->EndFrame();

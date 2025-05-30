@@ -1,5 +1,6 @@
 #pragma once
 #include "ABaseWindow.h"
+#include <chrono>
 
 class GameWindow : public ABaseWindow
 {
@@ -14,5 +15,8 @@ public:
 	void OnDestroy() override;
 
 private:
+	unsigned long m_oldTime = 0;
+	float m_deltaTime = 0;
+	float m_angle = 0;
 };
 

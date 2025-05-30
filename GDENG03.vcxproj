@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ConstantBuffer.cpp" />
     <ClCompile Include="src\AnimatedQuad.cpp" />
     <ClCompile Include="src\Quad.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="src\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ConstantBuffer.h" />
     <ClInclude Include="src\AnimatedQuad.h" />
     <ClInclude Include="src\InputLayouts.h" />
     <ClInclude Include="src\Quad.h" />
