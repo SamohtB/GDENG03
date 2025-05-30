@@ -94,6 +94,9 @@
     <Filter Include="Engine\Graphics\Resources\ConstantBuffer">
       <UniqueIdentifier>{e1f4311a-0935-44ad-9642-7917e56c6c9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Graphics\Core\DeviceContext">
+      <UniqueIdentifier>{68b231de-70d9-4261-be1f-edb050f12b8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -159,6 +162,7 @@
     <ClCompile Include="src\ConstantBuffer.cpp">
       <Filter>Engine\Graphics\Resources\ConstantBuffer</Filter>
     </ClCompile>
+    <ClCompile Include="DeviceContext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CommandQueueManager.h">
@@ -233,6 +237,7 @@
     <ClInclude Include="src\ConstantBuffer.h">
       <Filter>Engine\Graphics\Resources\ConstantBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="DeviceContext.h" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="Assets\Shaders\TexturedPixelShader.hlsl">

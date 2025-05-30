@@ -1,5 +1,5 @@
 #include "DescriptorHeapManager.h"
-#include "Helper.h"
+#include "DxException.h"
 
 DescriptorHeapManager::DescriptorHeapManager(ID3D12Device* device)
 {
@@ -8,7 +8,7 @@ DescriptorHeapManager::DescriptorHeapManager(ID3D12Device* device)
     rtvHeapDesc.NumDescriptors = FRAME_COUNT;
     rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
     rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    ThrowIfFailed(device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_rtvHeap)));
+    THROW_IF_FAILED(device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_rtvHeap)), "RTV Heap Creation Failed!");
    
     m_rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
@@ -16,7 +16,7 @@ DescriptorHeapManager::DescriptorHeapManager(ID3D12Device* device)
     cbvHeapDesc.NumDescriptors = 1;
     cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    ThrowIfFailed(device->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_cbvHeap)));
+    THROW_IF_FAILED(device->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_cbvHeap)), "CBV Heap Creation Failed!");
 }
 
 UINT DescriptorHeapManager::GetRTVDescriptorSize() const

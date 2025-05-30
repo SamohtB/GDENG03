@@ -1,29 +1,23 @@
 #include "RenderSystem.h"
-#include "Helper.h"
-#include "TextureManager.h"
-#include <iostream>
+#include "DxException.h"
 
-RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
-	m_viewport(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height)),
-	m_scissorRect(0, 0, static_cast<LONG>(width), static_cast<LONG>(height))
+RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd)
 {
-	/* Load Pipeline */
-	CreateFactory();
-	this->m_deviceManager = std::make_unique<DeviceManager>(this->m_dxgiFactory.Get());
-	this->m_commandQueueManager = std::make_unique<CommandQueueManager>(this->m_deviceManager->GetD3DDevice());
+	this->m_deviceContext = std::make_unique<DeviceContext>();
+	this->m_renderTargetManager = std::make_unique<RenderTargetManager>(
+		m_deviceContext->GetDevice(), width, height, hwnd, m_deviceContext->GetDescriptorHeapManager());
+	
 	this->m_swapChainManager = std::make_unique<SwapChainManager>(this->m_dxgiFactory.Get(),
 		this->m_commandQueueManager->GetCommandQueue(), width, height, hwnd);
-	this->m_descriptorHeap = std::make_unique<DescriptorHeapManager>(this->m_deviceManager->GetD3DDevice());
+	
 	this->m_renderTargetManager = std::make_unique<RenderTargetManager>(this->m_deviceManager->GetD3DDevice(), 
 		this->m_swapChainManager->GetSwapChain(), *this->m_descriptorHeap);
 
 	/* Load Assets */
 	/* Pipeline State Manager Temp creates default root signature and pipeline state */
-	this->m_pipelineStateManager = std::make_unique<PipelineStateManager>(this->m_deviceManager->GetD3DDevice());
+	
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
-	this->m_commandQueueManager->CreateCommandLists(this->m_deviceManager->GetD3DDevice(), currentFrameIndex);
-	this->m_fenceManager = std::make_unique<FenceManager>(this->m_deviceManager->GetD3DDevice(),
-		*this->m_swapChainManager);
+	
 
 	UINT frameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
 	this->m_fenceManager->IncrementFenceValueAtIndex(frameIndex);
@@ -154,12 +148,6 @@ ID3D12CommandQueue* RenderSystem::GetCommandQueue() const
 ID3D12Device* RenderSystem::GetD3DDevice() const 
 {
 	return this->m_deviceManager->GetD3DDevice();
-}
-
-void RenderSystem::CreateFactory()
-{
-	UINT dxgiFactoryFlags = 0;
-	ThrowIfFailed(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&m_dxgiFactory)));
 }
 
 void RenderSystem::SwapBuffers()

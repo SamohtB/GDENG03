@@ -1,5 +1,5 @@
 #pragma once
-#include "stdafx.h"
+#include "DX12Common.h"
 
 class DescriptorHeapManager 
 {

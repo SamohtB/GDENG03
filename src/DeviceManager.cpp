@@ -1,5 +1,5 @@
 #include "DeviceManager.h"
-#include "Helper.h"
+#include "DxException.h"
 
 DeviceManager::DeviceManager(IDXGIFactory6* factory)
 {
@@ -35,14 +35,11 @@ ComPtr<IDXGIAdapter1> DeviceManager::FindHardwareAdapter(IDXGIFactory6* factory)
 		}
 	}
 
-	ThrowIfFailed(E_FAIL);
+	THROW_IF_FAILED(E_FAIL, "Hardware Adapter Not Found!");
 	return nullptr;
 }
 
 void DeviceManager::CreateDeviceFromAdapter()
 {
-	ThrowIfFailed(D3D12CreateDevice(
-		m_dxgiAdapter.Get(),
-		D3D_FEATURE_LEVEL_12_0,
-		IID_PPV_ARGS(&m_d3dDevice)));
+	THROW_IF_FAILED(D3D12CreateDevice(m_dxgiAdapter.Get(), D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&m_d3dDevice)), "Device Creation Failed!");
 }

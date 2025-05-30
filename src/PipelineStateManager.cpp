@@ -1,5 +1,5 @@
 #include "PipelineStateManager.h"
-#include "Helper.h"
+#include "DxException.h"
 
 PipelineStateManager::PipelineStateManager(ID3D12Device* device)
 {
@@ -78,17 +78,10 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
 
     ComPtr<ID3DBlob> signature;
     ComPtr<ID3DBlob> error;
-    ThrowIfFailed(D3DX12SerializeVersionedRootSignature(
-        &rootSignatureDesc, featureData.HighestVersion,
-        &signature, &error
-    ));
+    THROW_IF_FAILED(D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, featureData.HighestVersion, &signature, &error));
 
-    ThrowIfFailed(device->CreateRootSignature(
-        0,
-        signature->GetBufferPointer(),
-        signature->GetBufferSize(),
-        IID_PPV_ARGS(&m_rootSignature)
-    ));
+    THROW_IF_FAILED(device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootSignature)),
+        "Root Signature Creation Failed!");
 }
 
 std::pair<ComPtr<ID3DBlob>, ComPtr<ID3DBlob>> PipelineStateManager::LoadShaders(const ShaderDesc& desc)
@@ -97,16 +90,20 @@ std::pair<ComPtr<ID3DBlob>, ComPtr<ID3DBlob>> PipelineStateManager::LoadShaders(
 
     ComPtr<ID3DBlob> vs;
     ComPtr<ID3DBlob> ps;
+    ComPtr<ID3DBlob> err;
+    const char* errorMsg;
 
-    ThrowIfFailed(D3DCompileFromFile(
-        desc.vertexPath.c_str(), nullptr, nullptr,
-        desc.vertexEntry.c_str(), desc.vertexTarget.c_str(),
-        compileFlags, 0, &vs, nullptr));
+    auto hr = D3DCompileFromFile(desc.vertexPath.c_str(), nullptr, nullptr, desc.vertexEntry.c_str(), 
+        desc.vertexTarget.c_str(), compileFlags, 0, &vs, &err);
+    errorMsg = static_cast<const char*>(err->GetBufferPointer());
 
-    ThrowIfFailed(D3DCompileFromFile(
-        desc.pixelPath.c_str(), nullptr, nullptr,
-        desc.pixelEntry.c_str(), desc.pixelTarget.c_str(),
-        compileFlags, 0, &ps, nullptr));
+    THROW_IF_FAILED(hr, errorMsg);
+
+    auto hr = D3DCompileFromFile(desc.pixelPath.c_str(), nullptr, nullptr, desc.pixelEntry.c_str(), 
+        desc.pixelTarget.c_str(), compileFlags, 0, &ps, &err);
+    errorMsg = static_cast<const char*>(err->GetBufferPointer());
+
+    THROW_IF_FAILED(hr, errorMsg);
 
     return { vs, ps };
 }
@@ -129,12 +126,7 @@ ComPtr<ID3D12PipelineState> PipelineStateManager::CreatePipelineState(ID3D12Devi
     psoDesc.SampleDesc.Count = 1;
 
     ComPtr<ID3D12PipelineState> pipelineState;
-    auto hr = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState));
-
-    if (FAILED(hr))
-    {
-
-    }
+    THROW_IF_FAILED(device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState)), "PSO Creation Failed!");
 
     return pipelineState;
 }

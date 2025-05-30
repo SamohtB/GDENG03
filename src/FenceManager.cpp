@@ -1,24 +1,21 @@
 #include "FenceManager.h"
-#include "Helper.h"
-#include "SwapChainManager.h"
+#include "DxException.h"
 
-FenceManager::FenceManager(ID3D12Device* device, SwapChainManager& swapChainManager) 
+FenceManager::FenceManager(ID3D12Device* device) 
     : m_nextFenceValue(1)
 {
-
     for (UINT i = 0; i < FRAME_COUNT; ++i)
         m_fenceValues[i] = 0;
 
-    UINT frameIndex = swapChainManager.GetCurrentFrameIndex();
-    ThrowIfFailed(device->CreateFence(m_fenceValues[frameIndex], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)));
-    m_fenceValues[frameIndex] = m_nextFenceValue;
+    THROW_IF_FAILED(device->CreateFence(m_fenceValues[0], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)), "Fence Creation Failed!");
+    m_fenceValues[0] = m_nextFenceValue;
     m_nextFenceValue++;
 
     m_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 
     if (m_fenceEvent == nullptr)
     {
-        ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
+        THROW_IF_FAILED(HRESULT_FROM_WIN32(GetLastError()));
     }
 }
 
@@ -32,19 +29,21 @@ void FenceManager::WaitForFrameGPU(UINT frameIndex)
     if (val < fenceValue)
     {
         // Ask the GPU to signal an OS event when it hits this fence value
-        ThrowIfFailed(m_fence->SetEventOnCompletion(fenceValue, m_fenceEvent));
+        THROW_IF_FAILED(m_fence->SetEventOnCompletion(fenceValue, m_fenceEvent));
 
         // Wait for the GPU to signal the event
         WaitForSingleObjectEx(m_fenceEvent, INFINITE, FALSE);
     }
 }
 
-void FenceManager::InitSignalFrames(ID3D12CommandQueue* commandQueue)
+void FenceManager::Flush(ID3D12CommandQueue* commandQueue, UINT64& fenceValue)
 {
-    for (int i = 0; i < FRAME_COUNT; ++i)
+    THROW_IF_FAILED(commandQueue->Signal(this->m_fence.Get(), ++fenceValue));
+
+    if (this->m_fence->GetCompletedValue() < fenceValue)
     {
-        commandQueue->Signal(m_fence.Get(), m_fenceValues[i]);
-        m_fenceValues[i]++;
+        THROW_IF_FAILED(this->m_fence->SetEventOnCompletion(fenceValue, this->m_fenceEvent));
+        WaitForSingleObject(this->m_fenceEvent, INFINITE);
     }
 }
 

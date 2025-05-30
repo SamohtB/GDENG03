@@ -36,9 +36,6 @@ void GameWindow::OnCreate(HWND hwnd)
 	//std::shared_ptr<Triangle> triangle = std::make_shared<Triangle>(2, "Rainbow Triangle", XMFLOAT2(0.0f, 0.0f));
 	//GameObjectManager::GetInstance()->AddGameObject(triangle);
 
-	std::shared_ptr<AnimatedQuad> aquad = std::make_shared<AnimatedQuad>(0, "AQuad");
-	GameObjectManager::GetInstance()->AddGameObject(aquad);
-
 	render->EndResourceUpload();
 }
 

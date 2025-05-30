@@ -1,7 +1,8 @@
 #pragma once
 #include <unordered_map>
 #include <string>
-#include "stdafx.h"
+
+#include "DX12Common.h"
 #include "InputLayouts.h"
 
 enum class InputLayoutType : int;
