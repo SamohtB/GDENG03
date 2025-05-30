@@ -150,6 +150,9 @@
     <ClCompile Include="src\Quad.cpp">
       <Filter>App\Entities\Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="src\AnimatedQuad.cpp">
+      <Filter>App\Entities\Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CommandQueueManager.h">
@@ -218,15 +221,24 @@
     <ClInclude Include="src\InputLayouts.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\AnimatedQuad.h">
+      <Filter>App\Entities\Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Assets\Shaders\VertexShader.hlsl">
-      <Filter>Assets\Shaders</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="Assets\Shaders\PixelShader.hlsl">
+    <Object Include="Assets\Shaders\TexturedPixelShader.hlsl">
       <Filter>Assets\Shaders</Filter>
     </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Assets\Shaders\TexturedVertexShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\Shaders\Pos2Col2Vertex.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\Shaders\Pos2Col2Pixel.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

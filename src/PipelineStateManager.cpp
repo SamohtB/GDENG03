@@ -5,14 +5,21 @@ PipelineStateManager::PipelineStateManager(ID3D12Device* device)
 {
 	CreateRootSignature(device);
 
-
-    ShaderDesc defaultShaderDesc = 
+    ShaderDesc shaderDesc = 
     {
         L"Assets/Shaders/TexturedVertexShader.hlsl", "VSMain", "vs_5_0",
         L"Assets/Shaders/TexturedPixelShader.hlsl", "PSMain", "ps_5_0"
     };
 
-    RegisterPipeline(device, InputLayoutType::Pos_Tex_Color, defaultShaderDesc, L"Default");
+    RegisterPipeline(device, InputLayoutType::Pos_Tex_Color, shaderDesc, L"Default");
+
+    shaderDesc =
+    {
+        L"Assets/Shaders/Pos2Col2Vertex.hlsl", "VSMain", "vs_5_0",
+        L"Assets/Shaders/Pos2Col2Pixel.hlsl", "PSMain", "ps_5_0"
+    };
+
+    RegisterPipeline(device, InputLayoutType::Pos_Pos_Col_Col, shaderDesc, L"Animated");
 }
 
 ID3D12PipelineState* PipelineStateManager::GetPipelineState(InputLayoutType layout, const std::wstring& shaderName) const
@@ -126,7 +133,12 @@ ComPtr<ID3D12PipelineState> PipelineStateManager::CreatePipelineState(ID3D12Devi
     psoDesc.SampleDesc.Count = 1;
 
     ComPtr<ID3D12PipelineState> pipelineState;
-    ThrowIfFailed(device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState)));
+    auto hr = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState));
+
+    if (FAILED(hr))
+    {
+
+    }
 
     return pipelineState;
 }

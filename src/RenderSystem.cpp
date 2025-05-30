@@ -76,7 +76,7 @@ void RenderSystem::StartFrame()
 
 	/* pipeline state and root signature can moved to game objects to have their own PSOs and Roots */
 	list->SetGraphicsRootSignature(this->m_pipelineStateManager->GetRootSignature());
-	list->SetPipelineState(m_pipelineStateManager->GetPipelineState(InputLayoutType::Pos_Tex_Color, L"Default"));
+	list->SetPipelineState(m_pipelineStateManager->GetPipelineState(InputLayoutType::Pos_Pos_Col_Col, L"Animated"));
 
 	auto srvHeap = TextureManager::GetInstance()->GetSRVHeap();
 
