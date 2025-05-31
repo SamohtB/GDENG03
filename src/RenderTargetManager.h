@@ -1,13 +1,10 @@
 #pragma once
-#include <vector>
-#include "stdafx.h"
-
-class DescriptorHeapManager;
+#include "Dx12Commons.h"
 
 class RenderTargetManager 
 {
 public:
-    RenderTargetManager(ID3D12Device* device, IDXGISwapChain3* swapChain, DescriptorHeapManager& heapManager);
+    RenderTargetManager(ID3D12Device* device, IDXGISwapChain3* swapChain, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandleStart, UINT descriptorSize);
     ~RenderTargetManager() = default;
 
     ID3D12Resource* GetRenderTarget(UINT index) const;

@@ -1,15 +1,16 @@
 #include "ConstantBuffer.h"
-#include "Helper.h"
-#include "GraphicsEngine.h"
+#include "Debug.h"
+
 
 ConstantBuffer::ConstantBuffer(ID3D12Device* device)
 {
+    /* We make 2 for each RTV */
     const UINT totalBufferSize = BUFFER_SIZE * FRAME_COUNT;
 
     CD3DX12_HEAP_PROPERTIES uploadHeapProps(D3D12_HEAP_TYPE_UPLOAD);
     CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(totalBufferSize);
 
-    ThrowIfFailed(device->CreateCommittedResource(
+    Debug::ThrowIfFailed(device->CreateCommittedResource(
         &uploadHeapProps,
         D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
@@ -17,10 +18,8 @@ ConstantBuffer::ConstantBuffer(ID3D12Device* device)
         nullptr,
         IID_PPV_ARGS(&m_constantBuffer)));
 
-    // Map and initialize the constant buffer. We don't unmap this until the
-    // app closes. Keeping things mapped for the lifetime of the resource is okay.
     CD3DX12_RANGE readRange(0, 0);
-    ThrowIfFailed(m_constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&m_pCbvDataBegin)));
+    Debug::ThrowIfFailed(m_constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&m_pCbvDataBegin)));
     memset(m_pCbvDataBegin, 0, totalBufferSize);
 }
 

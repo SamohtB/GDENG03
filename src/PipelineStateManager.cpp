@@ -1,5 +1,5 @@
 #include "PipelineStateManager.h"
-#include "Helper.h"
+#include "Debug.h"
 
 PipelineStateManager::PipelineStateManager(ID3D12Device* device)
 {
@@ -11,7 +11,7 @@ PipelineStateManager::PipelineStateManager(ID3D12Device* device)
         L"Assets/Shaders/TexturedPixelShader.hlsl", "PSMain", "ps_5_0"
     };
 
-    RegisterPipeline(device, InputLayoutType::Pos_Tex_Color, shaderDesc, L"Default");
+    RegisterPipeline(device, InputLayoutType::Pos_Color, shaderDesc, L"Default");
 
     shaderDesc =
     {
@@ -78,35 +78,58 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
 
     ComPtr<ID3DBlob> signature;
     ComPtr<ID3DBlob> error;
-    ThrowIfFailed(D3DX12SerializeVersionedRootSignature(
-        &rootSignatureDesc, featureData.HighestVersion,
-        &signature, &error
-    ));
+    Debug::ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, featureData.HighestVersion, &signature, &error),
+        "Root Description creation failed!");
 
-    ThrowIfFailed(device->CreateRootSignature(
-        0,
-        signature->GetBufferPointer(),
-        signature->GetBufferSize(),
-        IID_PPV_ARGS(&m_rootSignature)
-    ));
+    Debug::ThrowIfFailed(device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(),IID_PPV_ARGS(&m_rootSignature)),
+        "Root Signature creation failed!");
 }
 
+/* To Do: create shader manager */
 std::pair<ComPtr<ID3DBlob>, ComPtr<ID3DBlob>> PipelineStateManager::LoadShaders(const ShaderDesc& desc)
 {
     UINT compileFlags = 0;
 
     ComPtr<ID3DBlob> vs;
     ComPtr<ID3DBlob> ps;
+    ComPtr<ID3DBlob> err;
 
-    ThrowIfFailed(D3DCompileFromFile(
+    HRESULT hr = D3DCompileFromFile(
         desc.vertexPath.c_str(), nullptr, nullptr,
         desc.vertexEntry.c_str(), desc.vertexTarget.c_str(),
-        compileFlags, 0, &vs, nullptr));
+        compileFlags, 0, &vs, &err
+    );
 
-    ThrowIfFailed(D3DCompileFromFile(
+    if (FAILED(hr))
+    {
+        std::string errorMsg = "Shader compilation failed.";
+
+        if (err)
+        {
+            errorMsg += "\n";
+            errorMsg += static_cast<const char*>(err->GetBufferPointer());
+        }
+
+        Debug::ThrowIfFailed(hr, errorMsg);
+    }
+
+    hr = D3DCompileFromFile(
         desc.pixelPath.c_str(), nullptr, nullptr,
         desc.pixelEntry.c_str(), desc.pixelTarget.c_str(),
-        compileFlags, 0, &ps, nullptr));
+        compileFlags, 0, &ps, &err);
+
+    if (FAILED(hr))
+    {
+        std::string errorMsg = "Shader compilation failed.";
+
+        if (err)
+        {
+            errorMsg += "\n";
+            errorMsg += static_cast<const char*>(err->GetBufferPointer());
+        }
+
+        Debug::ThrowIfFailed(hr, errorMsg);
+    }
 
     return { vs, ps };
 }
@@ -129,12 +152,7 @@ ComPtr<ID3D12PipelineState> PipelineStateManager::CreatePipelineState(ID3D12Devi
     psoDesc.SampleDesc.Count = 1;
 
     ComPtr<ID3D12PipelineState> pipelineState;
-    auto hr = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState));
-
-    if (FAILED(hr))
-    {
-
-    }
+    Debug::ThrowIfFailed(device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState)), "PSO creation failed!");
 
     return pipelineState;
 }

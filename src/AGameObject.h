@@ -1,5 +1,7 @@
 #pragma once
-#include "stdafx.h"
+#include <string>
+
+class DeviceContext;
 
 class AGameObject
 {
@@ -10,7 +12,7 @@ public:
     virtual ~AGameObject() = default;
 
     virtual void Update() = 0;
-    virtual void Draw(ID3D12GraphicsCommandList* cmdList) = 0;
+    virtual void Draw(DeviceContext* dvcContext) = 0;
 
     bool IsActive() const;
     void SetActive(bool value);

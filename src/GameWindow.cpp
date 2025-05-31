@@ -25,21 +25,14 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	auto render = GraphicsEngine::GetInstance()->GetRenderSystem();
 
-	render->StartResourceUpload();
+	std::shared_ptr<Quad> rectangle = std::make_shared<Quad>(0, "Rectangle_1", XMFLOAT2(0.0f, 0.66f));
+	GameObjectManager::GetInstance()->AddGameObject(rectangle);
 
-	//std::shared_ptr<Quad> r_rectangle = std::make_shared<Quad>(0, "Rainbow Rectangle", XMFLOAT2(-0.66f, 0.66f));
-	//GameObjectManager::GetInstance()->AddGameObject(r_rectangle);
+	rectangle = std::make_shared<Quad>(1, "Rectangle_2", XMFLOAT2(0.0f, 0.0f));
+	GameObjectManager::GetInstance()->AddGameObject(rectangle);
 
-	//std::shared_ptr<Quad> g_rectangle = std::make_shared<Quad>(1, "Green Rectangle", XMFLOAT2(0.66f, -0.66f));
-	//GameObjectManager::GetInstance()->AddGameObject(g_rectangle);
-
-	//std::shared_ptr<Triangle> triangle = std::make_shared<Triangle>(2, "Rainbow Triangle", XMFLOAT2(0.0f, 0.0f));
-	//GameObjectManager::GetInstance()->AddGameObject(triangle);
-
-	std::shared_ptr<AnimatedQuad> aquad = std::make_shared<AnimatedQuad>(0, "AQuad");
-	GameObjectManager::GetInstance()->AddGameObject(aquad);
-
-	render->EndResourceUpload();
+	rectangle = std::make_shared<Quad>(2, "Rectangle_3", XMFLOAT2(0.0f, -0.66f));
+	GameObjectManager::GetInstance()->AddGameObject(rectangle);
 }
 
 void GameWindow::OnUpdate()

@@ -1,5 +1,5 @@
 #pragma once
-#include "stdafx.h"
+#include "Dx12Commons.h"
 
 class DeviceManager
 {
@@ -7,7 +7,7 @@ public:
 	DeviceManager(IDXGIFactory6* factory);
 	~DeviceManager() = default;
 
-	ID3D12Device* GetD3DDevice() const;
+	ComPtr<ID3D12Device> GetD3DDevice() const;
 
 private:
 	ComPtr<ID3D12Device> m_d3dDevice;

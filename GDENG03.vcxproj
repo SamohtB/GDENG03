@@ -149,8 +149,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BatchUploader.cpp" />
+    <ClCompile Include="src\RenderDevice.cpp" />
+    <ClCompile Include="src\DeviceContext.cpp" />
     <ClCompile Include="src\ConstantBuffer.cpp" />
-    <ClCompile Include="src\AnimatedQuad.cpp" />
     <ClCompile Include="src\Quad.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
     <ClCompile Include="src\GameObjectManager.cpp" />
@@ -159,7 +161,6 @@
     <ClCompile Include="src\FenceManager.cpp" />
     <ClCompile Include="src\GraphicsEngine.cpp" />
     <ClCompile Include="src\ABaseWindow.cpp" />
-    <ClCompile Include="src\CommandQueueManager.cpp" />
     <ClCompile Include="src\DescriptorHeapManager.cpp" />
     <ClCompile Include="src\DeviceManager.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -168,12 +169,15 @@
     <ClCompile Include="src\SwapChainManager.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
     <ClCompile Include="src\Win32App.cpp" />
-    <ClCompile Include="src\Triangle.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BatchUploader.h" />
+    <ClInclude Include="src\RenderDevice.h" />
+    <ClInclude Include="src\DeviceContext.h" />
+    <ClInclude Include="src\Debug.h" />
+    <ClInclude Include="src\Dx12Commons.h" />
     <ClInclude Include="src\ConstantBuffer.h" />
-    <ClInclude Include="src\AnimatedQuad.h" />
     <ClInclude Include="src\InputLayouts.h" />
     <ClInclude Include="src\Quad.h" />
     <ClInclude Include="src\AGameObject.h" />
@@ -183,7 +187,6 @@
     <ClInclude Include="src\FenceManager.h" />
     <ClInclude Include="src\GraphicsEngine.h" />
     <ClInclude Include="src\ABaseWindow.h" />
-    <ClInclude Include="src\CommandQueueManager.h" />
     <ClInclude Include="src\DescriptorHeapManager.h" />
     <ClInclude Include="src\DeviceManager.h" />
     <ClInclude Include="src\Helper.h" />
@@ -193,7 +196,6 @@
     <ClInclude Include="src\SwapChainManager.h" />
     <ClInclude Include="src\VertexBuffer.h" />
     <ClInclude Include="src\Win32App.h" />
-    <ClInclude Include="src\Triangle.h" />
     <ClInclude Include="src\VertexTypes.h" />
     <ClInclude Include="src\TextureManager.h" />
   </ItemGroup>

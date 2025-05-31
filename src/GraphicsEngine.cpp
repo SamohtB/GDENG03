@@ -1,5 +1,11 @@
 #include "GraphicsEngine.h"
 
+#include "RenderSystem.h"
+#include "BatchUploader.h"
+//#include "TextureManager.h"
+
+#include "Debug.h"
+
 GraphicsEngine* GraphicsEngine::sharedInstance = nullptr;
 
 GraphicsEngine::GraphicsEngine(UINT width, UINT height, HWND hwnd)
@@ -10,7 +16,20 @@ GraphicsEngine::GraphicsEngine(UINT width, UINT height, HWND hwnd)
 	}
 	catch (...)
 	{
-		throw std::exception("RenderSystem not created successfully");
+		Debug::LogError("Render System initialization failed!");
+		return;
+	}
+
+	auto dvcPtr = this->m_renderSystem->GetD3DDevicePtr();
+
+	try
+	{
+		this->m_batchUploader = std::make_unique<BatchUploader>(dvcPtr);
+	}
+	catch (...)
+	{
+		Debug::LogError("Batch Uploader initialization failed!");
+		return;
 	}
 }
 
@@ -27,7 +46,7 @@ void GraphicsEngine::Initialize(UINT width, UINT height, HWND hwnd)
 	}
 	catch (...)
 	{
-		std::exception("Graphics Engine not created sucessfully");
+		Debug::LogError("Graphics Engine initialization failed!");
 	}
 }
 
@@ -40,4 +59,14 @@ RenderSystem* GraphicsEngine::GetRenderSystem()
 {
 	return this->m_renderSystem.get();
 }
+
+BatchUploader* GraphicsEngine::GetBatchUploader()
+{
+	return this->m_batchUploader.get();
+}
+
+//TextureManager* GraphicsEngine::GetTextureManager()
+//{
+//	return this->m_textureManager.get();
+//}
 

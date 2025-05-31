@@ -1,6 +1,5 @@
 #pragma once
-#include "stdafx.h"
-#include "Helper.h"
+#include <vector>
 
 class VertexBuffer
 {
@@ -15,7 +14,6 @@ public:
 
 private:
     ComPtr<ID3D12Resource> m_vertexBuffer;
-    ComPtr<ID3D12Resource> m_vertexUploadHeap;  /* Remove Resource After Command List Execution */
     D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
 };
 

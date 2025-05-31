@@ -1,20 +1,16 @@
 #include "RenderTargetManager.h"
 
-#include "DeviceManager.h"
-#include "SwapChainManager.h"
-#include "DescriptorHeapManager.h"
+#include "Debug.h"
 
-#include "Helper.h"
-
-RenderTargetManager::RenderTargetManager(ID3D12Device* device, IDXGISwapChain3* swapChain, DescriptorHeapManager& heapManager)
+RenderTargetManager::RenderTargetManager(ID3D12Device* device, IDXGISwapChain3* swapChain, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandleStart, UINT descriptorSize)
 {
-    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(heapManager.GetRTVHeap()->GetCPUDescriptorHandleForHeapStart());
+    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHandleStart);
 
     for (UINT n = 0; n < FRAME_COUNT; n++)
     {
-        ThrowIfFailed(swapChain->GetBuffer(n, IID_PPV_ARGS(&m_renderTargets[n])));
+        Debug::ThrowIfFailed(swapChain->GetBuffer(n, IID_PPV_ARGS(&m_renderTargets[n])));
         device->CreateRenderTargetView(m_renderTargets[n].Get(), nullptr, rtvHandle);
-        rtvHandle.Offset(1, heapManager.GetRTVDescriptorSize());
+        rtvHandle.Offset(1, descriptorSize);
     }
 }
 

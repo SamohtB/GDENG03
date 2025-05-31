@@ -1,5 +1,5 @@
 #include "SwapChainManager.h"
-#include "Helper.h"
+#include "Debug.h"
 
 SwapChainManager::SwapChainManager(IDXGIFactory6* factory, ID3D12CommandQueue* commandQueue, UINT width, UINT height, HWND hwnd)
     : m_frameIndex(0)
@@ -15,29 +15,23 @@ SwapChainManager::SwapChainManager(IDXGIFactory6* factory, ID3D12CommandQueue* c
 
     ComPtr<IDXGISwapChain1> swapChain;
 
-    ThrowIfFailed(factory->CreateSwapChainForHwnd(
-        commandQueue,
-        hwnd,
-        &swapChainDesc,
-        nullptr,
-        nullptr,
-        &swapChain
-    ));
+    Debug::ThrowIfFailed(factory->CreateSwapChainForHwnd(commandQueue, hwnd, &swapChainDesc,
+        nullptr, nullptr, &swapChain), "Swapchain creation failed!");
 
-    ThrowIfFailed(factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER));
+    Debug::ThrowIfFailed(factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER));
 
-    ThrowIfFailed(swapChain.As(&m_swapChain));
+    Debug::ThrowIfFailed(swapChain.As(&m_swapChain));
     UpdateFrameIndex();
-}
-
-IDXGISwapChain3* SwapChainManager::GetSwapChain() const
-{
-    return m_swapChain.Get();
 }
 
 UINT SwapChainManager::GetCurrentFrameIndex() const
 {
     return m_frameIndex;
+}
+
+void SwapChainManager::PresentFrame()
+{
+    Debug::ThrowIfFailed(this->m_swapChain->Present(1, 0), "Frame Present Fail!");
 }
 
 void SwapChainManager::UpdateFrameIndex()

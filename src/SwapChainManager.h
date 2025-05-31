@@ -1,5 +1,5 @@
 #pragma once
-#include "stdafx.h"
+#include "Dx12Commons.h"
 
 class SwapChainManager
 {
@@ -7,8 +7,9 @@ public:
 	SwapChainManager(IDXGIFactory6* factory, ID3D12CommandQueue* commandQueue, UINT width, UINT height, HWND hwnd);
 	~SwapChainManager() = default;
 
-	IDXGISwapChain3* GetSwapChain() const;
 	UINT GetCurrentFrameIndex() const;
+
+	void PresentFrame();
 	void UpdateFrameIndex();
 
 private:

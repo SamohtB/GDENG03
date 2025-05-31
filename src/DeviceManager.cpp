@@ -1,5 +1,5 @@
 #include "DeviceManager.h"
-#include "Helper.h"
+#include "Debug.h"
 
 DeviceManager::DeviceManager(IDXGIFactory6* factory)
 {
@@ -7,9 +7,9 @@ DeviceManager::DeviceManager(IDXGIFactory6* factory)
 	CreateDeviceFromAdapter();
 }
 
-ID3D12Device* DeviceManager::GetD3DDevice() const
+ComPtr<ID3D12Device> DeviceManager::GetD3DDevice() const
 {
-	return this->m_d3dDevice.Get();
+	return this->m_d3dDevice;
 }
 
 ComPtr<IDXGIAdapter1> DeviceManager::FindHardwareAdapter(IDXGIFactory6* factory)
@@ -35,13 +35,13 @@ ComPtr<IDXGIAdapter1> DeviceManager::FindHardwareAdapter(IDXGIFactory6* factory)
 		}
 	}
 
-	ThrowIfFailed(E_FAIL);
+	Debug::ThrowIfFailed(E_FAIL);
 	return nullptr;
 }
 
 void DeviceManager::CreateDeviceFromAdapter()
 {
-	ThrowIfFailed(D3D12CreateDevice(
+	Debug::ThrowIfFailed(D3D12CreateDevice(
 		m_dxgiAdapter.Get(),
 		D3D_FEATURE_LEVEL_12_0,
 		IID_PPV_ARGS(&m_d3dDevice)));

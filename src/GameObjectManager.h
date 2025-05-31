@@ -1,10 +1,10 @@
 #pragma once
+#include <string>
 #include <vector>
 #include <memory>
 #include <unordered_map>
 
-#include "stdafx.h"
-
+class DeviceContext;
 class AGameObject;
 
 class GameObjectManager
@@ -23,7 +23,7 @@ public:
     std::vector<AGameObject*> GetAllObjects();
     int ActiveObjects();
     void UpdateAll();
-    void RenderAll(ID3D12GraphicsCommandList* cmdList);
+    void RenderAll(DeviceContext* dvcContext);
 
     void AddGameObject(GameObjectPtr gameObject);
     void DeleteObject(GameObjectPtr game_object);

@@ -1,12 +1,12 @@
 #pragma once
 #include <memory>
-#include "stdafx.h"
-#pragma once
+#include <vector>
+
 #include "VertexTypes.h"
 #include "AGameObject.h"
 #include "VertexBuffer.h"
-#include "TextureManager.h"
 
+class DeviceContext;
 class VertexBuffer;
 
 class Quad : public AGameObject
@@ -19,10 +19,11 @@ public:
 
 	// Inherited via AGameObject
 	void Update() override;
-	void Draw(ID3D12GraphicsCommandList* cmdList) override;
+	void Draw(DeviceContext* dvcContext) override;
 
 private:
-	std::vector<POS_TEX_COL> m_vertices;
+	std::vector<POS_COL> m_vertices;
+	std::vector<UINT> m_indices;
 	std::unique_ptr<VertexBuffer> m_vertexBuffer;
 };
 

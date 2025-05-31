@@ -1,0 +1,50 @@
+#include "RenderDevice.h"
+
+#include "DeviceManager.h"
+#include "DescriptorHeapManager.h"
+#include "PipelineStateManager.h"
+#include "FenceManager.h"
+
+#include "Debug.h"
+
+RenderDevice::RenderDevice()
+{
+	Debug::ThrowIfFailed(CreateDXGIFactory2(0, IID_PPV_ARGS(&m_dxgiFactory)), "DXGI factory creation failed!");
+	this->m_deviceManager = std::make_unique<DeviceManager>(this->m_dxgiFactory.Get());
+
+	auto d3dDevice = this->m_deviceManager->GetD3DDevice().Get();
+
+	this->m_descriptorHeap = std::make_unique<DescriptorHeapManager>(d3dDevice);
+	this->m_pipelineStateManager = std::make_unique<PipelineStateManager>(d3dDevice);
+	this->m_fenceManager = std::make_unique<FenceManager>(d3dDevice);
+}
+
+ID3D12Device* RenderDevice::GetD3DDevice() const
+{
+	return this->m_deviceManager->GetD3DDevice().Get();
+}
+
+ComPtr<ID3D12Device> RenderDevice::GetD3DDevicePtr() const
+{
+	return this->m_deviceManager->GetD3DDevice();
+}
+
+IDXGIFactory6* RenderDevice::GetFactory() const
+{
+	return this->m_dxgiFactory.Get();
+}
+
+FenceManager* RenderDevice::GetFenceManager() const
+{
+	return this->m_fenceManager.get();
+}
+
+PipelineStateManager* RenderDevice::GetPSOManager() const
+{
+	return this->m_pipelineStateManager.get();
+}
+
+DescriptorHeapManager* RenderDevice::GetDescriptorHeapManager() const
+{
+	return this->m_descriptorHeap.get();
+}

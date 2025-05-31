@@ -1,6 +1,6 @@
 #include "GameObjectManager.h"
 #include "AGameObject.h"
-#include <d3d12.h>
+#include "Debug.h"
 
 GameObjectManager* GameObjectManager::sharedInstance = nullptr;
 
@@ -17,7 +17,7 @@ void GameObjectManager::Initialize()
     }
     catch (...)
     {
-        std::exception("Game Object Manager not created sucessfully");
+        Debug::LogError("Game Object Manager creation failed!");
     }
 }
 
@@ -76,13 +76,13 @@ void GameObjectManager::UpdateAll()
     }
 }
 
-void GameObjectManager::RenderAll(ID3D12GraphicsCommandList* cmdList)
+void GameObjectManager::RenderAll(DeviceContext* dvcContext)
 {
     for (const auto& object : m_objectList)
     {
         if (object->IsActive())
         {
-            object->Draw(cmdList);
+            object->Draw(dvcContext);
         }
     }
 }

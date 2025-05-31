@@ -1,22 +1,17 @@
 #pragma once
-#include "stdafx.h"
+#include "Dx12Commons.h"
 
 class SwapChainManager;
 
 class FenceManager
 {
 public:
-	FenceManager(ID3D12Device* device, SwapChainManager& swapChainManager);
+	FenceManager(ID3D12Device* device);
 	~FenceManager() = default;
 
 	void WaitForFrameGPU(UINT frameIndex);
-	void InitSignalFrames(ID3D12CommandQueue* commandQueue);
-
-	UINT64 GetFenceValue(UINT frameIndex) const;
-	ID3D12Fence* GetFence() const;
-	HANDLE GetFenceEvent() const;
-	UINT64 IncrementFenceValueAtIndex(UINT frameIndex);
-	void CloseEvent();
+	void SignalCurrentFrameGPU(ID3D12CommandQueue* queue, UINT frameIndex);
+	void ShutDown();
 
 private:
 	HANDLE m_fenceEvent;

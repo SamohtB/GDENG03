@@ -1,5 +1,5 @@
 #pragma once
-#include "stdafx.h"
+#include "Dx12Commons.h"
 
 class ConstantBuffer
 {

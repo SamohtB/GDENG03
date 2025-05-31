@@ -1,0 +1,40 @@
+#pragma once
+#include "Dx12Commons.h"
+
+/* Reset -> Transition Barrier -> Set Params (Root/PSO/CBV/DescHeaps/Viewport/Rect) -> Draw Calls -> Transition Barrier */
+class DeviceContext
+{
+public:
+	DeviceContext(ID3D12Device* device);
+	~DeviceContext() = default;
+
+	void ExecuteCommandList();
+	void ResetCommands(UINT frameIndex, ID3D12PipelineState* pipelineState = nullptr);
+
+	void SetRootSignature(ID3D12RootSignature* rootSignature);
+	void SetPSO(ID3D12PipelineState* pipelineState);
+	void SetDescriptorHeaps(const std::vector<ID3D12DescriptorHeap*>& heaps);
+	void SetConstantBuffer(UINT rootParameterIndex, D3D12_GPU_VIRTUAL_ADDRESS cbvAddress);
+	void SetViewport(CD3DX12_VIEWPORT* viewport);
+	void SetScissorRect(CD3DX12_RECT* rect);
+
+	void TransitionToRenderTarget(ID3D12Resource* resource);
+	void TransitionToPresent(ID3D12Resource* resource);
+
+	void ClearRenderTargetColor(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, float red, float green, float blue, float alpha);
+
+	//void SetTexture(TexturePtr texture);
+	void SetVertexBuffer(D3D12_VERTEX_BUFFER_VIEW* vertexBufferView);
+	void SetIndexBuffer(D3D12_INDEX_BUFFER_VIEW* indexBufferView);
+
+	void DrawTriangleList(UINT vertexCount, UINT startVertexIndex);
+	void DrawIndexedTriangleList(UINT indexCount, UINT startVertexIndex, UINT startIndexLocation);
+
+	ID3D12CommandQueue* GetCommandQueue() const;
+
+private:
+	ComPtr<ID3D12CommandQueue> m_commandQueue;
+	ComPtr<ID3D12CommandAllocator> m_commandAllocators[FRAME_COUNT];
+	ComPtr<ID3D12GraphicsCommandList> m_commandList;
+};
+

@@ -1,8 +1,10 @@
 #pragma once
 #include <memory>
-#include "stdafx.h"
+#include <windows.h>
 
-#include "RenderSystem.h"
+class RenderSystem;
+class BatchUploader;
+//class TextureManager;
 
 class GraphicsEngine
 {
@@ -12,6 +14,8 @@ public:
 	static void Destroy();
 
 	RenderSystem* GetRenderSystem();
+	BatchUploader* GetBatchUploader();
+	//TextureManager* GetTextureManager();
 
 private:
 	GraphicsEngine(UINT width, UINT height, HWND hwnd);
@@ -22,5 +26,7 @@ private:
 	static GraphicsEngine* sharedInstance;
 
 	std::unique_ptr<RenderSystem> m_renderSystem = nullptr;
+	std::unique_ptr<BatchUploader> m_batchUploader = nullptr;
+	//std::unique_ptr<TextureManager> m_textureManager = nullptr;
 };
 
