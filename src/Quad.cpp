@@ -1,5 +1,7 @@
 #include "Quad.h"
-#include "TextureManager.h"
+#include "DeviceContext.h"
+
+
 
 Quad::Quad(int id, String name, XMFLOAT2 offset) : AGameObject(id, name)
 {
@@ -12,6 +14,8 @@ Quad::Quad(int id, String name, XMFLOAT2 offset) : AGameObject(id, name)
         2, 1, 3
     };
 
+    this->m_indexBuffer = std::make_unique<IndexBuffer>(m_indices);
+
     m_vertices =
     {
         { { -0.25f + x,  0.25f + y, 0.0f }, { 0.0f, 1.0f, 0.0f } }, // 0
@@ -20,18 +24,17 @@ Quad::Quad(int id, String name, XMFLOAT2 offset) : AGameObject(id, name)
         { {  0.25f + x, -0.25f + y, 0.0f }, { 0.0f, 1.0f, 1.0f } }  // 3
     };
 
-    this->m_vertexBuffer = std::make_unique<VertexBuffer>(m_vertices, m_indices);
+    this->m_vertexBuffer = std::make_unique<VertexBuffer>(m_vertices);
 }
 
 void Quad::Update()
 {
 }
 
-void Quad::Draw(DeviceContext* dvcContext)
+void Quad::Draw(DeviceContext* context)
 {
-    /* Actual Draw Calls */
-    cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    cmdList->IASetVertexBuffers(0, 1, this->m_vertexBuffer->GetVertexBufferViewPointer());
-    cmdList->IASetIndexBuffer(this->m_vertexBuffer->GetIndexBufferViewPointer());
-    cmdList->DrawIndexedInstanced(static_cast<UINT>(this->m_indices.size()), 1, 0, 0, 0);
+    context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());
+    context->SetIndexBuffer(this->m_indexBuffer->GetIndexBufferViewPointer());
+
+    context->DrawIndexedTriangleList(static_cast<UINT>(m_indices.size()), 0, 0);
 }

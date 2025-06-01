@@ -1,16 +1,16 @@
 #include "Win32App.h"
 #include "GameWindow.h"
-#include "Helper.h"
-#include "stdafx.h"
+#include "Dx12Commons.h"
+#include "Debug.h"
 
 int main() 
 {
 /* COM INIT for DirectXTex */
 #if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/)
 	Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
-	ThrowIfFailed(initialize);
+	Debug::ThrowIfFailed(initialize);
 #else
-	ThrowIFFailed(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED));
+	Debug::ThrowIFFailed(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED));
 #endif
 
 	try

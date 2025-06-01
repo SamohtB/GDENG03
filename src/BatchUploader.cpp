@@ -12,7 +12,7 @@ BatchUploader::BatchUploader(ComPtr<ID3D12Device> device) : m_device(device)
     Debug::ThrowIfFailed(this->m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_commandQueue)), 
         "Command Queue creation failed!");
 
-    this->m_resourceUploader = std::make_unique<ResourceUploadBatch>(this->m_device);
+    this->m_resourceUploader = std::make_unique<ResourceUploadBatch>(this->m_device.Get());
 }
 
 void BatchUploader::StartUpload()
@@ -39,11 +39,16 @@ IndexBufferInfo BatchUploader::SchedIndexBuffer(const std::vector<unsigned int>&
 {
     Debug::Assert(this->m_uploadStarted, "Upload Not Yet Started! | Invalid Shedule!");
 
-    size_t indexBufferSize = indices.size() * sizeof(unsigned int);
+    size_t indexBufferSize = indices.size() * sizeof(UINT);
     IndexBufferInfo indexBufferInfo;
 
-    Debug::ThrowIfFailed(CreateStaticBuffer(this->m_device, this->m_resourceUploader, indices.data(), indices.size(),
-        D3D12_RESOURCE_STATE_INDEX_BUFFER, &indexBufferInfo.buffer));
+    Debug::ThrowIfFailed(DirectX::CreateStaticBuffer(
+        this->m_device.Get(), 
+        *this->m_resourceUploader, 
+        indices,
+        D3D12_RESOURCE_STATE_INDEX_BUFFER,
+        indexBufferInfo.buffer.GetAddressOf()
+    ));
 
     indexBufferInfo.view.BufferLocation = indexBufferInfo.buffer->GetGPUVirtualAddress();
     indexBufferInfo.view.SizeInBytes = static_cast<UINT>(indexBufferSize);
@@ -60,8 +65,13 @@ VertexBufferInfo BatchUploader::SchedVertexBuffer(const std::vector<VertexType>&
     size_t vertexBufferSize = vertices.size() * sizeof(VertexType);
     VertexBufferInfo vertexBufferInfo;
 
-    Debug::ThrowIfFailed(CreateStaticBuffer(this->m_device, this->m_resourceUploader, vertices.data(), vertices.size(),
-        D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &vertexBufferInfo.buffer));
+    Debug::ThrowIfFailed(DirectX::CreateStaticBuffer(
+        this->m_device.Get(), 
+        *this->m_resourceUploader, 
+        vertices,
+        D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, 
+        vertexBufferInfo.buffer.GetAddressOf()
+    ));
 
     vertexBufferInfo.view.BufferLocation = vertexBufferInfo.buffer->GetGPUVirtualAddress();
     vertexBufferInfo.view.StrideInBytes = sizeof(VertexType);

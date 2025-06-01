@@ -2,10 +2,10 @@
 #include <memory>
 #include "Dx12Commons.h"
 
-class DeviceManager;
-class DescriptorHeapManager;
-class FenceManager;
-class PipelineStateManager;
+#include "DeviceManager.h"
+#include "DescriptorHeapManager.h"
+#include "PipelineStateManager.h"
+#include "FenceManager.h"
 
 class RenderDevice
 {

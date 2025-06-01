@@ -79,6 +79,9 @@
     <Filter Include="Engine\GraphicsEngine\BatchUploader">
       <UniqueIdentifier>{fe0a78d1-23f5-44f9-bbf8-e6faafe346d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Resources\IndexBuffer">
+      <UniqueIdentifier>{f9d8b6e9-29e3-4424-8572-62476d1204fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -141,8 +144,11 @@
     <ClCompile Include="src\RenderSystem.cpp">
       <Filter>Engine\GraphicsEngine\RenderSystem</Filter>
     </ClCompile>
-    <ClCompile Include="BatchUploader.cpp">
+    <ClCompile Include="src\BatchUploader.cpp">
       <Filter>Engine\GraphicsEngine\BatchUploader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IndexBuffer.cpp">
+      <Filter>Engine\Resources\IndexBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -182,9 +188,6 @@
     <ClInclude Include="src\GameObjectManager.h">
       <Filter>App\Managers\GameObjectManager</Filter>
     </ClInclude>
-    <ClInclude Include="src\Helper.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\stdafx.h">
       <Filter>Utility</Filter>
     </ClInclude>
@@ -221,8 +224,11 @@
     <ClInclude Include="src\InputLayouts.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="BatchUploader.h">
+    <ClInclude Include="src\BatchUploader.h">
       <Filter>Engine\GraphicsEngine\BatchUploader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IndexBuffer.h">
+      <Filter>Engine\Resources\IndexBuffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

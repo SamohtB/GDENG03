@@ -2,8 +2,8 @@
 #include <memory>
 #include <windows.h>
 
-class RenderSystem;
-class BatchUploader;
+#include "RenderSystem.h"
+#include "BatchUploader.h"
 //class TextureManager;
 
 class GraphicsEngine

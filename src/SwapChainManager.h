@@ -12,6 +12,7 @@ public:
 	void PresentFrame();
 	void UpdateFrameIndex();
 
+	IDXGISwapChain3* GetSwapChain();
 private:
 	UINT m_frameIndex;
 	ComPtr<IDXGISwapChain3> m_swapChain;

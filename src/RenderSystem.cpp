@@ -23,7 +23,11 @@ RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 	this->m_deviceContext = std::make_unique<DeviceContext>(d3dDevice);
 	this->m_swapChainManager = std::make_unique<SwapChainManager>(this->m_renderDevice->GetFactory(),
 		this->m_deviceContext->GetCommandQueue(), width, height, hwnd);
-	this->m_renderTargetManager = std::make_unique<RenderTargetManager>();
+
+	auto heapManager = this->m_renderDevice->GetDescriptorHeapManager();
+
+	this->m_renderTargetManager = std::make_unique<RenderTargetManager>(d3dDevice, this->m_swapChainManager->GetSwapChain(),
+		heapManager->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), heapManager->GetRTVDescriptorSize());
 
 	this->m_constantBuffer = std::make_shared<ConstantBuffer>(d3dDevice);
 
@@ -98,4 +102,9 @@ void RenderSystem::UpdateConstantBuffer(float time)
 ComPtr<ID3D12Device> RenderSystem::GetD3DDevicePtr()
 {
 	return this->m_renderDevice->GetD3DDevicePtr();
+}
+
+DeviceContext* RenderSystem::GetDeviceContext()
+{
+	return this->m_deviceContext.get();
 }

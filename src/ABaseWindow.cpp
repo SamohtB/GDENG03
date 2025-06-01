@@ -1,5 +1,4 @@
 #include "ABaseWindow.h"
-#include "Helper.h"
 
 ABaseWindow::ABaseWindow(UINT width, UINT height) : m_width(width), m_height(height)
 {

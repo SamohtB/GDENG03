@@ -149,7 +149,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BatchUploader.cpp" />
+    <ClCompile Include="src\IndexBuffer.cpp" />
+    <ClCompile Include="src\BatchUploader.cpp" />
     <ClCompile Include="src\RenderDevice.cpp" />
     <ClCompile Include="src\DeviceContext.cpp" />
     <ClCompile Include="src\ConstantBuffer.cpp" />
@@ -172,7 +173,8 @@
     <ClCompile Include="src\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BatchUploader.h" />
+    <ClInclude Include="src\IndexBuffer.h" />
+    <ClInclude Include="src\BatchUploader.h" />
     <ClInclude Include="src\RenderDevice.h" />
     <ClInclude Include="src\DeviceContext.h" />
     <ClInclude Include="src\Debug.h" />
@@ -189,7 +191,6 @@
     <ClInclude Include="src\ABaseWindow.h" />
     <ClInclude Include="src\DescriptorHeapManager.h" />
     <ClInclude Include="src\DeviceManager.h" />
-    <ClInclude Include="src\Helper.h" />
     <ClInclude Include="src\RenderSystem.h" />
     <ClInclude Include="src\RenderTargetManager.h" />
     <ClInclude Include="src\stdafx.h" />

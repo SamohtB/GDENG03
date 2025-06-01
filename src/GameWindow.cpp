@@ -4,12 +4,9 @@
 
 #include "GraphicsEngine.h"
 #include "GameObjectManager.h"
-#include "TextureManager.h"
 
 #include "RenderSystem.h"
-#include "AnimatedQuad.h"
 #include "Quad.h"
-#include "Triangle.h"
 
 #include "ConstantBuffer.h"
 
@@ -21,9 +18,8 @@ void GameWindow::OnCreate(HWND hwnd)
 {
 	GraphicsEngine::Initialize(this->m_width, this->m_height, hwnd);
 	GameObjectManager::Initialize();
-	TextureManager::Initialize();
 
-	auto render = GraphicsEngine::GetInstance()->GetRenderSystem();
+	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 
 	std::shared_ptr<Quad> rectangle = std::make_shared<Quad>(0, "Rectangle_1", XMFLOAT2(0.0f, 0.66f));
 	GameObjectManager::GetInstance()->AddGameObject(rectangle);
@@ -33,6 +29,8 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	rectangle = std::make_shared<Quad>(2, "Rectangle_3", XMFLOAT2(0.0f, -0.66f));
 	GameObjectManager::GetInstance()->AddGameObject(rectangle);
+
+	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
 }
 
 void GameWindow::OnUpdate()
@@ -49,24 +47,23 @@ void GameWindow::OnUpdate()
 
 	/* get delta time here and pass to game object manager */
 	GameObjectManager::GetInstance()->UpdateAll();
-
-	GraphicsEngine::GetInstance()->GetRenderSystem()->UpdateConstantBuffer(m_angle);
 }
 
 void GameWindow::OnRender()
 {
-	auto cmdList = GraphicsEngine::GetInstance()->GetRenderSystem()->GetCommandList();
+	auto context = GraphicsEngine::GetInstance()->GetRenderSystem()->GetDeviceContext();
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->StartFrame();
 
-	GameObjectManager::GetInstance()->RenderAll(cmdList);
+	GraphicsEngine::GetInstance()->GetRenderSystem()->UpdateConstantBuffer(m_angle); // Update Constant Buffers when GPU not busy
+
+	GameObjectManager::GetInstance()->RenderAll(context);
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->EndFrame();
 }
 
 void GameWindow::OnDestroy()
 {
-	TextureManager::Destroy();
 	GameObjectManager::Destroy();
 	GraphicsEngine::Destroy();
 }

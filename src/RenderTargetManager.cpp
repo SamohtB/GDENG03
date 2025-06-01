@@ -1,5 +1,4 @@
 #include "RenderTargetManager.h"
-
 #include "Debug.h"
 
 RenderTargetManager::RenderTargetManager(ID3D12Device* device, IDXGISwapChain3* swapChain, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandleStart, UINT descriptorSize)

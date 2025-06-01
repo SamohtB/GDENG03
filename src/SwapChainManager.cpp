@@ -38,3 +38,8 @@ void SwapChainManager::UpdateFrameIndex()
 {
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 }
+
+IDXGISwapChain3* SwapChainManager::GetSwapChain()
+{
+    return this->m_swapChain.Get();
+}

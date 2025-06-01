@@ -1,7 +1,6 @@
 #include "GraphicsEngine.h"
 
-#include "RenderSystem.h"
-#include "BatchUploader.h"
+
 //#include "TextureManager.h"
 
 #include "Debug.h"
