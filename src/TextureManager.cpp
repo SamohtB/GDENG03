@@ -15,10 +15,16 @@ void TextureManager::LoadInitialTextures()
 void TextureManager::LoadTexture(const TextureType& type, const std::wstring& filePath)
 {
     auto srvIndex = m_heapManager->AllocateSRVSlot();
-    auto srvHandle = m_heapManager->GetCPUHandleAt(srvIndex);
+    auto srvHandle = m_heapManager->GetSRVCPUHandleAt(srvIndex);
     auto buffer = m_uploader->SchedTexture(filePath, srvHandle);
 
     TexturePtr texture = std::make_unique<Texture>(buffer, srvIndex);
     this->m_srvMap[type] = srvIndex;
     this->m_textureMap[type] = std::move(texture);
+}
+
+D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetTextureHandle(const TextureType& type)
+{
+    UINT index = m_srvMap[type];
+    return m_heapManager->GetSRVGPUHandleAt(index);
 }

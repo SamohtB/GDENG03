@@ -19,6 +19,7 @@ public:
 
     void LoadInitialTextures();
     void LoadTexture(const TextureType& type, const std::wstring& filePath);
+    D3D12_GPU_DESCRIPTOR_HANDLE GetTextureHandle(const TextureType& type);
 
 private:
     std::shared_ptr<DescriptorHeapManager> m_heapManager;

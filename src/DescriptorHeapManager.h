@@ -12,14 +12,14 @@ public:
     // RTV access
     UINT GetRTVDescriptorSize() const;
     ID3D12DescriptorHeap* GetRTVHeap() const;
-    D3D12_CPU_DESCRIPTOR_HANDLE GetRTVHandleFromFrame(UINT frameIndex) const;
+    D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUHandleAt(UINT frameIndex) const;
 
     // SRV access
     UINT GetSRVDescriptorSize() const;
     ID3D12DescriptorHeap* GetSRVHeap() const;
     UINT AllocateSRVSlot();
-    D3D12_CPU_DESCRIPTOR_HANDLE GetCPUHandleAt(UINT index) const;
-    D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleFromIndex(UINT index) const;
+    D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCPUHandleAt(UINT index) const;
+    D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUHandleAt(UINT index) const;
 
 private:
     std::vector<ID3D12DescriptorHeap*> m_activeHeaps;

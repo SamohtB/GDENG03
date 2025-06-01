@@ -2,6 +2,8 @@
 #include <memory>
 #include "Dx12Commons.h"
 
+#include "ShaderTypes.h"
+
 class RenderDevice;
 class DeviceContext;
 class SwapChainManager;
@@ -19,6 +21,9 @@ public:
 	void EndFrame();
 
 	void UpdateConstantBuffer(float time);
+
+	ID3D12PipelineState* GetPipelineState(const ShaderType& type) const;
+
 	ComPtr<ID3D12Device> GetD3DDevicePtr();
 	RenderDevice* GetRenderDevice();
 	DeviceContext* GetDeviceContext();

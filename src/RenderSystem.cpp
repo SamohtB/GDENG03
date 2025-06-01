@@ -59,7 +59,6 @@ void RenderSystem::StartFrame()
 	/* Set ENV Can Be Moved */
 	{
 		this->m_deviceContext->SetRootSignature(this->m_renderDevice->GetPSOManager()->GetRootSignature());
-		this->m_deviceContext->SetPSO(this->m_renderDevice->GetPSOManager()->GetPipelineState(InputLayoutType::Pos_Color, L"Default"));
 
 		/* Set Heaps SRV/CBV/UAV */
 		auto heaps = this->m_renderDevice->GetDescriptorHeapManager()->GetActiveHeaps();
@@ -76,7 +75,7 @@ void RenderSystem::StartFrame()
 	auto renderTarget = this->m_renderTargetManager->GetRenderTarget(currentFrameIndex);
 	this->m_deviceContext->TransitionToRenderTarget(renderTarget);
 
-	auto rtvHandle = this->m_renderDevice->GetDescriptorHeapManager()->GetRTVHandleFromFrame(currentFrameIndex);
+	auto rtvHandle = this->m_renderDevice->GetDescriptorHeapManager()->GetRTVCPUHandleAt(currentFrameIndex);
 	this->m_deviceContext->ClearRenderTargetColor(rtvHandle, 0.0f, 0.2f, 0.4f, 1.0f);
 }
 
@@ -97,6 +96,19 @@ void RenderSystem::UpdateConstantBuffer(float time)
 {
 	auto index = this->m_swapChainManager->GetCurrentFrameIndex();
 	this->m_constantBuffer->Update(time, index);
+}
+
+ID3D12PipelineState* RenderSystem::GetPipelineState(const ShaderType& type) const
+{
+	auto psoManager = this->m_renderDevice->GetPSOManager();
+
+	switch (type)
+	{
+	case TEXTURED: return psoManager->GetPipelineState(InputLayoutType::Pos_Tex_Color, L"Textured");
+	case ANIMATED: return psoManager->GetPipelineState(InputLayoutType::Pos_Pos_Col_Col, L"Animated");
+	default: return psoManager->GetPipelineState(InputLayoutType::Pos_Color, L"Default");
+	}
+	
 }
 
 ComPtr<ID3D12Device> RenderSystem::GetD3DDevicePtr()

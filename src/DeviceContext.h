@@ -1,5 +1,6 @@
 #pragma once
 #include "Dx12Commons.h"
+#include "TextureTypes.h"
 
 /* Reset -> Transition Barrier -> Set Params (Root/PSO/CBV/DescHeaps/Viewport/Rect) -> Draw Calls -> Transition Barrier */
 class DeviceContext
@@ -23,7 +24,7 @@ public:
 
 	void ClearRenderTargetColor(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, float red, float green, float blue, float alpha);
 
-	//void SetTexture(TexturePtr texture);
+	void SetTexture(UINT rootParameterIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle);
 	void SetVertexBuffer(D3D12_VERTEX_BUFFER_VIEW* vertexBufferView);
 	void SetIndexBuffer(D3D12_INDEX_BUFFER_VIEW* indexBufferView);
 

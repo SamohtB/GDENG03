@@ -41,7 +41,7 @@ ID3D12DescriptorHeap* DescriptorHeapManager::GetRTVHeap() const
     return this->m_rtvHeap.Get();
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetRTVHandleFromFrame(UINT frameIndex) const
+D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetRTVCPUHandleAt(UINT frameIndex) const
 {
     return CD3DX12_CPU_DESCRIPTOR_HANDLE(
         m_rtvHeap->GetCPUDescriptorHandleForHeapStart(),
@@ -66,7 +66,7 @@ UINT DescriptorHeapManager::AllocateSRVSlot()
     return this->m_currentSRVOffset++;
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetCPUHandleAt(UINT index) const
+D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetSRVCPUHandleAt(UINT index) const
 {
     return CD3DX12_CPU_DESCRIPTOR_HANDLE(
         this->m_srvHeap->GetCPUDescriptorHandleForHeapStart(),
@@ -75,7 +75,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetCPUHandleAt(UINT index) co
     );
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetSRVHandleFromIndex(UINT index) const
+D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetSRVGPUHandleAt(UINT index) const
 {
     return CD3DX12_GPU_DESCRIPTOR_HANDLE(
         this->m_srvHeap->GetGPUDescriptorHandleForHeapStart(),

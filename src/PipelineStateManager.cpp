@@ -7,11 +7,19 @@ PipelineStateManager::PipelineStateManager(ID3D12Device* device)
 
     ShaderDesc shaderDesc = 
     {
+        L"Assets/Shaders/DefaultVertexShader.hlsl", "VSMain", "vs_5_0",
+        L"Assets/Shaders/DefaultPixelShader.hlsl", "PSMain", "ps_5_0"
+    };
+
+    RegisterPipeline(device, InputLayoutType::Pos_Color, shaderDesc, L"Default");
+
+    shaderDesc =
+    {
         L"Assets/Shaders/TexturedVertexShader.hlsl", "VSMain", "vs_5_0",
         L"Assets/Shaders/TexturedPixelShader.hlsl", "PSMain", "ps_5_0"
     };
 
-    RegisterPipeline(device, InputLayoutType::Pos_Color, shaderDesc, L"Default");
+    RegisterPipeline(device, InputLayoutType::Pos_Tex_Color, shaderDesc, L"Textured");
 
     shaderDesc =
     {
@@ -106,8 +114,7 @@ std::pair<ComPtr<ID3DBlob>, ComPtr<ID3DBlob>> PipelineStateManager::LoadShaders(
 
         if (err)
         {
-            errorMsg += "\n";
-            errorMsg += static_cast<const char*>(err->GetBufferPointer());
+            errorMsg = static_cast<const char*>(err->GetBufferPointer());
         }
 
         Debug::ThrowIfFailed(hr, errorMsg);
@@ -124,8 +131,7 @@ std::pair<ComPtr<ID3DBlob>, ComPtr<ID3DBlob>> PipelineStateManager::LoadShaders(
 
         if (err)
         {
-            errorMsg += "\n";
-            errorMsg += static_cast<const char*>(err->GetBufferPointer());
+            errorMsg = static_cast<const char*>(err->GetBufferPointer());
         }
 
         Debug::ThrowIfFailed(hr, errorMsg);

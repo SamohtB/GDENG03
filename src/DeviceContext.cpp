@@ -104,6 +104,11 @@ void DeviceContext::ClearRenderTargetColor(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle
     this->m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 }
 
+void DeviceContext::SetTexture(UINT rootParameterIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle)
+{
+    this->m_commandList->SetGraphicsRootDescriptorTable(rootParameterIndex, handle);
+}
+
 void DeviceContext::SetVertexBuffer(D3D12_VERTEX_BUFFER_VIEW* vertexBufferView)
 {
     this->m_commandList->IASetVertexBuffers(0, 1, vertexBufferView);
