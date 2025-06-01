@@ -80,6 +80,7 @@ void PBSQuads::Draw(DeviceContext* context)
         context->SetPSO(renderSystem->GetPipelineState(this->m_shader));
         context->SetTexture(0, textureManager->GetTextureHandle(this->m_texture));
         context->SetTexture(1, textureManager->GetTextureHandle(this->m_normal));
+        context->SetTexture(2, textureManager->GetTextureHandle(TextureType::ROUGH));
     }
 
     context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());

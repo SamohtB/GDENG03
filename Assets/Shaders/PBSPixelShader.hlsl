@@ -1,29 +1,59 @@
-Texture2D DiffuseMap : register(t0);
-Texture2D NormalMap : register(t1);
+// Physically Based Rendering
+// Based ON Michal Siejak PBR
+// https://github.com/Nadrin/PBR 
+
+// Physically Based shading model: Lambetrtian diffuse BRDF + Cook-Torrance microfacet specular BRDF + IBL for ambient.
+
+Texture2D AlbedoTexture : register(t0);
+Texture2D NormalTexture : register(t1);
+Texture2D RoughnessTexture : register(t2);
+
 SamplerState Sampler : register(s0);
 
 struct PSINPUT
 {
     float4 position : SV_POSITION;
     float2 texcoord : TEXCOORD;
-    float3 T : TANGENT;
-    float3 B : BITANGENT;
-    float3 N : NORMAL;
+    float3x3 TBN : TBN;
 };
 
 float4 PSMain(PSINPUT input) : SV_TARGET
 {
-    float3 normalMap = NormalMap.Sample(Sampler, input.texcoord).rgb;
-    normalMap = normalize(normalMap * 2.0 - 1.0);
-    
-    float3x3 TBN = float3x3(input.T, input.B, input.N);
-    float3 normal = normalize(mul(normalMap, TBN));
-    
-    float3 albedo = DiffuseMap.Sample(Sampler, input.texcoord).rgb;
-    
-    float3 lightDir = normalize(float3(0.5f, -1.0f, -0.5f));
-    float diff = max(dot(normal, -lightDir), 0.0f);
+    // Sample albedo (base color)
+    float3 albedo = AlbedoTexture.Sample(Sampler, input.texcoord).rgb;
 
-    return float4(albedo * diff, 1.0f);
+    // === Lighting Vectors ===
+    float3 lightDir = normalize(float3(0.5, 2.0, 1.0)); // Static fake light direction
+    float3 viewDir = normalize(float3(0.0, 0.0, 1.0)); // Assume camera is facing forward
     
+    // === Normal Mapping ===
+    float3 normalSample = NormalTexture.Sample(Sampler, input.texcoord).rgb;
+    float3 mappedNormal = normalize(2.0 * normalSample - 1.0);
+    float3 flatNormal = float3(0.0, 0.0, 1.0);
+    float3 finalNormalTangent = normalize(lerp(flatNormal, mappedNormal, 0.5f)); // To Do: move str to cbuffer
+    float3 N = normalize(mul(input.TBN, finalNormalTangent));
+    
+    // === Roughness ===
+    float roughnessSample = RoughnessTexture.Sample(Sampler, input.texcoord).r;
+    float baseRoughness = 0.5;
+    float roughness = lerp(baseRoughness, roughnessSample, 0.3f); // To Do: move str to cbuffer
+    roughness = saturate(roughness);
+
+    // === Diffuse ===
+    float diff = saturate(dot(N, lightDir));
+    float3 diffuse = albedo * diff;
+    
+    // === Specular === (Fake using Blinn-Phong model modulated by roughness)
+    float3 halfway = normalize(lightDir + viewDir);
+    float specAngle = max(dot(N, halfway), 0.0);
+    float shininess = lerp(2.0, 128.0, 1.0 - roughness);
+    float specularIntensity = pow(specAngle, shininess);
+    float3 specularColor = float3(1.0, 1.0, 1.0) * specularIntensity;
+    
+    // === Ambient ===
+    float3 ambient = albedo * 0.2;
+    
+    float3 finalColor = diffuse + specularColor + ambient;
+
+    return float4(finalColor, 1.0f);
 }

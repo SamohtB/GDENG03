@@ -153,6 +153,9 @@
     <ClCompile Include="src\Texture.cpp">
       <Filter>Engine\Resources\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="src\PBSQuads.cpp">
+      <Filter>App\Entities\Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DescriptorHeapManager.h">
@@ -239,11 +242,15 @@
     <ClInclude Include="src\TextureTypes.h">
       <Filter>Engine</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="Assets\Shaders\TexturedPixelShader.hlsl">
-      <Filter>Assets\Shaders</Filter>
-    </Object>
+    <ClInclude Include="src\GeoMath.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PBSQuads.h">
+      <Filter>App\Entities\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShaderTypes.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\TexturedVertexShader.hlsl">
@@ -255,5 +262,22 @@
     <FxCompile Include="Assets\Shaders\Pos2Col2Pixel.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Assets\Shaders\DefaultVertexShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\Shaders\PBSPixelShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\Shaders\PBSVertexShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\Shaders\TexturedPixelShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="Assets\Shaders\DefaultPixelShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </Object>
   </ItemGroup>
 </Project>

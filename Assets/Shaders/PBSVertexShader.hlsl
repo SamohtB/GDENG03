@@ -11,9 +11,7 @@ struct VSOutput
 {
     float4 position : SV_POSITION;
     float2 texcoord : TEXCOORD;
-    float3 T : TANGENT;
-    float3 B : BITANGENT;
-    float3 N : NORMAL;
+    float3x3 TBN : TBN;
 };
 
 VSOutput VSMain(VSInput input)
@@ -21,10 +19,10 @@ VSOutput VSMain(VSInput input)
     VSOutput output;
 
     output.position = float4(input.position, 1.0f);
-    output.texcoord = input.texcoord;
-    output.T = input.tangent;
-    output.B = input.bitangent;
-    output.N = input.normal;
-
+    output.texcoord = float2(input.texcoord.x, 1.0 - input.texcoord.y);
+    
+    float3x3 TBN = float3x3(input.tangent, input.bitangent, input.normal);
+    output.TBN = transpose(TBN);
+    
     return output;
 }
