@@ -58,7 +58,6 @@ public:
         SetColor(12);
         std::cerr << "[Error] " << message << std::endl;
         ResetColor();
-        Break();
     }
 
     static void LogException(const std::exception& e) 

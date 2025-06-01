@@ -104,4 +104,5 @@ VertexBufferInfo BatchUploader::SchedVertexBuffer(const std::vector<VertexType>&
 
 template VertexBufferInfo BatchUploader::SchedVertexBuffer(const std::vector<POS_COL>&);
 template VertexBufferInfo BatchUploader::SchedVertexBuffer(const std::vector<POS_TEX_COL>&);
+template VertexBufferInfo BatchUploader::SchedVertexBuffer(const std::vector<POS_TEX_NOR_TAN_BIT>&);
 template VertexBufferInfo BatchUploader::SchedVertexBuffer(const std::vector<POS_POS_COL_COL>&);

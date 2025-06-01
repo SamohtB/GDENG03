@@ -12,25 +12,25 @@
 
 class DeviceContext;
 
-class Quad : public AGameObject
+class PBSQuads : public AGameObject
 {
 public:
 	using String = std::string;
 
-	Quad(int id, String name, Vector2 offset);
-	~Quad() = default;
+	PBSQuads(int id, String name, Vector2 offset);
+	~PBSQuads() = default;
 
 	// Inherited via AGameObject
 	void Update() override;
 	void Draw(DeviceContext* dvcContext) override;
 
 private:
-	std::vector<POS_TEX_COL> m_vertices;
+	std::vector<POS_TEX_NOR_TAN_BIT> m_vertices;
 	std::vector<unsigned int> m_indices;
 	ShaderType m_shader = ShaderType::DEFAULT;
 	TextureType m_texture = TextureType::UNSET;
+	TextureType m_normal = TextureType::UNSET;
 
 	std::unique_ptr<VertexBuffer> m_vertexBuffer;
 	std::unique_ptr<IndexBuffer> m_indexBuffer;
 };
-

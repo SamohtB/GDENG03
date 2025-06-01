@@ -7,6 +7,7 @@
 
 #include "RenderSystem.h"
 #include "Quad.h"
+#include "PBSQuads.h"
 
 #include "ConstantBuffer.h"
 
@@ -23,14 +24,11 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	GraphicsEngine::GetInstance()->GetTextureManager()->LoadInitialTextures();
 
-	std::shared_ptr<Quad> rectangle = std::make_shared<Quad>(0, "Rectangle_1", XMFLOAT2(0.0f, 0.66f));
-	GameObjectManager::GetInstance()->AddGameObject(rectangle);
+	std::shared_ptr<PBSQuads> quad = std::make_shared<PBSQuads>(0, "PBS", XMFLOAT2(0.0f, 0.5f));
+	GameObjectManager::GetInstance()->AddGameObject(quad);
 
-	rectangle = std::make_shared<Quad>(1, "Rectangle_2", XMFLOAT2(0.0f, 0.0f));
-	GameObjectManager::GetInstance()->AddGameObject(rectangle);
-
-	rectangle = std::make_shared<Quad>(2, "Rectangle_3", XMFLOAT2(0.0f, -0.66f));
-	GameObjectManager::GetInstance()->AddGameObject(rectangle);
+	std::shared_ptr<Quad> quad2 = std::make_shared<Quad>(1, "Rectangle", XMFLOAT2(0.0f, -0.5f));
+	GameObjectManager::GetInstance()->AddGameObject(quad2);
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
 }

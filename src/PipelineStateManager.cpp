@@ -19,7 +19,15 @@ PipelineStateManager::PipelineStateManager(ID3D12Device* device)
         L"Assets/Shaders/TexturedPixelShader.hlsl", "PSMain", "ps_5_0"
     };
 
-    RegisterPipeline(device, InputLayoutType::Pos_Tex_Color, shaderDesc, L"Textured");
+    RegisterPipeline(device, InputLayoutType::Pos_Tex_Col, shaderDesc, L"Textured");
+
+    shaderDesc =
+    {
+        L"Assets/Shaders/PBSVertexShader.hlsl", "VSMain", "vs_5_0",
+        L"Assets/Shaders/PBSPixelShader.hlsl", "PSMain", "ps_5_0"
+    };
+
+    RegisterPipeline(device, InputLayoutType::Pos_Tex_Nor_Tan_Bit, shaderDesc, L"PBS");
 
     shaderDesc =
     {
@@ -60,7 +68,7 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
     if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
         featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
 
-    CD3DX12_DESCRIPTOR_RANGE1 srvRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+    CD3DX12_DESCRIPTOR_RANGE1 srvRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0);
 
     CD3DX12_ROOT_PARAMETER1 rootParams[2];
     rootParams[0].InitAsDescriptorTable(1, &srvRange, D3D12_SHADER_VISIBILITY_PIXEL);

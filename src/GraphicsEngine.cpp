@@ -17,12 +17,12 @@ GraphicsEngine::GraphicsEngine(UINT width, UINT height, HWND hwnd)
 		return;
 	}
 
-	auto dvcPtr = this->m_renderSystem->GetD3DDevicePtr();
+	auto device = this->m_renderSystem->GetD3DDevicePtr();
 	auto descHeap = this->m_renderSystem->GetRenderDevice()->GetDescriptorHeapManagerPtr();
 
 	try
 	{
-		this->m_batchUploader = std::make_shared<BatchUploader>(dvcPtr);
+		this->m_batchUploader = std::make_shared<BatchUploader>(device);
 	}
 	catch (...)
 	{

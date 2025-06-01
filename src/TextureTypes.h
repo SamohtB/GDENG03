@@ -2,6 +2,7 @@
 
 enum TextureType : int
 {
-    UNSET = -1,
-    CRATE = 0
+    UNSET = 0,
+    COLOR = 1,
+    NORMAL = 2
 };

@@ -8,8 +8,11 @@ TextureManager::TextureManager(std::shared_ptr<DescriptorHeapManager> heapManage
 
 void TextureManager::LoadInitialTextures()
 {
-    LoadTexture(TextureType::CRATE, L"Assets/Textures/crate.png");
-    Debug::Log("Crate Texture Successfully Loaded");
+    LoadTexture(TextureType::COLOR, L"Assets/Textures/rock_c.jpg");
+    Debug::Log("Brick_Diffuse Texture Successfully Loaded");
+
+    LoadTexture(TextureType::NORMAL, L"Assets/Textures/rock_n.jpg");
+    Debug::Log("Brick_Normals Successfully Loaded");
 }
 
 void TextureManager::LoadTexture(const TextureType& type, const std::wstring& filePath)

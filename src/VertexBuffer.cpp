@@ -16,6 +16,7 @@ VertexBuffer::VertexBuffer(const std::vector<VertexType>& vertices)
 
 template VertexBuffer::VertexBuffer(const std::vector<POS_COL>&);
 template VertexBuffer::VertexBuffer(const std::vector<POS_TEX_COL>&);
+template VertexBuffer::VertexBuffer(const std::vector<POS_TEX_NOR_TAN_BIT>&);
 template VertexBuffer::VertexBuffer(const std::vector<POS_POS_COL_COL>&);
 
 

@@ -4,10 +4,12 @@
 #include "GraphicsEngine.h"
 #include "TextureManager.h"
 
-Quad::Quad(int id, String name, XMFLOAT2 offset) : AGameObject(id, name)
+Quad::Quad(int id, String name, Vector2 offset) : AGameObject(id, name)
 {
     float x = offset.x;
     float y = offset.y;
+
+    float aspectRatio = 1024.0f / 768.0f;
 
     m_indices =
     {
@@ -19,16 +21,16 @@ Quad::Quad(int id, String name, XMFLOAT2 offset) : AGameObject(id, name)
 
     m_vertices =
     {
-        { { -0.25f + x,  0.25f + y, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } }, // 0
-        { {  0.25f + x,  0.25f + y, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f } }, // 1
-        { { -0.25f + x, -0.25f + y, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 0.0f, 1.0f } }, // 2
-        { {  0.25f + x, -0.25f + y, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 1.0f } }  // 3
+        { { -0.25f + x * aspectRatio,  0.25f + y, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } }, // 0
+        { {  0.25f + x * aspectRatio,  0.25f + y, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f } }, // 1
+        { { -0.25f + x * aspectRatio, -0.25f + y, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 0.0f, 1.0f } }, // 2
+        { {  0.25f + x * aspectRatio, -0.25f + y, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 1.0f } }  // 3
     };
 
     this->m_vertexBuffer = std::make_unique<VertexBuffer>(m_vertices);
 
     this->m_shader = ShaderType::TEXTURED;
-    this->m_texture = TextureType::CRATE;
+    this->m_texture = TextureType::COLOR;
 }
 
 void Quad::Update()
@@ -37,8 +39,6 @@ void Quad::Update()
 
 void Quad::Draw(DeviceContext* context)
 {
-    
-
     auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
     auto textureManager = GraphicsEngine::GetInstance()->GetTextureManager();
 

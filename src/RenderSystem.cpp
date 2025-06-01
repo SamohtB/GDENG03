@@ -104,8 +104,9 @@ ID3D12PipelineState* RenderSystem::GetPipelineState(const ShaderType& type) cons
 
 	switch (type)
 	{
-	case TEXTURED: return psoManager->GetPipelineState(InputLayoutType::Pos_Tex_Color, L"Textured");
+	case TEXTURED: return psoManager->GetPipelineState(InputLayoutType::Pos_Tex_Col, L"Textured");
 	case ANIMATED: return psoManager->GetPipelineState(InputLayoutType::Pos_Pos_Col_Col, L"Animated");
+	case PBS: return psoManager->GetPipelineState(InputLayoutType::Pos_Tex_Nor_Tan_Bit, L"PBS");
 	default: return psoManager->GetPipelineState(InputLayoutType::Pos_Color, L"Default");
 	}
 	
