@@ -1,5 +1,8 @@
 #include "BatchUploader.h"
+#include <directxtk12/DirectXHelpers.h>
 #include <directxtk12/BufferHelpers.h>
+#include <directxtk12/WICTextureLoader.h>
+
 #include "VertexTypes.h"
 #include "Debug.h"
 
@@ -55,6 +58,25 @@ IndexBufferInfo BatchUploader::SchedIndexBuffer(const std::vector<unsigned int>&
     indexBufferInfo.view.Format = DXGI_FORMAT_R32_UINT;
 
     return indexBufferInfo;
+}
+
+ComPtr<ID3D12Resource> BatchUploader::SchedTexture(const std::wstring& filePath, D3D12_CPU_DESCRIPTOR_HANDLE handle)
+{
+    Debug::Assert(this->m_uploadStarted, "Upload Not Yet Started! | Invalid Shedule!");
+
+    ComPtr<ID3D12Resource> textureBuffer;
+
+    Debug::ThrowIfFailed(DirectX::CreateWICTextureFromFile(
+        this->m_device.Get(),
+        *this->m_resourceUploader,
+        filePath.c_str(),
+        &textureBuffer,
+        false //mipmaps
+    ));
+
+    DirectX::CreateShaderResourceView(this->m_device.Get(), textureBuffer.Get(), handle);
+
+    return textureBuffer;
 }
 
 template<typename VertexType>

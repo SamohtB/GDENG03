@@ -1,4 +1,5 @@
 #include "DescriptorHeapManager.h"
+#include <directxtk12/DirectXHelpers.h>
 #include "Debug.h"
 
 DescriptorHeapManager::DescriptorHeapManager(ID3D12Device* device, UINT maxRTVCount, UINT maxSRVCount) 
@@ -59,16 +60,22 @@ ID3D12DescriptorHeap* DescriptorHeapManager::GetSRVHeap() const
     return this->m_srvHeap.Get();
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetNextFreeSRV_CPUHandle() const
+UINT DescriptorHeapManager::AllocateSRVSlot()
+{
+    Debug::Assert(this->m_currentSRVOffset < this->m_maxSRVCount, "Exceeded SRV descriptor heap capacity");
+    return this->m_currentSRVOffset++;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetCPUHandleAt(UINT index) const
 {
     return CD3DX12_CPU_DESCRIPTOR_HANDLE(
         this->m_srvHeap->GetCPUDescriptorHandleForHeapStart(),
-        this->m_currentSRVOffset,
+        index,
         this->m_srvDescriptorSize
     );
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetSRVGPUHandleFromIndex(UINT index) const
+D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetSRVHandleFromIndex(UINT index) const
 {
     return CD3DX12_GPU_DESCRIPTOR_HANDLE(
         this->m_srvHeap->GetGPUDescriptorHandleForHeapStart(),
@@ -77,9 +84,3 @@ D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetSRVGPUHandleFromIndex(UINT
     );
 }
 
-/* Allocate First and use returned UINT to create SRV */
-UINT DescriptorHeapManager::AllocateSRVSlot()
-{
-    Debug::Assert(this->m_currentSRVOffset < this->m_maxSRVCount, "Exceeded SRV descriptor heap capacity");
-    return this->m_currentSRVOffset++;
-}

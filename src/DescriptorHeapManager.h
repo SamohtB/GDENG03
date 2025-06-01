@@ -17,9 +17,9 @@ public:
     // SRV access
     UINT GetSRVDescriptorSize() const;
     ID3D12DescriptorHeap* GetSRVHeap() const;
-    D3D12_CPU_DESCRIPTOR_HANDLE GetNextFreeSRV_CPUHandle() const;
-    D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUHandleFromIndex(UINT index) const;
-    UINT AllocateSRVSlot();  // returns index of allocated descriptor
+    UINT AllocateSRVSlot();
+    D3D12_CPU_DESCRIPTOR_HANDLE GetCPUHandleAt(UINT index) const;
+    D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleFromIndex(UINT index) const;
 
 private:
     std::vector<ID3D12DescriptorHeap*> m_activeHeaps;

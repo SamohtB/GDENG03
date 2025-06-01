@@ -20,6 +20,7 @@ public:
 
 	void UpdateConstantBuffer(float time);
 	ComPtr<ID3D12Device> GetD3DDevicePtr();
+	RenderDevice* GetRenderDevice();
 	DeviceContext* GetDeviceContext();
 
 private:

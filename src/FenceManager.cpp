@@ -29,7 +29,6 @@ void FenceManager::WaitForFrameGPU(UINT frameIndex)
     {
         Debug::ThrowIfFailed(m_fence->SetEventOnCompletion(fenceValue, m_fenceEvent));
         WaitForSingleObjectEx(m_fenceEvent, INFINITE, FALSE);
-        Debug::Log("Waiting For: " + std::to_string(fenceValue));
     }
 }
 
@@ -38,7 +37,6 @@ void FenceManager::SignalCurrentFrameGPU(ID3D12CommandQueue* queue, UINT frameIn
     UINT64 value = m_nextFenceValue++;
     m_fenceValues[frameIndex] = value;
     Debug::ThrowIfFailed(queue->Signal(this->m_fence.Get(), value));
-    Debug::Log("Signaling: " + std::to_string(value));
 }
 
 void FenceManager::ShutDown()

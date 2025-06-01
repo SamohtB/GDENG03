@@ -21,6 +21,8 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 
+	GraphicsEngine::GetInstance()->GetTextureManager()->LoadInitialTextures();
+
 	std::shared_ptr<Quad> rectangle = std::make_shared<Quad>(0, "Rectangle_1", XMFLOAT2(0.0f, 0.66f));
 	GameObjectManager::GetInstance()->AddGameObject(rectangle);
 

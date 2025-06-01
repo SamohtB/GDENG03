@@ -1,8 +1,6 @@
 #include "GraphicsEngine.h"
 
-
-//#include "TextureManager.h"
-
+#include "RenderDevice.h"
 #include "Debug.h"
 
 GraphicsEngine* GraphicsEngine::sharedInstance = nullptr;
@@ -20,14 +18,25 @@ GraphicsEngine::GraphicsEngine(UINT width, UINT height, HWND hwnd)
 	}
 
 	auto dvcPtr = this->m_renderSystem->GetD3DDevicePtr();
+	auto descHeap = this->m_renderSystem->GetRenderDevice()->GetDescriptorHeapManagerPtr();
 
 	try
 	{
-		this->m_batchUploader = std::make_unique<BatchUploader>(dvcPtr);
+		this->m_batchUploader = std::make_shared<BatchUploader>(dvcPtr);
 	}
 	catch (...)
 	{
 		Debug::LogError("Batch Uploader initialization failed!");
+		return;
+	}
+
+	try 
+	{
+		this->m_textureManager = std::make_unique<TextureManager>(descHeap, this->m_batchUploader);
+	}
+	catch (...)
+	{
+		Debug::LogError("Texture Manager initialization failed!");
 		return;
 	}
 }
@@ -64,8 +73,8 @@ BatchUploader* GraphicsEngine::GetBatchUploader()
 	return this->m_batchUploader.get();
 }
 
-//TextureManager* GraphicsEngine::GetTextureManager()
-//{
-//	return this->m_textureManager.get();
-//}
+TextureManager* GraphicsEngine::GetTextureManager()
+{
+	return this->m_textureManager.get();
+}
 

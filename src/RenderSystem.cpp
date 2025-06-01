@@ -104,6 +104,11 @@ ComPtr<ID3D12Device> RenderSystem::GetD3DDevicePtr()
 	return this->m_renderDevice->GetD3DDevicePtr();
 }
 
+RenderDevice* RenderSystem::GetRenderDevice()
+{
+	return this->m_renderDevice.get();
+}
+
 DeviceContext* RenderSystem::GetDeviceContext()
 {
 	return this->m_deviceContext.get();

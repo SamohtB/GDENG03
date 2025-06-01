@@ -4,7 +4,7 @@
 
 #include "RenderSystem.h"
 #include "BatchUploader.h"
-//class TextureManager;
+#include "TextureManager.h"
 
 class GraphicsEngine
 {
@@ -15,7 +15,7 @@ public:
 
 	RenderSystem* GetRenderSystem();
 	BatchUploader* GetBatchUploader();
-	//TextureManager* GetTextureManager();
+	TextureManager* GetTextureManager();
 
 private:
 	GraphicsEngine(UINT width, UINT height, HWND hwnd);
@@ -26,7 +26,9 @@ private:
 	static GraphicsEngine* sharedInstance;
 
 	std::unique_ptr<RenderSystem> m_renderSystem = nullptr;
-	std::unique_ptr<BatchUploader> m_batchUploader = nullptr;
-	//std::unique_ptr<TextureManager> m_textureManager = nullptr;
+	std::shared_ptr<BatchUploader> m_batchUploader = nullptr;
+	std::unique_ptr<TextureManager> m_textureManager = nullptr;
+
+	friend RenderDevice;
 };
 

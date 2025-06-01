@@ -21,11 +21,13 @@ public:
 	PipelineStateManager* GetPSOManager() const;
 	DescriptorHeapManager* GetDescriptorHeapManager() const;
 
+	std::shared_ptr<DescriptorHeapManager> GetDescriptorHeapManagerPtr() const;
+
 private:
 	ComPtr<IDXGIFactory6> m_dxgiFactory;
 	std::unique_ptr<DeviceManager> m_deviceManager;
 	std::unique_ptr<FenceManager> m_fenceManager;
-	std::unique_ptr<DescriptorHeapManager> m_descriptorHeap;
+	std::shared_ptr<DescriptorHeapManager> m_descriptorHeap;
 	std::unique_ptr<PipelineStateManager> m_pipelineStateManager;
 };
 

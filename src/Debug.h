@@ -28,13 +28,12 @@ public:
     {
         if (FAILED(hr))
         {
-#ifdef DEBUG
             if (!message.empty()) 
             {
                 LogError(message);
             }
             LogError(HrToString(hr));
-#endif
+
             throw HrException(hr);
             Break();
         }
@@ -42,56 +41,45 @@ public:
 
     static void Log(const std::string& message) 
     {
-#ifdef DEBUG
         SetColor(7);
         std::cout << "[Log] " << message << std::endl;
         ResetColor();
-#endif
     }
 
     static void LogWarning(const std::string& message) 
     {
-#ifdef DEBUG
         SetColor(14);
         std::cout << "[Warning] " << message << std::endl;
         ResetColor();
-#endif
     }
 
     static void LogError(const std::string& message) 
     {
-#ifdef DEBUG
         SetColor(12);
         std::cerr << "[Error] " << message << std::endl;
         ResetColor();
-#endif
+        Break();
     }
 
     static void LogException(const std::exception& e) 
     {
-#ifdef DEBUG
         SetColor(12);
         std::cerr << "[Exception] " << e.what() << std::endl;
         ResetColor();
-#endif
     }
 
     static void Break() 
     {
-#ifdef DEBUG
         DEBUG_BREAK();
-#endif
     }
 
     static void Assert(bool condition, const std::string& message = "Assertion failed") 
     {
-#ifdef DEBUG
         if (!condition) 
         {
             LogError(message);
             Break();
         }
-#endif
     }
 
 private:

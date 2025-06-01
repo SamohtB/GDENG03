@@ -11,7 +11,7 @@ RenderDevice::RenderDevice()
 
 	auto d3dDevice = this->m_deviceManager->GetD3DDevice().Get();
 
-	this->m_descriptorHeap = std::make_unique<DescriptorHeapManager>(d3dDevice);
+	this->m_descriptorHeap = std::make_shared<DescriptorHeapManager>(d3dDevice);
 	this->m_pipelineStateManager = std::make_unique<PipelineStateManager>(d3dDevice);
 	this->m_fenceManager = std::make_unique<FenceManager>(d3dDevice);
 }
@@ -44,4 +44,9 @@ PipelineStateManager* RenderDevice::GetPSOManager() const
 DescriptorHeapManager* RenderDevice::GetDescriptorHeapManager() const
 {
 	return this->m_descriptorHeap.get();
+}
+
+std::shared_ptr<DescriptorHeapManager> RenderDevice::GetDescriptorHeapManagerPtr() const
+{
+	return this->m_descriptorHeap;
 }

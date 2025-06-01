@@ -171,6 +171,7 @@
     <ClCompile Include="src\VertexBuffer.cpp" />
     <ClCompile Include="src\Win32App.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\IndexBuffer.h" />
@@ -199,6 +200,8 @@
     <ClInclude Include="src\Win32App.h" />
     <ClInclude Include="src\VertexTypes.h" />
     <ClInclude Include="src\TextureManager.h" />
+    <ClInclude Include="src\Texture.h" />
+    <ClInclude Include="src\TextureTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\TexturedVertexShader.hlsl">
