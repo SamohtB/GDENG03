@@ -68,7 +68,7 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
     if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
         featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
 
-    CD3DX12_DESCRIPTOR_RANGE1 srvRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 3, 0);
+    CD3DX12_DESCRIPTOR_RANGE1 srvRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 0);
 
     CD3DX12_ROOT_PARAMETER1 rootParams[2];
     rootParams[0].InitAsDescriptorTable(1, &srvRange, D3D12_SHADER_VISIBILITY_PIXEL);

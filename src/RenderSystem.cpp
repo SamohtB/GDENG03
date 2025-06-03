@@ -92,10 +92,19 @@ void RenderSystem::EndFrame()
 	this->m_swapChainManager->UpdateFrameIndex();
 }
 
-void RenderSystem::UpdateConstantBuffer(float time)
+void RenderSystem::UpdateConstantBuffer(DirectX::SimpleMath::Vector3 values)
 {
 	auto index = this->m_swapChainManager->GetCurrentFrameIndex();
-	this->m_constantBuffer->Update(time, index);
+	this->m_constantBuffer->Update(values, index);
+}
+
+void RenderSystem::UpdateAndSetConstantBuffer(DirectX::SimpleMath::Vector3 values)
+{
+	auto index = this->m_swapChainManager->GetCurrentFrameIndex();
+	this->m_constantBuffer->Update(values, index);
+
+	auto cbAddress = m_constantBuffer->GetVirtualAddress(index);
+	this->m_deviceContext->SetConstantBuffer(1, cbAddress);
 }
 
 ID3D12PipelineState* RenderSystem::GetPipelineState(const ShaderType& type) const

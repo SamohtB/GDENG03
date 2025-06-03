@@ -10,6 +10,7 @@
 #include "PBSQuads.h"
 
 #include "ConstantBuffer.h"
+#include "Materials.h"
 
 #include <iostream>
 
@@ -24,11 +25,14 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	GraphicsEngine::GetInstance()->GetTextureManager()->LoadInitialTextures();
 
-	std::shared_ptr<PBSQuads> quad = std::make_shared<PBSQuads>(0, "PBS", XMFLOAT2(0.0f, 0.5f));
-	GameObjectManager::GetInstance()->AddGameObject(quad);
+	//std::shared_ptr<PBSQuads> quad = std::make_shared<PBSQuads>(0, "RockBase", XMFLOAT2(-0.5f, 0.66f), rock_mat_0);
+	//GameObjectManager::GetInstance()->AddGameObject(quad);
 
-	std::shared_ptr<Quad> quad2 = std::make_shared<Quad>(1, "Rectangle", XMFLOAT2(0.0f, -0.5f));
-	GameObjectManager::GetInstance()->AddGameObject(quad2);
+	//quad = std::make_shared<PBSQuads>(1, "RockWithNormal", XMFLOAT2(-0.5f, 0.0f), rock_mat_1);
+	//GameObjectManager::GetInstance()->AddGameObject(quad);
+
+	std::shared_ptr<PBSQuads> quad = std::make_shared<PBSQuads>(2, "RockWithRoughness", XMFLOAT2(-0.5f, -0.66f), metal_plate_mat);
+	GameObjectManager::GetInstance()->AddGameObject(quad);
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
 }
@@ -54,8 +58,6 @@ void GameWindow::OnRender()
 	auto context = GraphicsEngine::GetInstance()->GetRenderSystem()->GetDeviceContext();
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->StartFrame();
-
-	GraphicsEngine::GetInstance()->GetRenderSystem()->UpdateConstantBuffer(m_angle); // Update Constant Buffers when GPU not busy
 
 	GameObjectManager::GetInstance()->RenderAll(context);
 

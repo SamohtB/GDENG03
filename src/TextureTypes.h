@@ -3,8 +3,11 @@
 enum TextureType : int
 {
     UNSET = 0,
-    COLOR = 1,
-    NORMAL = 2,
-    ROUGH = 3,
-    HEIGHT = 4
+    ROCK_COLOR = 1,
+    ROCK_NORMAL = 2,
+    ROCK_ROUGH = 3,
+    METAL_COLOR = 4,
+    METAL_NORMAL = 5,
+    METAL_ROUGH = 6,
+    METAL_METAL = 7,
 };

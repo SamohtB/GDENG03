@@ -79,6 +79,32 @@ ComPtr<ID3D12Resource> BatchUploader::SchedTexture(const std::wstring& filePath,
     return textureBuffer;
 }
 
+ComPtr<ID3D12Resource> BatchUploader::SchedWhitePixelTexture(D3D12_CPU_DESCRIPTOR_HANDLE handle)
+{
+    Debug::Assert(this->m_uploadStarted, "Upload Not Yet Started! | Invalid Schedule!");
+
+    static const uint8_t whitePixel[4] = { 255, 255, 255, 255 };
+
+    D3D12_SUBRESOURCE_DATA subresource = {};
+    subresource.pData = whitePixel;
+    subresource.RowPitch = 4;
+    subresource.SlicePitch = 4;
+
+    ComPtr<ID3D12Resource> textureBuffer;
+    Debug::ThrowIfFailed(DirectX::CreateTextureFromMemory(
+        this->m_device.Get(), 
+        *this->m_resourceUploader,
+        4, 
+        DXGI_FORMAT_R8G8B8A8_UNORM, 
+        subresource, 
+        &textureBuffer
+    ));
+
+    DirectX::CreateShaderResourceView(this->m_device.Get(), textureBuffer.Get(), handle);
+
+    return textureBuffer;
+}
+
 template<typename VertexType>
 VertexBufferInfo BatchUploader::SchedVertexBuffer(const std::vector<VertexType>& vertices)
 {

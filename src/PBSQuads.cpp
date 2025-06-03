@@ -4,8 +4,9 @@
 #include "GraphicsEngine.h"
 #include "TextureManager.h"
 #include "GeoMath.h"
+#include "Debug.h"
 
-PBSQuads::PBSQuads(int id, String name, Vector2 offset) : AGameObject(id, name)
+PBSQuads::PBSQuads(int id, String name, Vector2 offset, Material mat) : AGameObject(id, name)
 {
     float x = offset.x;
     float y = offset.y;
@@ -62,8 +63,7 @@ PBSQuads::PBSQuads(int id, String name, Vector2 offset) : AGameObject(id, name)
     this->m_vertexBuffer = std::make_unique<VertexBuffer>(m_vertices);
 
     this->m_shader = ShaderType::PBS;
-    this->m_texture = TextureType::COLOR;
-    this->m_normal = TextureType::NORMAL;
+    this->m_material = mat;
 }
 
 void PBSQuads::Update()
@@ -75,12 +75,16 @@ void PBSQuads::Draw(DeviceContext* context)
     auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
     auto textureManager = GraphicsEngine::GetInstance()->GetTextureManager();
 
+    Vector3 values = { this->m_material.normalValue, this->m_material.roughnessValue, this->m_material.metallicValue };
+    renderSystem->UpdateAndSetConstantBuffer(values);
+
     /* Check Render System Start Frame {} for other settables */
     {
         context->SetPSO(renderSystem->GetPipelineState(this->m_shader));
-        context->SetTexture(0, textureManager->GetTextureHandle(this->m_texture));
-        context->SetTexture(1, textureManager->GetTextureHandle(this->m_normal));
-        context->SetTexture(2, textureManager->GetTextureHandle(TextureType::ROUGH));
+        context->SetTexture(0, textureManager->GetTextureHandle(this->m_material.albedo));
+        context->SetTexture(1, textureManager->GetTextureHandle(this->m_material.normal));
+        context->SetTexture(2, textureManager->GetTextureHandle(this->m_material.roughness));
+        context->SetTexture(3, textureManager->GetTextureHandle(this->m_material.metallic));
     }
 
     context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());

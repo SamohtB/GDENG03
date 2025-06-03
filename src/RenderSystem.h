@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "Dx12Commons.h"
+#include <directxtk12/SimpleMath.h>
 
 #include "ShaderTypes.h"
 
@@ -20,7 +21,8 @@ public:
 	void StartFrame();
 	void EndFrame();
 
-	void UpdateConstantBuffer(float time);
+	void UpdateConstantBuffer(DirectX::SimpleMath::Vector3 values);
+	void UpdateAndSetConstantBuffer(DirectX::SimpleMath::Vector3 values);
 
 	ID3D12PipelineState* GetPipelineState(const ShaderType& type) const;
 

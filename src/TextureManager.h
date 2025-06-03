@@ -22,6 +22,8 @@ public:
     D3D12_GPU_DESCRIPTOR_HANDLE GetTextureHandle(const TextureType& type);
 
 private:
+    void CreateDefaultWhiteTexture();
+
     std::shared_ptr<DescriptorHeapManager> m_heapManager;
     std::shared_ptr<BatchUploader> m_uploader;
     SRVMap m_srvMap;
