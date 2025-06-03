@@ -251,6 +251,9 @@
     <ClInclude Include="src\ShaderTypes.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="src\Materials.h">
+      <Filter>App\Entities\Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\TexturedVertexShader.hlsl">

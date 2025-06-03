@@ -30,7 +30,7 @@ Quad::Quad(int id, String name, Vector2 offset) : AGameObject(id, name)
     this->m_vertexBuffer = std::make_unique<VertexBuffer>(m_vertices);
 
     this->m_shader = ShaderType::TEXTURED;
-    this->m_texture = TextureType::COLOR;
+    this->m_texture = TextureType::ROCK_COLOR;
 }
 
 void Quad::Update()

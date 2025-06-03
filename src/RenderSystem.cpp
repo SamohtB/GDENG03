@@ -64,9 +64,9 @@ void RenderSystem::StartFrame()
 		auto heaps = this->m_renderDevice->GetDescriptorHeapManager()->GetActiveHeaps();
 		this->m_deviceContext->SetDescriptorHeaps(heaps);
 
-		/* Constant Buffer */
-		auto cbAddress = m_constantBuffer->GetVirtualAddress(currentFrameIndex);
-		this->m_deviceContext->SetConstantBuffer(1, cbAddress);
+		///* Constant Buffer */
+		//auto cbAddress = m_constantBuffer->GetVirtualAddress(currentFrameIndex);
+		//this->m_deviceContext->SetConstantBuffer(1, cbAddress);
 
 		this->m_deviceContext->SetViewport(&m_viewport);
 		this->m_deviceContext->SetScissorRect(&m_scissorRect);
@@ -92,10 +92,19 @@ void RenderSystem::EndFrame()
 	this->m_swapChainManager->UpdateFrameIndex();
 }
 
-void RenderSystem::UpdateConstantBuffer(float time)
+void RenderSystem::UpdateConstantBuffer(DirectX::SimpleMath::Vector2 values)
 {
 	auto index = this->m_swapChainManager->GetCurrentFrameIndex();
-	this->m_constantBuffer->Update(time, index);
+	this->m_constantBuffer->Update(values, index);
+}
+
+void RenderSystem::UpdateAndSetConstantBuffer(DirectX::SimpleMath::Vector2 values)
+{
+	auto index = this->m_swapChainManager->GetCurrentFrameIndex();
+	this->m_constantBuffer->Update(values, index);
+
+	auto cbAddress = m_constantBuffer->GetVirtualAddress(index);
+	this->m_deviceContext->SetConstantBuffer(1, cbAddress);
 }
 
 ID3D12PipelineState* RenderSystem::GetPipelineState(const ShaderType& type) const

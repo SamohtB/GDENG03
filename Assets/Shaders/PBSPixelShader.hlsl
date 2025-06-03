@@ -17,6 +17,13 @@ struct PSINPUT
     float3x3 TBN : TBN;
 };
 
+cbuffer MaterialBuffer : register(b0)
+{
+    float normalStr;
+    float roughStr;
+    
+}
+
 float4 PSMain(PSINPUT input) : SV_TARGET
 {
     // Sample albedo (base color)
@@ -30,13 +37,13 @@ float4 PSMain(PSINPUT input) : SV_TARGET
     float3 normalSample = NormalTexture.Sample(Sampler, input.texcoord).rgb;
     float3 mappedNormal = normalize(2.0 * normalSample - 1.0);
     float3 flatNormal = float3(0.0, 0.0, 1.0);
-    float3 finalNormalTangent = normalize(lerp(flatNormal, mappedNormal, 0.5f)); // To Do: move str to cbuffer
+    float3 finalNormalTangent = normalize(lerp(flatNormal, mappedNormal, normalStr));
     float3 N = normalize(mul(input.TBN, finalNormalTangent));
     
     // === Roughness ===
     float roughnessSample = RoughnessTexture.Sample(Sampler, input.texcoord).r;
     float baseRoughness = 0.5;
-    float roughness = lerp(baseRoughness, roughnessSample, 0.3f); // To Do: move str to cbuffer
+    float roughness = lerp(baseRoughness, roughnessSample, roughStr);
     roughness = saturate(roughness);
 
     // === Diffuse ===
@@ -46,7 +53,7 @@ float4 PSMain(PSINPUT input) : SV_TARGET
     // === Specular === (Fake using Blinn-Phong model modulated by roughness)
     float3 halfway = normalize(lightDir + viewDir);
     float specAngle = max(dot(N, halfway), 0.0);
-    float shininess = lerp(2.0, 128.0, 1.0 - roughness);
+    float shininess = lerp(2.0, 256.0, 1.0 - roughness);
     float specularIntensity = pow(specAngle, shininess);
     float3 specularColor = float3(1.0, 1.0, 1.0) * specularIntensity;
     

@@ -28,6 +28,7 @@ public:
 
 	IndexBufferInfo SchedIndexBuffer(const std::vector<unsigned int>& indices);
 	ComPtr<ID3D12Resource> SchedTexture(const std::wstring& filePath, D3D12_CPU_DESCRIPTOR_HANDLE handle);
+	ComPtr<ID3D12Resource> SchedWhitePixelTexture(D3D12_CPU_DESCRIPTOR_HANDLE handle);
 
 	template<typename VertexType>
 	VertexBufferInfo SchedVertexBuffer(const std::vector<VertexType>& vertices);

@@ -175,6 +175,7 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Materials.h" />
     <ClInclude Include="src\GeoMath.h" />
     <ClInclude Include="src\PBSQuads.h" />
     <ClInclude Include="src\ShaderTypes.h" />

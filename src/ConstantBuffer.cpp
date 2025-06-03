@@ -23,9 +23,12 @@ ConstantBuffer::ConstantBuffer(ID3D12Device* device)
     memset(m_pCbvDataBegin, 0, totalBufferSize);
 }
 
-void ConstantBuffer::Update(float time, UINT currentFrameIndex)
+void ConstantBuffer::Update(DirectX::SimpleMath::Vector2 matValues, UINT currentFrameIndex)
 {
-    this->m_constantBufferData.time = time;
+    /* Set Values */
+    this->m_constantBufferData.normal = matValues.x;
+    this->m_constantBufferData.roughness = matValues.y;
+
     void* dest = reinterpret_cast<BYTE*>(m_pCbvDataBegin) + (currentFrameIndex * BUFFER_SIZE);
     memcpy(dest, &m_constantBufferData, sizeof(m_constantBufferData));
 }
