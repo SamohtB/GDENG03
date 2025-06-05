@@ -27,32 +27,24 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	renderSystem->LoadInitialResources();
 
-	std::shared_ptr<PBSQuads> quad = std::make_shared<PBSQuads>(0, "RockBase", XMFLOAT2(-0.5f, 0.66f), ROCK_0);
+	std::shared_ptr<PBSQuads> quad = std::make_shared<PBSQuads>(0, "RockBase", XMFLOAT2(-0.5f, 0.33f), ROCK_0);
 	GameObjectManager::GetInstance()->AddGameObject(quad);
 
-	quad = std::make_shared<PBSQuads>(1, "RockWithNormal", XMFLOAT2(-0.5f, 0.0f), ROCK_1);
+	quad = std::make_shared<PBSQuads>(1, "RockWithPBS", XMFLOAT2(-0.5f, -0.33f), ROCK_1);
 	GameObjectManager::GetInstance()->AddGameObject(quad);
 
-	quad = std::make_shared<PBSQuads>(2, "RockWithNormalAndRough", XMFLOAT2(-0.5f, -0.66f), ROCK_2);
+	quad = std::make_shared<PBSQuads>(2, "MetalPlateBase", XMFLOAT2(0.0f, 0.33f), METAL_PLATE_0);
 	GameObjectManager::GetInstance()->AddGameObject(quad);
 
-	quad = std::make_shared<PBSQuads>(3, "MetalPlateBase", XMFLOAT2(0.0f, 0.66f), METAL_PLATE_0);
+	quad = std::make_shared<PBSQuads>(3, "MetalPlateWithPBS", XMFLOAT2(0.0f, -0.33f), METAL_PLATE_1);
 	GameObjectManager::GetInstance()->AddGameObject(quad);
 
-	quad = std::make_shared<PBSQuads>(3, "MetalPlateWithNormal", XMFLOAT2(0.0f, 0.0f), METAL_PLATE_1);
+	quad = std::make_shared<PBSQuads>(4, "BricksBase", XMFLOAT2(0.5f, 0.33f), BRICKS_0);
 	GameObjectManager::GetInstance()->AddGameObject(quad);
 
-	quad = std::make_shared<PBSQuads>(3, "MetalPlateWithNormalAndRough", XMFLOAT2(0.0f, -0.66f), METAL_PLATE_2);
+	quad = std::make_shared<PBSQuads>(5, "BricksWithPBS", XMFLOAT2(0.5f, -0.33f), BRICKS_1);
 	GameObjectManager::GetInstance()->AddGameObject(quad);
 
-	quad = std::make_shared<PBSQuads>(3, "BricksBase", XMFLOAT2(0.5f, 0.66f), BRICKS_0);
-	GameObjectManager::GetInstance()->AddGameObject(quad);
-
-	quad = std::make_shared<PBSQuads>(3, "BricksWithNormal", XMFLOAT2(0.5f, 0.0f), BRICKS_1);
-	GameObjectManager::GetInstance()->AddGameObject(quad);
-
-	quad = std::make_shared<PBSQuads>(3, "BricksWithNormalAndRough", XMFLOAT2(0.5f, -0.66f), BRICKS_2);
-	GameObjectManager::GetInstance()->AddGameObject(quad);
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
 }

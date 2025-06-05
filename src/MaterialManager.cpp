@@ -18,26 +18,17 @@ void MaterialManager::LoadInitialMaterials()
     LoadMaterial(MaterialType::ROCK_1, MaterialData::Materials.at(MaterialType::ROCK_1));
     Debug::Log("ROCK_1 Material Loaded");
 
-    LoadMaterial(MaterialType::ROCK_2, MaterialData::Materials.at(MaterialType::ROCK_2));
-    Debug::Log("ROCK_2 Material Loaded");
-
     LoadMaterial(MaterialType::METAL_PLATE_0, MaterialData::Materials.at(MaterialType::METAL_PLATE_0));
     Debug::Log("METAL_PLATE_0 Material Loaded");
 
     LoadMaterial(MaterialType::METAL_PLATE_1, MaterialData::Materials.at(MaterialType::METAL_PLATE_1));
     Debug::Log("METAL_PLATE_1 Material Loaded");
 
-    LoadMaterial(MaterialType::METAL_PLATE_2, MaterialData::Materials.at(MaterialType::METAL_PLATE_2));
-    Debug::Log("METAL_PLATE_2 Material Loaded");
-
     LoadMaterial(MaterialType::BRICKS_0, MaterialData::Materials.at(MaterialType::BRICKS_0));
-    Debug::Log("METAL_PLATE_2 Material Loaded");
+    Debug::Log("BRICKS_0 Material Loaded");
 
     LoadMaterial(MaterialType::BRICKS_1, MaterialData::Materials.at(MaterialType::BRICKS_1));
-    Debug::Log("METAL_PLATE_2 Material Loaded");
-
-    LoadMaterial(MaterialType::BRICKS_2, MaterialData::Materials.at(MaterialType::BRICKS_2));
-    Debug::Log("METAL_PLATE_2 Material Loaded");
+    Debug::Log("BRICKS_1 Material Loaded");
 }
 
 

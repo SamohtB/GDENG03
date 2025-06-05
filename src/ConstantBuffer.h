@@ -9,14 +9,20 @@ class ConstantBuffer
 {
 public:
 
-	struct alignas(256) SceneConstantBuffer 
+	struct alignas(256) SceneConstantBuffer
 	{
-		UINT diffuseHandleIndex = 0;
-		UINT normalHandleIndex = 0;
+		uint32_t diffuseHandleIndex = 0;
+		uint32_t normalHandleIndex = 0;
 		float normalStr = 0;
-		UINT roughHandleIndex = 0;
+		uint32_t metalHandleIndex = 0;
+		float metalStr = 0;
+		uint32_t roughHandleIndex = 0;
 		float roughStr = 0;
+		uint32_t ambientOcclussionHandleIndex = 0;
+		float ambientOcclussionStr = 0;
+		uint32_t materialFlags = 0;
 	};
+
 
 	ConstantBuffer(ComPtr<ID3D12Resource> buffer);
 	~ConstantBuffer() = default;

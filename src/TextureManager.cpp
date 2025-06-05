@@ -19,6 +19,9 @@ void TextureManager::LoadInitialTextures()
     LoadTexture(TextureType::ROCK_ROUGH, L"Assets/Textures/rock_r.jpg");
     Debug::Log("Rock_Rough Texture Successfully Loaded");
 
+    LoadTexture(TextureType::ROCK_AO, L"Assets/Textures/rock_ao.jpg");
+    Debug::Log("Rock_AO Texture Successfully Loaded");
+
     LoadTexture(TextureType::METAL_COLOR, L"Assets/Textures/metal_plate_d.jpg");
     Debug::Log("metal_plate_d Texture Successfully Loaded");
 
@@ -32,13 +35,16 @@ void TextureManager::LoadInitialTextures()
     Debug::Log("metal_plate_m Texture Successfully Loaded");
 
     LoadTexture(TextureType::BRICKS_COLOR, L"Assets/Textures/bricks_d.jpg");
-    Debug::Log("metal_plate_m Texture Successfully Loaded");
+    Debug::Log("bricks_d Texture Successfully Loaded");
 
     LoadTexture(TextureType::BRICKS_NORMAL, L"Assets/Textures/bricks_n.jpg");
-    Debug::Log("metal_plate_m Texture Successfully Loaded");
+    Debug::Log("bricks_n Texture Successfully Loaded");
 
     LoadTexture(TextureType::BRICKS_ROUGH, L"Assets/Textures/bricks_r.jpg");
-    Debug::Log("metal_plate_m Texture Successfully Loaded");
+    Debug::Log("bricks_r Texture Successfully Loaded");
+
+    LoadTexture(TextureType::BRICKS_AO, L"Assets/Textures/bricks_ao.jpg");
+    Debug::Log("bricks_ao Texture Successfully Loaded");
 }
 
 void TextureManager::LoadTexture(const TextureType& type, const std::wstring& filePath)

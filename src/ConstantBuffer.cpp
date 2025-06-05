@@ -12,12 +12,16 @@ ConstantBuffer::ConstantBuffer(ComPtr<ID3D12Resource> buffer) : m_constantBuffer
 
 void ConstantBuffer::Update(MaterialDescription mat)
 {
-    /* Set Values */
-    this->m_constantBufferData.diffuseHandleIndex = mat.albedo;
-    this->m_constantBufferData.normalHandleIndex = mat.normal;
-    this->m_constantBufferData.normalStr = mat.normalValue;
-    this->m_constantBufferData.roughHandleIndex = mat.roughness;
-    this->m_constantBufferData.roughStr = mat.roughnessValue;
+    this->m_constantBufferData.diffuseHandleIndex = mat.albedoTextureIndex;
+    this->m_constantBufferData.normalHandleIndex = mat.normalTextureIndex;
+    this->m_constantBufferData.normalStr = mat.normalStr;
+    this->m_constantBufferData.metalHandleIndex = mat.metallicTextureIndex;
+    this->m_constantBufferData.metalStr = mat.metallicStr;
+    this->m_constantBufferData.roughHandleIndex = mat.roughTextureIndex;
+    this->m_constantBufferData.roughStr = mat.roughStr;
+    this->m_constantBufferData.ambientOcclussionHandleIndex = mat.ambientOcclusionTextureIndex;
+    this->m_constantBufferData.ambientOcclussionStr = mat.ambientOcclusionStr;
+    this->m_constantBufferData.materialFlags = MaterialData::GetFlags(mat);
 
     memcpy(m_cbvDataBegin, &m_constantBufferData, sizeof(m_constantBufferData));
 }
