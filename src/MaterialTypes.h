@@ -5,8 +5,15 @@
 enum MaterialType : int
 {
 	DEFAULT_MAT = 0,
-	ROCK = 1,
-	METAL_PLATE = 2
+	ROCK_0 = 1,
+	ROCK_1,
+	ROCK_2,
+	METAL_PLATE_0,
+	METAL_PLATE_1,
+	METAL_PLATE_2,
+	BRICKS_0,
+	BRICKS_1,
+	BRICKS_2
 };
 
 struct MaterialDescription
@@ -25,20 +32,4 @@ struct MaterialDescription
 	{
 
 	}
-
-	void Print() const
-	{
-		std::cout << "Material:\n";
-		std::cout << "  Albedo: " << static_cast<int>(albedo) << "\n";
-		std::cout << "  Normal: " << static_cast<int>(normal) << " (Strength: " << normalValue << ")\n";
-		std::cout << "  Roughness: " << static_cast<int>(roughness) << " (Strength: " << roughnessValue << ")\n";
-	}
 };
-
-static MaterialDescription default_mat(DEFAULT_TEXTURE, DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f);
-static MaterialDescription rock_mat_0(ROCK_COLOR, DEFAULT_TEXTURE, 0.f, DEFAULT_TEXTURE, 0.f);
-static MaterialDescription rock_mat_1(ROCK_COLOR, ROCK_NORMAL, 0.5f, DEFAULT_TEXTURE, 0.0f);
-static MaterialDescription rock_mat_2(ROCK_COLOR, ROCK_NORMAL, 0.5f, ROCK_ROUGH, 0.8f);
-static MaterialDescription metal_plate_mat_0(METAL_COLOR, DEFAULT_TEXTURE, 0.f, DEFAULT_TEXTURE, 0.f);
-static MaterialDescription metal_plate_mat_1(METAL_COLOR, METAL_NORMAL, 0.9f, DEFAULT_TEXTURE, 0.f);
-static MaterialDescription metal_plate_mat_2(METAL_COLOR, METAL_NORMAL, 0.9f, METAL_ROUGH, 0.2f);

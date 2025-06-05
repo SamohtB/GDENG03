@@ -9,13 +9,37 @@ MaterialManager::MaterialManager(std::shared_ptr<DescriptorHeapManager> heapMana
 
 void MaterialManager::LoadInitialMaterials()
 {
-    LoadMaterial(MaterialType::DEFAULT_MAT, rock_mat_0);
-    Debug::Log("Default Material Loaded");
-    LoadMaterial(MaterialType::ROCK, rock_mat_2);
-    Debug::Log("Rock Material Loaded");
-    LoadMaterial(MaterialType::METAL_PLATE, metal_plate_mat_2);
-    Debug::Log("Metal Plate Material Loaded");
+    LoadMaterial(MaterialType::DEFAULT_MAT, MaterialData::Materials.at(MaterialType::DEFAULT_MAT));
+    Debug::Log("DEFAULT_MAT Material Loaded");
+
+    LoadMaterial(MaterialType::ROCK_0, MaterialData::Materials.at(MaterialType::ROCK_0));
+    Debug::Log("ROCK_0 Material Loaded");
+
+    LoadMaterial(MaterialType::ROCK_1, MaterialData::Materials.at(MaterialType::ROCK_1));
+    Debug::Log("ROCK_1 Material Loaded");
+
+    LoadMaterial(MaterialType::ROCK_2, MaterialData::Materials.at(MaterialType::ROCK_2));
+    Debug::Log("ROCK_2 Material Loaded");
+
+    LoadMaterial(MaterialType::METAL_PLATE_0, MaterialData::Materials.at(MaterialType::METAL_PLATE_0));
+    Debug::Log("METAL_PLATE_0 Material Loaded");
+
+    LoadMaterial(MaterialType::METAL_PLATE_1, MaterialData::Materials.at(MaterialType::METAL_PLATE_1));
+    Debug::Log("METAL_PLATE_1 Material Loaded");
+
+    LoadMaterial(MaterialType::METAL_PLATE_2, MaterialData::Materials.at(MaterialType::METAL_PLATE_2));
+    Debug::Log("METAL_PLATE_2 Material Loaded");
+
+    LoadMaterial(MaterialType::BRICKS_0, MaterialData::Materials.at(MaterialType::BRICKS_0));
+    Debug::Log("METAL_PLATE_2 Material Loaded");
+
+    LoadMaterial(MaterialType::BRICKS_1, MaterialData::Materials.at(MaterialType::BRICKS_1));
+    Debug::Log("METAL_PLATE_2 Material Loaded");
+
+    LoadMaterial(MaterialType::BRICKS_2, MaterialData::Materials.at(MaterialType::BRICKS_2));
+    Debug::Log("METAL_PLATE_2 Material Loaded");
 }
+
 
 void MaterialManager::LoadMaterial(const MaterialType& type, const MaterialDescription& description)
 {

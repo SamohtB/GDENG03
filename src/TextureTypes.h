@@ -10,4 +10,7 @@ enum TextureType : int
     METAL_NORMAL = 5,
     METAL_ROUGH = 6,
     METAL_METAL = 7,
+    BRICKS_COLOR = 8,
+    BRICKS_NORMAL = 9,
+    BRICKS_ROUGH = 10,
 };

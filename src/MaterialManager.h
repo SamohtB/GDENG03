@@ -9,6 +9,22 @@
 #include "MaterialTypes.h"
 #include "Material.h"
 
+namespace MaterialData
+{
+    static const std::unordered_map<MaterialType, MaterialDescription> Materials = {
+        { DEFAULT_MAT,      { DEFAULT_TEXTURE, DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f } },
+        { ROCK_0,           { ROCK_COLOR, DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f } },
+        { ROCK_1,           { ROCK_COLOR, ROCK_NORMAL, 0.5f, DEFAULT_TEXTURE, 0.0f } },
+        { ROCK_2,           { ROCK_COLOR, ROCK_NORMAL, 0.5f, ROCK_ROUGH, 0.8f } },
+        { METAL_PLATE_0,    { METAL_COLOR, DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f } },
+        { METAL_PLATE_1,    { METAL_COLOR, METAL_NORMAL, 0.9f, DEFAULT_TEXTURE, 0.0f } },
+        { METAL_PLATE_2,    { METAL_COLOR, METAL_NORMAL, 0.9f, METAL_ROUGH, 0.2f } },
+        { BRICKS_0,         { BRICKS_COLOR, DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f } },
+        { BRICKS_1,         { BRICKS_COLOR, BRICKS_NORMAL, 0.0f, DEFAULT_TEXTURE, 0.0f } },
+        { BRICKS_2,         { BRICKS_COLOR, BRICKS_NORMAL, 0.9f, BRICKS_ROUGH, 0.8f } },
+    };
+}
+
 class MaterialManager
 {
 public:

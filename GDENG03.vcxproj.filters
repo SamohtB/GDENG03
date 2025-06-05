@@ -61,9 +61,6 @@
     <Filter Include="Engine\GraphicsEngine\RenderSystem\SwapChain">
       <UniqueIdentifier>{a974f9e7-b98f-40da-b246-25133e0e13c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GraphicsEngine\TextureManager">
-      <UniqueIdentifier>{93b0d9aa-689f-434b-a657-df74fa665943}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Resources">
       <UniqueIdentifier>{876e5d23-d643-4d93-97c8-5633efad3ae2}</UniqueIdentifier>
     </Filter>
@@ -90,6 +87,9 @@
     </Filter>
     <Filter Include="Engine\GraphicsEngine\RenderSystem\MaterialManager">
       <UniqueIdentifier>{6c28ad4b-015c-4609-9a28-476212287e1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GraphicsEngine\RenderSystem\TextureManager">
+      <UniqueIdentifier>{93b0d9aa-689f-434b-a657-df74fa665943}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -133,7 +133,7 @@
       <Filter>App\Managers\GameObjectManager</Filter>
     </ClCompile>
     <ClCompile Include="src\TextureManager.cpp">
-      <Filter>Engine\GraphicsEngine\TextureManager</Filter>
+      <Filter>Engine\GraphicsEngine\RenderSystem\TextureManager</Filter>
     </ClCompile>
     <ClCompile Include="src\Quad.cpp">
       <Filter>App\Entities\Primitives</Filter>
@@ -213,7 +213,7 @@
       <Filter>App\Managers\GameObjectManager</Filter>
     </ClInclude>
     <ClInclude Include="src\TextureManager.h">
-      <Filter>Engine\GraphicsEngine\TextureManager</Filter>
+      <Filter>Engine\GraphicsEngine\RenderSystem\TextureManager</Filter>
     </ClInclude>
     <ClInclude Include="src\Quad.h">
       <Filter>App\Entities\Primitives</Filter>

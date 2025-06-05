@@ -30,6 +30,15 @@ void TextureManager::LoadInitialTextures()
 
     LoadTexture(TextureType::METAL_METAL, L"Assets/Textures/metal_plate_m.jpg");
     Debug::Log("metal_plate_m Texture Successfully Loaded");
+
+    LoadTexture(TextureType::BRICKS_COLOR, L"Assets/Textures/bricks_d.jpg");
+    Debug::Log("metal_plate_m Texture Successfully Loaded");
+
+    LoadTexture(TextureType::BRICKS_NORMAL, L"Assets/Textures/bricks_n.jpg");
+    Debug::Log("metal_plate_m Texture Successfully Loaded");
+
+    LoadTexture(TextureType::BRICKS_ROUGH, L"Assets/Textures/bricks_r.jpg");
+    Debug::Log("metal_plate_m Texture Successfully Loaded");
 }
 
 void TextureManager::LoadTexture(const TextureType& type, const std::wstring& filePath)
