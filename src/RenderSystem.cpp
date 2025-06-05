@@ -94,7 +94,8 @@ void RenderSystem::StartFrame()
 		auto heaps = this->m_renderDevice->GetDescriptorHeapManager()->GetActiveHeaps();
 		this->m_deviceContext->SetDescriptorHeaps(heaps);
 
-		this->m_deviceContext->SetTexture(this->m_renderDevice->GetDescriptorHeapManager()->GetShaderVisibleGPUHandleAt(0));
+		this->m_deviceContext->SetTexture(
+			this->m_renderDevice->GetDescriptorHeapManager()->GetShaderVisibleGPUHandleAt(0));
 
 		this->m_deviceContext->SetViewport(&m_viewport);
 		this->m_deviceContext->SetScissorRect(&m_scissorRect);

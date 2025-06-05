@@ -75,7 +75,8 @@ ComPtr<ID3D12Resource> BatchUploader::SchedTexture(const std::wstring& filePath,
         false //mipmaps
     ));
 
-    DirectX::CreateShaderResourceView(this->m_device.Get(), textureBuffer.Get(), handle);
+    DirectX::CreateShaderResourceView(this->m_device.Get(), 
+        textureBuffer.Get(), handle);
 
     return textureBuffer;
 }

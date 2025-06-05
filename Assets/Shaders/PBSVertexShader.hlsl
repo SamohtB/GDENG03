@@ -49,7 +49,7 @@ VSOutput VSMain(VSInput input)
     float4 projPos = mul(viewPos, projection);
     output.position = projPos;
 
-    output.texcoord = float2(input.texcoord.x, -input.texcoord.y);
+    output.texcoord = input.texcoord;
     output.positionWS = worldPos.xyz;
     
     float3 worldNormal = normalize(mul(input.normal, (float3x3) world));

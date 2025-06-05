@@ -75,7 +75,7 @@ namespace MaterialData
         { ROCK_0,           { ROCK_COLOR,      DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f,   DEFAULT_TEXTURE, 0.0f } },
         { ROCK_1,           { ROCK_COLOR,      ROCK_NORMAL,     1.0f, DEFAULT_TEXTURE, 0.0f, ROCK_ROUGH,      1.0f,   ROCK_AO,         1.0f } },
         { METAL_PLATE_0,    { METAL_COLOR,     DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f,   DEFAULT_TEXTURE, 0.0f } },
-        { METAL_PLATE_1,    { METAL_COLOR,     METAL_NORMAL,    1.0f, METAL_METAL,     0.8f, METAL_ROUGH,     0.2f,   DEFAULT_TEXTURE, 0.0f } },
+        { METAL_PLATE_1,    { METAL_COLOR,     METAL_NORMAL,    1.0f, METAL_METAL,     0.8f, METAL_ROUGH,     1.0f,   DEFAULT_TEXTURE, 0.0f } },
         { BRICKS_0,         { BRICKS_COLOR,    DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f,   DEFAULT_TEXTURE, 0.0f } },
         { BRICKS_1,         { BRICKS_COLOR,    BRICKS_NORMAL,   1.0f, DEFAULT_TEXTURE, 0.0f, BRICKS_ROUGH,    1.0f,   BRICKS_AO,       1.0f } },
     };

@@ -163,14 +163,12 @@ float4 PSMain(PSINPUT input) : SV_TARGET
     float3 F0 = lerp(float3(0.04, 0.04, 0.04), samples.albedo, samples.MRAO.r);
     float3 Lo = float3(0.0, 0.0, 0.0);
     
-    // === Direct Lighting ===
-    for (int i = 0; i < 4; ++i)
-    {
-        float3 L = normalize(defaultLightPositions[i] - input.positionWS);
+        // === Direct Lighting ===
+        float3 L = normalize(defaultLightPositions[0] - input.positionWS);
         float3 H = normalize(V + L);
-        float distance = length(defaultLightPositions[i] - input.positionWS);
+        float distance = length(defaultLightPositions[0] - input.positionWS);
         float attenuation = 1.0 / (distance * distance);
-        float3 radiance = defaultLightColors[i] * attenuation;
+        float3 radiance = defaultLightColors[0] * attenuation;
 
         float NDF = DistributionGGX(N, H, samples.MRAO.g);
         float G = GeometrySmith(N, V, L, samples.MRAO.g);
@@ -185,7 +183,6 @@ float4 PSMain(PSINPUT input) : SV_TARGET
 
         float NdotL = max(dot(N, L), 0.0);
         Lo += (kD * samples.albedo / PI + specular) * radiance * NdotL;
-    }
 
     float3 ambient = float3(0.03, 0.03, 0.03) * samples.albedo * samples.MRAO.b;
     float3 color = ambient + Lo;
