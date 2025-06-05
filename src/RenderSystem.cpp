@@ -8,6 +8,9 @@
 
 #include "Debug.h"
 
+#include "TextureManager.h"
+#include "MaterialManager.h"
+
 /* Sub Classes */
 #include "FenceManager.h"
 #include "PipelineStateManager.h"
@@ -29,8 +32,6 @@ RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 	this->m_renderTargetManager = std::make_unique<RenderTargetManager>(d3dDevice, this->m_swapChainManager->GetSwapChain(),
 		heapManager->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), heapManager->GetRTVDescriptorSize());
 
-	this->m_constantBuffer = std::make_shared<ConstantBuffer>(d3dDevice);
-
 	/* Initial Signal */
 	this->m_renderDevice->GetFenceManager()->SignalCurrentFrameGPU(this->m_deviceContext->GetCommandQueue(), 0);
 }
@@ -49,6 +50,35 @@ RenderSystem::~RenderSystem()
 	fenceManager->ShutDown();
 }
 
+void RenderSystem::InitResourceManagers(std::shared_ptr<BatchUploader> uploader)
+{
+	try
+	{
+		this->m_textureManager = std::make_unique<TextureManager>(m_renderDevice->GetDescriptorHeapManagerPtr(), uploader);
+	}
+	catch (...)
+	{
+		Debug::LogError("Texture Manager initialization failed!");
+		return;
+	}
+
+	try
+	{
+		this->m_materialManager = std::make_unique<MaterialManager>(m_renderDevice->GetDescriptorHeapManagerPtr(), uploader);
+	}
+	catch (...)
+	{
+		Debug::LogError("Material Manager initialization failed!");
+		return;
+	}
+}
+
+void RenderSystem::LoadInitialResources()
+{
+	this->m_textureManager->LoadInitialTextures();
+	this->m_materialManager->LoadInitialMaterials();
+}
+
 void RenderSystem::StartFrame()
 {
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
@@ -64,9 +94,7 @@ void RenderSystem::StartFrame()
 		auto heaps = this->m_renderDevice->GetDescriptorHeapManager()->GetActiveHeaps();
 		this->m_deviceContext->SetDescriptorHeaps(heaps);
 
-		///* Constant Buffer */
-		//auto cbAddress = m_constantBuffer->GetVirtualAddress(currentFrameIndex);
-		//this->m_deviceContext->SetConstantBuffer(1, cbAddress);
+		this->m_deviceContext->SetTexture(this->m_renderDevice->GetDescriptorHeapManager()->GetShaderVisibleGPUHandleAt(0));
 
 		this->m_deviceContext->SetViewport(&m_viewport);
 		this->m_deviceContext->SetScissorRect(&m_scissorRect);
@@ -92,19 +120,11 @@ void RenderSystem::EndFrame()
 	this->m_swapChainManager->UpdateFrameIndex();
 }
 
-void RenderSystem::UpdateConstantBuffer(DirectX::SimpleMath::Vector2 values)
+void RenderSystem::SetMaterialConstantBuffer(MaterialType type)
 {
 	auto index = this->m_swapChainManager->GetCurrentFrameIndex();
-	this->m_constantBuffer->Update(values, index);
-}
-
-void RenderSystem::UpdateAndSetConstantBuffer(DirectX::SimpleMath::Vector2 values)
-{
-	auto index = this->m_swapChainManager->GetCurrentFrameIndex();
-	this->m_constantBuffer->Update(values, index);
-
-	auto cbAddress = m_constantBuffer->GetVirtualAddress(index);
-	this->m_deviceContext->SetConstantBuffer(1, cbAddress);
+	auto handle = m_materialManager->GetMaterialHandle(type, index);
+	this->m_deviceContext->SetConstantBuffer(handle);
 }
 
 ID3D12PipelineState* RenderSystem::GetPipelineState(const ShaderType& type) const

@@ -82,6 +82,15 @@
     <Filter Include="Engine\Resources\IndexBuffer">
       <UniqueIdentifier>{f9d8b6e9-29e3-4424-8572-62476d1204fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GraphicsEngine\RenderSystem\RenderDevice\ShaderLoader">
+      <UniqueIdentifier>{a32f9d8a-a9cc-49f0-9237-805139bd0c54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Resources\Material">
+      <UniqueIdentifier>{dd65ecb2-10f2-4bcd-a5ef-14bf85e7504f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GraphicsEngine\RenderSystem\MaterialManager">
+      <UniqueIdentifier>{6c28ad4b-015c-4609-9a28-476212287e1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -156,6 +165,15 @@
     <ClCompile Include="src\PBSQuads.cpp">
       <Filter>App\Entities\Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="src\ShaderLoader.cpp">
+      <Filter>Engine\GraphicsEngine\RenderSystem\RenderDevice\ShaderLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MaterialManager.cpp">
+      <Filter>Engine\GraphicsEngine\RenderSystem\MaterialManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Material.cpp">
+      <Filter>Engine\Resources\Material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DescriptorHeapManager.h">
@@ -193,9 +211,6 @@
     </ClInclude>
     <ClInclude Include="src\GameObjectManager.h">
       <Filter>App\Managers\GameObjectManager</Filter>
-    </ClInclude>
-    <ClInclude Include="src\stdafx.h">
-      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\TextureManager.h">
       <Filter>Engine\GraphicsEngine\TextureManager</Filter>
@@ -251,8 +266,17 @@
     <ClInclude Include="src\ShaderTypes.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\Materials.h">
-      <Filter>App\Entities\Primitives</Filter>
+    <ClInclude Include="src\MaterialTypes.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShaderLoader.h">
+      <Filter>Engine\GraphicsEngine\RenderSystem\RenderDevice\ShaderLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MaterialManager.h">
+      <Filter>Engine\GraphicsEngine\RenderSystem\MaterialManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Material.h">
+      <Filter>Engine\Resources\Material</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

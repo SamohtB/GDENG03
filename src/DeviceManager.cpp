@@ -3,6 +3,12 @@
 
 DeviceManager::DeviceManager(IDXGIFactory6* factory)
 {
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
+	{
+		debugController->EnableDebugLayer();
+		Debug::Log("Debug Layer Enabled!");
+	}
+
 	m_dxgiAdapter = FindHardwareAdapter(factory);
 	CreateDeviceFromAdapter();
 }

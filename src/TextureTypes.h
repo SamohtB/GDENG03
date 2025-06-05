@@ -2,7 +2,7 @@
 
 enum TextureType : int
 {
-    UNSET = 0,
+    DEFAULT_TEXTURE = 0,
     ROCK_COLOR = 1,
     ROCK_NORMAL = 2,
     ROCK_ROUGH = 3,

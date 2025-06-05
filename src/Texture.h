@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
-#include "Dx12Commons.h"
+#include <d3d12.h>
+#include <wrl.h>
+
+using Microsoft::WRL::ComPtr;
 
 class Texture
 {

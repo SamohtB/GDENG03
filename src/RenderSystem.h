@@ -4,25 +4,29 @@
 #include <directxtk12/SimpleMath.h>
 
 #include "ShaderTypes.h"
+#include "MaterialTypes.h"
 
 class RenderDevice;
 class DeviceContext;
 class SwapChainManager;
 class RenderTargetManager;
-
-class ConstantBuffer;
+class TextureManager;
+class MaterialManager;
+class BatchUploader;
 
 class RenderSystem
 {
 public:
 	RenderSystem(UINT width, UINT height, HWND hwnd);	
 	~RenderSystem();
+	
+	void InitResourceManagers(std::shared_ptr<BatchUploader> uploader);
+	void LoadInitialResources();
 
 	void StartFrame();
 	void EndFrame();
 
-	void UpdateConstantBuffer(DirectX::SimpleMath::Vector2 values);
-	void UpdateAndSetConstantBuffer(DirectX::SimpleMath::Vector2 values);
+	void SetMaterialConstantBuffer(MaterialType type);
 
 	ID3D12PipelineState* GetPipelineState(const ShaderType& type) const;
 
@@ -35,8 +39,8 @@ private:
 	std::unique_ptr<DeviceContext> m_deviceContext;
 	std::unique_ptr<SwapChainManager> m_swapChainManager;
 	std::unique_ptr<RenderTargetManager> m_renderTargetManager;
-
-	std::shared_ptr<ConstantBuffer> m_constantBuffer;
+	std::unique_ptr<TextureManager> m_textureManager;
+	std::unique_ptr<MaterialManager> m_materialManager;
 
 	CD3DX12_VIEWPORT m_viewport;
 	CD3DX12_RECT m_scissorRect;

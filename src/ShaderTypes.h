@@ -2,7 +2,7 @@
 
 enum ShaderType : int
 {
-    DEFAULT = 0,
+    DEFAULT_SHADER = 0,
     TEXTURED = 1,
     PBS = 2,
     ANIMATED = 3

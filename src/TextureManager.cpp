@@ -35,7 +35,7 @@ void TextureManager::LoadInitialTextures()
 void TextureManager::LoadTexture(const TextureType& type, const std::wstring& filePath)
 {
     auto srvIndex = m_heapManager->AllocateSRVSlot();
-    auto srvHandle = m_heapManager->GetSRVCPUHandleAt(srvIndex);
+    auto srvHandle = m_heapManager->GetShaderVisibleCPUHandleAt(srvIndex);
     auto buffer = m_uploader->SchedTexture(filePath, srvHandle);
 
     TexturePtr texture = std::make_unique<Texture>(buffer, srvIndex);
@@ -46,19 +46,18 @@ void TextureManager::LoadTexture(const TextureType& type, const std::wstring& fi
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetTextureHandle(const TextureType& type)
 {
     UINT index = m_srvMap[type];
-    return m_heapManager->GetSRVGPUHandleAt(index);
+    return m_heapManager->GetShaderVisibleGPUHandleAt(index);
 }
 
 void TextureManager::CreateDefaultWhiteTexture()
 {
     auto srvIndex = m_heapManager->AllocateSRVSlot();
-    auto srvHandle = m_heapManager->GetSRVCPUHandleAt(srvIndex);
+    auto srvHandle = m_heapManager->GetShaderVisibleCPUHandleAt(srvIndex);
+    auto buffer = m_uploader->SchedWhitePixelTexture(srvHandle);
 
-    ComPtr<ID3D12Resource> whiteTextureBuffer = m_uploader->SchedWhitePixelTexture(srvHandle);
-
-    TexturePtr whiteTex = std::make_unique<Texture>(whiteTextureBuffer, srvIndex);
-    this->m_srvMap[TextureType::UNSET] = srvIndex;
-    this->m_textureMap[TextureType::UNSET] = std::move(whiteTex);
+    TexturePtr whiteTex = std::make_unique<Texture>(buffer, srvIndex);
+    this->m_srvMap[TextureType::DEFAULT_TEXTURE] = srvIndex;
+    this->m_textureMap[TextureType::DEFAULT_TEXTURE] = std::move(whiteTex);
 
     Debug::Log("Default white texture generated and uploaded.");
 }

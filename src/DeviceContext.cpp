@@ -57,9 +57,9 @@ void DeviceContext::SetDescriptorHeaps(const std::vector<ID3D12DescriptorHeap*>&
     this->m_commandList->SetDescriptorHeaps(static_cast<UINT>(heaps.size()), heaps.data());
 }
 
-void DeviceContext::SetConstantBuffer(UINT rootParameterIndex, D3D12_GPU_VIRTUAL_ADDRESS cbvAddress)
+void DeviceContext::SetConstantBuffer(D3D12_GPU_DESCRIPTOR_HANDLE handle)
 {
-    this->m_commandList->SetGraphicsRootConstantBufferView(rootParameterIndex, cbvAddress);
+    this->m_commandList->SetGraphicsRootDescriptorTable(RootDescriptorIndex::MAT_CONST, handle);
 }
 
 void DeviceContext::SetViewport(CD3DX12_VIEWPORT* viewport)
@@ -104,9 +104,9 @@ void DeviceContext::ClearRenderTargetColor(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle
     this->m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 }
 
-void DeviceContext::SetTexture(UINT rootParameterIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle)
+void DeviceContext::SetTexture(D3D12_GPU_DESCRIPTOR_HANDLE handle)
 {
-    this->m_commandList->SetGraphicsRootDescriptorTable(rootParameterIndex, handle);
+    this->m_commandList->SetGraphicsRootDescriptorTable(RootDescriptorIndex::TEXTURES, handle);
 }
 
 void DeviceContext::SetVertexBuffer(D3D12_VERTEX_BUFFER_VIEW* vertexBufferView)

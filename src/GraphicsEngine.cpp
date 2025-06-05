@@ -18,7 +18,6 @@ GraphicsEngine::GraphicsEngine(UINT width, UINT height, HWND hwnd)
 	}
 
 	auto device = this->m_renderSystem->GetD3DDevicePtr();
-	auto descHeap = this->m_renderSystem->GetRenderDevice()->GetDescriptorHeapManagerPtr();
 
 	try
 	{
@@ -30,15 +29,7 @@ GraphicsEngine::GraphicsEngine(UINT width, UINT height, HWND hwnd)
 		return;
 	}
 
-	try 
-	{
-		this->m_textureManager = std::make_unique<TextureManager>(descHeap, this->m_batchUploader);
-	}
-	catch (...)
-	{
-		Debug::LogError("Texture Manager initialization failed!");
-		return;
-	}
+	this->m_renderSystem->InitResourceManagers(this->m_batchUploader);
 }
 
 GraphicsEngine* GraphicsEngine::GetInstance()
@@ -71,10 +62,5 @@ RenderSystem* GraphicsEngine::GetRenderSystem()
 BatchUploader* GraphicsEngine::GetBatchUploader()
 {
 	return this->m_batchUploader.get();
-}
-
-TextureManager* GraphicsEngine::GetTextureManager()
-{
-	return this->m_textureManager.get();
 }
 

@@ -34,8 +34,9 @@ public:
             }
             LogError(HrToString(hr));
 
-            throw HrException(hr);
             Break();
+            throw HrException(hr);
+            
         }
     }
 

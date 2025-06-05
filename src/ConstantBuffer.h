@@ -1,6 +1,9 @@
 #pragma once
-#include "Dx12Commons.h"
-#include <directxtk12/SimpleMath.h>
+#include <d3d12.h>
+#include <wrl.h>
+#include "MaterialTypes.h"
+
+using Microsoft::WRL::ComPtr;
 
 class ConstantBuffer
 {
@@ -8,21 +11,22 @@ public:
 
 	struct alignas(256) SceneConstantBuffer 
 	{
-		float normal = 0;
-		float roughness = 0;
+		UINT diffuseHandleIndex = 0;
+		UINT normalHandleIndex = 0;
+		float normalStr = 0;
+		UINT roughHandleIndex = 0;
+		float roughStr = 0;
 	};
 
-	ConstantBuffer(ID3D12Device* device);
+	ConstantBuffer(ComPtr<ID3D12Resource> buffer);
 	~ConstantBuffer() = default;
 
-	void Update(DirectX::SimpleMath::Vector2 matValues, UINT currentFrameIndex);
-	D3D12_GPU_VIRTUAL_ADDRESS GetVirtualAddress(UINT currentFrameIndex);
+	void Update(MaterialDescription mat);
 
 	static constexpr UINT BUFFER_SIZE = (sizeof(SceneConstantBuffer) + 255) & ~255;
 
 private:
 	ComPtr<ID3D12Resource> m_constantBuffer;
 	SceneConstantBuffer m_constantBufferData {};
-	UINT8* m_pCbvDataBegin;
+	UINT8* m_cbvDataBegin;
 };
-

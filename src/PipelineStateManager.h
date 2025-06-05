@@ -1,8 +1,11 @@
 #pragma once
 #include <unordered_map>
 #include <string>
+#include <memory>
+
 #include "Dx12Commons.h"
 #include "InputLayouts.h"
+#include "ShaderLoader.h"
 
 enum class InputLayoutType : int;
 
@@ -31,17 +34,6 @@ namespace std
 	};
 }
 
-struct ShaderDesc 
-{
-	std::wstring vertexPath;
-	std::string vertexEntry;
-	std::string vertexTarget = "vs_5_0";
-
-	std::wstring pixelPath;
-	std::string pixelEntry;
-	std::string pixelTarget = "ps_5_0";
-};
-
 class PipelineStateManager
 {
 public:
@@ -53,14 +45,15 @@ public:
 	ID3D12PipelineState* GetPipelineState(InputLayoutType layout, const std::wstring& shaderName) const;
 	ID3D12RootSignature* GetRootSignature() const;
 
-	void RegisterPipeline(ID3D12Device* device, InputLayoutType layout, const ShaderDesc& desc, const std::wstring& shaderName);
+	void RegisterPipeline(ID3D12Device* device, InputLayoutType layout, const ShaderDesc& vertexDesc, const ShaderDesc& pixelDesc, const std::wstring& shaderName);
 
 private:
 	void CreateRootSignature(ID3D12Device* device);
-	std::pair<ComPtr<ID3DBlob>, ComPtr<ID3DBlob>> LoadShaders(const ShaderDesc& desc);
-	ComPtr<ID3D12PipelineState> CreatePipelineState(ID3D12Device* device, const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout, ComPtr<ID3DBlob> vs, ComPtr<ID3DBlob> ps);
+	ComPtr<ID3D12PipelineState> CreatePipelineState(ID3D12Device* device, const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout, 
+		ComPtr<IDxcBlob> vs, ComPtr<IDxcBlob> ps);
 
 	PipelineMap m_pipelineStates;
 	ComPtr<ID3D12RootSignature> m_rootSignature;
+	std::unique_ptr<ShaderLoader> m_shaderLoader;
 };
 

@@ -3,39 +3,28 @@
 
 PipelineStateManager::PipelineStateManager(ID3D12Device* device)
 {
+    this->m_shaderLoader = std::make_unique<ShaderLoader>();
 	CreateRootSignature(device);
 
-    ShaderDesc shaderDesc = 
-    {
-        L"Assets/Shaders/DefaultVertexShader.hlsl", "VSMain", "vs_5_0",
-        L"Assets/Shaders/DefaultPixelShader.hlsl", "PSMain", "ps_5_0"
-    };
+    // === Default ===
+    ShaderDesc vertexshaderDesc(L"Assets/Shaders/DefaultVertexShader.hlsl", L"VSMain", L"vs_6_5");
+    ShaderDesc pixelShaderDesc(L"Assets/Shaders/DefaultPixelShader.hlsl", L"PSMain", L"ps_6_5");
+    RegisterPipeline(device, InputLayoutType::Pos_Color, vertexshaderDesc, pixelShaderDesc, L"Default");
 
-    RegisterPipeline(device, InputLayoutType::Pos_Color, shaderDesc, L"Default");
+    // === Textured ===
+    ShaderDesc vertexShaderDesc_Textured(L"Assets/Shaders/TexturedVertexShader.hlsl", L"VSMain", L"vs_6_5");
+    ShaderDesc pixelShaderDesc_Textured(L"Assets/Shaders/TexturedPixelShader.hlsl", L"PSMain", L"ps_6_5");
+    RegisterPipeline(device, InputLayoutType::Pos_Tex_Col, vertexShaderDesc_Textured, pixelShaderDesc_Textured, L"Textured");
 
-    shaderDesc =
-    {
-        L"Assets/Shaders/TexturedVertexShader.hlsl", "VSMain", "vs_5_0",
-        L"Assets/Shaders/TexturedPixelShader.hlsl", "PSMain", "ps_5_0"
-    };
+    // === PBS pipeline (Shader Model 6.6) ===
+    ShaderDesc vertexShaderDesc_PBS(L"Assets/Shaders/PBSVertexShader.hlsl", L"VSMain", L"vs_6_6");
+    ShaderDesc pixelShaderDesc_PBS(L"Assets/Shaders/PBSPixelShader.hlsl", L"PSMain", L"ps_6_6");
+    RegisterPipeline(device, InputLayoutType::Pos_Tex_Nor_Tan_Bit, vertexShaderDesc_PBS, pixelShaderDesc_PBS, L"PBS");
 
-    RegisterPipeline(device, InputLayoutType::Pos_Tex_Col, shaderDesc, L"Textured");
-
-    shaderDesc =
-    {
-        L"Assets/Shaders/PBSVertexShader.hlsl", "VSMain", "vs_5_0",
-        L"Assets/Shaders/PBSPixelShader.hlsl", "PSMain", "ps_5_0"
-    };
-
-    RegisterPipeline(device, InputLayoutType::Pos_Tex_Nor_Tan_Bit, shaderDesc, L"PBS");
-
-    shaderDesc =
-    {
-        L"Assets/Shaders/Pos2Col2Vertex.hlsl", "VSMain", "vs_5_0",
-        L"Assets/Shaders/Pos2Col2Pixel.hlsl", "PSMain", "ps_5_0"
-    };
-
-    RegisterPipeline(device, InputLayoutType::Pos_Pos_Col_Col, shaderDesc, L"Animated");
+    // === Animated ===
+    ShaderDesc vertexShaderDesc_Animated(L"Assets/Shaders/Pos2Col2Vertex.hlsl", L"VSMain", L"vs_6_5");
+    ShaderDesc pixelShaderDesc_Animated(L"Assets/Shaders/Pos2Col2Pixel.hlsl", L"PSMain", L"ps_6_5");
+    RegisterPipeline(device, InputLayoutType::Pos_Pos_Col_Col, vertexShaderDesc_Animated, pixelShaderDesc_Animated, L"Animated");
 }
 
 ID3D12PipelineState* PipelineStateManager::GetPipelineState(InputLayoutType layout, const std::wstring& shaderName) const
@@ -50,11 +39,11 @@ ID3D12RootSignature* PipelineStateManager::GetRootSignature() const
 	return m_rootSignature.Get();
 }
 
-void PipelineStateManager::RegisterPipeline(ID3D12Device* device, InputLayoutType layout, const ShaderDesc& desc, const std::wstring& shaderName)
+void PipelineStateManager::RegisterPipeline(ID3D12Device* device, InputLayoutType layout, const ShaderDesc& vertexDesc, const ShaderDesc& pixelDesc, const std::wstring& shaderName)
 {
-	const auto& inputLayout = InputLayouts::Get(layout);
-
-	auto [vs, ps] = LoadShaders(desc);
+	const auto& inputLayout = InputLayouts::Get(layout); 
+    auto vs = m_shaderLoader->CompileShader(vertexDesc);
+    auto ps = m_shaderLoader->CompileShader(pixelDesc);
 	auto pso = CreatePipelineState(device, inputLayout, vs, ps);
 
 	m_pipelineStates[{layout, shaderName}] = pso;
@@ -68,11 +57,13 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
     if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
         featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
 
-    CD3DX12_DESCRIPTOR_RANGE1 srvRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 3, 0);
+    CD3DX12_DESCRIPTOR_RANGE1 rootRanges[2];
+    rootRanges[RootDescriptorIndex::TEXTURES].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, SRV_MAX_COUNT, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_VOLATILE);
+    rootRanges[RootDescriptorIndex::MAT_CONST].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, CBV_MAX_COUNT, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_VOLATILE);
 
     CD3DX12_ROOT_PARAMETER1 rootParams[2];
-    rootParams[0].InitAsDescriptorTable(1, &srvRange, D3D12_SHADER_VISIBILITY_PIXEL);
-    rootParams[1].InitAsConstantBufferView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_ALL);
+    rootParams[RootDescriptorIndex::TEXTURES].InitAsDescriptorTable(1, &rootRanges[0], D3D12_SHADER_VISIBILITY_PIXEL);
+    rootParams[RootDescriptorIndex::MAT_CONST].InitAsDescriptorTable(1, &rootRanges[1], D3D12_SHADER_VISIBILITY_ALL);
 
     D3D12_STATIC_SAMPLER_DESC sampler = {};
     sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
@@ -101,60 +92,14 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
         "Root Signature creation failed!");
 }
 
-/* To Do: create shader manager */
-std::pair<ComPtr<ID3DBlob>, ComPtr<ID3DBlob>> PipelineStateManager::LoadShaders(const ShaderDesc& desc)
-{
-    UINT compileFlags = 0;
-
-    ComPtr<ID3DBlob> vs;
-    ComPtr<ID3DBlob> ps;
-    ComPtr<ID3DBlob> err;
-
-    HRESULT hr = D3DCompileFromFile(
-        desc.vertexPath.c_str(), nullptr, nullptr,
-        desc.vertexEntry.c_str(), desc.vertexTarget.c_str(),
-        compileFlags, 0, &vs, &err
-    );
-
-    if (FAILED(hr))
-    {
-        std::string errorMsg = "Shader compilation failed.";
-
-        if (err)
-        {
-            errorMsg = static_cast<const char*>(err->GetBufferPointer());
-        }
-
-        Debug::ThrowIfFailed(hr, errorMsg);
-    }
-
-    hr = D3DCompileFromFile(
-        desc.pixelPath.c_str(), nullptr, nullptr,
-        desc.pixelEntry.c_str(), desc.pixelTarget.c_str(),
-        compileFlags, 0, &ps, &err);
-
-    if (FAILED(hr))
-    {
-        std::string errorMsg = "Shader compilation failed.";
-
-        if (err)
-        {
-            errorMsg = static_cast<const char*>(err->GetBufferPointer());
-        }
-
-        Debug::ThrowIfFailed(hr, errorMsg);
-    }
-
-    return { vs, ps };
-}
-
-ComPtr<ID3D12PipelineState> PipelineStateManager::CreatePipelineState(ID3D12Device* device, const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout, ComPtr<ID3DBlob> vs, ComPtr<ID3DBlob> ps)
+ComPtr<ID3D12PipelineState> PipelineStateManager::CreatePipelineState(ID3D12Device* device, const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout,
+    ComPtr<IDxcBlob> vs, ComPtr<IDxcBlob> ps)
 {
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
     psoDesc.InputLayout = { inputLayout.data(), static_cast<UINT>(inputLayout.size()) };
     psoDesc.pRootSignature = m_rootSignature.Get();
-    psoDesc.VS = CD3DX12_SHADER_BYTECODE(vs.Get());
-    psoDesc.PS = CD3DX12_SHADER_BYTECODE(ps.Get());
+    psoDesc.VS = CD3DX12_SHADER_BYTECODE( { vs->GetBufferPointer(), vs->GetBufferSize() });
+    psoDesc.PS = CD3DX12_SHADER_BYTECODE( { ps->GetBufferPointer(), ps->GetBufferSize() });
     psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
     psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
     psoDesc.DepthStencilState.DepthEnable = FALSE;

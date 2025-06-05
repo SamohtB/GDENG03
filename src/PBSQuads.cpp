@@ -2,24 +2,25 @@
 #include "DeviceContext.h"
 #include "RenderDevice.h"
 #include "GraphicsEngine.h"
-#include "TextureManager.h"
+#include "MaterialManager.h"
 #include "GeoMath.h"
 #include "Debug.h"
 
-PBSQuads::PBSQuads(int id, String name, Vector2 offset, Material mat) : AGameObject(id, name)
+PBSQuads::PBSQuads(int id, String name, Vector2 offset, MaterialType matType) : AGameObject(id, name)
 {
     float x = offset.x;
     float y = offset.y;
 
     float aspectRatio = 1024.0f / 768.0f;
 
-    m_indices =
+    std::vector<unsigned int> indices =
     {
         0, 1, 2,
         2, 1, 3
     };
 
-    this->m_indexBuffer = std::make_unique<IndexBuffer>(m_indices);
+    this->m_indexBuffer = std::make_unique<IndexBuffer>(indices);
+    this->m_indicesSize = static_cast<UINT>(indices.size());
 
     std::vector<Vector3> position = {
         { -0.25f + x * aspectRatio,  0.25f + y, 0.0f },
@@ -46,12 +47,14 @@ PBSQuads::PBSQuads(int id, String name, Vector2 offset, Material mat) : AGameObj
     std::vector<Vector3> tangents(4);
     std::vector<Vector3> bitangents(4);
 
-    GeoMath::CalculateTangentFrame(m_indices, position.data(), normals.data(), texcoords.data(),
+    GeoMath::CalculateTangentFrame(indices, position.data(), normals.data(), texcoords.data(),
         position.size(), tangents.data(), bitangents.data());
+
+    std::vector<POS_TEX_NOR_TAN_BIT> vertices;
 
     for (size_t i = 0; i < position.size(); ++i)
     {
-        m_vertices.emplace_back(
+        vertices.emplace_back(
             position[i],
             texcoords[i],
             normals[i],
@@ -60,10 +63,10 @@ PBSQuads::PBSQuads(int id, String name, Vector2 offset, Material mat) : AGameObj
         );
     }
 
-    this->m_vertexBuffer = std::make_unique<VertexBuffer>(m_vertices);
+    this->m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);
 
     this->m_shader = ShaderType::PBS;
-    this->m_material = mat;
+    this->m_material = matType;
 }
 
 void PBSQuads::Update()
@@ -73,28 +76,15 @@ void PBSQuads::Update()
 void PBSQuads::Draw(DeviceContext* context)
 {
     auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
-    auto textureManager = GraphicsEngine::GetInstance()->GetTextureManager();
-
-    Vector2 values = { this->m_material.normalValue, this->m_material.roughnessValue };
-  
 
     /* Check Render System Start Frame {} for other settables */
     {
         context->SetPSO(renderSystem->GetPipelineState(this->m_shader));
-
-        renderSystem->UpdateAndSetConstantBuffer(values);
-
-        context->SetTexture(0, textureManager->GetTextureHandle(this->m_material.albedo));
-
-        if (this->m_material.normalValue > 0)
-            context->SetTexture(1, textureManager->GetTextureHandle(this->m_material.normal));
-
-        if (this->m_material.roughnessValue > 0)
-            context->SetTexture(2, textureManager->GetTextureHandle(this->m_material.roughness));
+        renderSystem->SetMaterialConstantBuffer(this->m_material);
     }
 
     context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());
     context->SetIndexBuffer(this->m_indexBuffer->GetIndexBufferViewPointer());
 
-    context->DrawIndexedTriangleList(static_cast<UINT>(m_indices.size()), 0, 0);
+    context->DrawIndexedTriangleList(m_indicesSize, 0, 0);
 }

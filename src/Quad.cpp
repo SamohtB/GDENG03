@@ -40,12 +40,11 @@ void Quad::Update()
 void Quad::Draw(DeviceContext* context)
 {
     auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
-    auto textureManager = GraphicsEngine::GetInstance()->GetTextureManager();
 
     /* Check Render System Start Frame {} for other settables */
     {
         context->SetPSO(renderSystem->GetPipelineState(this->m_shader));
-        context->SetTexture(0, textureManager->GetTextureHandle(this->m_texture));
+        //add texture here
     }
     
     context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());

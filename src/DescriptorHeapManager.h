@@ -1,10 +1,12 @@
 #pragma once
+#include <vector>
 #include "Dx12Commons.h"
+
 
 class DescriptorHeapManager 
 {
 public:
-    DescriptorHeapManager(ID3D12Device* device, UINT maxRTVCount = FRAME_COUNT, UINT maxSRVCount = 64);
+    DescriptorHeapManager(ID3D12Device* device, UINT maxRTVCount = FRAME_COUNT, UINT maxSRVCount = SRV_MAX_COUNT, UINT maxCBVCount = CBV_MAX_COUNT);
     ~DescriptorHeapManager() = default;
 
     const std::vector<ID3D12DescriptorHeap*>& GetActiveHeaps() const;
@@ -14,12 +16,13 @@ public:
     ID3D12DescriptorHeap* GetRTVHeap() const;
     D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUHandleAt(UINT frameIndex) const;
 
-    // SRV access
-    UINT GetSRVDescriptorSize() const;
-    ID3D12DescriptorHeap* GetSRVHeap() const;
+    // Shader Visible Heap access
+    UINT GetShaderVisibleDescriptorSize() const;
     UINT AllocateSRVSlot();
-    D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCPUHandleAt(UINT index) const;
-    D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUHandleAt(UINT index) const;
+    UINT AllocateCBVSlot();
+    D3D12_CPU_DESCRIPTOR_HANDLE GetShaderVisibleCPUHandleAt(UINT index) const;
+    D3D12_GPU_DESCRIPTOR_HANDLE GetShaderVisibleGPUHandleAt(UINT index) const;
+   
 
 private:
     std::vector<ID3D12DescriptorHeap*> m_activeHeaps;
@@ -29,11 +32,12 @@ private:
     UINT m_rtvDescriptorSize;
     UINT m_maxRTVCount;
 
-    // SRV heap
-    ComPtr<ID3D12DescriptorHeap> m_srvHeap;
-    UINT m_srvDescriptorSize;
+    // SRV + CBV
+    ComPtr<ID3D12DescriptorHeap> m_shaderVisibleHeap;
+    UINT m_shaderVisibleDescriptorSize;
     UINT m_currentSRVOffset;
+    UINT m_currentCBVOffset;
     UINT m_maxSRVCount;
-
-    /* future DSV and CBV here */
+    UINT m_maxCBVCount;
+    UINT m_cbvEnd;
 };

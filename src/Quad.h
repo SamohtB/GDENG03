@@ -27,8 +27,8 @@ public:
 private:
 	std::vector<POS_TEX_COL> m_vertices;
 	std::vector<unsigned int> m_indices;
-	ShaderType m_shader = ShaderType::DEFAULT;
-	TextureType m_texture = TextureType::UNSET;
+	ShaderType m_shader = ShaderType::DEFAULT_SHADER;
+	TextureType m_texture = TextureType::DEFAULT_TEXTURE;
 
 	std::unique_ptr<VertexBuffer> m_vertexBuffer;
 	std::unique_ptr<IndexBuffer> m_indexBuffer;

@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "Dx12Commons.h"
 #include "TextureTypes.h"
 
@@ -15,7 +16,7 @@ public:
 	void SetRootSignature(ID3D12RootSignature* rootSignature);
 	void SetPSO(ID3D12PipelineState* pipelineState);
 	void SetDescriptorHeaps(const std::vector<ID3D12DescriptorHeap*>& heaps);
-	void SetConstantBuffer(UINT rootParameterIndex, D3D12_GPU_VIRTUAL_ADDRESS cbvAddress);
+	void SetConstantBuffer(D3D12_GPU_DESCRIPTOR_HANDLE handle);
 	void SetViewport(CD3DX12_VIEWPORT* viewport);
 	void SetScissorRect(CD3DX12_RECT* rect);
 
@@ -24,7 +25,7 @@ public:
 
 	void ClearRenderTargetColor(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, float red, float green, float blue, float alpha);
 
-	void SetTexture(UINT rootParameterIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle);
+	void SetTexture(D3D12_GPU_DESCRIPTOR_HANDLE handle);
 	void SetVertexBuffer(D3D12_VERTEX_BUFFER_VIEW* vertexBufferView);
 	void SetIndexBuffer(D3D12_INDEX_BUFFER_VIEW* indexBufferView);
 

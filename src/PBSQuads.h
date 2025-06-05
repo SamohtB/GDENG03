@@ -5,7 +5,7 @@
 #include "VertexTypes.h"
 #include "TextureTypes.h"
 #include "ShaderTypes.h"
-#include "Materials.h"
+#include "MaterialTypes.h"
 
 #include "AGameObject.h"
 #include "IndexBuffer.h"
@@ -18,7 +18,7 @@ class PBSQuads : public AGameObject
 public:
 	using String = std::string;
 
-	PBSQuads(int id, String name, Vector2 offset, Material mat);
+	PBSQuads(int id, String name, Vector2 offset, MaterialType matType);
 	~PBSQuads() = default;
 
 	// Inherited via AGameObject
@@ -26,10 +26,9 @@ public:
 	void Draw(DeviceContext* dvcContext) override;
 
 private:
-	std::vector<POS_TEX_NOR_TAN_BIT> m_vertices;
-	std::vector<unsigned int> m_indices;
-	ShaderType m_shader = ShaderType::DEFAULT;
-	Material m_material;
+	UINT m_indicesSize = 0;
+	ShaderType m_shader = ShaderType::DEFAULT_SHADER;
+	MaterialType m_material = MaterialType::DEFAULT_MAT;
 
 	std::unique_ptr<VertexBuffer> m_vertexBuffer;
 	std::unique_ptr<IndexBuffer> m_indexBuffer;

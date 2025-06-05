@@ -1,7 +1,4 @@
 #include "RenderDevice.h"
-
-
-
 #include "Debug.h"
 
 RenderDevice::RenderDevice()

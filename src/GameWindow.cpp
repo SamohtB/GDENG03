@@ -10,7 +10,7 @@
 #include "PBSQuads.h"
 
 #include "ConstantBuffer.h"
-#include "Materials.h"
+#include "MaterialTypes.h"
 
 #include <iostream>
 
@@ -21,20 +21,22 @@ void GameWindow::OnCreate(HWND hwnd)
 	GraphicsEngine::Initialize(this->m_width, this->m_height, hwnd);
 	GameObjectManager::Initialize();
 
+	auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
+
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 
-	GraphicsEngine::GetInstance()->GetTextureManager()->LoadInitialTextures();
+	renderSystem->LoadInitialResources();
 
-	std::shared_ptr<PBSQuads> quad = std::make_shared<PBSQuads>(0, "RockBase", XMFLOAT2(-0.33f, 0.33f), rock_mat_0);
+	std::shared_ptr<PBSQuads> quad = std::make_shared<PBSQuads>(0, "RockBase", XMFLOAT2(-0.33f, 0.33f), ROCK);
 	GameObjectManager::GetInstance()->AddGameObject(quad);
 
-	quad = std::make_shared<PBSQuads>(1, "RockWithNormalAndRough", XMFLOAT2(-0.33f, -0.33f), rock_mat_2);
+	quad = std::make_shared<PBSQuads>(1, "RockWithNormalAndRough", XMFLOAT2(-0.33f, -0.33f), ROCK);
 	GameObjectManager::GetInstance()->AddGameObject(quad);
 
-	quad = std::make_shared<PBSQuads>(2, "MetalPlateBase", XMFLOAT2(0.33f, 0.33f), metal_plate_mat_0);
+	quad = std::make_shared<PBSQuads>(2, "MetalPlateBase", XMFLOAT2(0.33f, 0.33f), METAL_PLATE);
 	GameObjectManager::GetInstance()->AddGameObject(quad);
 
-	quad = std::make_shared<PBSQuads>(3, "MetalPlateWithNormalAndRough", XMFLOAT2(0.33f, -0.33f), metal_plate_mat_1);
+	quad = std::make_shared<PBSQuads>(3, "MetalPlateWithNormalAndRough", XMFLOAT2(0.33f, -0.33f), METAL_PLATE);
 	GameObjectManager::GetInstance()->AddGameObject(quad);
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
