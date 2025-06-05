@@ -91,6 +91,9 @@
     <Filter Include="Engine\GraphicsEngine\RenderSystem\TextureManager">
       <UniqueIdentifier>{93b0d9aa-689f-434b-a657-df74fa665943}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\EngineTime">
+      <UniqueIdentifier>{a5580be4-e8cf-43c0-827c-0007e7f8eb7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -173,6 +176,9 @@
     </ClCompile>
     <ClCompile Include="src\Material.cpp">
       <Filter>Engine\Resources\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineTime.cpp">
+      <Filter>Engine\EngineTime</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -277,6 +283,9 @@
     </ClInclude>
     <ClInclude Include="src\Material.h">
       <Filter>Engine\Resources\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EngineTime.h">
+      <Filter>Engine\EngineTime</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@
 
 #include "GraphicsEngine.h"
 #include "GameObjectManager.h"
+#include "EngineTime.h"
 
 #include "RenderSystem.h"
 #include "Quad.h"
@@ -20,6 +21,7 @@ void GameWindow::OnCreate(HWND hwnd)
 {
 	GraphicsEngine::Initialize(this->m_width, this->m_height, hwnd);
 	GameObjectManager::Initialize();
+	EngineTime::Initialize(60);
 
 	auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
 
@@ -51,16 +53,6 @@ void GameWindow::OnCreate(HWND hwnd)
 
 void GameWindow::OnUpdate()
 {
-	unsigned long newTime = 0;
-
-	if (m_oldTime)
-		newTime = ::GetTickCount64() - m_oldTime;
-
-	m_deltaTime = newTime / 1000.0f;
-
-	m_oldTime = ::GetTickCount64();
-	m_angle += 1.57f * m_deltaTime;
-
 	/* get delta time here and pass to game object manager */
 	GameObjectManager::GetInstance()->UpdateAll();
 }

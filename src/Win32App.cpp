@@ -1,7 +1,7 @@
 #include "Win32App.h"
 #include "stdafx.h"
-#include <thread>
-#include <chrono>
+#include "EngineTime.h"
+#include "Debug.h"
 
 Win32App::Win32App(ABaseWindow* window, std::wstring windowName) : m_window(window), m_isRun(true)
 {
@@ -70,17 +70,6 @@ LRESULT Win32App::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 	switch (msg)
 	{
-
-	case WM_PAINT:
-	{
-		if (app->m_window)
-		{
-			app->m_window->OnUpdate();
-			app->m_window->OnRender();
-		}
-		return 0;
-	}
-
 	case WM_DESTROY:
 		if (app->m_window)
 		{
@@ -96,6 +85,8 @@ LRESULT Win32App::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 void Win32App::Broadcast()
 {
+	EngineTime::LogFrameStart();
+
 	MSG msg = {};
 
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -103,6 +94,14 @@ void Win32App::Broadcast()
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+
+	if (!m_isRun || !m_window) return;
+
+	this->m_window->OnUpdate();
+	this->m_window->OnRender();
+
+	EngineTime::LogFrameEnd();
+	EngineTime::UpdateFPSCounter();
 }
 
 
