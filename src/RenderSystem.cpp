@@ -4,7 +4,7 @@
 #include "DeviceContext.h"
 #include "SwapChainManager.h"
 #include "RenderTargetManager.h"
-#include "ConstantBuffer.h"
+#include "MaterialBuffer.h"
 
 #include "Debug.h"
 
@@ -31,6 +31,8 @@ RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 
 	this->m_renderTargetManager = std::make_unique<RenderTargetManager>(d3dDevice, this->m_swapChainManager->GetSwapChain(),
 		heapManager->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), heapManager->GetRTVDescriptorSize());
+
+	this->m_globalBuffer = std::make_unique<GlobalBuffer>(d3dDevice);
 
 	/* Initial Signal */
 	this->m_renderDevice->GetFenceManager()->SignalCurrentFrameGPU(this->m_deviceContext->GetCommandQueue(), 0);
@@ -121,11 +123,23 @@ void RenderSystem::EndFrame()
 	this->m_swapChainManager->UpdateFrameIndex();
 }
 
+void RenderSystem::UpdateGlobalBuffer(float time)
+{
+	auto index = this->m_swapChainManager->GetCurrentFrameIndex();
+	this->m_globalBuffer->Update(time, index);
+}
+
 void RenderSystem::SetMaterialConstantBuffer(MaterialType type)
 {
 	auto index = this->m_swapChainManager->GetCurrentFrameIndex();
 	auto handle = m_materialManager->GetMaterialHandle(type, index);
-	this->m_deviceContext->SetConstantBuffer(handle);
+	this->m_deviceContext->SetMaterialBuffer(handle);
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS RenderSystem::GetGlobalBufferAddress()
+{
+	auto index = this->m_swapChainManager->GetCurrentFrameIndex();
+	return this->m_globalBuffer->GetVirtualAddress(index);
 }
 
 ID3D12PipelineState* RenderSystem::GetPipelineState(const ShaderType& type) const

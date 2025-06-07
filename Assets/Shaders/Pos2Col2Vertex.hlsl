@@ -13,7 +13,7 @@ struct VSOutput
     float3 color2 : COLOR1;
 };
 
-cbuffer SceneConstantBuffer : register(b0)
+cbuffer SceneConstantBuffer : register(b129)
 {
     float time;
 };
@@ -22,7 +22,7 @@ VSOutput VSMain(VSInput input)
 {
     VSOutput output;
     
-    float3 lerpedPos = lerp(input.position1, input.position2, (sin(time) + 1.0f) / 2.0f);
+    float3 lerpedPos = lerp(input.position1, input.position2, time);
     output.position = float4(lerpedPos, 1.0f);
     output.color1 = input.color1;
     output.color2 = input.color2;

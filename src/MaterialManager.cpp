@@ -1,5 +1,5 @@
 #include "MaterialManager.h"
-#include "ConstantBuffer.h"
+#include "MaterialBuffer.h"
 #include "Debug.h"
 
 MaterialManager::MaterialManager(std::shared_ptr<DescriptorHeapManager> heapManager, std::shared_ptr<BatchUploader> uploader) 

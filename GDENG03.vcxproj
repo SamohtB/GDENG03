@@ -149,6 +149,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GlobalBuffer.cpp" />
+    <ClCompile Include="src\AnimatedQuad.cpp" />
     <ClCompile Include="src\EngineTime.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\MaterialManager.cpp" />
@@ -158,7 +160,7 @@
     <ClCompile Include="src\BatchUploader.cpp" />
     <ClCompile Include="src\RenderDevice.cpp" />
     <ClCompile Include="src\DeviceContext.cpp" />
-    <ClCompile Include="src\ConstantBuffer.cpp" />
+    <ClCompile Include="src\MaterialBuffer.cpp" />
     <ClCompile Include="src\Quad.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
     <ClCompile Include="src\GameObjectManager.cpp" />
@@ -179,6 +181,8 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GlobalBuffer.h" />
+    <ClInclude Include="src\AnimatedQuad.h" />
     <ClInclude Include="src\EngineTime.h" />
     <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\MaterialManager.h" />
@@ -193,7 +197,7 @@
     <ClInclude Include="src\DeviceContext.h" />
     <ClInclude Include="src\Debug.h" />
     <ClInclude Include="src\Dx12Commons.h" />
-    <ClInclude Include="src\ConstantBuffer.h" />
+    <ClInclude Include="src\MaterialBuffer.h" />
     <ClInclude Include="src\InputLayouts.h" />
     <ClInclude Include="src\Quad.h" />
     <ClInclude Include="src\AGameObject.h" />

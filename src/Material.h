@@ -4,7 +4,7 @@
 #include <vector>
 #include <array>
 #include "Dx12Commons.h"
-#include "ConstantBuffer.h"
+#include "MaterialBuffer.h"
 #include "MaterialTypes.h"
 
 class Material
@@ -16,6 +16,6 @@ public:
 	void SetMaterialDescription(MaterialDescription desc);
 
 private:
-	std::array<std::unique_ptr<ConstantBuffer>, FRAME_COUNT> m_materialBuffers;
+	std::array<std::unique_ptr<MaterialBuffer>, FRAME_COUNT> m_materialBuffers;
 };
 

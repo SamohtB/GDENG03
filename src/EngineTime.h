@@ -15,6 +15,7 @@ public:
 
     static float GetDeltaTime();
     static float GetFixedDeltaTime();
+    static float GetTimeSinceStart();
 
     static void UpdateFPSCounter();
 
@@ -33,6 +34,7 @@ private:
     double m_deltaTime;
     double m_fixedDeltaTime;
     double m_targetFrameDuration;
+    double m_accumulator;
 
     static void LogFrameStart();
     static void LogFrameEnd();

@@ -6,6 +6,8 @@
 #include "ShaderTypes.h"
 #include "MaterialTypes.h"
 
+#include "GlobalBuffer.h"
+
 class RenderDevice;
 class DeviceContext;
 class SwapChainManager;
@@ -26,7 +28,9 @@ public:
 	void StartFrame();
 	void EndFrame();
 
+	void UpdateGlobalBuffer(float time);
 	void SetMaterialConstantBuffer(MaterialType type);
+	D3D12_GPU_VIRTUAL_ADDRESS GetGlobalBufferAddress();
 
 	ID3D12PipelineState* GetPipelineState(const ShaderType& type) const;
 
@@ -41,6 +45,7 @@ private:
 	std::unique_ptr<RenderTargetManager> m_renderTargetManager;
 	std::unique_ptr<TextureManager> m_textureManager;
 	std::unique_ptr<MaterialManager> m_materialManager;
+	std::unique_ptr<GlobalBuffer> m_globalBuffer;
 
 	CD3DX12_VIEWPORT m_viewport;
 	CD3DX12_RECT m_scissorRect;

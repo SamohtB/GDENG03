@@ -5,7 +5,7 @@
 
 using Microsoft::WRL::ComPtr;
 
-class ConstantBuffer
+class MaterialBuffer
 {
 public:
 
@@ -24,8 +24,8 @@ public:
 	};
 
 
-	ConstantBuffer(ComPtr<ID3D12Resource> buffer);
-	~ConstantBuffer() = default;
+	MaterialBuffer(ComPtr<ID3D12Resource> buffer);
+	~MaterialBuffer() = default;
 
 	void Update(MaterialDescription mat);
 

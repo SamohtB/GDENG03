@@ -15,7 +15,7 @@ void EngineTime::Initialize(int frameRate)
     }
 }
 
-EngineTime::EngineTime(double frameRate) : m_deltaTime(0)
+EngineTime::EngineTime(double frameRate) : m_deltaTime(0), m_accumulator(0)
 {
     this->m_fixedDeltaTime = 1.0 / 60.0;
     this->m_targetFrameDuration = 1.0 / frameRate;
@@ -32,6 +32,11 @@ float EngineTime::GetFixedDeltaTime()
     return static_cast<float>(sharedInstance->m_targetFrameDuration);
 }
 
+float EngineTime::GetTimeSinceStart()
+{
+    return static_cast<float>(sharedInstance->m_accumulator);
+}
+
 void EngineTime::LogFrameStart()
 {
     if (sharedInstance->m_firstFrame)
@@ -40,17 +45,12 @@ void EngineTime::LogFrameStart()
         sharedInstance->m_firstFrame = false;
     }
 
-    std::this_thread::sleep_until(sharedInstance->m_nextFrame);
+    
     sharedInstance->m_start = Clock::now();
 }
 
 void EngineTime::LogFrameEnd()
 {
-    sharedInstance->m_end = Clock::now();
-
-    std::chrono::duration<double> elapsedSeconds = sharedInstance->m_end - sharedInstance->m_start;
-	sharedInstance->m_deltaTime = elapsedSeconds.count();
-
     sharedInstance->m_nextFrame += std::chrono::duration_cast<Clock::duration>(
         std::chrono::duration<double>(sharedInstance->m_targetFrameDuration)
     );
@@ -60,6 +60,14 @@ void EngineTime::LogFrameEnd()
     {
         sharedInstance->m_nextFrame = now;
     }
+
+    std::this_thread::sleep_until(sharedInstance->m_nextFrame);
+
+    sharedInstance->m_end = Clock::now();
+
+    std::chrono::duration<double> elapsedSeconds = sharedInstance->m_end - sharedInstance->m_start;
+    sharedInstance->m_deltaTime = elapsedSeconds.count();
+    sharedInstance->m_accumulator += elapsedSeconds.count();
 }
 
 void EngineTime::UpdateFPSCounter()

@@ -15,5 +15,6 @@ public:
 	void OnDestroy() override;
 
 private:
+	float m_ticks = 0.0f;
 };
 

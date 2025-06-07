@@ -141,7 +141,7 @@
     <ClCompile Include="src\Quad.cpp">
       <Filter>App\Entities\Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="src\ConstantBuffer.cpp">
+    <ClCompile Include="src\MaterialBuffer.cpp">
       <Filter>Engine\Resources\ConstantBuffer</Filter>
     </ClCompile>
     <ClCompile Include="src\GraphicsEngine.cpp">
@@ -179,6 +179,12 @@
     </ClCompile>
     <ClCompile Include="src\EngineTime.cpp">
       <Filter>Engine\EngineTime</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AnimatedQuad.cpp">
+      <Filter>App\Entities\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GlobalBuffer.cpp">
+      <Filter>Engine\Resources\ConstantBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -224,7 +230,7 @@
     <ClInclude Include="src\Quad.h">
       <Filter>App\Entities\Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="src\ConstantBuffer.h">
+    <ClInclude Include="src\MaterialBuffer.h">
       <Filter>Engine\Resources\ConstantBuffer</Filter>
     </ClInclude>
     <ClInclude Include="src\Dx12Commons.h">
@@ -286,6 +292,12 @@
     </ClInclude>
     <ClInclude Include="src\EngineTime.h">
       <Filter>Engine\EngineTime</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AnimatedQuad.h">
+      <Filter>App\Entities\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GlobalBuffer.h">
+      <Filter>Engine\Resources\ConstantBuffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
