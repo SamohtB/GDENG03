@@ -65,21 +65,21 @@ void GameWindow::OnUpdate()
 	m_ticks += deltaTime * 1.5f;
 
 	/* Speed Up/Down */
-	float max = 4.0f;
-	float min = 0.25f;
+	//float max = 4.0f;
+	//float min = 0.25f;
 
-	float center = (max + min) / 2.0f;
-	float amplitude = (max - min) / 2.0f;
-	float period = 8.0f * M_PI;
-	float frequency = 2.0f * M_PI / period;
+	//float center = (max + min) / 2.0f;
+	//float amplitude = (max - min) / 2.0f;
+	//float period = 8.0f * M_PI;
+	//float frequency = 2.0f * M_PI / period;
 
-	float speed = center - amplitude * cos(frequency * m_ticks);
-	float t = 0.5f + 0.5f * cos(speed * m_ticks);;
+	//float speed = center - amplitude * cos(frequency * m_ticks);
+	//float t = 0.5f + 0.5f * cos(speed * m_ticks);;
 
-	if (m_ticks >= period) m_ticks = 0.0f;
+	//if (m_ticks >= period) m_ticks = 0.0f;
 
 	/* Normal Sine Wave */
-	//t = 0.5f + 0.5f * sin(m_ticks);
+	float t = 0.5f + 0.5f * sin(m_ticks);
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->UpdateGlobalBuffer(t);
 
