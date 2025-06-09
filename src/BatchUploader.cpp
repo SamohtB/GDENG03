@@ -3,7 +3,6 @@
 #include <directxtk12/BufferHelpers.h>
 #include <directxtk12/WICTextureLoader.h>
 
-#include "MaterialBuffer.h"
 #include "VertexTypes.h"
 #include "Debug.h"
 
@@ -105,30 +104,6 @@ ComPtr<ID3D12Resource> BatchUploader::SchedWhitePixelTexture(D3D12_CPU_DESCRIPTO
     DirectX::CreateShaderResourceView(this->m_device.Get(), textureBuffer.Get(), handle);
 
     return textureBuffer;
-}
-
-ComPtr<ID3D12Resource> BatchUploader::CreateCBV(D3D12_CPU_DESCRIPTOR_HANDLE handle)
-{
-    CD3DX12_HEAP_PROPERTIES uploadHeapProps(D3D12_HEAP_TYPE_UPLOAD);
-    CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(MaterialBuffer::BUFFER_SIZE);
-
-    ComPtr<ID3D12Resource> constantBuffer;
-
-    Debug::ThrowIfFailed(m_device->CreateCommittedResource(
-        &uploadHeapProps,
-        D3D12_HEAP_FLAG_NONE,
-        &resourceDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(&constantBuffer)));
-
-    D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-    cbvDesc.BufferLocation = constantBuffer->GetGPUVirtualAddress();
-    cbvDesc.SizeInBytes = MaterialBuffer::BUFFER_SIZE;
-
-    this->m_device->CreateConstantBufferView(&cbvDesc, handle);
-
-    return constantBuffer;
 }
 
 template<typename VertexType>

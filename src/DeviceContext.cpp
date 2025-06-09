@@ -57,14 +57,19 @@ void DeviceContext::SetDescriptorHeaps(const std::vector<ID3D12DescriptorHeap*>&
     this->m_commandList->SetDescriptorHeaps(static_cast<UINT>(heaps.size()), heaps.data());
 }
 
-void DeviceContext::SetGlobalConstantBuffer(D3D12_GPU_VIRTUAL_ADDRESS address)
+void DeviceContext::SetObjectConstants(D3D12_GPU_VIRTUAL_ADDRESS address)
 {
-    this->m_commandList->SetGraphicsRootConstantBufferView(RootDescriptorIndex::GLOBAL_CONST, address);
+    this->m_commandList->SetGraphicsRootConstantBufferView(RootDescriptorIndex::OBJECT_CONSTANTS, address);
 }
 
-void DeviceContext::SetMaterialBuffer(D3D12_GPU_DESCRIPTOR_HANDLE handle)
+void DeviceContext::SetMaterialConstants(D3D12_GPU_VIRTUAL_ADDRESS address)
 {
-    this->m_commandList->SetGraphicsRootDescriptorTable(RootDescriptorIndex::MAT_CONST, handle);
+    this->m_commandList->SetGraphicsRootConstantBufferView(RootDescriptorIndex::MATERIAL_CONSTANTS, address);
+}
+
+void DeviceContext::SetFrameConstants(D3D12_GPU_VIRTUAL_ADDRESS address)
+{
+    this->m_commandList->SetGraphicsRootConstantBufferView(RootDescriptorIndex::FRAME_CONSTANTS, address);
 }
 
 void DeviceContext::SetViewport(CD3DX12_VIEWPORT* viewport)

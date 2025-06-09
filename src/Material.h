@@ -1,21 +1,17 @@
 #pragma once
-#include <string>
-#include <memory>
-#include <vector>
-#include <array>
-#include "Dx12Commons.h"
-#include "MaterialBuffer.h"
+#include "ConstantBuffer.h"
 #include "MaterialTypes.h"
 
 class Material
 {
 public:
-	Material(const std::vector<ComPtr<ID3D12Resource>>& buffers, MaterialDescription desc);
+	Material(MaterialDescription desc, const MaterialConstantsData& data);
 	~Material() = default;
 
-	void SetMaterialDescription(MaterialDescription desc);
+	MaterialConstantsData GetMaterialData();
 
 private:
-	std::array<std::unique_ptr<MaterialBuffer>, FRAME_COUNT> m_materialBuffers;
+	MaterialConstantsData m_data;
+	MaterialDescription m_description;
 };
 

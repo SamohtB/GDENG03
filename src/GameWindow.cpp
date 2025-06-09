@@ -10,22 +10,16 @@
 #include "Quad.h"
 #include "PBSQuads.h"
 #include "AnimatedQuad.h"
-
-#include "MaterialBuffer.h"
-#include "MaterialTypes.h"
+#include "Cube.h"
 
 #include "Debug.h"
-
-#include <cmath>
-
-#define M_PI 3.14159265f
 
 GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
 
 void GameWindow::OnCreate(HWND hwnd)
 {
 	GraphicsEngine::Initialize(this->m_width, this->m_height, hwnd);
-	GameObjectManager::Initialize();
+	GameObjectManager::Initialize(GraphicsEngine::GetInstance()->GetRenderSystem()->GetD3DDevicePtr().Get());
 	EngineTime::Initialize(60);
 
 	auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
@@ -34,27 +28,8 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	renderSystem->LoadInitialResources();
 
-	//std::shared_ptr<PBSQuads> quad = std::make_shared<PBSQuads>(0, "RockBase", XMFLOAT2(-0.5f, 0.33f), ROCK_0);
-	//GameObjectManager::GetInstance()->AddGameObject(quad);
-
-	//quad = std::make_shared<PBSQuads>(1, "RockWithPBS", XMFLOAT2(-0.5f, -0.33f), ROCK_1);
-	//GameObjectManager::GetInstance()->AddGameObject(quad);
-
-	//quad = std::make_shared<PBSQuads>(2, "MetalPlateBase", XMFLOAT2(0.0f, 0.33f), METAL_PLATE_0);
-	//GameObjectManager::GetInstance()->AddGameObject(quad);
-
-	//quad = std::make_shared<PBSQuads>(3, "MetalPlateWithPBS", XMFLOAT2(0.0f, -0.33f), METAL_PLATE_1);
-	//GameObjectManager::GetInstance()->AddGameObject(quad);
-
-	//quad = std::make_shared<PBSQuads>(4, "BricksBase", XMFLOAT2(0.5f, 0.33f), BRICKS_0);
-	//GameObjectManager::GetInstance()->AddGameObject(quad);
-
-	//quad = std::make_shared<PBSQuads>(5, "BricksWithPBS", XMFLOAT2(0.5f, -0.33f), BRICKS_1);
-	//GameObjectManager::GetInstance()->AddGameObject(quad);
-
-	std::shared_ptr<AnimatedQuad> quad = std::make_shared<AnimatedQuad>(0, "Quad", XMFLOAT2(0.0f, 0.0f));
-	GameObjectManager::GetInstance()->AddGameObject(quad);
-
+	std::shared_ptr<Cube> cube = std::make_shared<Cube>("Cube");
+	GameObjectManager::GetInstance()->AddGameObject(cube);
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
 } 
@@ -64,27 +39,19 @@ void GameWindow::OnUpdate()
 	auto deltaTime = EngineTime::GetDeltaTime();
 	m_ticks += deltaTime * 1.5f;
 
-	/* Speed Up/Down */
-	//float max = 4.0f;
-	//float min = 0.25f;
+	Vector3 cameraPosition = Vector3(0.0f, 0.0f, -5.0f); 
+	Vector3 cameraTarget = Vector3(0.0f, 0.0f, 0.0f);
+	Vector3 upDirection = Vector3(0.0f, 1.0f, 0.0f);
+	constexpr float fovRadians = DirectX::XMConvertToRadians(60.0f);
 
-	//float center = (max + min) / 2.0f;
-	//float amplitude = (max - min) / 2.0f;
-	//float period = 8.0f * M_PI;
-	//float frequency = 2.0f * M_PI / period;
+	FrameConstantsData frameData = {};
+	frameData.viewMatrix = DirectX::SimpleMath::Matrix::CreateLookAt(cameraPosition, cameraTarget, upDirection);
+	frameData.projMatrix = DirectX::SimpleMath::Matrix::CreatePerspectiveFieldOfView(fovRadians, this->m_aspectRatio, 0.1f, 100.0f);
 
-	//float speed = center - amplitude * cos(frequency * m_ticks);
-	//float t = 0.5f + 0.5f * cos(speed * m_ticks);;
-
-	//if (m_ticks >= period) m_ticks = 0.0f;
-
-	/* Normal Sine Wave */
-	float t = 0.5f + 0.5f * sin(m_ticks);
-
-	GraphicsEngine::GetInstance()->GetRenderSystem()->UpdateGlobalBuffer(t);
+	GraphicsEngine::GetInstance()->GetRenderSystem()->UpdateFrameConstants(frameData);
 
 	/* get delta time here and pass to game object manager */
-	GameObjectManager::GetInstance()->UpdateAll();
+	GameObjectManager::GetInstance()->UpdateAll(deltaTime);
 }
 
 void GameWindow::OnRender()

@@ -13,8 +13,9 @@ struct VSOutput
     float3 color2 : COLOR1;
 };
 
-cbuffer SceneConstantBuffer : register(b129)
+cbuffer SceneConstantBuffer : register(b0)
 {
+    float4x4 model;
     float time;
 };
 

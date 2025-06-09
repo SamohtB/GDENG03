@@ -141,9 +141,6 @@
     <ClCompile Include="src\Quad.cpp">
       <Filter>App\Entities\Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="src\MaterialBuffer.cpp">
-      <Filter>Engine\Resources\ConstantBuffer</Filter>
-    </ClCompile>
     <ClCompile Include="src\GraphicsEngine.cpp">
       <Filter>Engine\GraphicsEngine</Filter>
     </ClCompile>
@@ -183,8 +180,8 @@
     <ClCompile Include="src\AnimatedQuad.cpp">
       <Filter>App\Entities\Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="src\GlobalBuffer.cpp">
-      <Filter>Engine\Resources\ConstantBuffer</Filter>
+    <ClCompile Include="src\Cube.cpp">
+      <Filter>App\Entities\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -229,9 +226,6 @@
     </ClInclude>
     <ClInclude Include="src\Quad.h">
       <Filter>App\Entities\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MaterialBuffer.h">
-      <Filter>Engine\Resources\ConstantBuffer</Filter>
     </ClInclude>
     <ClInclude Include="src\Dx12Commons.h">
       <Filter>Utility</Filter>
@@ -284,9 +278,6 @@
     <ClInclude Include="src\ShaderLoader.h">
       <Filter>Engine\GraphicsEngine\RenderSystem\RenderDevice\ShaderLoader</Filter>
     </ClInclude>
-    <ClInclude Include="src\MaterialManager.h">
-      <Filter>Engine\GraphicsEngine\RenderSystem\MaterialManager</Filter>
-    </ClInclude>
     <ClInclude Include="src\Material.h">
       <Filter>Engine\Resources\Material</Filter>
     </ClInclude>
@@ -296,8 +287,14 @@
     <ClInclude Include="src\AnimatedQuad.h">
       <Filter>App\Entities\Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="src\GlobalBuffer.h">
+    <ClInclude Include="src\Cube.h">
+      <Filter>App\Entities\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ConstantBuffer.h">
       <Filter>Engine\Resources\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MaterialManager.h">
+      <Filter>Engine\GraphicsEngine\RenderSystem\MaterialManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

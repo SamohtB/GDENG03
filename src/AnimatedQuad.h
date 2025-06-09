@@ -16,11 +16,11 @@ class AnimatedQuad : public AGameObject
 public:
 	using String = std::string;
 
-	AnimatedQuad(int id, String name, Vector2 offset);
+	AnimatedQuad(String name);
 	~AnimatedQuad() = default;
 
 	// Inherited via AGameObject
-	void Update() override;
+	void Update(float deltaTime) override;
 	void Draw(DeviceContext* dvcContext) override;
 
 private:

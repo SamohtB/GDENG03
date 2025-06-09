@@ -19,7 +19,7 @@ public:
 
     void LoadInitialTextures();
     void LoadTexture(const TextureType& type, const std::wstring& filePath);
-    D3D12_GPU_DESCRIPTOR_HANDLE GetTextureHandle(const TextureType& type);
+    D3D12_GPU_DESCRIPTOR_HANDLE GetSRVStart();
 
 private:
     void CreateDefaultWhiteTexture();

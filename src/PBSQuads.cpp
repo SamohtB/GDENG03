@@ -2,11 +2,12 @@
 #include "DeviceContext.h"
 #include "RenderDevice.h"
 #include "GraphicsEngine.h"
+#include "TextureManager.h"
 #include "MaterialManager.h"
 #include "GeoMath.h"
 #include "Debug.h"
 
-PBSQuads::PBSQuads(int id, String name, Vector2 offset, MaterialType matType) : AGameObject(id, name)
+PBSQuads::PBSQuads(String name, Vector2 offset, MaterialType matType) : AGameObject(name)
 {
     float x = offset.x;
     float y = offset.y;
@@ -69,7 +70,7 @@ PBSQuads::PBSQuads(int id, String name, Vector2 offset, MaterialType matType) : 
     this->m_material = matType;
 }
 
-void PBSQuads::Update()
+void PBSQuads::Update(float deltaTime)
 {
 }
 
@@ -80,7 +81,8 @@ void PBSQuads::Draw(DeviceContext* context)
     /* Check Render System Start Frame {} for other settables */
     {
         context->SetPSO(renderSystem->GetPipelineState(this->m_shader));
-        renderSystem->SetMaterialConstantBuffer(this->m_material);
+        context->SetTexture(renderSystem->GetTextureManager()->GetSRVStart());
+        context->SetMaterialConstants(renderSystem->GetMaterialConstantsAddress(this->m_material));
     }
 
     context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());

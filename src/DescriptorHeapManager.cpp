@@ -2,9 +2,8 @@
 #include <directxtk12/DirectXHelpers.h>
 #include "Debug.h"
 
-DescriptorHeapManager::DescriptorHeapManager(ID3D12Device* device, UINT maxRTVCount, UINT maxSRVCount, UINT maxCBVCount)
-    : m_maxRTVCount(maxRTVCount), m_maxSRVCount(maxSRVCount), m_maxCBVCount(maxCBVCount), 
-    m_currentSRVOffset(0), m_currentCBVOffset(maxSRVCount), m_cbvEnd(maxSRVCount + maxCBVCount)
+DescriptorHeapManager::DescriptorHeapManager(ID3D12Device* device, UINT maxRTVCount, UINT maxSRVCount)
+    : m_maxRTVCount(maxRTVCount), m_maxSRVCount(maxSRVCount), m_currentSRVOffset(0)
 {
     /* Render Target View */
     D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
@@ -15,17 +14,17 @@ DescriptorHeapManager::DescriptorHeapManager(ID3D12Device* device, UINT maxRTVCo
    
     this->m_rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-    /* Shader Resource View + Constant Buffer View */
-    D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-    srvHeapDesc.NumDescriptors = m_cbvEnd;
+    /* Shader Resource View */
+    D3D12_DESCRIPTOR_HEAP_DESC  srvHeapDesc = {};
+    srvHeapDesc.NumDescriptors = this->m_maxSRVCount;
     srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    Debug::ThrowIfFailed(device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&this->m_shaderVisibleHeap)));
+    Debug::ThrowIfFailed(device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&this->m_srvHeap)));
 
-    this->m_shaderVisibleDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    this->m_srvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
     /* add for binding */
-    this->m_activeHeaps.push_back(m_shaderVisibleHeap.Get());
+    this->m_activeHeaps.push_back(m_srvHeap.Get());
 }
 
 const std::vector<ID3D12DescriptorHeap*>& DescriptorHeapManager::GetActiveHeaps() const
@@ -52,9 +51,9 @@ D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetRTVCPUHandleAt(UINT frameI
     );
 }
 
-UINT DescriptorHeapManager::GetShaderVisibleDescriptorSize() const
+UINT DescriptorHeapManager::GetSRVDescriptorSize() const
 {
-    return this->m_shaderVisibleDescriptorSize;
+    return this->m_srvDescriptorSize;
 }
 
 UINT DescriptorHeapManager::AllocateSRVSlot()
@@ -63,27 +62,21 @@ UINT DescriptorHeapManager::AllocateSRVSlot()
     return this->m_currentSRVOffset++;
 }
 
-UINT DescriptorHeapManager::AllocateCBVSlot()
-{
-    Debug::Assert(this->m_currentCBVOffset < m_cbvEnd, "Exceeded CBV descriptor heap capacity");
-    return this->m_currentCBVOffset++;
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetShaderVisibleCPUHandleAt(UINT index) const
+D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetSRVCPUHandleAt(UINT index) const
 {
     return CD3DX12_CPU_DESCRIPTOR_HANDLE(
-        this->m_shaderVisibleHeap->GetCPUDescriptorHandleForHeapStart(),
+        this->m_srvHeap->GetCPUDescriptorHandleForHeapStart(),
         index,
-        this->m_shaderVisibleDescriptorSize
+        this->m_srvDescriptorSize
     );
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetShaderVisibleGPUHandleAt(UINT index) const
+D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetSRVGPUHandleAt(UINT index) const
 {
     return CD3DX12_GPU_DESCRIPTOR_HANDLE(
-        this->m_shaderVisibleHeap->GetGPUDescriptorHandleForHeapStart(),
+        this->m_srvHeap->GetGPUDescriptorHandleForHeapStart(),
         index,
-        this->m_shaderVisibleDescriptorSize
+        this->m_srvDescriptorSize
     );
 }
 

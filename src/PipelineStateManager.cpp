@@ -57,14 +57,14 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
     if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
         featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
 
-    CD3DX12_DESCRIPTOR_RANGE1 rootRanges[2];
-    rootRanges[RootDescriptorIndex::TEXTURES].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, SRV_MAX_COUNT, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_VOLATILE);
-    rootRanges[RootDescriptorIndex::MAT_CONST].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, CBV_MAX_COUNT, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_VOLATILE);
+    CD3DX12_DESCRIPTOR_RANGE1 rootRanges[1];
+    rootRanges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, SRV_MAX_COUNT, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_VOLATILE);
 
-    CD3DX12_ROOT_PARAMETER1 rootParams[3];
-    rootParams[RootDescriptorIndex::TEXTURES].InitAsDescriptorTable(1, &rootRanges[0], D3D12_SHADER_VISIBILITY_PIXEL);
-    rootParams[RootDescriptorIndex::MAT_CONST].InitAsDescriptorTable(1, &rootRanges[1], D3D12_SHADER_VISIBILITY_ALL);
-    rootParams[RootDescriptorIndex::GLOBAL_CONST].InitAsConstantBufferView(129, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC, D3D12_SHADER_VISIBILITY_ALL);
+    CD3DX12_ROOT_PARAMETER1 rootParams[4];
+    rootParams[RootDescriptorIndex::OBJECT_CONSTANTS].InitAsConstantBufferView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_VOLATILE, D3D12_SHADER_VISIBILITY_ALL);
+    rootParams[RootDescriptorIndex::FRAME_CONSTANTS].InitAsConstantBufferView(1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC, D3D12_SHADER_VISIBILITY_ALL);
+    rootParams[RootDescriptorIndex::TEXTURES].InitAsDescriptorTable(1, &rootRanges[0], D3D12_SHADER_VISIBILITY_ALL);
+    rootParams[RootDescriptorIndex::MATERIAL_CONSTANTS].InitAsConstantBufferView(2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_VOLATILE, D3D12_SHADER_VISIBILITY_ALL);
 
     D3D12_STATIC_SAMPLER_DESC sampler = {};
     sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;

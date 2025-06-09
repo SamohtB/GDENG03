@@ -17,11 +17,11 @@ class Quad : public AGameObject
 public:
 	using String = std::string;
 
-	Quad(int id, String name, Vector2 offset);
+	Quad(String name, Vector2 offset);
 	~Quad() = default;
 
 	// Inherited via AGameObject
-	void Update() override;
+	void Update(float deltaTime) override;
 	void Draw(DeviceContext* dvcContext) override;
 
 private:

@@ -4,7 +4,7 @@
 #include "GraphicsEngine.h"
 #include "TextureManager.h"
 
-Quad::Quad(int id, String name, Vector2 offset) : AGameObject(id, name)
+Quad::Quad(String name, Vector2 offset) : AGameObject(name)
 {
     float x = offset.x;
     float y = offset.y;
@@ -33,7 +33,7 @@ Quad::Quad(int id, String name, Vector2 offset) : AGameObject(id, name)
     this->m_texture = TextureType::ROCK_COLOR;
 }
 
-void Quad::Update()
+void Quad::Update(float deltaTime)
 {
 }
 
@@ -41,10 +41,8 @@ void Quad::Draw(DeviceContext* context)
 {
     auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
 
-    /* Check Render System Start Frame {} for other settables */
     {
         context->SetPSO(renderSystem->GetPipelineState(this->m_shader));
-        //add texture here
     }
     
     context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());

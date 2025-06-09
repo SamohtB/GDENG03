@@ -4,28 +4,32 @@
 #include <unordered_map>
 #include "Dx12Commons.h"
 
-#include "DescriptorHeapManager.h"
-#include "BatchUploader.h"
+#include "ConstantBuffer.h"
 #include "MaterialTypes.h"
 #include "Material.h"
 
 class MaterialManager
 {
 public:
-    MaterialManager(std::shared_ptr<DescriptorHeapManager> heapManager, std::shared_ptr<BatchUploader> uploader);
+    MaterialManager(ID3D12Device* device);
     ~MaterialManager() = default;
 
     using MaterialPtr = std::unique_ptr<Material>;
     using MaterialMap = std::unordered_map<MaterialType, MaterialPtr>;
-    using CBVMap = std::unordered_map<MaterialType, std::array<UINT, FRAME_COUNT>>;
+    using CBMap = std::unordered_map<MaterialType, std::array<UINT, FRAME_COUNT>>;
 
     void LoadInitialMaterials();
     void LoadMaterial(const MaterialType& type, const MaterialDescription& description);
-    D3D12_GPU_DESCRIPTOR_HANDLE GetMaterialHandle(const MaterialType& type, UINT frameIndex);
+    void UpdateMaterialConstants(const MaterialType& type, UINT frameIndex);
+    D3D12_GPU_VIRTUAL_ADDRESS GetMaterialConstantsAddress(MaterialType type, UINT frameIndex);
 
 private:
-    std::shared_ptr<DescriptorHeapManager> m_heapManager;
-    std::shared_ptr<BatchUploader> m_uploader;
-    CBVMap m_cbvMap;
+    UINT ReserveSlot();
+
+    CBMap m_cbMap;
     MaterialMap m_materialMap;
+    std::unique_ptr<MaterialConstantsBuffer> m_materialConstantsBuffer;
+    
+    UINT m_nextSlot = 0;
+    const int MAX_MATERIAL_COUNT = 128;
 };

@@ -10,11 +10,27 @@ struct VSOutput
     float3 color : COLOR;
 };
 
+cbuffer ObjectConstants : register(b0)
+{
+    float4x4 model;
+    int id;
+}
+
+cbuffer FrameConstants : register(b1)
+{
+    float4x4 view;
+    float4x4 projection;
+}
+
 VSOutput VSMain(VSInput input)
 {
     VSOutput output;
 
-    output.position = float4(input.position, 1.0f);
+    float4 worldPos = mul(float4(input.position, 1.0), model);
+    float4 viewPos = mul(worldPos, view);
+    float4 projPos = mul(viewPos, projection);
+    output.position = projPos;
+
     output.color = input.color;
 
     return output;

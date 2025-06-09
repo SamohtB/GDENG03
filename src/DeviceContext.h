@@ -16,8 +16,9 @@ public:
 	void SetRootSignature(ID3D12RootSignature* rootSignature);
 	void SetPSO(ID3D12PipelineState* pipelineState);
 	void SetDescriptorHeaps(const std::vector<ID3D12DescriptorHeap*>& heaps);
-	void SetGlobalConstantBuffer(D3D12_GPU_VIRTUAL_ADDRESS address);
-	void SetMaterialBuffer(D3D12_GPU_DESCRIPTOR_HANDLE handle);
+	void SetObjectConstants(D3D12_GPU_VIRTUAL_ADDRESS address);
+	void SetMaterialConstants(D3D12_GPU_VIRTUAL_ADDRESS address);
+	void SetFrameConstants(D3D12_GPU_VIRTUAL_ADDRESS address);
 	void SetViewport(CD3DX12_VIEWPORT* viewport);
 	void SetScissorRect(CD3DX12_RECT* rect);
 

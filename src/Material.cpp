@@ -1,19 +1,11 @@
 #include "Material.h"
 
-Material::Material(const std::vector<ComPtr<ID3D12Resource>>& buffers, MaterialDescription desc)
+Material::Material(MaterialDescription desc, const MaterialConstantsData& data) : m_description(desc), m_data(data)
 {
-	for (int i = 0; i < FRAME_COUNT; i++)
-	{
-		this->m_materialBuffers[i] = std::make_unique<MaterialBuffer>(buffers[i]);
-	}
 
-	this->SetMaterialDescription(desc);
 }
 
-void Material::SetMaterialDescription(MaterialDescription desc)
+MaterialConstantsData Material::GetMaterialData()
 {
-	for (int i = 0; i < FRAME_COUNT; i++)
-	{
-		this->m_materialBuffers[i]->Update(desc);
-	}
+	return this->m_data;
 }

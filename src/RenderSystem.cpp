@@ -4,7 +4,6 @@
 #include "DeviceContext.h"
 #include "SwapChainManager.h"
 #include "RenderTargetManager.h"
-#include "MaterialBuffer.h"
 
 #include "Debug.h"
 
@@ -32,7 +31,7 @@ RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 	this->m_renderTargetManager = std::make_unique<RenderTargetManager>(d3dDevice, this->m_swapChainManager->GetSwapChain(),
 		heapManager->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), heapManager->GetRTVDescriptorSize());
 
-	this->m_globalBuffer = std::make_unique<GlobalBuffer>(d3dDevice);
+	this->m_frameConstantsBuffer = std::make_unique<FrameConstantsBuffer>(d3dDevice, FRAME_COUNT);
 
 	/* Initial Signal */
 	this->m_renderDevice->GetFenceManager()->SignalCurrentFrameGPU(this->m_deviceContext->GetCommandQueue(), 0);
@@ -66,7 +65,7 @@ void RenderSystem::InitResourceManagers(std::shared_ptr<BatchUploader> uploader)
 
 	try
 	{
-		this->m_materialManager = std::make_unique<MaterialManager>(m_renderDevice->GetDescriptorHeapManagerPtr(), uploader);
+		this->m_materialManager = std::make_unique<MaterialManager>(this->m_renderDevice->GetD3DDevice());
 	}
 	catch (...)
 	{
@@ -88,20 +87,13 @@ void RenderSystem::StartFrame()
 	this->m_renderDevice->GetFenceManager()->WaitForFrameGPU(currentFrameIndex);
 	this->m_deviceContext->ResetCommands(currentFrameIndex);
 
-	/* Set ENV Can Be Moved */
-	{
-		this->m_deviceContext->SetRootSignature(this->m_renderDevice->GetPSOManager()->GetRootSignature());
+	this->m_deviceContext->SetRootSignature(this->m_renderDevice->GetPSOManager()->GetRootSignature());
 
-		/* Set Heaps SRV/CBV/UAV */
-		auto heaps = this->m_renderDevice->GetDescriptorHeapManager()->GetActiveHeaps();
-		this->m_deviceContext->SetDescriptorHeaps(heaps);
+	auto heaps = this->m_renderDevice->GetDescriptorHeapManager()->GetActiveHeaps();
+	this->m_deviceContext->SetDescriptorHeaps(heaps);
 
-		this->m_deviceContext->SetTexture(
-			this->m_renderDevice->GetDescriptorHeapManager()->GetShaderVisibleGPUHandleAt(0));
-
-		this->m_deviceContext->SetViewport(&m_viewport);
-		this->m_deviceContext->SetScissorRect(&m_scissorRect);
-	}
+	this->m_deviceContext->SetViewport(&m_viewport);
+	this->m_deviceContext->SetScissorRect(&m_scissorRect);
 	
 	auto renderTarget = this->m_renderTargetManager->GetRenderTarget(currentFrameIndex);
 	this->m_deviceContext->TransitionToRenderTarget(renderTarget);
@@ -123,23 +115,28 @@ void RenderSystem::EndFrame()
 	this->m_swapChainManager->UpdateFrameIndex();
 }
 
-void RenderSystem::UpdateGlobalBuffer(float time)
+void RenderSystem::UpdateFrameConstants(const FrameConstantsData& data)
 {
-	auto index = this->m_swapChainManager->GetCurrentFrameIndex();
-	this->m_globalBuffer->Update(time, index);
+	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	this->m_frameConstantsBuffer->Update(data, currentFrameIndex);
 }
 
-void RenderSystem::SetMaterialConstantBuffer(MaterialType type)
+D3D12_GPU_VIRTUAL_ADDRESS RenderSystem::GetFrameConstantsAddress()
 {
-	auto index = this->m_swapChainManager->GetCurrentFrameIndex();
-	auto handle = m_materialManager->GetMaterialHandle(type, index);
-	this->m_deviceContext->SetMaterialBuffer(handle);
+	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	return this->m_frameConstantsBuffer->GetGPUVirtualAddress(currentFrameIndex);
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS RenderSystem::GetGlobalBufferAddress()
+void RenderSystem::UpdateMaterialConstants(MaterialType type)
 {
-	auto index = this->m_swapChainManager->GetCurrentFrameIndex();
-	return this->m_globalBuffer->GetVirtualAddress(index);
+	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	this->m_materialManager->UpdateMaterialConstants(type, currentFrameIndex);
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS RenderSystem::GetMaterialConstantsAddress(MaterialType type)
+{
+	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
+	return this->m_materialManager->GetMaterialConstantsAddress(type, currentFrameIndex);
 }
 
 ID3D12PipelineState* RenderSystem::GetPipelineState(const ShaderType& type) const
@@ -154,6 +151,16 @@ ID3D12PipelineState* RenderSystem::GetPipelineState(const ShaderType& type) cons
 	default: return psoManager->GetPipelineState(InputLayoutType::Pos_Color, L"Default");
 	}
 	
+}
+
+UINT RenderSystem::GetCurrentFrameIndex()
+{
+	return this->m_swapChainManager->GetCurrentFrameIndex();;
+}
+
+TextureManager* RenderSystem::GetTextureManager()
+{
+	return this->m_textureManager.get();
 }
 
 ComPtr<ID3D12Device> RenderSystem::GetD3DDevicePtr()

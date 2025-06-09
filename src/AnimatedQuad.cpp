@@ -1,8 +1,9 @@
 #include "AnimatedQuad.h"
 #include "GraphicsEngine.h"
 #include "DeviceContext.h"
+#include "GameObjectManager.h"
 
-AnimatedQuad::AnimatedQuad(int id, String name, Vector2 offset) : AGameObject(id, name)
+AnimatedQuad::AnimatedQuad(String name) : AGameObject(name)
 {
     std::vector<unsigned int> indices =
     {
@@ -34,18 +35,19 @@ AnimatedQuad::AnimatedQuad(int id, String name, Vector2 offset) : AGameObject(id
     this->m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);
 }
 
-void AnimatedQuad::Update()
+void AnimatedQuad::Update(float deltaTime)
 {
 }
 
 void AnimatedQuad::Draw(DeviceContext* context)
 {
     auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
+    auto frameIndex = renderSystem->GetCurrentFrameIndex();
 
     /* Check Render System Start Frame {} for other settables */
     {
         context->SetPSO(renderSystem->GetPipelineState(this->m_shader));
-        context->SetGlobalConstantBuffer(renderSystem->GetGlobalBufferAddress()); // needs to be set after setting PSO
+        context->SetObjectConstants(GameObjectManager::GetInstance()->GetObjectConstantsAddress(this->GetId(), frameIndex));
     }
 
     context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());

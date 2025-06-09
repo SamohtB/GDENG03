@@ -15,7 +15,8 @@ static const UINT SRV_MAX_COUNT = 128;
 static const UINT CBV_MAX_COUNT = 64 * FRAME_COUNT;
 
 enum RootDescriptorIndex : int {
-	TEXTURES = 0,
-	MAT_CONST = 1,
-	GLOBAL_CONST
+	OBJECT_CONSTANTS = 0,
+	TEXTURES = 1,
+	MATERIAL_CONSTANTS = 2,
+	FRAME_CONSTANTS = 3
 };
