@@ -180,6 +180,7 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Random.h" />
     <ClInclude Include="src\ConstantBuffer.h" />
     <ClInclude Include="src\Cube.h" />
     <ClInclude Include="src\AnimatedQuad.h" />

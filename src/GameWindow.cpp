@@ -13,6 +13,7 @@
 #include "Cube.h"
 
 #include "Debug.h"
+#include "Random.h"
 
 GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
 
@@ -28,8 +29,31 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	renderSystem->LoadInitialResources();
 
-	std::shared_ptr<Cube> cube = std::make_shared<Cube>("Cube");
-	GameObjectManager::GetInstance()->AddGameObject(cube);
+	float depth = 3.0f;
+	float zPos = depth;
+
+	float fovY = DirectX::XMConvertToRadians(60.0f);
+	float tanFovY = tanf(fovY * 0.5f);
+	float viewHeight = 2.0f * depth * tanFovY;
+	float viewWidth = viewHeight * this->m_aspectRatio;
+
+	float padding = 0.8f;
+
+	// Spawn 100 cubes
+	for (int i = 0; i < 100; ++i)
+	{
+		std::shared_ptr<Cube> cube = std::make_shared<Cube>("Cube_" + std::to_string(i));
+
+		float x = Random::Range(-viewWidth * 0.5f * padding, viewWidth * 0.5f * padding);
+		float y = Random::Range(-viewHeight * 0.5f * padding, viewHeight * 0.5f * padding);
+		float z = 0.0f;
+
+		cube->SetPosition(Vector3(x, y, -5.0f + zPos + z));
+		cube->SetScale(0.5f, 0.5f, 0.5f);
+		cube->SetRandomRotation();
+
+		GameObjectManager::GetInstance()->AddGameObject(cube);
+	}
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
 } 
@@ -37,7 +61,7 @@ void GameWindow::OnCreate(HWND hwnd)
 void GameWindow::OnUpdate()
 {
 	auto deltaTime = EngineTime::GetDeltaTime();
-	m_ticks += deltaTime * 1.5f;
+	m_ticks += deltaTime;
 
 	Vector3 cameraPosition = Vector3(0.0f, 0.0f, -5.0f); 
 	Vector3 cameraTarget = Vector3(0.0f, 0.0f, 0.0f);

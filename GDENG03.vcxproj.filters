@@ -296,6 +296,9 @@
     <ClInclude Include="src\MaterialManager.h">
       <Filter>Engine\GraphicsEngine\RenderSystem\MaterialManager</Filter>
     </ClInclude>
+    <ClInclude Include="src\Random.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\TexturedVertexShader.hlsl">

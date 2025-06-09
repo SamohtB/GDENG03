@@ -3,6 +3,7 @@
 #include "RenderDevice.h"
 #include "GraphicsEngine.h"
 #include "GameObjectManager.h"
+#include "Random.h"
 
 Cube::Cube(String name) : AGameObject(name)
 {
@@ -49,7 +50,16 @@ Cube::Cube(String name) : AGameObject(name)
 
 void Cube::Update(float deltaTime)
 {
-    this->Rotate(0.0f, deltaTime * 2.0f, 0.0f);
+    m_ticks += deltaTime;
+
+    float x = sinf(m_ticks * 0.7f + GetId());
+    float y = cosf(m_ticks * 1.1f + GetId());
+    float z = sinf(m_ticks * 0.3f + GetId() * 0.5f);
+
+    Vector3 axis(x, y, z);
+    axis.Normalize();
+
+    this->Rotate(axis.x * deltaTime, axis.y * deltaTime, axis.z * deltaTime);
 
     ObjectConstantsData objData = {};
     objData.modelMatrix = this->GetLocalMatrix();
@@ -75,4 +85,13 @@ void Cube::Draw(DeviceContext* context)
     context->SetIndexBuffer(this->m_indexBuffer->GetIndexBufferViewPointer());
 
     context->DrawIndexedTriangleList(m_indicesSize, 0, 0);
+}
+
+void Cube::SetRandomRotation()
+{
+    float pitch = Random::Range(0.0f, DirectX::XM_2PI); 
+    float yaw = Random::Range(0.0f, DirectX::XM_2PI);
+    float roll = Random::Range(0.0f, DirectX::XM_2PI);
+
+    this->SetRotation(pitch, yaw, roll);
 }
