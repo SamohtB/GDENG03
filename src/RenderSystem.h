@@ -7,6 +7,7 @@
 #include "MaterialTypes.h"
 
 #include "ConstantBuffer.h"
+#include "DepthBuffer.h"
 
 class RenderDevice;
 class DeviceContext;
@@ -48,6 +49,7 @@ private:
 	std::unique_ptr<DeviceContext> m_deviceContext;
 	std::unique_ptr<SwapChainManager> m_swapChainManager;
 	std::unique_ptr<RenderTargetManager> m_renderTargetManager;
+	std::unique_ptr<DepthBuffer> m_depthBuffer;
 
 	std::unique_ptr<TextureManager> m_textureManager;
 	std::unique_ptr<MaterialManager> m_materialManager;

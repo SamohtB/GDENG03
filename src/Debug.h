@@ -6,7 +6,9 @@
 #include <sstream>
 #include <cassert>
 #include <windows.h>
-#include <comdef.h> // For _com_error
+#include <type_traits>
+#include <comdef.h>
+#include <directxtk12/SimpleMath.h>
 #define DEBUG_BREAK() __debugbreak()
 
 class Debug
@@ -40,10 +42,26 @@ public:
         }
     }
 
+    static std::string ToString(const DirectX::SimpleMath::Vector3& v) 
+    {
+        return "Vector3(" + std::to_string(v.x) + ", "
+            + std::to_string(v.y) + ", "
+            + std::to_string(v.z) + ")";
+    }
+
+
     static void Log(const std::string& message) 
     {
         SetColor(7);
         std::cout << "[Log] " << message << std::endl;
+        ResetColor();
+    }
+
+    template<typename T>
+    static typename std::enable_if<std::is_arithmetic<T>::value>::type
+        Log(const T& value) {
+        SetColor(7);
+        std::cout << "[Log] " << value << std::endl;
         ResetColor();
     }
 

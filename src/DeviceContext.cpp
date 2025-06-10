@@ -82,7 +82,7 @@ void DeviceContext::SetScissorRect(CD3DX12_RECT* rect)
     this->m_commandList->RSSetScissorRects(1, rect);
 }
 
-/* Use before rendering */
+/* Use before draw calls */
 void DeviceContext::TransitionToRenderTarget(ID3D12Resource* resource)
 {
     CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
@@ -94,7 +94,7 @@ void DeviceContext::TransitionToRenderTarget(ID3D12Resource* resource)
     m_commandList->ResourceBarrier(1, &barrier);
 }
 
-/* Use after rendering */
+/* Use after draw calls */
 void DeviceContext::TransitionToPresent(ID3D12Resource* resource)
 {
     CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
@@ -106,12 +106,37 @@ void DeviceContext::TransitionToPresent(ID3D12Resource* resource)
     m_commandList->ResourceBarrier(1, &barrier);
 }
 
-void DeviceContext::ClearRenderTargetColor(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, float red, float green, float blue, float alpha)
+/* Use before draw calls */
+void DeviceContext::TransitionToDepthWrite(ID3D12Resource* resource)
 {
-    const float clearColor[] = { red, green, blue, alpha };
+    CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+        resource,
+        D3D12_RESOURCE_STATE_DEPTH_READ,
+        D3D12_RESOURCE_STATE_DEPTH_WRITE
+    );
 
+    m_commandList->ResourceBarrier(1, &barrier);
+}
+
+/* Use after draw calls */
+void DeviceContext::TransitionToDepthRead(ID3D12Resource* resource)
+{
+    CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+        resource,
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        D3D12_RESOURCE_STATE_DEPTH_READ
+    );
+
+    m_commandList->ResourceBarrier(1, &barrier);
+}
+
+void DeviceContext::ClearRenderTargetColor(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle, float red, float green, float blue, float alpha)
+{
+    D3D12_CLEAR_FLAGS clearFlags = D3D12_CLEAR_FLAG_DEPTH;
+    this->m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+    const float clearColor[] = { red, green, blue, alpha };
     this->m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-    this->m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+    this->m_commandList->ClearDepthStencilView(dsvHandle, clearFlags, 1.0f, 0, 0, nullptr);
 }
 
 void DeviceContext::SetTexture(D3D12_GPU_DESCRIPTOR_HANDLE handle)

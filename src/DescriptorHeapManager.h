@@ -22,6 +22,8 @@ public:
     D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCPUHandleAt(UINT index) const;
     D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUHandleAt(UINT index) const;
 
+    D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUHandle() const;
+
 private:
     std::vector<ID3D12DescriptorHeap*> m_activeHeaps;
 
@@ -35,4 +37,7 @@ private:
     UINT m_srvDescriptorSize;
     UINT m_currentSRVOffset;
     UINT m_maxSRVCount;
+
+    // DSV 
+    ComPtr<ID3D12DescriptorHeap> m_dsvHeap;
 };

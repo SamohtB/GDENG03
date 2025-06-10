@@ -10,7 +10,9 @@
 #include "Quad.h"
 #include "PBSQuads.h"
 #include "AnimatedQuad.h"
+
 #include "Cube.h"
+#include "PlaneEntity.h"
 
 #include "Debug.h"
 #include "Random.h"
@@ -27,33 +29,13 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 
-	renderSystem->LoadInitialResources();
+	auto plane = std::make_shared<PlaneEntity>("Plane");
+	plane->Rotate(-10.0f, 0.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(plane);
 
-	float depth = 3.0f;
-	float zPos = depth;
-
-	float fovY = DirectX::XMConvertToRadians(60.0f);
-	float tanFovY = tanf(fovY * 0.5f);
-	float viewHeight = 2.0f * depth * tanFovY;
-	float viewWidth = viewHeight * this->m_aspectRatio;
-
-	float padding = 0.8f;
-
-	// Spawn 100 cubes
-	for (int i = 0; i < 100; ++i)
-	{
-		std::shared_ptr<Cube> cube = std::make_shared<Cube>("Cube_" + std::to_string(i));
-
-		float x = Random::Range(-viewWidth * 0.5f * padding, viewWidth * 0.5f * padding);
-		float y = Random::Range(-viewHeight * 0.5f * padding, viewHeight * 0.5f * padding);
-		float z = 0.0f;
-
-		cube->SetPosition(Vector3(x, y, -5.0f + zPos + z));
-		cube->SetScale(0.5f, 0.5f, 0.5f);
-		cube->SetRandomRotation();
-
-		GameObjectManager::GetInstance()->AddGameObject(cube);
-	}
+	auto cube = std::make_shared<Cube>("Cube");
+	cube->Rotate(0.0f, 45.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
 } 

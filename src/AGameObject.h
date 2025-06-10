@@ -28,6 +28,7 @@ public:
 
     void SetPosition(float x, float y, float z);
     void SetPosition(Vector3 vector);
+    void Move(float x, float y, float z);
     Vector3 GetLocalPosition();
 
     void SetRotation(float pitch, float yaw, float roll);

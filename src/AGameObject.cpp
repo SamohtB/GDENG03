@@ -5,6 +5,7 @@ AGameObject::AGameObject(String name) : m_id(0), m_name(name), m_active(true), m
 	this->m_local_position = Vector3(0, 0, 0);
 	this->m_local_rotation = Vector3(0, 0, 0);
 	this->m_local_scale = Vector3(1, 1, 1);
+	this->m_local_matrix = GetLocalMatrix();
 }
 
 bool AGameObject::IsActive() const
@@ -46,6 +47,12 @@ void AGameObject::SetPosition(float x, float y, float z)
 void AGameObject::SetPosition(Vector3 vector)
 {
 	this->m_local_position = vector;
+	this->m_dirty = true;
+}
+
+void AGameObject::Move(float x, float y, float z)
+{
+	this->m_local_position += Vector3(x, y, z);
 	this->m_dirty = true;
 }
 

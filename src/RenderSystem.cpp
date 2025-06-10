@@ -32,6 +32,7 @@ RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 		heapManager->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), heapManager->GetRTVDescriptorSize());
 
 	this->m_frameConstantsBuffer = std::make_unique<FrameConstantsBuffer>(d3dDevice, FRAME_COUNT);
+	this->m_depthBuffer = std::make_unique<DepthBuffer>(d3dDevice, heapManager->GetDSVCPUHandle(), width, height);
 
 	/* Initial Signal */
 	this->m_renderDevice->GetFenceManager()->SignalCurrentFrameGPU(this->m_deviceContext->GetCommandQueue(), 0);
@@ -99,7 +100,8 @@ void RenderSystem::StartFrame()
 	this->m_deviceContext->TransitionToRenderTarget(renderTarget);
 
 	auto rtvHandle = this->m_renderDevice->GetDescriptorHeapManager()->GetRTVCPUHandleAt(currentFrameIndex);
-	this->m_deviceContext->ClearRenderTargetColor(rtvHandle, 0.0f, 0.2f, 0.4f, 1.0f);
+	auto dsvHandle = this->m_renderDevice->GetDescriptorHeapManager()->GetDSVCPUHandle();
+	this->m_deviceContext->ClearRenderTargetColor(rtvHandle, dsvHandle, 0.0f, 0.2f, 0.4f, 1.0f);
 }
 
 void RenderSystem::EndFrame()

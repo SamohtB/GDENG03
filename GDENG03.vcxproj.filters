@@ -94,6 +94,15 @@
     <Filter Include="Engine\EngineTime">
       <UniqueIdentifier>{a5580be4-e8cf-43c0-827c-0007e7f8eb7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="App\Entities\Primitives\3D">
+      <UniqueIdentifier>{1e3c48b4-7ef3-4d66-afc2-258e9a834c39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Entities\Primitives\2D">
+      <UniqueIdentifier>{032b75a3-0a85-459c-8b3c-166e92e28600}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GraphicsEngine\RenderSystem\DepthBuffer">
+      <UniqueIdentifier>{abded308-e74e-4365-8598-679a877682bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -138,9 +147,6 @@
     <ClCompile Include="src\TextureManager.cpp">
       <Filter>Engine\GraphicsEngine\RenderSystem\TextureManager</Filter>
     </ClCompile>
-    <ClCompile Include="src\Quad.cpp">
-      <Filter>App\Entities\Primitives</Filter>
-    </ClCompile>
     <ClCompile Include="src\GraphicsEngine.cpp">
       <Filter>Engine\GraphicsEngine</Filter>
     </ClCompile>
@@ -162,9 +168,6 @@
     <ClCompile Include="src\Texture.cpp">
       <Filter>Engine\Resources\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="src\PBSQuads.cpp">
-      <Filter>App\Entities\Primitives</Filter>
-    </ClCompile>
     <ClCompile Include="src\ShaderLoader.cpp">
       <Filter>Engine\GraphicsEngine\RenderSystem\RenderDevice\ShaderLoader</Filter>
     </ClCompile>
@@ -178,10 +181,22 @@
       <Filter>Engine\EngineTime</Filter>
     </ClCompile>
     <ClCompile Include="src\AnimatedQuad.cpp">
-      <Filter>App\Entities\Primitives</Filter>
+      <Filter>App\Entities\Primitives\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBSQuads.cpp">
+      <Filter>App\Entities\Primitives\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Quad.cpp">
+      <Filter>App\Entities\Primitives\2D</Filter>
     </ClCompile>
     <ClCompile Include="src\Cube.cpp">
-      <Filter>App\Entities\Primitives</Filter>
+      <Filter>App\Entities\Primitives\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlaneEntity.cpp">
+      <Filter>App\Entities\Primitives\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DepthBuffer.cpp">
+      <Filter>Engine\GraphicsEngine\RenderSystem\DepthBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -224,9 +239,6 @@
     <ClInclude Include="src\TextureManager.h">
       <Filter>Engine\GraphicsEngine\RenderSystem\TextureManager</Filter>
     </ClInclude>
-    <ClInclude Include="src\Quad.h">
-      <Filter>App\Entities\Primitives</Filter>
-    </ClInclude>
     <ClInclude Include="src\Dx12Commons.h">
       <Filter>Utility</Filter>
     </ClInclude>
@@ -266,9 +278,6 @@
     <ClInclude Include="src\GeoMath.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\PBSQuads.h">
-      <Filter>App\Entities\Primitives</Filter>
-    </ClInclude>
     <ClInclude Include="src\ShaderTypes.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -284,12 +293,6 @@
     <ClInclude Include="src\EngineTime.h">
       <Filter>Engine\EngineTime</Filter>
     </ClInclude>
-    <ClInclude Include="src\AnimatedQuad.h">
-      <Filter>App\Entities\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Cube.h">
-      <Filter>App\Entities\Primitives</Filter>
-    </ClInclude>
     <ClInclude Include="src\ConstantBuffer.h">
       <Filter>Engine\Resources\ConstantBuffer</Filter>
     </ClInclude>
@@ -298,6 +301,24 @@
     </ClInclude>
     <ClInclude Include="src\Random.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AnimatedQuad.h">
+      <Filter>App\Entities\Primitives\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PBSQuads.h">
+      <Filter>App\Entities\Primitives\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Quad.h">
+      <Filter>App\Entities\Primitives\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cube.h">
+      <Filter>App\Entities\Primitives\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlaneEntity.h">
+      <Filter>App\Entities\Primitives\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DepthBuffer.h">
+      <Filter>Engine\GraphicsEngine\RenderSystem\DepthBuffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

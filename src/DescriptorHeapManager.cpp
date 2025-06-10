@@ -23,6 +23,13 @@ DescriptorHeapManager::DescriptorHeapManager(ID3D12Device* device, UINT maxRTVCo
 
     this->m_srvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
+    /* Depth Stencil View */
+    D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+    dsvHeapDesc.NumDescriptors = 1;
+    dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+    dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    Debug::ThrowIfFailed(device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&m_dsvHeap)));
+
     /* add for binding */
     this->m_activeHeaps.push_back(m_srvHeap.Get());
 }
@@ -78,5 +85,10 @@ D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetSRVGPUHandleAt(UINT index)
         index,
         this->m_srvDescriptorSize
     );
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetDSVCPUHandle() const
+{
+    return this->m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
 }
 

@@ -1,60 +1,37 @@
-#include "Cube.h"
+#include "PlaneEntity.h"
 #include "DeviceContext.h"
 #include "RenderDevice.h"
 #include "GraphicsEngine.h"
 #include "GameObjectManager.h"
-#include "Random.h"
 
-Cube::Cube(String name) : AGameObject(name)
+PlaneEntity::PlaneEntity(String name) : AGameObject(name)
 {
     std::vector<unsigned int> indices =
     {
         0, 1, 2,
         0, 2, 3,
 
-        4, 5, 6,
-        4, 6, 7,
-
-        3, 2, 5,
-        3, 5, 4,
-
-        7, 6, 1,
-        7, 1, 0,
-
-        1, 6, 5,
-        1, 5, 2,
-
-        7, 0, 3,
-        7, 3, 4
+        //2, 1, 0,
+        //3, 2, 0
     };
 
     this->m_indexBuffer = std::make_unique<IndexBuffer>(indices);
     this->m_indicesSize = static_cast<UINT>(indices.size());
 
     std::vector<POS_COL> vertices = {
-
-        {{-0.5f, -0.5f, -0.5f} , {1.0f, 1.0f, 1.0f}},
-        {{-0.5f,  0.5f, -0.5f},  {1.0f, 1.0f, 1.0f}},
-        {{ 0.5f,  0.5f, -0.5f},  {1.0f, 1.0f, 1.0f}},
-        {{ 0.5f, -0.5f, -0.5f},  {1.0f, 1.0f, 1.0f}},
-
-        {{ 0.5f, -0.5f, 0.5f},  {1.0f, 1.0f, 1.0f}},
-        {{ 0.5f,  0.5f, 0.5f},  {1.0f, 1.0f, 1.0f}},
-        {{-0.5f,  0.5f, 0.5f},  {1.0f, 1.0f, 1.0f}},
-        {{-0.5f, -0.5f, 0.5f},  {1.0f, 1.0f, 1.0f}},
+        {{-5.0f,  0.0f, -5.0f} , {0.5f, 0.5f, 0.5f}},
+        {{-5.0f,  0.0f,  5.0f},  {0.5f, 0.5f, 0.5f}},
+        {{ 5.0f,  0.0f,  5.0f},  {0.5f, 0.5f, 0.5f}},
+        {{ 5.0f,  0.0f, -5.0f},  {0.5f, 0.5f, 0.5f}}
     };
 
     this->m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);
     this->m_shader = ShaderType::DEFAULT_SHADER;
 }
 
-void Cube::Update(float deltaTime)
+void PlaneEntity::Update(float deltaTime)
 {
-    m_ticks += deltaTime;
-
-    float t = 1.5f * sin(m_ticks);
-    this->SetPosition(0.0f, 0.0f, t);
-
+    /* Constant Buffer Stuff */
     ObjectConstantsData objData = {};
     objData.modelMatrix = this->GetLocalMatrix();
     objData.objectId = this->GetId();
@@ -62,7 +39,7 @@ void Cube::Update(float deltaTime)
     GameObjectManager::GetInstance()->UpdateConstantBuffer(this->GetId(), objData);
 }
 
-void Cube::Draw(DeviceContext* context)
+void PlaneEntity::Draw(DeviceContext* context)
 {
     auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
     auto frameIndex = renderSystem->GetCurrentFrameIndex();
@@ -79,13 +56,4 @@ void Cube::Draw(DeviceContext* context)
     context->SetIndexBuffer(this->m_indexBuffer->GetIndexBufferViewPointer());
 
     context->DrawIndexedTriangleList(m_indicesSize, 0, 0);
-}
-
-void Cube::SetRandomRotation()
-{
-    float pitch = Random::Range(0.0f, DirectX::XM_2PI); 
-    float yaw = Random::Range(0.0f, DirectX::XM_2PI);
-    float roll = Random::Range(0.0f, DirectX::XM_2PI);
-
-    this->SetRotation(pitch, yaw, roll);
 }
