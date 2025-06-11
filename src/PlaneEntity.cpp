@@ -11,18 +11,18 @@ PlaneEntity::PlaneEntity(String name) : AGameObject(name)
         0, 1, 2,
         0, 2, 3,
 
-        //2, 1, 0,
-        //3, 2, 0
+        2, 1, 0,
+        3, 2, 0
     };
 
     this->m_indexBuffer = std::make_unique<IndexBuffer>(indices);
     this->m_indicesSize = static_cast<UINT>(indices.size());
 
     std::vector<POS_COL> vertices = {
-        {{-5.0f,  0.0f, -5.0f} , {0.5f, 0.5f, 0.5f}},
-        {{-5.0f,  0.0f,  5.0f},  {0.5f, 0.5f, 0.5f}},
-        {{ 5.0f,  0.0f,  5.0f},  {0.5f, 0.5f, 0.5f}},
-        {{ 5.0f,  0.0f, -5.0f},  {0.5f, 0.5f, 0.5f}}
+        {{-5.0f,  0.0f, -5.0f} , {1.f, 1.f, 1.f}},
+        {{-5.0f,  0.0f,  5.0f},  {1.f, 1.f, 1.f}},
+        {{ 5.0f,  0.0f,  5.0f},  {1.f, 1.f, 1.f}},
+        {{ 5.0f,  0.0f, -5.0f},  {1.f, 1.f, 1.1f}}
     };
 
     this->m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);

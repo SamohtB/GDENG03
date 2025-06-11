@@ -30,11 +30,10 @@ void GameWindow::OnCreate(HWND hwnd)
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 
 	auto plane = std::make_shared<PlaneEntity>("Plane");
-	plane->Rotate(-10.0f, 0.0f, 0.0f);
+	plane->SetRotation(15.0f, 0.0f, 0.0f);
 	GameObjectManager::GetInstance()->AddGameObject(plane);
 
 	auto cube = std::make_shared<Cube>("Cube");
-	cube->Rotate(0.0f, 45.0f, 0.0f);
 	GameObjectManager::GetInstance()->AddGameObject(cube);
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();

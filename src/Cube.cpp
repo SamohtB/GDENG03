@@ -33,15 +33,15 @@ Cube::Cube(String name) : AGameObject(name)
 
     std::vector<POS_COL> vertices = {
 
-        {{-0.5f, -0.5f, -0.5f} , {1.0f, 1.0f, 1.0f}},
-        {{-0.5f,  0.5f, -0.5f},  {1.0f, 1.0f, 1.0f}},
-        {{ 0.5f,  0.5f, -0.5f},  {1.0f, 1.0f, 1.0f}},
-        {{ 0.5f, -0.5f, -0.5f},  {1.0f, 1.0f, 1.0f}},
+        {{-0.5f, -0.5f, -0.5f} , {0.0f, 1.0f, 1.0f}},
+        {{-0.5f,  0.5f, -0.5f},  {1.0f, 1.0f, 0.0f}},
+        {{ 0.5f,  0.5f, -0.5f},  {1.0f, 1.0f, 0.0f}},
+        {{ 0.5f, -0.5f, -0.5f},  {0.0f, 1.0f, 1.0f}},
 
-        {{ 0.5f, -0.5f, 0.5f},  {1.0f, 1.0f, 1.0f}},
+        {{ 0.5f, -0.5f, 0.5f},  {0.0f, 1.0f, 1.0f}},
         {{ 0.5f,  0.5f, 0.5f},  {1.0f, 1.0f, 1.0f}},
-        {{-0.5f,  0.5f, 0.5f},  {1.0f, 1.0f, 1.0f}},
-        {{-0.5f, -0.5f, 0.5f},  {1.0f, 1.0f, 1.0f}},
+        {{-0.5f,  0.5f, 0.5f},  {1.0f, 1.0f, 0.0f}},
+        {{-0.5f, -0.5f, 0.5f},  {1.0f, 0.0f, 1.0f}},
     };
 
     this->m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);
@@ -52,8 +52,9 @@ void Cube::Update(float deltaTime)
 {
     m_ticks += deltaTime;
 
-    float t = 1.5f * sin(m_ticks);
-    this->SetPosition(0.0f, 0.0f, t);
+    float t = 1.5f * sin(1.5f * m_ticks);
+    this->SetRotation(t, t, 0.0f);
+	this->SetPosition(0.0f, 0.0f, t);
 
     ObjectConstantsData objData = {};
     objData.modelMatrix = this->GetLocalMatrix();
