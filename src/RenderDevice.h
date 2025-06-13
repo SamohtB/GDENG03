@@ -1,6 +1,5 @@
 #pragma once
-#include <memory>
-#include "Dx12Commons.h"
+#include "pch.h"
 
 #include "DeviceManager.h"
 #include "DescriptorHeapManager.h"

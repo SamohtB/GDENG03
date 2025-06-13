@@ -25,7 +25,7 @@ public:
     void UpdateAll(float deltaTime);
     void RenderAll(DeviceContext* dvcContext);
 
-    void AddGameObject(GameObjectPtr gameObject);
+    void AddGameObject(GameObjectPtr gameObject, bool hasConstantBuffer = true);
     void DeleteObject(GameObjectPtr game_object);
     void DeleteObjectByName(String name);
     void ClearAllObjects();
@@ -44,11 +44,13 @@ private:
     static GameObjectManager* sharedInstance;
 
     CBMap m_cbMap;
-    List m_objectList;
+    List m_renderedObjectList;
+    List m_logicObjectList;
     Table m_objectTable;
     std::unique_ptr<ObjectConstantsBuffer> m_objectConstantsBuffer;
 
-    UINT m_nextSlot = 0;
+    UINT m_nextRenderedSlot = 0;
+    UINT m_nextLogicSlot = 0;
     const int MAX_OBJECT_COUNT = 128;
 
     friend class AGameObject;

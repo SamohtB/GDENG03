@@ -30,8 +30,8 @@ void GameObjectManager::Destroy()
 
 UINT GameObjectManager::ReserveSlot()
 {
-    if (m_nextSlot < MAX_OBJECT_COUNT * FRAME_COUNT)
-        return m_nextSlot++;
+    if (m_nextRenderedSlot < MAX_OBJECT_COUNT * FRAME_COUNT)
+        return m_nextRenderedSlot++;
 
     Debug::LogError("GameObjectManager::ReserveSlot - No available constant buffer slots left.");
     Debug::Assert(false, "Exceeded material constant buffer capacity!");
@@ -59,7 +59,7 @@ std::vector<AGameObject*> GameObjectManager::GetAllObjects()
 {
     std::vector<AGameObject*> allObjects;
 
-    for (const auto& obj : m_objectList)
+    for (const auto& obj : m_renderedObjectList)
     {
         allObjects.push_back(obj.get());
     }
@@ -70,7 +70,16 @@ std::vector<AGameObject*> GameObjectManager::GetAllObjects()
 int GameObjectManager::ActiveObjects()
 {
     int activeCount = 0;
-    for (const auto& obj : m_objectList)
+
+    for (const auto& object : this->m_logicObjectList)
+    {
+        if (object->IsActive())
+        {
+            activeCount++;
+        }
+    }
+
+    for (const auto& obj : m_renderedObjectList)
     {
         if (obj->IsActive())
         {
@@ -82,7 +91,15 @@ int GameObjectManager::ActiveObjects()
 
 void GameObjectManager::UpdateAll(float deltaTime)
 {
-    for (const auto& object : this->m_objectList)
+    for (const auto& object : this->m_logicObjectList)
+    {
+        if (object->IsActive())
+        {
+            object->Update(deltaTime);
+        }
+    }
+
+    for (const auto& object : this->m_renderedObjectList)
     {
         if (object->IsActive())
         {
@@ -93,7 +110,7 @@ void GameObjectManager::UpdateAll(float deltaTime)
 
 void GameObjectManager::RenderAll(DeviceContext* dvcContext)
 {
-    for (const auto& object : m_objectList)
+    for (const auto& object : m_renderedObjectList)
     {
         if (object->IsActive())
         {
@@ -102,9 +119,11 @@ void GameObjectManager::RenderAll(DeviceContext* dvcContext)
     }
 }
 
-void GameObjectManager::AddGameObject(GameObjectPtr gameObject)
+void GameObjectManager::AddGameObject(GameObjectPtr gameObject, bool hasConstantBuffer)
 {
-    if (gameObject)
+	if (!gameObject) return;
+
+    if (hasConstantBuffer)
     {
         std::array<UINT, FRAME_COUNT> cbIndices{};
 
@@ -118,12 +137,26 @@ void GameObjectManager::AddGameObject(GameObjectPtr gameObject)
 
             m_objectConstantsBuffer->Update(objData, cbIndices[i]);
         }
-       
+
         gameObject->SetId(cbIndices[0]);
         m_cbMap[cbIndices[0]] = cbIndices;
-        m_objectList.push_back(gameObject);
-        m_objectTable[gameObject->GetName()] = gameObject;
+        m_renderedObjectList.push_back(gameObject);
     }
+
+    else
+    {
+        gameObject->SetId(this->m_nextLogicSlot);
+        this->m_nextLogicSlot++;
+        m_logicObjectList.push_back(gameObject);
+    }
+
+    const std::string& name = gameObject->GetName();
+    if (m_objectTable.contains(name))
+    {
+        Debug::LogWarning("GameObjectManager::AddGameObject: Object with name '" + name + "' already exists. Overwriting.");
+    }
+
+    m_objectTable[name] = gameObject;
 }
 
 void GameObjectManager::DeleteObject(GameObjectPtr game_object)
@@ -131,7 +164,7 @@ void GameObjectManager::DeleteObject(GameObjectPtr game_object)
     if (game_object)
     {
         /*To Do: Add Unreserve Slot here */
-        m_objectList.erase(std::remove(m_objectList.begin(), m_objectList.end(), game_object), m_objectList.end());
+        m_renderedObjectList.erase(std::remove(m_renderedObjectList.begin(), m_renderedObjectList.end(), game_object), m_renderedObjectList.end());
         m_objectTable.erase(game_object->GetName());
     }
 }
@@ -147,7 +180,8 @@ void GameObjectManager::DeleteObjectByName(String name)
 
 void GameObjectManager::ClearAllObjects()
 {
-    m_objectList.clear();
+    m_renderedObjectList.clear();
+    m_logicObjectList.clear();
     m_objectTable.clear();
 }
 

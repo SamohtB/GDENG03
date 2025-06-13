@@ -1,6 +1,5 @@
 #pragma once
 #include "ABaseWindow.h"
-#include <chrono>
 
 class GameWindow : public ABaseWindow
 {

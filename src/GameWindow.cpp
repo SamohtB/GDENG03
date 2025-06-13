@@ -3,6 +3,8 @@
 #include "GraphicsEngine.h"
 #include "GameObjectManager.h"
 #include "EngineTime.h"
+#include "InputSystem.h"
+#include "CameraManager.h"
 
 #include "RenderSystem.h"
 #include "BatchUploader.h"
@@ -24,6 +26,8 @@ void GameWindow::OnCreate(HWND hwnd)
 	GraphicsEngine::Initialize(this->m_width, this->m_height, hwnd);
 	GameObjectManager::Initialize(GraphicsEngine::GetInstance()->GetRenderSystem()->GetD3DDevicePtr().Get());
 	EngineTime::Initialize(60);
+	InputSystem::Initialize();
+	CameraManager::Initialize(this->m_width, this->m_height);
 
 	auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
 
@@ -44,19 +48,16 @@ void GameWindow::OnUpdate()
 	auto deltaTime = EngineTime::GetDeltaTime();
 	m_ticks += deltaTime;
 
-	Vector3 cameraPosition = Vector3(0.0f, 0.0f, -5.0f); 
-	Vector3 cameraTarget = Vector3(0.0f, 0.0f, 0.0f);
-	Vector3 upDirection = Vector3(0.0f, 1.0f, 0.0f);
-	constexpr float fovRadians = DirectX::XMConvertToRadians(60.0f);
+	InputSystem::GetInstance()->ProcessInput();
+
+	CameraManager::GetInstance()->Update(deltaTime);
+	GameObjectManager::GetInstance()->UpdateAll(deltaTime);
 
 	FrameConstantsData frameData = {};
-	frameData.viewMatrix = DirectX::SimpleMath::Matrix::CreateLookAt(cameraPosition, cameraTarget, upDirection);
-	frameData.projMatrix = DirectX::SimpleMath::Matrix::CreatePerspectiveFieldOfView(fovRadians, this->m_aspectRatio, 0.1f, 100.0f);
+	frameData.viewMatrix = CameraManager::GetInstance()->GetActiveCameraViewMatrix();
+	frameData.projMatrix = CameraManager::GetInstance()->GetActiveCameraProjMatrix();;
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->UpdateFrameConstants(frameData);
-
-	/* get delta time here and pass to game object manager */
-	GameObjectManager::GetInstance()->UpdateAll(deltaTime);
 }
 
 void GameWindow::OnRender()
@@ -72,6 +73,8 @@ void GameWindow::OnRender()
 
 void GameWindow::OnDestroy()
 {
+	CameraManager::Destroy();
+	InputSystem::Destroy();
 	GameObjectManager::Destroy();
 	GraphicsEngine::Destroy();
 }

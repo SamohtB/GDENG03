@@ -56,6 +56,12 @@ void AGameObject::Move(float x, float y, float z)
 	this->m_dirty = true;
 }
 
+void AGameObject::Move(Vector3 vector)
+{
+	this->m_local_position += vector;
+	this->m_dirty = true;
+}
+
 Vector3 AGameObject::GetLocalPosition()
 {
 	return this->m_local_position;

@@ -28,7 +28,7 @@ void InputSystem::Destroy()
 
 InputSystem::InputSystem() {}
 
-void InputSystem::Update()
+void InputSystem::ProcessInput()
 {
 	Vector2 current_mouse_pos = GetMousePosition();
 
@@ -41,7 +41,7 @@ void InputSystem::Update()
 	if (current_mouse_pos != old_mouse_position)
 	{
 		/* Mouse Move Event */
-		std::map<InputListener*, InputListener*>::iterator it = m_map_listeners.begin();
+		std::map<InputListenerPtr, InputListenerPtr>::iterator it = m_map_listeners.begin();
 
 		while (it != m_map_listeners.end())
 		{
@@ -62,7 +62,7 @@ void InputSystem::Update()
 			/* Key Down */
 			if (m_keys_state[i] & 0x80)
 			{
-				std::map<InputListener*, InputListener*>::iterator it = m_map_listeners.begin();
+				std::map<InputListenerPtr, InputListenerPtr>::iterator it = m_map_listeners.begin();
 
 				while (it != m_map_listeners.end())
 				{
@@ -94,7 +94,7 @@ void InputSystem::Update()
 			{
 				if (m_keys_state[i] != m_old_keys_state[i])
 				{
-					std::map<InputListener*, InputListener*>::iterator it = m_map_listeners.begin();
+					std::map<InputListenerPtr, InputListenerPtr>::iterator it = m_map_listeners.begin();
 
 					while (it != m_map_listeners.end())
 					{
@@ -121,14 +121,14 @@ void InputSystem::Update()
 	}
 }
 
-void InputSystem::AddListener(InputListener* listener)
+void InputSystem::AddListener(InputListenerPtr listener)
 {
-	m_map_listeners.insert(std::make_pair<InputListener*, InputListener*>(std::forward<InputListener*>(listener), std::forward<InputListener*>(listener)));
+	m_map_listeners.insert(std::make_pair<InputListenerPtr, InputListenerPtr>(std::forward<InputListenerPtr>(listener), std::forward<InputListenerPtr>(listener)));
 }
 
-void InputSystem::RemoveListener(InputListener* listener)
+void InputSystem::RemoveListener(InputListenerPtr listener)
 {
-	std::map<InputListener*, InputListener*>::iterator it = m_map_listeners.find(listener);
+	std::map<InputListenerPtr, InputListenerPtr>::iterator it = m_map_listeners.find(listener);
 
 	if (it != m_map_listeners.end())
 	{

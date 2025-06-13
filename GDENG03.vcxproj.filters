@@ -100,6 +100,12 @@
     <Filter Include="Engine\GraphicsEngine\TextureManager">
       <UniqueIdentifier>{93b0d9aa-689f-434b-a657-df74fa665943}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\CameraSystem">
+      <UniqueIdentifier>{9945129f-188c-43a8-8880-b462990c3f69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\InputSystem">
+      <UniqueIdentifier>{4d6f795e-1643-4654-870d-3e0d0a1e2d13}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -191,6 +197,15 @@
     </ClCompile>
     <ClCompile Include="src\DepthBuffer.cpp">
       <Filter>Engine\GraphicsEngine\RenderSystem\DepthBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>Engine\CameraSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InputSystem.cpp">
+      <Filter>Engine\InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CameraManager.cpp">
+      <Filter>Engine\CameraSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -316,6 +331,18 @@
     </ClInclude>
     <ClInclude Include="src\GraphicsCommons.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Camera.h">
+      <Filter>Engine\CameraSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InputListener.h">
+      <Filter>Engine\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InputSystem.h">
+      <Filter>Engine\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CameraManager.h">
+      <Filter>Engine\CameraSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
