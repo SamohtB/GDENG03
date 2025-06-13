@@ -38,13 +38,15 @@ void InputSystem::ProcessInput()
 		m_oldMousePosition = current_mouse_pos;
 	}
 
+	Vector2 delta = current_mouse_pos - m_oldMousePosition;
+
 	/* Mouse Movement */
-	if (current_mouse_pos != m_oldMousePosition)
-	{
+	if (fabs(delta.x) > 0.001f || fabs(delta.y) > 0.001f)
+	{	
 		// Mouse Move Event
 		for (const auto& listener : m_listenersMap)
 		{
-			listener->OnMouseMove(current_mouse_pos);
+			listener->OnMouseMove(delta);
 		}
 
 		m_oldMousePosition = current_mouse_pos;

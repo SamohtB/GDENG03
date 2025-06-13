@@ -7,6 +7,12 @@ using Vector3 = DirectX::SimpleMath::Vector3;
 using Vector4 = DirectX::SimpleMath::Vector4;
 using Matrix = DirectX::SimpleMath::Matrix;
 
+template<typename T>
+inline T Clamp(const T& value, const T& min, const T& max)
+{
+    return (value < min) ? min : (value > max) ? max : value;
+}
+
 namespace GeoMath
 {
 	static void CalculateTangentFrame(const std::vector<unsigned int>& indices, const Vector3* positions, const Vector3* normals,

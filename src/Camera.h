@@ -12,6 +12,7 @@ public:
 	~Camera() = default;
 
 	void Update(float deltaTime) override;
+
 	Matrix GetViewMatrix();
 	Matrix GetProjectionMatrix();
 
@@ -21,9 +22,15 @@ public:
 	virtual void OnMouseMove(const Vector2& deltaMousePos) override;
 	virtual void OnMouseWheel(const float& delta) override;
 
+	virtual void OnRightMouseDown(const Vector2& mousePos) override;
+	virtual void OnRightMouseUp(const Vector2& mousePos) override;
+
 	void SetViewportSize(UINT width, UINT height);
 
 private:
+	void FlyCamMode();
+	void ZoomMode();
+
 	bool m_isPerspectiveView = true;
 	float m_deltaTime = 0.0f;
 

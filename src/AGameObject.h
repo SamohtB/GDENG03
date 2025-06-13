@@ -42,15 +42,19 @@ public:
 
     Matrix GetLocalMatrix();
 
+	Vector3 GetForwardVector() const;
+	Vector3 GetRightVector() const;
+	Vector3 GetUpVector() const;
+
 protected:
     unsigned int m_id = 0;    
     String m_name{};
     bool m_active = true;
     bool m_dirty = false;
 
-    Vector3 m_local_position;
-    Vector3 m_local_rotation;
-    Vector3 m_local_scale;
-    Matrix m_local_matrix;
+    Vector3 m_localPosition;
+    Vector3 m_localRotation;
+    Vector3 m_localScale;
+    Matrix m_localMatrix;
 };
 
