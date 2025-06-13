@@ -32,118 +32,110 @@ void InputSystem::ProcessInput()
 {
 	Vector2 current_mouse_pos = GetMousePosition();
 
-	if (first_time)
+	if (m_firstTime)
 	{
-		first_time = false;
-		old_mouse_position = current_mouse_pos;
+		m_firstTime = false;
+		m_oldMousePosition = current_mouse_pos;
 	}
 
-	if (current_mouse_pos != old_mouse_position)
+	/* Mouse Movement */
+	if (current_mouse_pos != m_oldMousePosition)
 	{
-		/* Mouse Move Event */
-		std::map<InputListenerPtr, InputListenerPtr>::iterator it = m_map_listeners.begin();
-
-		while (it != m_map_listeners.end())
+		// Mouse Move Event
+		for (const auto& listener : m_listenersMap)
 		{
-			Vector2 current_point;
-			XMStoreFloat2(&current_point, current_mouse_pos);
-
-			it->second->OnMouseMove(current_point);
-			it++;
+			listener->OnMouseMove(current_mouse_pos);
 		}
 
-		old_mouse_position = current_mouse_pos;
+		m_oldMousePosition = current_mouse_pos;
 	}
 
-	if (::GetKeyboardState(m_keys_state))
+	/* Mouse Scroll */
+	if (m_mouseWheelDelta != 0.0f)
+	{
+		for (const auto& listener : m_listenersMap)
+		{
+			listener->OnMouseWheel(m_mouseWheelDelta);
+		}
+		m_mouseWheelDelta = 0.0f; // Reset after notifying listeners
+	}
+
+	/* Keyboard States */
+	if (::GetKeyboardState(m_keysState))
 	{
 		for (unsigned int i = 0; i < 256; i++)
 		{
-			/* Key Down */
-			if (m_keys_state[i] & 0x80)
+			// Key Down
+			if (m_keysState[i] & 0x80)
 			{
-				std::map<InputListenerPtr, InputListenerPtr>::iterator it = m_map_listeners.begin();
-
-				while (it != m_map_listeners.end())
+				for (const auto& listener : m_listenersMap)
 				{
-
 					if (i == VK_LBUTTON)
 					{
-						if (m_keys_state[i] != m_old_keys_state[i])
+						if (m_keysState[i] != m_oldKeysState[i])
 						{
-							it->second->OnLeftMouseDown(current_mouse_pos);
+							listener->OnLeftMouseDown(current_mouse_pos);
 						}
 					}
 					else if (i == VK_RBUTTON)
 					{
-						if (m_keys_state[i] != m_old_keys_state[i])
+						if (m_keysState[i] != m_oldKeysState[i])
 						{
-							it->second->OnRightMouseDown(current_mouse_pos);
+							listener->OnRightMouseDown(current_mouse_pos);
 						}
 					}
 					else
 					{
-						it->second->OnKeyDown(i);
+						listener->OnKeyDown(i);
 					}
-
-					it++;
 				}
 			}
-			/* Key Up */
+			// Key Up
 			else
 			{
-				if (m_keys_state[i] != m_old_keys_state[i])
+				if (m_keysState[i] != m_oldKeysState[i])
 				{
-					std::map<InputListenerPtr, InputListenerPtr>::iterator it = m_map_listeners.begin();
-
-					while (it != m_map_listeners.end())
+					for (const auto& listener : m_listenersMap)
 					{
 						if (i == VK_LBUTTON)
 						{
-							it->second->OnLeftMouseUp(current_mouse_pos);
+							listener->OnLeftMouseUp(current_mouse_pos);
 						}
 						else if (i == VK_RBUTTON)
 						{
-							it->second->OnRightMouseUp(current_mouse_pos);
+							listener->OnRightMouseUp(current_mouse_pos);
 						}
 						else
 						{
-							it->second->OnKeyUp(i);
+							listener->OnKeyUp(i);
 						}
-
-						it++;
 					}
 				}
 			}
 		}
 
-		::memcpy(m_old_keys_state, m_keys_state, sizeof(unsigned char) * 256);
+		::memcpy(m_oldKeysState, m_keysState, sizeof(unsigned char) * 256);
 	}
 }
 
 void InputSystem::AddListener(InputListenerPtr listener)
 {
-	m_map_listeners.insert(std::make_pair<InputListenerPtr, InputListenerPtr>(std::forward<InputListenerPtr>(listener), std::forward<InputListenerPtr>(listener)));
+	m_listenersMap.insert(listener);
 }
 
 void InputSystem::RemoveListener(InputListenerPtr listener)
 {
-	std::map<InputListenerPtr, InputListenerPtr>::iterator it = m_map_listeners.find(listener);
-
-	if (it != m_map_listeners.end())
-	{
-		m_map_listeners.erase(it);
-	}
+	m_listenersMap.erase(listener);
 }
 
 bool InputSystem::IsKeyDown(int key)
 {
-	return (m_keys_state[key] & 0x80) != 0;
+	return (m_keysState[key] & 0x80) != 0;
 }
 
 bool InputSystem::IsKeyUp(int key)
 {
-	return (m_keys_state[key] & 0x80) == 0;
+	return (m_keysState[key] & 0x80) == 0;
 }
 
 void InputSystem::SetCursorPosition(const Vector2& point)
@@ -154,6 +146,11 @@ void InputSystem::SetCursorPosition(const Vector2& point)
 void InputSystem::ShowCursor(bool show)
 {
 	::ShowCursor(show);
+}
+
+void InputSystem::GetMouseScrollDelta(float delta)
+{
+	this->m_mouseWheelDelta += delta;
 }
 
 Vector2 InputSystem::GetMousePosition()

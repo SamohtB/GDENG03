@@ -1,5 +1,6 @@
 #include "Win32App.h"
 #include "EngineTime.h"
+#include "InputSystem.h"
 #include "ABaseWindow.h"
 #include "Debug.h"
 
@@ -70,6 +71,14 @@ LRESULT Win32App::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 	switch (msg)
 	{
+
+	case WM_MOUSEWHEEL:
+	{
+		float scroll = static_cast<float>(GET_WHEEL_DELTA_WPARAM(wparam)) / 120.0f;
+		InputSystem::GetInstance()->GetMouseScrollDelta(scroll);
+		break;
+	}
+
 	case WM_DESTROY:
 		if (app->m_window)
 		{

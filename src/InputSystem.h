@@ -23,6 +23,8 @@ public:
 	void SetCursorPosition(const Vector2& point);
 	void ShowCursor(bool show);
 
+	void GetMouseScrollDelta(float delta);
+
 private:
 	InputSystem();
 	~InputSystem() = default;
@@ -31,11 +33,12 @@ private:
 
 	static InputSystem* sharedInstance;
 
-	std::map<InputListenerPtr, InputListenerPtr> m_map_listeners;
-	unsigned char m_keys_state[256] = {};
-	unsigned char m_old_keys_state[256] = {};
-	Vector2 old_mouse_position;
-	bool first_time = true;
+	std::unordered_set<InputListenerPtr> m_listenersMap;
+	unsigned char m_keysState[256] = {};
+	unsigned char m_oldKeysState[256] = {};
+	Vector2 m_oldMousePosition;
+	bool m_firstTime = true;
+	float m_mouseWheelDelta = 0.0f;
 
 	Vector2 GetMousePosition();
 };

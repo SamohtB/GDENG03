@@ -207,6 +207,9 @@
     <ClCompile Include="src\CameraManager.cpp">
       <Filter>Engine\CameraSystem</Filter>
     </ClCompile>
+    <ClCompile Include="src\pch.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DescriptorHeapManager.h">

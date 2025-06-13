@@ -19,12 +19,7 @@ public:
 	virtual void OnKeyUp(int key) override;
 
 	virtual void OnMouseMove(const Vector2& deltaMousePos) override;
-
-	virtual void OnLeftMouseDown(const Vector2& mousePos) override;
-	virtual void OnLeftMouseUp(const Vector2& mousePos) override;
-
-	virtual void OnRightMouseDown(const Vector2& mousePos) override;
-	virtual void OnRightMouseUp(const Vector2& mousePos) override;
+	virtual void OnMouseWheel(const float& delta) override;
 
 	void SetViewportSize(UINT width, UINT height);
 

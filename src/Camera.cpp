@@ -13,45 +13,24 @@ Camera::Camera(String name, UINT width, UINT height) : AGameObject(name), m_view
 void Camera::Update(float deltaTime)
 {
     this->m_deltaTime = deltaTime;
-    Vector3 position = this->m_local_position;
-    Vector3 rotation = this->m_local_rotation;
-
-    Matrix rotationMatrix = Matrix::CreateFromYawPitchRoll(rotation);
 
     Vector3 moveDirection = Vector3(0.0f, 0.0f, 0.0f);
+    
+    if (m_heldKeys.contains('W'))       moveDirection -= Vector3::Forward;
+    if (m_heldKeys.contains('S'))       moveDirection += Vector3::Forward;
+    if (m_heldKeys.contains('A'))       moveDirection -= Vector3::Right;
+    if (m_heldKeys.contains('D'))       moveDirection += Vector3::Right;
 
-    if (InputSystem::GetInstance()->IsKeyDown('W'))
+    if (m_scrollDelta != 0.0f)
     {
-        moveDirection += Vector3::Forward;
-    }
-    if (InputSystem::GetInstance()->IsKeyDown('S'))
-    {
-        moveDirection -= Vector3::Forward;
-    }
-    if (InputSystem::GetInstance()->IsKeyDown('A'))
-    {
-        moveDirection -= Vector3::Right;
-    }
-    if (InputSystem::GetInstance()->IsKeyDown('D'))
-    {
-        moveDirection += Vector3::Right;
-    }
-    if (InputSystem::GetInstance()->IsKeyDown(VK_SPACE))
-    {
-        moveDirection += Vector3::Up;
-    }
-    if (InputSystem::GetInstance()->IsKeyDown(VK_LSHIFT))
-    {
-        moveDirection -= Vector3::Up;
+        moveDirection -= Vector3::Up * m_scrollDelta * 0.1f;
+        m_scrollDelta = 0.0f;
     }
 
     if (moveDirection != Vector3::Zero)
-    {
-        moveDirection = XMVector3Normalize(moveDirection);
-    }
+        moveDirection.Normalize(); 
 
-    moveDirection *= this->m_moveSpeed * deltaTime;
-    this->Move(moveDirection);
+    this->Move(moveDirection * this->m_moveSpeed * deltaTime);
 }
 
 Matrix Camera::GetViewMatrix()
@@ -71,31 +50,21 @@ Matrix Camera::GetProjectionMatrix()
 
 void Camera::OnKeyDown(int key)
 {
-    Debug::Log("Down: " + std::to_string(key));
+    this->m_heldKeys.insert(key);
 }
 
 void Camera::OnKeyUp(int key)
 {
+    this->m_heldKeys.erase(key);
 }
 
 void Camera::OnMouseMove(const Vector2& deltaMousePos)
 {
 }
 
-void Camera::OnLeftMouseDown(const Vector2& mousePos)
+void Camera::OnMouseWheel(const float& delta)
 {
-}
-
-void Camera::OnLeftMouseUp(const Vector2& mousePos)
-{
-}
-
-void Camera::OnRightMouseDown(const Vector2& mousePos)
-{
-}
-
-void Camera::OnRightMouseUp(const Vector2& mousePos)
-{
+    this->m_scrollDelta = delta;
 }
 
 void Camera::SetViewportSize(UINT width, UINT height)
