@@ -1,13 +1,10 @@
 #pragma once
-#include <unordered_map>
-#include <string>
-#include <memory>
-
-#include "Dx12Commons.h"
+#include "pch.h"
+#include <dxcapi.h>
+#include "GraphicsCommons.h"
+#include "ShaderTypes.h"
 #include "InputLayouts.h"
 #include "ShaderLoader.h"
-
-enum class InputLayoutType : int;
 
 struct PipelineMapKey 
 {

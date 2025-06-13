@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 
+#include "FrameConstants.h"
 #include "VertexTypes.h"
 #include "TextureTypes.h"
 #include "ShaderTypes.h"

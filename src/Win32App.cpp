@@ -1,6 +1,6 @@
 #include "Win32App.h"
-#include "stdafx.h"
 #include "EngineTime.h"
+#include "ABaseWindow.h"
 #include "Debug.h"
 
 Win32App::Win32App(ABaseWindow* window, std::wstring windowName) : m_window(window), m_isRun(true)
@@ -29,7 +29,7 @@ Win32App::Win32App(ABaseWindow* window, std::wstring windowName) : m_window(wind
 	m_hwnd = CreateWindowEx(
 		WS_EX_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX,
 		L"MyWindowClass",		//Window
-		windowName.c_str(),		//Window Name
+		windowName.c_str(),				//Window Name
 		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU, //Style
 		CW_USEDEFAULT, CW_USEDEFAULT, // Window Position
 		rc.right - rc.left, rc.bottom - rc.top, //Window Size

@@ -1,10 +1,10 @@
 #pragma once
-#include <memory>
-
-#include "ABaseWindow.h"
+#include <windows.h>
+#include <string>
 
 class ABaseWindow;
 
+/* Win32 platform-specific window application host. */
 class Win32App
 {
 public:

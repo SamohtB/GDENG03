@@ -1,7 +1,6 @@
 #pragma once
-#include <memory>
-#include "Dx12Commons.h"
-#include <directxtk12/ResourceUploadBatch.h>
+#include "pch.h"
+#include <ResourceUploadBatch.h>
 
 using namespace DirectX;
 

@@ -1,8 +1,6 @@
 #pragma once
-#include <string>
-#include <directxtk12/SimpleMath.h>
-
-using namespace DirectX::SimpleMath;
+#include "pch.h"
+#include "Math.h"
 
 class DeviceContext;
 

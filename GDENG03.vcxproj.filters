@@ -43,9 +43,6 @@
     <Filter Include="Engine\GraphicsEngine\RenderSystem\RenderDevice">
       <UniqueIdentifier>{e66a4244-26a9-485a-b77c-cd7a4c1fd799}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GraphicsEngine\RenderSystem\RenderDevice\Fence">
-      <UniqueIdentifier>{d5c31b89-edbf-475d-af10-a93dc78894c4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\GraphicsEngine\RenderSystem\RenderDevice\Device">
       <UniqueIdentifier>{0e84f3ea-59bf-41ed-afb3-6385e573f7d6}</UniqueIdentifier>
     </Filter>
@@ -85,12 +82,6 @@
     <Filter Include="Engine\Resources\Material">
       <UniqueIdentifier>{dd65ecb2-10f2-4bcd-a5ef-14bf85e7504f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GraphicsEngine\RenderSystem\MaterialManager">
-      <UniqueIdentifier>{6c28ad4b-015c-4609-9a28-476212287e1c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GraphicsEngine\RenderSystem\TextureManager">
-      <UniqueIdentifier>{93b0d9aa-689f-434b-a657-df74fa665943}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\EngineTime">
       <UniqueIdentifier>{a5580be4-e8cf-43c0-827c-0007e7f8eb7e}</UniqueIdentifier>
     </Filter>
@@ -102,6 +93,12 @@
     </Filter>
     <Filter Include="Engine\GraphicsEngine\RenderSystem\DepthBuffer">
       <UniqueIdentifier>{abded308-e74e-4365-8598-679a877682bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GraphicsEngine\MaterialManager">
+      <UniqueIdentifier>{6c28ad4b-015c-4609-9a28-476212287e1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GraphicsEngine\TextureManager">
+      <UniqueIdentifier>{93b0d9aa-689f-434b-a657-df74fa665943}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -119,9 +116,6 @@
     </ClCompile>
     <ClCompile Include="src\SwapChainManager.cpp">
       <Filter>Engine\GraphicsEngine\RenderSystem\SwapChain</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FenceManager.cpp">
-      <Filter>Engine\GraphicsEngine\RenderSystem\RenderDevice\Fence</Filter>
     </ClCompile>
     <ClCompile Include="src\PipelineStateManager.cpp">
       <Filter>Engine\GraphicsEngine\RenderSystem\RenderDevice\PipelineState</Filter>
@@ -145,7 +139,7 @@
       <Filter>App\Managers\GameObjectManager</Filter>
     </ClCompile>
     <ClCompile Include="src\TextureManager.cpp">
-      <Filter>Engine\GraphicsEngine\RenderSystem\TextureManager</Filter>
+      <Filter>Engine\GraphicsEngine\TextureManager</Filter>
     </ClCompile>
     <ClCompile Include="src\GraphicsEngine.cpp">
       <Filter>Engine\GraphicsEngine</Filter>
@@ -172,7 +166,7 @@
       <Filter>Engine\GraphicsEngine\RenderSystem\RenderDevice\ShaderLoader</Filter>
     </ClCompile>
     <ClCompile Include="src\MaterialManager.cpp">
-      <Filter>Engine\GraphicsEngine\RenderSystem\MaterialManager</Filter>
+      <Filter>Engine\GraphicsEngine\MaterialManager</Filter>
     </ClCompile>
     <ClCompile Include="src\Material.cpp">
       <Filter>Engine\Resources\Material</Filter>
@@ -212,9 +206,6 @@
     <ClInclude Include="src\DeviceManager.h">
       <Filter>Engine\GraphicsEngine\RenderSystem\RenderDevice\Device</Filter>
     </ClInclude>
-    <ClInclude Include="src\FenceManager.h">
-      <Filter>Engine\GraphicsEngine\RenderSystem\RenderDevice\Fence</Filter>
-    </ClInclude>
     <ClInclude Include="src\PipelineStateManager.h">
       <Filter>Engine\GraphicsEngine\RenderSystem\RenderDevice\PipelineState</Filter>
     </ClInclude>
@@ -237,10 +228,7 @@
       <Filter>App\Managers\GameObjectManager</Filter>
     </ClInclude>
     <ClInclude Include="src\TextureManager.h">
-      <Filter>Engine\GraphicsEngine\RenderSystem\TextureManager</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Dx12Commons.h">
-      <Filter>Utility</Filter>
+      <Filter>Engine\GraphicsEngine\TextureManager</Filter>
     </ClInclude>
     <ClInclude Include="src\GraphicsEngine.h">
       <Filter>Engine\GraphicsEngine</Filter>
@@ -275,7 +263,7 @@
     <ClInclude Include="src\TextureTypes.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\GeoMath.h">
+    <ClInclude Include="src\Math.h">
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\ShaderTypes.h">
@@ -297,7 +285,7 @@
       <Filter>Engine\Resources\ConstantBuffer</Filter>
     </ClInclude>
     <ClInclude Include="src\MaterialManager.h">
-      <Filter>Engine\GraphicsEngine\RenderSystem\MaterialManager</Filter>
+      <Filter>Engine\GraphicsEngine\MaterialManager</Filter>
     </ClInclude>
     <ClInclude Include="src\Random.h">
       <Filter>Utility</Filter>
@@ -319,6 +307,15 @@
     </ClInclude>
     <ClInclude Include="src\DepthBuffer.h">
       <Filter>Engine\GraphicsEngine\RenderSystem\DepthBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pch.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FrameConstants.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphicsCommons.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -348,5 +345,8 @@
     <Object Include="Assets\Shaders\DefaultPixelShader.hlsl">
       <Filter>Assets\Shaders</Filter>
     </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

@@ -1,22 +1,7 @@
 #pragma once
 
-#include <windows.h>
-#include <d3d12.h>
-#include <dxgi1_6.h>
-#include <wrl.h>
-#include <shellapi.h>
-#include "d3dx12.h"
+//static const UINT FRAME_COUNT = 2;
+//static const UINT SRV_MAX_COUNT = 128;
+//static const UINT CBV_MAX_COUNT = 64 * FRAME_COUNT;
 
-#include <memory>
 
-using Microsoft::WRL::ComPtr;
-static const UINT FRAME_COUNT = 2;
-static const UINT SRV_MAX_COUNT = 128;
-static const UINT CBV_MAX_COUNT = 64 * FRAME_COUNT;
-
-enum RootDescriptorIndex : int {
-	OBJECT_CONSTANTS = 0,
-	TEXTURES = 1,
-	MATERIAL_CONSTANTS = 2,
-	FRAME_CONSTANTS = 3
-};

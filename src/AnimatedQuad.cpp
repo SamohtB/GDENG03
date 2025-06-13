@@ -1,6 +1,8 @@
 #include "AnimatedQuad.h"
 #include "GraphicsEngine.h"
+#include "RenderSystem.h"
 #include "DeviceContext.h"
+#include "RenderDevice.h"
 #include "GameObjectManager.h"
 
 AnimatedQuad::AnimatedQuad(String name) : AGameObject(name)

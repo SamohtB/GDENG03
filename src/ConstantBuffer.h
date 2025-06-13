@@ -1,13 +1,7 @@
 #pragma once
-#include <wrl.h>
-#include "d3dx12.h"
-#include <d3d12.h>
+#include "pch.h"
+#include "Math.h"
 #include "Debug.h"
-
-#include <directxtk12/SimpleMath.h>
-
-using namespace DirectX::SimpleMath;
-using Microsoft::WRL::ComPtr;
 
 inline UINT Align256(UINT size) 
 {

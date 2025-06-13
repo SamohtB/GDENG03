@@ -1,9 +1,13 @@
 #include "GraphicsEngine.h"
 
+#include "RenderSystem.h"
 #include "RenderDevice.h"
+#include "TextureManager.h"
+#include "MaterialManager.h"
+
 #include "Debug.h"
 
-GraphicsEngine* GraphicsEngine::sharedInstance = nullptr;
+std::unique_ptr<GraphicsEngine> GraphicsEngine::sharedInstance = nullptr;
 
 GraphicsEngine::GraphicsEngine(UINT width, UINT height, HWND hwnd)
 {
@@ -18,6 +22,7 @@ GraphicsEngine::GraphicsEngine(UINT width, UINT height, HWND hwnd)
 	}
 
 	auto device = this->m_renderSystem->GetD3DDevicePtr();
+	auto heapManager = this->m_renderSystem->GetRenderDevice()->GetDescriptorHeapManagerPtr();
 
 	try
 	{
@@ -29,19 +34,38 @@ GraphicsEngine::GraphicsEngine(UINT width, UINT height, HWND hwnd)
 		return;
 	}
 
-	this->m_renderSystem->InitResourceManagers(this->m_batchUploader);
+	try
+	{
+		this->m_textureManager = std::make_unique<TextureManager>(heapManager, this->m_batchUploader);
+	}
+	catch (...)
+	{
+		Debug::LogError("Texture Manager initialization failed!");
+		return;
+	}
+
+	try
+	{
+		this->m_materialManager = std::make_unique<MaterialManager>(device.Get());
+	}
+	catch (...)
+	{
+		Debug::LogError("Material Manager initialization failed!");
+		return;
+	}
 }
 
 GraphicsEngine* GraphicsEngine::GetInstance()
 {
-	return sharedInstance;
+	return sharedInstance.get();
 }
 
 void GraphicsEngine::Initialize(UINT width, UINT height, HWND hwnd)
 {
 	try
 	{
-		sharedInstance = new GraphicsEngine(width, height, hwnd);
+		sharedInstance.reset();
+		sharedInstance = std::make_unique<GraphicsEngine>(width, height, hwnd);
 	}
 	catch (...)
 	{
@@ -51,7 +75,7 @@ void GraphicsEngine::Initialize(UINT width, UINT height, HWND hwnd)
 
 void GraphicsEngine::Destroy()
 {
-	delete sharedInstance;
+	sharedInstance.reset();
 }
 
 RenderSystem* GraphicsEngine::GetRenderSystem()
@@ -62,5 +86,15 @@ RenderSystem* GraphicsEngine::GetRenderSystem()
 BatchUploader* GraphicsEngine::GetBatchUploader()
 {
 	return this->m_batchUploader.get();
+}
+
+TextureManager* GraphicsEngine::GetTextureManager()
+{
+	return this->m_textureManager.get();
+}
+
+MaterialManager* GraphicsEngine::GetMaterialManager()
+{
+	return this->m_materialManager.get();
 }
 

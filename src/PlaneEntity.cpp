@@ -1,5 +1,6 @@
 #include "PlaneEntity.h"
 #include "DeviceContext.h"
+#include "RenderSystem.h"
 #include "RenderDevice.h"
 #include "GraphicsEngine.h"
 #include "GameObjectManager.h"

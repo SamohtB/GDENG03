@@ -1,6 +1,5 @@
 #pragma once
-#include <vector>
-#include "Dx12Commons.h"
+#include "pch.h"
 
 class IndexBuffer
 {

@@ -1,24 +1,51 @@
 #include "DeviceContext.h"
+#include "GraphicsCommons.h"
 #include "Debug.h"
 
-DeviceContext::DeviceContext(ID3D12Device* device)
+DeviceContext::DeviceContext(ID3D12Device* device) : m_nextFenceValue(1)
 {
+    /* Create Command Queue */
     D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-    queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
     queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-
+    
     Debug::ThrowIfFailed(device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_commandQueue)), "Command Queue creation failed!");
 
+    /* Create Command Allocators */
     for (int i = 0; i < FRAME_COUNT; i++)
     {
         Debug::ThrowIfFailed(device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_commandAllocators[i])),
             "Command Allocator creation failed!");
+
+        m_fenceValues[i] = 0;
     }
 
+    /* Create and Close Command List */
     Debug::ThrowIfFailed(device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocators[0].Get(), 
         nullptr, IID_PPV_ARGS(&m_commandList)), "Command List creation failed!");
-
     Debug::ThrowIfFailed(this->m_commandList->Close());
+
+    /* Create Fence */
+    Debug::ThrowIfFailed(device->CreateFence(m_fenceValues[0], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)), "Fence creation failed!");
+    m_fenceValues[0] = m_nextFenceValue;
+    m_nextFenceValue++;
+
+    /* Create Fence Event */
+    m_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+    if (m_fenceEvent == nullptr)
+    {
+        Debug::ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
+    }
+}
+
+DeviceContext::~DeviceContext()
+{
+    for (UINT frameIndex = 0; frameIndex < FRAME_COUNT; ++frameIndex)
+    {
+        this->SignalCurrentFrameGPU(frameIndex);
+        this->WaitForFrameGPU(frameIndex);
+    }
+
+    CloseHandle(m_fenceEvent);
 }
 
 void DeviceContext::ExecuteCommandList()
@@ -40,6 +67,26 @@ void DeviceContext::ResetCommands(UINT frameIndex, ID3D12PipelineState* pipeline
     // list, that command list can then be reset at any time and must be before 
     // re-recording.
     Debug::ThrowIfFailed(m_commandList->Reset(allocator, pipelineState));
+}
+
+void DeviceContext::WaitForFrameGPU(UINT frameIndex)
+{
+    UINT64 fenceValue = m_fenceValues[frameIndex];
+    auto val = m_fence->GetCompletedValue();
+
+    // GPU has not reached this fence yet — must wait
+    if (val < fenceValue)
+    {
+        Debug::ThrowIfFailed(m_fence->SetEventOnCompletion(fenceValue, m_fenceEvent));
+        WaitForSingleObjectEx(m_fenceEvent, INFINITE, FALSE);
+    }
+}
+
+void DeviceContext::SignalCurrentFrameGPU(UINT frameIndex)
+{
+    UINT64 value = m_nextFenceValue++;
+    m_fenceValues[frameIndex] = value;
+    Debug::ThrowIfFailed(this->m_commandQueue->Signal(this->m_fence.Get(), value));
 }
 
 void DeviceContext::SetRootSignature(ID3D12RootSignature* rootSignature)

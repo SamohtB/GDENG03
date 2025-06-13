@@ -1,4 +1,5 @@
 #include "DepthBuffer.h"
+#include "Debug.h"
 
 DepthBuffer::DepthBuffer(ID3D12Device* device, D3D12_CPU_DESCRIPTOR_HANDLE handle, UINT width, UINT height)
 {
@@ -10,13 +11,13 @@ DepthBuffer::DepthBuffer(ID3D12Device* device, D3D12_CPU_DESCRIPTOR_HANDLE handl
     clearValue.DepthStencil.Stencil = 0;
 
     CD3DX12_HEAP_PROPERTIES heapProps(D3D12_HEAP_TYPE_DEFAULT);
-    device->CreateCommittedResource(
+    Debug::ThrowIfFailed(device->CreateCommittedResource(
         &heapProps,
         D3D12_HEAP_FLAG_NONE,
         &desc,
         D3D12_RESOURCE_STATE_DEPTH_WRITE,
         &clearValue,
-        IID_PPV_ARGS(&m_depthStencilBuffer));
+        IID_PPV_ARGS(&m_depthStencilBuffer)));
 
     D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
     dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;

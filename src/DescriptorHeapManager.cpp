@@ -1,9 +1,10 @@
 #include "DescriptorHeapManager.h"
-#include <directxtk12/DirectXHelpers.h>
+#include <DirectXHelpers.h>
+#include <BufferHelpers.h>
 #include "Debug.h"
 
-DescriptorHeapManager::DescriptorHeapManager(ID3D12Device* device, UINT maxRTVCount, UINT maxSRVCount)
-    : m_maxRTVCount(maxRTVCount), m_maxSRVCount(maxSRVCount), m_currentSRVOffset(0)
+DescriptorHeapManager::DescriptorHeapManager(ID3D12Device* device)
+    : m_maxRTVCount(FRAME_COUNT), m_currentSRVOffset(0)
 {
     /* Render Target View */
     D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
@@ -16,7 +17,7 @@ DescriptorHeapManager::DescriptorHeapManager(ID3D12Device* device, UINT maxRTVCo
 
     /* Shader Resource View */
     D3D12_DESCRIPTOR_HEAP_DESC  srvHeapDesc = {};
-    srvHeapDesc.NumDescriptors = this->m_maxSRVCount;
+    srvHeapDesc.NumDescriptors = MAX_SRV_COUNT;
     srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     Debug::ThrowIfFailed(device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&this->m_srvHeap)));
@@ -39,16 +40,6 @@ const std::vector<ID3D12DescriptorHeap*>& DescriptorHeapManager::GetActiveHeaps(
     return this->m_activeHeaps;
 }
 
-UINT DescriptorHeapManager::GetRTVDescriptorSize() const
-{
-	return this->m_rtvDescriptorSize;
-}
-
-ID3D12DescriptorHeap* DescriptorHeapManager::GetRTVHeap() const
-{
-    return this->m_rtvHeap.Get();
-}
-
 D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetRTVCPUHandleAt(UINT frameIndex) const
 {
     return CD3DX12_CPU_DESCRIPTOR_HANDLE(
@@ -58,14 +49,14 @@ D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetRTVCPUHandleAt(UINT frameI
     );
 }
 
-UINT DescriptorHeapManager::GetSRVDescriptorSize() const
+UINT DescriptorHeapManager::GetRTVDescriptorSize() const
 {
-    return this->m_srvDescriptorSize;
+    return this->m_rtvDescriptorSize; 
 }
 
 UINT DescriptorHeapManager::AllocateSRVSlot()
 {
-    Debug::Assert(this->m_currentSRVOffset < this->m_maxSRVCount, "Exceeded SRV descriptor heap capacity");
+    Debug::Assert(this->m_currentSRVOffset < MAX_SRV_COUNT, "Exceeded SRV descriptor heap capacity");
     return this->m_currentSRVOffset++;
 }
 

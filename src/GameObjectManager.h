@@ -1,11 +1,6 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <array>
-#include <memory>
-#include <unordered_map>
-
-#include "Dx12Commons.h"
+#include "pch.h"
+#include "FrameConstants.h"
 #include "ConstantBuffer.h"
 
 class DeviceContext;

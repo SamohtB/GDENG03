@@ -1,17 +1,12 @@
 #include "RenderSystem.h"
 
-#include "RenderDevice.h"
-#include "DeviceContext.h"
-#include "SwapChainManager.h"
-#include "RenderTargetManager.h"
+
 
 #include "Debug.h"
 
 #include "TextureManager.h"
 #include "MaterialManager.h"
 
-/* Sub Classes */
-#include "FenceManager.h"
 #include "PipelineStateManager.h"
 #include "DescriptorHeapManager.h"
 
@@ -29,63 +24,20 @@ RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 	auto heapManager = this->m_renderDevice->GetDescriptorHeapManager();
 
 	this->m_renderTargetManager = std::make_unique<RenderTargetManager>(d3dDevice, this->m_swapChainManager->GetSwapChain(),
-		heapManager->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), heapManager->GetRTVDescriptorSize());
+		heapManager->GetRTVCPUHandleAt(0), heapManager->GetRTVDescriptorSize());
 
 	this->m_frameConstantsBuffer = std::make_unique<FrameConstantsBuffer>(d3dDevice, FRAME_COUNT);
 	this->m_depthBuffer = std::make_unique<DepthBuffer>(d3dDevice, heapManager->GetDSVCPUHandle(), width, height);
 
 	/* Initial Signal */
-	this->m_renderDevice->GetFenceManager()->SignalCurrentFrameGPU(this->m_deviceContext->GetCommandQueue(), 0);
+	this->m_deviceContext->SignalCurrentFrameGPU(0);
 }
 
-RenderSystem::~RenderSystem()
-{
-	auto commandQueue = this->m_deviceContext->GetCommandQueue();
-	auto fenceManager = this->m_renderDevice->GetFenceManager();
-
-	for (UINT frameIndex = 0; frameIndex < FRAME_COUNT; ++frameIndex)
-	{
-		fenceManager->SignalCurrentFrameGPU(commandQueue, frameIndex);
-		fenceManager->WaitForFrameGPU(frameIndex);
-	}
-
-	fenceManager->ShutDown();
-}
-
-void RenderSystem::InitResourceManagers(std::shared_ptr<BatchUploader> uploader)
-{
-	try
-	{
-		this->m_textureManager = std::make_unique<TextureManager>(m_renderDevice->GetDescriptorHeapManagerPtr(), uploader);
-	}
-	catch (...)
-	{
-		Debug::LogError("Texture Manager initialization failed!");
-		return;
-	}
-
-	try
-	{
-		this->m_materialManager = std::make_unique<MaterialManager>(this->m_renderDevice->GetD3DDevice());
-	}
-	catch (...)
-	{
-		Debug::LogError("Material Manager initialization failed!");
-		return;
-	}
-}
-
-void RenderSystem::LoadInitialResources()
-{
-	this->m_textureManager->LoadInitialTextures();
-	this->m_materialManager->LoadInitialMaterials();
-}
-
-void RenderSystem::StartFrame()
+void RenderSystem::BeginFrame()
 {
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
 	
-	this->m_renderDevice->GetFenceManager()->WaitForFrameGPU(currentFrameIndex);
+	this->m_deviceContext->WaitForFrameGPU(currentFrameIndex);
 	this->m_deviceContext->ResetCommands(currentFrameIndex);
 
 	this->m_deviceContext->SetRootSignature(this->m_renderDevice->GetPSOManager()->GetRootSignature());
@@ -113,7 +65,7 @@ void RenderSystem::EndFrame()
 
 	this->m_swapChainManager->PresentFrame();
 
-	this->m_renderDevice->GetFenceManager()->SignalCurrentFrameGPU(this->m_deviceContext->GetCommandQueue(), currentFrameIndex);
+	this->m_deviceContext->SignalCurrentFrameGPU(currentFrameIndex);
 	this->m_swapChainManager->UpdateFrameIndex();
 }
 
@@ -127,18 +79,6 @@ D3D12_GPU_VIRTUAL_ADDRESS RenderSystem::GetFrameConstantsAddress()
 {
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
 	return this->m_frameConstantsBuffer->GetGPUVirtualAddress(currentFrameIndex);
-}
-
-void RenderSystem::UpdateMaterialConstants(MaterialType type)
-{
-	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
-	this->m_materialManager->UpdateMaterialConstants(type, currentFrameIndex);
-}
-
-D3D12_GPU_VIRTUAL_ADDRESS RenderSystem::GetMaterialConstantsAddress(MaterialType type)
-{
-	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
-	return this->m_materialManager->GetMaterialConstantsAddress(type, currentFrameIndex);
 }
 
 ID3D12PipelineState* RenderSystem::GetPipelineState(const ShaderType& type) const
@@ -158,11 +98,6 @@ ID3D12PipelineState* RenderSystem::GetPipelineState(const ShaderType& type) cons
 UINT RenderSystem::GetCurrentFrameIndex()
 {
 	return this->m_swapChainManager->GetCurrentFrameIndex();;
-}
-
-TextureManager* RenderSystem::GetTextureManager()
-{
-	return this->m_textureManager.get();
 }
 
 ComPtr<ID3D12Device> RenderSystem::GetD3DDevicePtr()

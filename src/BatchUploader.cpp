@@ -1,7 +1,7 @@
 #include "BatchUploader.h"
-#include <directxtk12/DirectXHelpers.h>
-#include <directxtk12/BufferHelpers.h>
-#include <directxtk12/WICTextureLoader.h>
+#include <DirectXHelpers.h>
+#include <BufferHelpers.h>
+#include <WICTextureLoader.h>
 
 #include "VertexTypes.h"
 #include "Debug.h"

@@ -1,12 +1,12 @@
 #include "GameWindow.h"
 
-#include "stdafx.h"
-
 #include "GraphicsEngine.h"
 #include "GameObjectManager.h"
 #include "EngineTime.h"
 
 #include "RenderSystem.h"
+#include "BatchUploader.h"
+
 #include "Quad.h"
 #include "PBSQuads.h"
 #include "AnimatedQuad.h"
@@ -63,7 +63,7 @@ void GameWindow::OnRender()
 {
 	auto context = GraphicsEngine::GetInstance()->GetRenderSystem()->GetDeviceContext();
 
-	GraphicsEngine::GetInstance()->GetRenderSystem()->StartFrame();
+	GraphicsEngine::GetInstance()->GetRenderSystem()->BeginFrame();
 
 	GameObjectManager::GetInstance()->RenderAll(context);
 

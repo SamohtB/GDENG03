@@ -1,17 +1,20 @@
 #pragma once
-#include <vector>
-#include "Dx12Commons.h"
-#include "TextureTypes.h"
+#include "pch.h"
+#include "FrameConstants.h"
 
 /* Reset -> Transition Barrier -> Set Params (Root/PSO/CBV/DescHeaps/Viewport/Rect) -> Draw Calls -> Transition Barrier */
 class DeviceContext
 {
 public:
 	DeviceContext(ID3D12Device* device);
-	~DeviceContext() = default;
+	~DeviceContext();
 
 	void ExecuteCommandList();
 	void ResetCommands(UINT frameIndex, ID3D12PipelineState* pipelineState = nullptr);
+
+	/* GPU Sync */
+	void WaitForFrameGPU(UINT frameIndex);
+	void SignalCurrentFrameGPU(UINT frameIndex);
 
 	void SetRootSignature(ID3D12RootSignature* rootSignature);
 	void SetPSO(ID3D12PipelineState* pipelineState);
@@ -40,8 +43,13 @@ public:
 	ID3D12CommandQueue* GetCommandQueue() const;
 
 private:
+	ComPtr<ID3D12Fence> m_fence;
 	ComPtr<ID3D12CommandQueue> m_commandQueue;
 	ComPtr<ID3D12CommandAllocator> m_commandAllocators[FRAME_COUNT];
 	ComPtr<ID3D12GraphicsCommandList> m_commandList;
+
+	HANDLE m_fenceEvent;
+	UINT64 m_fenceValues[FRAME_COUNT];
+	UINT64 m_nextFenceValue;
 };
 

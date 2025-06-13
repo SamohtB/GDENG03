@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <string>
 
+/* pure interface for game/application window behavior */
 class ABaseWindow
 {
 public:
@@ -12,7 +13,6 @@ public:
     virtual void OnUpdate() = 0;
     virtual void OnRender() = 0;
     virtual void OnDestroy() = 0;
-    /* add on input later */
 
     unsigned int GetWidth() const;
     unsigned int GetHeight() const;

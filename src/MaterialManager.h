@@ -1,8 +1,6 @@
 #pragma once
-#include <memory>
-#include <array>
-#include <unordered_map>
-#include "Dx12Commons.h"
+#include "pch.h"
+#include "FrameConstants.h"
 
 #include "ConstantBuffer.h"
 #include "MaterialTypes.h"

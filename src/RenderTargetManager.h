@@ -1,5 +1,6 @@
 #pragma once
-#include "Dx12Commons.h"
+#include "pch.h"
+#include "FrameConstants.h"
 
 class RenderTargetManager 
 {

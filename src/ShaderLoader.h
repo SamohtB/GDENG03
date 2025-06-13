@@ -1,21 +1,7 @@
 #pragma once
-#include "Dx12Commons.h"
+#include "pch.h"
+#include "ShaderTypes.h"
 #include <dxcapi.h>
-#include <string>
-
-struct ShaderDesc 
-{
-	std::wstring shaderFilePath;
-	std::wstring shaderEntry;
-	std::wstring shaderTarget;
-
-	ShaderDesc() = default;
-	ShaderDesc(std::wstring path, std::wstring entry, std::wstring target) :
-		shaderFilePath(path), shaderEntry(entry), shaderTarget(target) {
-	}
-};
-
-using Microsoft::WRL::ComPtr;
 
 class ShaderLoader
 {

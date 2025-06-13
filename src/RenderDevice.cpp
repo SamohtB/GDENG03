@@ -10,7 +10,6 @@ RenderDevice::RenderDevice()
 
 	this->m_descriptorHeap = std::make_shared<DescriptorHeapManager>(d3dDevice);
 	this->m_pipelineStateManager = std::make_unique<PipelineStateManager>(d3dDevice);
-	this->m_fenceManager = std::make_unique<FenceManager>(d3dDevice);
 }
 
 ID3D12Device* RenderDevice::GetD3DDevice() const
@@ -26,11 +25,6 @@ ComPtr<ID3D12Device> RenderDevice::GetD3DDevicePtr() const
 IDXGIFactory6* RenderDevice::GetFactory() const
 {
 	return this->m_dxgiFactory.Get();
-}
-
-FenceManager* RenderDevice::GetFenceManager() const
-{
-	return this->m_fenceManager.get();
 }
 
 PipelineStateManager* RenderDevice::GetPSOManager() const

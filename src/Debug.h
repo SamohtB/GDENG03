@@ -8,7 +8,7 @@
 #include <windows.h>
 #include <type_traits>
 #include <comdef.h>
-#include <directxtk12/SimpleMath.h>
+
 #define DEBUG_BREAK() __debugbreak()
 
 class Debug
@@ -41,14 +41,6 @@ public:
             
         }
     }
-
-    static std::string ToString(const DirectX::SimpleMath::Vector3& v) 
-    {
-        return "Vector3(" + std::to_string(v.x) + ", "
-            + std::to_string(v.y) + ", "
-            + std::to_string(v.z) + ")";
-    }
-
 
     static void Log(const std::string& message) 
     {

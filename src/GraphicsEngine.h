@@ -2,9 +2,12 @@
 #include <memory>
 #include <windows.h>
 
-#include "RenderSystem.h"
-#include "BatchUploader.h"
+class RenderSystem;
+class BatchUploader;
+class TextureManager;
+class MaterialManager;
 
+/* central graphics subsystem entry point */
 class GraphicsEngine
 {
 public:
@@ -14,18 +17,20 @@ public:
 
 	RenderSystem* GetRenderSystem();
 	BatchUploader* GetBatchUploader();
+	TextureManager* GetTextureManager();
+	MaterialManager* GetMaterialManager();
 
-private:
 	GraphicsEngine(UINT width, UINT height, HWND hwnd);
 	~GraphicsEngine() = default;
-	GraphicsEngine(GraphicsEngine const&) {}
-	GraphicsEngine& operator=(GraphicsEngine const&) {}
+	GraphicsEngine(GraphicsEngine const&) = delete;
+	GraphicsEngine& operator=(GraphicsEngine const&) = delete;
 
-	static GraphicsEngine* sharedInstance;
+private:
+	static std::unique_ptr<GraphicsEngine> sharedInstance;
 
 	std::unique_ptr<RenderSystem> m_renderSystem = nullptr;
 	std::shared_ptr<BatchUploader> m_batchUploader = nullptr;
-
-	friend RenderDevice;
+	std::unique_ptr<TextureManager> m_textureManager = nullptr;
+	std::unique_ptr<MaterialManager> m_materialManager = nullptr;
 };
 

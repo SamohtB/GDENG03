@@ -1,7 +1,5 @@
 #pragma once
-
-#include <directxtk12/SimpleMath.h>
-using namespace DirectX::SimpleMath;
+#include "Math.h"
 
 struct IVertexType {};
 

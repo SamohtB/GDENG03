@@ -1,12 +1,14 @@
 #pragma once
-#include <vector>
-#include <directxtk12/SimpleMath.h>
+#include "pch.h"
+#include <SimpleMath.h>
 
-using namespace DirectX::SimpleMath;
+using Vector2 = DirectX::SimpleMath::Vector2;
+using Vector3 = DirectX::SimpleMath::Vector3;
+using Vector4 = DirectX::SimpleMath::Vector4;
+using Matrix = DirectX::SimpleMath::Matrix;
 
-class GeoMath
+namespace GeoMath
 {
-public:
 	static void CalculateTangentFrame(const std::vector<unsigned int>& indices, const Vector3* positions, const Vector3* normals,
 		const Vector2* texcoords, size_t vertexCount, Vector3* tangents, Vector3* bitangents)
 	{
