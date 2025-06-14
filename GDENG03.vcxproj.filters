@@ -210,6 +210,9 @@
     <ClCompile Include="src\pch.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="src\SceneCamera.cpp">
+      <Filter>Engine\CameraSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DescriptorHeapManager.h">
@@ -345,6 +348,9 @@
       <Filter>Engine\InputSystem</Filter>
     </ClInclude>
     <ClInclude Include="src\CameraManager.h">
+      <Filter>Engine\CameraSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SceneCamera.h">
       <Filter>Engine\CameraSystem</Filter>
     </ClInclude>
   </ItemGroup>

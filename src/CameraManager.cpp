@@ -1,5 +1,6 @@
 #include "CameraManager.h"
 #include "InputSystem.h"
+#include "SceneCamera.h"
 #include "Camera.h"
 #include "Debug.h"
 
@@ -30,9 +31,13 @@ void CameraManager::Destroy()
 
 CameraManager::CameraManager(UINT width, UINT height)
 {
-	this->m_sceneCamera = std::make_shared<Camera>("Scene Camera", width, height);
+	this->m_sceneCamera = std::make_shared<SceneCamera>(width, height);
 	this->m_sceneCamera->SetPosition(0.0f, 0.0f, -10.0f);
-	this->AddCamera(this->m_sceneCamera, true); // Set the scene camera as the main camera by default
+	this->AddCamera(this->m_sceneCamera);
+	this->PossessCamera(this->m_sceneCamera);
+
+	std::shared_ptr<InputListener> listenerRef = std::dynamic_pointer_cast<InputListener>(this->m_sceneCamera);
+	InputSystem::GetInstance()->AddListener(listenerRef);
 }
 
 int CameraManager::AddCamera(const CameraPtr& reference, bool setMain)
@@ -42,12 +47,9 @@ int CameraManager::AddCamera(const CameraPtr& reference, bool setMain)
 	int index = static_cast<int>(this->m_cameraIndex);
 	this->m_cameraIndex++;
 
-	std::shared_ptr<InputListener> listenerRef = std::static_pointer_cast<InputListener>(reference);
-	InputSystem::GetInstance()->AddListener(listenerRef);
-
 	if (setMain || this->m_activeCamera == nullptr)
 	{
-		this->m_activeCamera = reference;
+		this->PossessCamera(reference);
 	}
 
 	return index;
@@ -79,11 +81,12 @@ void CameraManager::UpdateViewportSize(UINT width, UINT height)
 	}
 }
 
-void CameraManager::SetActiveCamera(int index)
+void CameraManager::PossessCamera(int index)
 {
 	auto it = m_cameraMap.find(index);
 	if (it != m_cameraMap.end())
 	{
+		m_previousCamera = m_activeCamera;
 		m_activeCamera = it->second;
 	}
 	else
@@ -92,13 +95,14 @@ void CameraManager::SetActiveCamera(int index)
 	}
 }
 
-void CameraManager::SetActiveCamera(const CameraPtr& reference)
+void CameraManager::PossessCamera(const CameraPtr& reference)
 {
 	bool found = false;
 	for (const auto& [id, cam] : m_cameraMap)
 	{
 		if (cam == reference)
 		{
+			m_previousCamera = m_activeCamera;
 			m_activeCamera = reference;
 			found = true;
 			break;
@@ -109,6 +113,29 @@ void CameraManager::SetActiveCamera(const CameraPtr& reference)
 	{
 		Debug::LogWarning("CameraManager::SetActiveCamera: Provided reference not found in camera map.");
 	}
+}
+
+void CameraManager::UnpossessCamera()
+{
+	if (m_sceneCamera)
+	{
+		m_previousCamera = m_activeCamera;
+		m_activeCamera = m_sceneCamera;
+	}
+	else
+	{
+		Debug::LogWarning("CameraManager::Unpossess: Scene camera not initialized.");
+	}
+}
+
+const std::shared_ptr<Camera>& CameraManager::GetActiveCamera() const
+{
+	return this->m_activeCamera;
+}
+
+const std::shared_ptr<Camera>& CameraManager::GetSceneCamera() const
+{
+	return this->m_sceneCamera;
 }
 
 

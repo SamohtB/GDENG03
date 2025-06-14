@@ -5,7 +5,7 @@
 
 class DeviceContext;
 
-class Camera : public AGameObject, public InputListener
+class Camera : public AGameObject 
 {
 public:
 	Camera(String name, UINT viewportWidth, UINT viewportHeight);
@@ -16,21 +16,9 @@ public:
 	Matrix GetViewMatrix();
 	Matrix GetProjectionMatrix();
 
-	virtual void OnKeyDown(int key) override;
-	virtual void OnKeyUp(int key) override;
-
-	virtual void OnMouseMove(const Vector2& deltaMousePos) override;
-	virtual void OnMouseWheel(const float& delta) override;
-
-	virtual void OnRightMouseDown(const Vector2& mousePos) override;
-	virtual void OnRightMouseUp(const Vector2& mousePos) override;
-
 	void SetViewportSize(UINT width, UINT height);
 
-private:
-	void FlyCamMode();
-	void ZoomMode();
-
+protected:
 	bool m_isPerspectiveView = true;
 	float m_deltaTime = 0.0f;
 
@@ -46,9 +34,6 @@ private:
 	float m_oNearZ = -4.0f;
 	float m_oFarZ = 4.0f;
 
-	float m_moveSpeed = 50.0f;
-	Vector2 m_lastMousePosition;
-	bool m_rightMousePressed = false;
-
+private:
 	void Draw(DeviceContext* dvcContext) override;
 };

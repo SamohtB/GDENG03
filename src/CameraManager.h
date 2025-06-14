@@ -16,13 +16,19 @@ public:
 	static void Destroy();
 
 	int AddCamera(const CameraPtr& reference, bool setMain = false);
-	void Update(float deltaTime);
+	
 	Matrix GetActiveCameraViewMatrix();
 	Matrix GetActiveCameraProjMatrix();
 
+	void Update(float deltaTime);
 	void UpdateViewportSize(UINT width, UINT height);
-	void SetActiveCamera(int index);
-	void SetActiveCamera(const CameraPtr& reference);
+
+	void PossessCamera(int index);
+	void PossessCamera(const CameraPtr& reference);
+	void UnpossessCamera();
+
+	const CameraPtr& GetActiveCamera() const;
+	const CameraPtr& GetSceneCamera() const;
 
 	CameraManager(UINT width, UINT height);
 	~CameraManager() = default;
@@ -34,6 +40,8 @@ private:
 
 	CameraPtr m_sceneCamera = nullptr;
 	CameraPtr m_activeCamera = nullptr;
+	CameraPtr m_previousCamera = nullptr;
+
 	CameraMap m_cameraMap;
 	CameraList m_cameraList;
 
