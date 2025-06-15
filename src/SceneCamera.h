@@ -9,21 +9,29 @@ public:
 
 	void Update(float deltaTime) override final;
 
-	virtual void OnKeyDown(int key) override;
-	virtual void OnKeyUp(int key) override;
+	virtual void OnKeyPressed(int key) override;
+	virtual void OnKeyReleased(int key) override;
 
-	virtual void OnMouseMove(const Vector2& deltaMousePos) override;
+	virtual void OnMouseMove(const Vector2& mousePos) override;
 	virtual void OnMouseWheel(const float& delta) override;
 
-	virtual void OnRightMouseDown(const Vector2& mousePos) override;
-	virtual void OnRightMouseUp(const Vector2& mousePos) override;
+	virtual void OnRightMousePressed(const Vector2& mousePos) override;
+	virtual void OnRightMouseReleased(const Vector2& mousePos) override;
 
 private:
-	void FlyCamMode();
-	void ZoomMode();
+	void FlyCamMode(float deltaTime);
+	void ZoomMode(float deltaTime);
+	void MouseMovement(float deltaTime);
 
-	float m_moveSpeed = 50.0f;
-	Vector2 m_lastMousePosition;
+	float m_mouseSensitivity = 0.3f;
+	float m_cameraMoveSpeed = 50.0f;
+	float m_scrollDelta = 0.0f;
+
 	bool m_rightMousePressed = false;
+
+	Vector2 m_mouseDelta = Vector2(0.0f, 0.0f);
+	Vector2 m_lastMousePosition = Vector2(0.0f, 0.0f);
+
+	std::unordered_set<int> m_heldKeys;
 };
 

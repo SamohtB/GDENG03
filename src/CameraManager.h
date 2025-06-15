@@ -1,15 +1,23 @@
 #pragma once
 #include "pch.h"
 #include "Math.h"
+#include "InputListener.h"
 
 class Camera;
 
-class CameraManager
+class CameraManager : public InputListener
 {
 public:
 	using CameraPtr = std::shared_ptr<Camera>;
 	using CameraList = std::vector<CameraPtr>;
 	using CameraMap = std::unordered_map<UINT, CameraPtr>;
+
+	enum PossessionState
+	{
+		UNPOSSESSED,
+		POSSESSED,
+		PAUSED
+	};
 
 	static CameraManager* GetInstance();
 	static void Initialize(UINT width, UINT height);
@@ -30,12 +38,20 @@ public:
 	const CameraPtr& GetActiveCamera() const;
 	const CameraPtr& GetSceneCamera() const;
 
+	/* Input Stuff */
+	virtual void OnKeyPressed(int key) override;
+
+	/* Singleton Stuff */
 	CameraManager(UINT width, UINT height);
 	~CameraManager() = default;
 	CameraManager(CameraManager const&) = delete;
 	CameraManager& operator=(CameraManager const&) = delete;
 
 private:
+	void CameraSwitcher();
+	void CycleCameras();
+	void ResumePossess();
+	
 	static std::unique_ptr<CameraManager> sharedInstance;
 
 	CameraPtr m_sceneCamera = nullptr;
@@ -46,5 +62,7 @@ private:
 	CameraList m_cameraList;
 
 	UINT m_cameraIndex = 0;
+	UINT m_cameraCycleTracker = 1;
+	PossessionState m_possessionState = UNPOSSESSED;
 };
 

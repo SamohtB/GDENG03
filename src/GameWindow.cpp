@@ -14,10 +14,12 @@
 #include "AnimatedQuad.h"
 
 #include "Cube.h"
-#include "PlaneEntity.h"
+#include "Plane.h"
+#include "Camera.h"
 
 #include "Debug.h"
 #include "Random.h"
+#include "Colors.h"
 
 GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
 
@@ -33,12 +35,55 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 
-	auto plane = std::make_shared<PlaneEntity>("Plane");
-	plane->SetRotation(15.0f, 0.0f, 0.0f);
+	auto plane = std::make_shared<Plane>("Plane");
+	plane->SetRotation(0.0f, 0.0f, 0.0f);
+	plane->SetScale(3.0f, 3.0f, 3.0f);
 	GameObjectManager::GetInstance()->AddGameObject(plane);
 
-	auto cube = std::make_shared<Cube>("Cube");
-	GameObjectManager::GetInstance()->AddGameObject(cube);
+	std::vector<Vector3> colorPalette = {
+	colors::red,
+	colors::orange,
+	colors::yellow,
+	colors::green,
+	colors::blue,
+	colors::violet,
+	colors::magenta,
+	colors::teal
+	};
+
+	const float radius = 10.0f;
+	const float angleStep = 45.0f;
+
+	for (int i = 0; i < 8; ++i)
+	{
+		float angleDeg = i * angleStep;
+		float angleRad = DirectX::XMConvertToRadians(angleDeg);
+
+		float x = radius * cos(angleRad);
+		float z = radius * sin(angleRad);
+
+		auto cube = std::make_shared<Cube>("Cube_" + std::to_string(i), colorPalette[i]);
+		cube->SetPosition(x, 0.5f, z);
+
+		GameObjectManager::GetInstance()->AddGameObject(cube);
+	}
+
+	std::vector<Vector3> positions = {
+	{ 20.0f, 10.0f,  0.0f },  // +X
+	{-20.0f, 10.0f,  0.0f },  // -X
+	{ 0.0f, 10.0f, 20.0f },   // +Z
+	{ 0.0f, 10.0f, -20.0f },   // -Z
+	};
+
+	for (int i = 0; i < positions.size(); ++i)
+	{
+		auto cam = std::make_shared<Camera>("Camera_" + std::to_string(i), 1024, 768);
+		cam->SetPosition(positions[i]);
+		cam->SetLookAt(Vector3(0.0f, 0.0f, 0.0f));
+
+		CameraManager::GetInstance()->AddCamera(cam);
+	}
+
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
 } 

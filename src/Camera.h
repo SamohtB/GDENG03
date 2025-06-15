@@ -17,6 +17,7 @@ public:
 	Matrix GetProjectionMatrix();
 
 	void SetViewportSize(UINT width, UINT height);
+	void SetLookAt(Vector3 lookat);
 
 protected:
 	bool m_isPerspectiveView = true;

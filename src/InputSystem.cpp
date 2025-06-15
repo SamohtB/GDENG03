@@ -30,102 +30,91 @@ InputSystem::InputSystem() {}
 
 void InputSystem::ProcessInput()
 {
+	// === Mouse Movement ===
 	Vector2 current_mouse_pos = GetMousePosition();
 
 	if (m_firstTime)
 	{
+		m_oldMousePosition = current_mouse_pos;
 		m_firstTime = false;
-		m_oldMousePosition = current_mouse_pos;
 	}
 
-	Vector2 delta = current_mouse_pos - m_oldMousePosition;
-
-	/* Mouse Movement */
-	if (fabs(delta.x) > 0.001f || fabs(delta.y) > 0.001f)
-	{	
-		// Mouse Move Event
-		for (const auto& listener : m_listenersMap)
-		{
-			listener->OnMouseMove(delta);
-		}
+	if (m_oldMousePosition != current_mouse_pos)
+	{
+		for (auto listener : m_listenersMap)
+			listener->OnMouseMove(current_mouse_pos);
 
 		m_oldMousePosition = current_mouse_pos;
 	}
 
-	/* Mouse Scroll */
+	// === Mouse Scroll ===
 	if (m_mouseWheelDelta != 0.0f)
 	{
-		for (const auto& listener : m_listenersMap)
-		{
+		for (auto listener : m_listenersMap)
 			listener->OnMouseWheel(m_mouseWheelDelta);
-		}
-		m_mouseWheelDelta = 0.0f; // Reset after notifying listeners
+
+		m_mouseWheelDelta = 0.0f;
 	}
 
-	/* Keyboard States */
-	if (::GetKeyboardState(m_keysState))
+
+	// === Keyboard State Handling ===
+	BYTE currentKeys[256];
+
+	if (!::GetKeyboardState(currentKeys)) return;
+
+	for (int i = 0; i < 256; ++i)
 	{
-		for (unsigned int i = 0; i < 256; i++)
-		{
-			// Key Down
-			if (m_keysState[i] & 0x80)
-			{
-				for (const auto& listener : m_listenersMap)
-				{
-					if (i == VK_LBUTTON)
-					{
-						if (m_keysState[i] != m_oldKeysState[i])
-						{
-							listener->OnLeftMouseDown(current_mouse_pos);
-						}
-					}
-					else if (i == VK_RBUTTON)
-					{
-						if (m_keysState[i] != m_oldKeysState[i])
-						{
-							listener->OnRightMouseDown(current_mouse_pos);
-						}
-					}
-					else
-					{
-						listener->OnKeyDown(i);
-					}
-				}
-			}
-			// Key Up
-			else
-			{
-				if (m_keysState[i] != m_oldKeysState[i])
-				{
-					for (const auto& listener : m_listenersMap)
-					{
-						if (i == VK_LBUTTON)
-						{
-							listener->OnLeftMouseUp(current_mouse_pos);
-						}
-						else if (i == VK_RBUTTON)
-						{
-							listener->OnRightMouseUp(current_mouse_pos);
-						}
-						else
-						{
-							listener->OnKeyUp(i);
-						}
-					}
-				}
-			}
-		}
+		bool isDown = (currentKeys[i] & 0x80) != 0;
+		bool wasDown = (m_keysState[i] & 0x80) != 0;
 
-		::memcpy(m_oldKeysState, m_keysState, sizeof(unsigned char) * 256);
+		auto& state = m_keyStates[i];
+
+		// Update key state enum
+		if (isDown && !wasDown)			state = KeyState::Pressed;
+		else if (isDown && wasDown)		state = KeyState::Held;
+		else if (!isDown && wasDown)	state = KeyState::Released;
+		else							state = KeyState::Idle;
+
+		switch (state)
+		{
+		case KeyState::Pressed:
+			for (auto listener : m_listenersMap)
+			{
+				if (i == VK_LBUTTON)	listener->OnLeftMousePressed(current_mouse_pos);
+				if (i == VK_RBUTTON)	listener->OnRightMousePressed(current_mouse_pos);
+				listener->OnKeyPressed(i);
+			}
+			break;
+
+		case KeyState::Held:
+			for (auto listener : m_listenersMap)
+			{
+				//if (i == VK_LBUTTON)	listener->OnLeftMousePressed(current_mouse_pos);
+				//if (i == VK_RBUTTON)	listener->OnRightMousePressed(current_mouse_pos);
+				listener->OnKeyHeld(i);
+			}
+			break;
+
+		case KeyState::Released:
+			for (auto listener : m_listenersMap)
+			{
+				if (i == VK_LBUTTON)	listener->OnLeftMouseReleased(current_mouse_pos);
+				if (i == VK_RBUTTON)	listener->OnRightMouseReleased(current_mouse_pos);
+				listener->OnKeyReleased(i);
+			}
+			break;
+		}
 	}
+
+	::memcpy(m_keysState, currentKeys, sizeof(m_keysState));
 }
 
-void InputSystem::AddListener(InputListenerPtr listener)
+void InputSystem::AddListener(InputListener* listener)
 {
 	m_listenersMap.insert(listener);
 }
 
-void InputSystem::RemoveListener(InputListenerPtr listener)
+void InputSystem::RemoveListener(InputListener* listener)
 {
 	m_listenersMap.erase(listener);
 }

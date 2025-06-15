@@ -1,4 +1,5 @@
 #include "SceneCamera.h"
+#include "Debug.h"
 
 SceneCamera::SceneCamera(UINT viewportWidth, UINT viewportHeight) : Camera("Scene Camera", viewportWidth, viewportHeight)
 {
@@ -13,36 +14,34 @@ void SceneCamera::Update(float deltaTime)
 
     switch (this->m_rightMousePressed)
     {
-    case true: FlyCamMode(); break;
-    case false: ZoomMode();  break;
+    case true:
+    {
+        FlyCamMode(deltaTime);
+        MouseMovement(deltaTime);
+    } 
+    break;
+
+    case false: ZoomMode(deltaTime);  break;
     }
+
+    
 }
 
-void SceneCamera::OnKeyDown(int key)
+void SceneCamera::OnKeyPressed(int key)
 {
     this->m_heldKeys.insert(key);
 }
 
-void SceneCamera::OnKeyUp(int key)
+void SceneCamera::OnKeyReleased(int key)
 {
     this->m_heldKeys.erase(key);
 }
 
-void SceneCamera::OnMouseMove(const Vector2& deltaMousePos)
+void SceneCamera::OnMouseMove(const Vector2& mousePos)
 {
-    if (!this->m_rightMousePressed) return;
-
-    float sensitivity = 0.01f;
-    float yawDelta = deltaMousePos.x * sensitivity;
-    float pitchDelta = deltaMousePos.y * sensitivity;
-
-    Vector3 rotation = this->GetLocalRotation();
-
-    rotation.y += yawDelta;
-    rotation.x += pitchDelta;
-    rotation.x = Clamp(rotation.x, -89.9f, 89.9f);
-
-    this->SetRotation(rotation);
+    Vector2 delta = mousePos - this->m_lastMousePosition;
+    this->m_mouseDelta = delta;
+    this->m_lastMousePosition = mousePos;
 }
 
 void SceneCamera::OnMouseWheel(const float& delta)
@@ -50,17 +49,19 @@ void SceneCamera::OnMouseWheel(const float& delta)
     this->m_scrollDelta = delta;
 }
 
-void SceneCamera::OnRightMouseDown(const Vector2& mousePos)
+void SceneCamera::OnRightMousePressed(const Vector2& mousePos)
 {
     this->m_rightMousePressed = true;
+    this->m_mouseDelta = Vector2(0.0f, 0.0f);
+    this->m_lastMousePosition = mousePos;
 }
 
-void SceneCamera::OnRightMouseUp(const Vector2& mousePos)
+void SceneCamera::OnRightMouseReleased(const Vector2& mousePos)
 {
     this->m_rightMousePressed = false;
 }
 
-void SceneCamera::FlyCamMode()
+void SceneCamera::FlyCamMode(float deltaTime)
 {
     Vector3 moveDirection = Vector3(0.0f, 0.0f, 0.0f);
 
@@ -76,21 +77,35 @@ void SceneCamera::FlyCamMode()
     if (moveDirection != Vector3::Zero)
     {
         moveDirection.Normalize();
-        this->Move(moveDirection * this->m_moveSpeed * speedMultiplier * m_deltaTime);
+        this->Move(moveDirection * this->m_cameraMoveSpeed * speedMultiplier * deltaTime);
     }
 }
 
-void SceneCamera::ZoomMode()
+void SceneCamera::ZoomMode(float deltaTime)
 {
     if (m_scrollDelta == 0.0f) return;
 
     if (this->m_isPerspectiveView)
     {
         Vector3 zoomDirection = this->GetForwardVector();
-        float zoomAmount = m_scrollDelta * m_moveSpeed * m_deltaTime;
+        float zoomAmount = m_scrollDelta * m_cameraMoveSpeed * deltaTime;
 
         this->Move(zoomDirection * zoomAmount);
     }
 
     m_scrollDelta = 0.0f;
+}
+
+void SceneCamera::MouseMovement(float deltaTime)
+{
+    float yawDelta = m_mouseDelta.x * m_mouseSensitivity * deltaTime;
+    float pitchDelta = m_mouseDelta.y * m_mouseSensitivity * deltaTime;
+    Vector3 rotation = this->GetLocalRotation();
+
+    rotation.y += yawDelta;
+    rotation.x += pitchDelta;
+    rotation.x = Clamp(rotation.x, -89.9f, 89.9f);
+
+    this->SetRotation(rotation);
+    m_mouseDelta = Vector2(0.0f, 0.0f);
 }

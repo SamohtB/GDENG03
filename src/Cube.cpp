@@ -6,7 +6,7 @@
 #include "GameObjectManager.h"
 #include "Random.h"
 
-Cube::Cube(String name) : AGameObject(name)
+Cube::Cube(String name, Vector3 color) : AGameObject(name)
 {
     std::vector<unsigned int> indices =
     {
@@ -34,15 +34,15 @@ Cube::Cube(String name) : AGameObject(name)
 
     std::vector<POS_COL> vertices = {
 
-        {{-1.0f, -1.0f,  1.0f}, {1.0f, 0.0f, 1.0f}}, // 0
-        {{ 1.0f, -1.0f,  1.0f}, {0.0f, 1.0f, 1.0f}}, // 1
-        {{-1.0f,  1.0f,  1.0f}, {1.0f, 1.0f, 0.0f}}, // 2
-        {{ 1.0f,  1.0f,  1.0f}, {1.0f, 1.0f, 1.0f}}, // 3
+        {{-1.0f, -1.0f,  1.0f}, color}, // 0
+        {{ 1.0f, -1.0f,  1.0f}, color}, // 1
+        {{-1.0f,  1.0f,  1.0f}, color}, // 2
+        {{ 1.0f,  1.0f,  1.0f}, color}, // 3
 
-        {{-1.0f, -1.0f, -1.0f}, {0.0f, 1.0f, 1.0f}}, // 4
-        {{ 1.0f, -1.0f, -1.0f}, {0.0f, 1.0f, 1.0f}}, // 5
-        {{-1.0f,  1.0f, -1.0f}, {1.0f, 1.0f, 0.0f}}, // 6
-        {{ 1.0f,  1.0f, -1.0f}, {1.0f, 1.0f, 0.0f}}, // 7
+        {{-1.0f, -1.0f, -1.0f}, color}, // 4
+        {{ 1.0f, -1.0f, -1.0f}, color}, // 5
+        {{-1.0f,  1.0f, -1.0f}, color}, // 6
+        {{ 1.0f,  1.0f, -1.0f}, color}, // 7
     };
 
     this->m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);
@@ -54,8 +54,6 @@ void Cube::Update(float deltaTime)
     m_ticks += deltaTime;
 
     float t = 1.5f * sin(1.5f * m_ticks);
-    this->SetRotation(t, t, 0.0f);
-	this->SetPosition(0.0f, 0.0f, t);
 
     ObjectConstantsData objData = {};
     objData.modelMatrix = this->GetLocalMatrix();

@@ -15,19 +15,19 @@ public:
 
 	}
 
-	virtual void OnKeyDown(int key) {}
-	virtual void OnKeyUp(int key) {}
+	virtual void OnKeyPressed(int key) {}
+	virtual void OnKeyReleased(int key) {}
+	virtual void OnKeyHeld(int key) {}
 
 	virtual void OnMouseMove(const Vector2& deltaMousePos) {}
 	virtual void OnMouseWheel(const float& delta) {}
 
-	virtual void OnLeftMouseDown(const Vector2& mousePos) {}
-	virtual void OnLeftMouseUp(const Vector2& mousePos) {}
+	virtual void OnLeftMousePressed(const Vector2& mousePos) {}
+	virtual void OnLeftMouseReleased(const Vector2& mousePos) {}
 
-	virtual void OnRightMouseDown(const Vector2& mousePos) {}
-	virtual void OnRightMouseUp(const Vector2& mousePos) {}
+	virtual void OnRightMousePressed(const Vector2& mousePos) {}
+	virtual void OnRightMouseReleased(const Vector2& mousePos) {}
 
 protected:
-	std::unordered_set<int> m_heldKeys;
-	float m_scrollDelta = 0.0f;
+
 };

@@ -37,7 +37,44 @@ CameraManager::CameraManager(UINT width, UINT height)
 	this->PossessCamera(this->m_sceneCamera);
 
 	std::shared_ptr<InputListener> listenerRef = std::dynamic_pointer_cast<InputListener>(this->m_sceneCamera);
-	InputSystem::GetInstance()->AddListener(listenerRef);
+	InputSystem::GetInstance()->AddListener(listenerRef.get());
+	InputSystem::GetInstance()->AddListener(this);
+}
+
+void CameraManager::CameraSwitcher()
+{
+
+}
+
+void CameraManager::CycleCameras()
+{
+	if (m_cameraList.size() == 1)
+	{
+		Debug::LogWarning("CameraManager::CycleCameras: No cameras available to cycle through.");
+		return;
+	}
+
+	if (m_cameraCycleTracker >= m_cameraList.size())
+	{
+		m_cameraCycleTracker = 1; // Skip the scene camera
+	}
+
+	PossessCamera(m_cameraCycleTracker);
+	m_cameraCycleTracker++;
+}
+
+void CameraManager::ResumePossess()
+{
+	if (m_previousCamera != nullptr)
+	{
+		m_activeCamera = m_previousCamera;
+		m_possessionState = POSSESSED;
+		Debug::Log("CameraManager::ResumePossess: Resumed possession of " + m_activeCamera->GetName());
+	}
+	else
+	{
+		Debug::LogWarning("CameraManager::ResumePossess: No previous camera to resume possession.");
+	}
 }
 
 int CameraManager::AddCamera(const CameraPtr& reference, bool setMain)
@@ -47,7 +84,7 @@ int CameraManager::AddCamera(const CameraPtr& reference, bool setMain)
 	int index = static_cast<int>(this->m_cameraIndex);
 	this->m_cameraIndex++;
 
-	if (setMain || this->m_activeCamera == nullptr)
+	if (setMain)
 	{
 		this->PossessCamera(reference);
 	}
@@ -58,6 +95,7 @@ int CameraManager::AddCamera(const CameraPtr& reference, bool setMain)
 void CameraManager::Update(float deltaTime)
 {
 	Debug::Assert(m_activeCamera != nullptr, "No Active Camera Set!");
+	CameraSwitcher();
 	this->m_activeCamera->Update(deltaTime);
 }
 
@@ -83,36 +121,34 @@ void CameraManager::UpdateViewportSize(UINT width, UINT height)
 
 void CameraManager::PossessCamera(int index)
 {
-	auto it = m_cameraMap.find(index);
-	if (it != m_cameraMap.end())
+	if (index >= m_cameraList.size())
 	{
-		m_previousCamera = m_activeCamera;
-		m_activeCamera = it->second;
+		Debug::LogWarning("Camera " + std::to_string(index) + " has not yet been set!");
+		return;
 	}
-	else
-	{
-		Debug::LogWarning("CameraManager::SetActiveCamera: Invalid index " + std::to_string(index));
-	}
+
+	m_previousCamera = m_activeCamera;
+	m_activeCamera = this->m_cameraList[index];
+
+	if(index != 0)
+		m_possessionState = POSSESSED;
+
+	Debug::Log("CameraManager::PossessCamera: Switched to camera at index " + std::to_string(index));
 }
 
 void CameraManager::PossessCamera(const CameraPtr& reference)
 {
-	bool found = false;
-	for (const auto& [id, cam] : m_cameraMap)
+	for (const auto& [id, ref] : this->m_cameraMap)
 	{
-		if (cam == reference)
+		if (ref == reference)
 		{
-			m_previousCamera = m_activeCamera;
-			m_activeCamera = reference;
-			found = true;
-			break;
+			Debug::Log("CameraManager::PossessCamera: Possessing camera with ID " + std::to_string(id));
+			PossessCamera(id);
+			return;
 		}
 	}
 
-	if (!found)
-	{
-		Debug::LogWarning("CameraManager::SetActiveCamera: Provided reference not found in camera map.");
-	}
+	Debug::Log("CameraManager::PossessCamera: " + m_activeCamera->GetName() + " is not registered! ");
 }
 
 void CameraManager::UnpossessCamera()
@@ -121,6 +157,8 @@ void CameraManager::UnpossessCamera()
 	{
 		m_previousCamera = m_activeCamera;
 		m_activeCamera = m_sceneCamera;
+		m_possessionState = UNPOSSESSED;
+		Debug::Log("CameraManager::UnpossessCamera: Unpossessed " + m_previousCamera->GetName());
 	}
 	else
 	{
@@ -138,4 +176,31 @@ const std::shared_ptr<Camera>& CameraManager::GetSceneCamera() const
 	return this->m_sceneCamera;
 }
 
+void CameraManager::OnKeyPressed(int key)
+{
+	switch (key)
+	{
+	case VK_TAB: CycleCameras(); break;
+	case VK_F1: PossessCamera(1); break;
+	case VK_F2: PossessCamera(2); break;
+	case VK_F3: PossessCamera(3); break;
+	case VK_F4: PossessCamera(4); break;
+	case VK_F5: PossessCamera(5); break;
+	case VK_ESCAPE:
+
+		if (m_possessionState == POSSESSED)
+		{
+			UnpossessCamera();
+		}
+		else
+		{
+			ResumePossess();
+		}
+		
+		break;
+
+	default:
+		break;
+	}
+}
 

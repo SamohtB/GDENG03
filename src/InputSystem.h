@@ -2,20 +2,26 @@
 #include "pch.h"
 #include "Math.h"
 
+enum class KeyState
+{
+	Idle,
+	Pressed,
+	Held,
+	Released
+};
+
 class InputListener;
 
 class InputSystem
 {
 public:
-	using InputListenerPtr = std::shared_ptr<InputListener>;
-
 	static InputSystem* GetInstance();
 	static void Initialize();
 	static void Destroy();
 
 	void ProcessInput();
-	void AddListener(InputListenerPtr listener);
-	void RemoveListener(InputListenerPtr listener);
+	void AddListener(InputListener* listener);
+	void RemoveListener(InputListener* listener);
 
 	bool IsKeyDown(int key);
 	bool IsKeyUp(int key);
@@ -33,12 +39,16 @@ private:
 
 	static InputSystem* sharedInstance;
 
-	std::unordered_set<InputListenerPtr> m_listenersMap;
+	std::unordered_set<InputListener*> m_listenersMap;
+	std::unordered_map<int, KeyState> m_keyStates;
+
 	unsigned char m_keysState[256] = {};
 	unsigned char m_oldKeysState[256] = {};
+
 	Vector2 m_oldMousePosition;
-	bool m_firstTime = true;
 	float m_mouseWheelDelta = 0.0f;
+
+	bool m_firstTime = true;
 
 	Vector2 GetMousePosition();
 };

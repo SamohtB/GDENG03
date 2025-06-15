@@ -37,6 +37,19 @@ void Camera::SetViewportSize(UINT width, UINT height)
     this->m_aspectRatio = static_cast<float>(width) / static_cast<float>(height);
 }
 
+void Camera::SetLookAt(Vector3 lookat)
+{
+    Vector3 forward = lookat - this->m_localPosition;
+    forward.Normalize();
+
+	Matrix::CreateLookAt(this->m_localPosition, lookat, Vector3::Up);
+
+    float yaw = atan2f(forward.x, forward.z);
+    float pitch = asinf(-forward.y);
+
+	this->SetRotation(pitch, yaw, 0.0f);
+}
+
 void Camera::Draw(DeviceContext* dvcContext)
 {
 }

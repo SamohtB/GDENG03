@@ -1,11 +1,11 @@
-#include "PlaneEntity.h"
+#include "Plane.h"
 #include "DeviceContext.h"
 #include "RenderSystem.h"
 #include "RenderDevice.h"
 #include "GraphicsEngine.h"
 #include "GameObjectManager.h"
 
-PlaneEntity::PlaneEntity(String name) : AGameObject(name)
+Plane::Plane(String name, Vector3 color) : AGameObject(name)
 {
     std::vector<unsigned int> indices =
     {
@@ -20,17 +20,17 @@ PlaneEntity::PlaneEntity(String name) : AGameObject(name)
     this->m_indicesSize = static_cast<UINT>(indices.size());
 
     std::vector<POS_COL> vertices = {
-        {{-5.0f,  0.0f, -5.0f} , {1.f, 1.f, 1.f}},
-        {{-5.0f,  0.0f,  5.0f},  {1.f, 1.f, 1.f}},
-        {{ 5.0f,  0.0f,  5.0f},  {1.f, 1.f, 1.f}},
-        {{ 5.0f,  0.0f, -5.0f},  {1.f, 1.f, 1.1f}}
+        {{-5.0f,  0.0f, -5.0f}, color},
+        {{-5.0f,  0.0f,  5.0f}, color},
+        {{ 5.0f,  0.0f,  5.0f}, color},
+        {{ 5.0f,  0.0f, -5.0f}, color}
     };
 
     this->m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);
     this->m_shader = ShaderType::DEFAULT_SHADER;
 }
 
-void PlaneEntity::Update(float deltaTime)
+void Plane::Update(float deltaTime)
 {
     /* Constant Buffer Stuff */
     ObjectConstantsData objData = {};
@@ -40,7 +40,7 @@ void PlaneEntity::Update(float deltaTime)
     GameObjectManager::GetInstance()->UpdateConstantBuffer(this->GetId(), objData);
 }
 
-void PlaneEntity::Draw(DeviceContext* context)
+void Plane::Draw(DeviceContext* context)
 {
     auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
     auto frameIndex = renderSystem->GetCurrentFrameIndex();

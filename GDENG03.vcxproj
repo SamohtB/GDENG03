@@ -162,7 +162,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\PlaneEntity.cpp" />
+    <ClCompile Include="src\Plane.cpp" />
     <ClCompile Include="src\Cube.cpp" />
     <ClCompile Include="src\AnimatedQuad.cpp" />
     <ClCompile Include="src\EngineTime.cpp" />
@@ -193,6 +193,7 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Colors.h" />
     <ClInclude Include="src\SceneCamera.h" />
     <ClInclude Include="src\CameraManager.h" />
     <ClInclude Include="src\Camera.h" />
@@ -202,7 +203,7 @@
     <ClInclude Include="src\InputListener.h" />
     <ClInclude Include="src\InputSystem.h" />
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\PlaneEntity.h" />
+    <ClInclude Include="src\Plane.h" />
     <ClInclude Include="src\Random.h" />
     <ClInclude Include="src\ConstantBuffer.h" />
     <ClInclude Include="src\Cube.h" />

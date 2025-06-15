@@ -10,6 +10,7 @@
 #include "AGameObject.h"
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
+#include "Colors.h"
 
 class DeviceContext;
 
@@ -18,7 +19,7 @@ class Cube : public AGameObject
 public:
 	using String = std::string;
 
-	Cube(String name);
+	Cube(String name, Vector3 color = colors::white);
 	~Cube() = default;
 
 	// Inherited via AGameObject

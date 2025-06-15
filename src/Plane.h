@@ -10,16 +10,17 @@
 #include "AGameObject.h"
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
+#include "Colors.h"
 
 class DeviceContext;
 
-class PlaneEntity : public AGameObject
+class Plane : public AGameObject
 {
 public:
 	using String = std::string;
 
-	PlaneEntity(String name);
-	~PlaneEntity() = default;
+	Plane(String name, Vector3 color = colors::white);
+	~Plane() = default;
 
 	// Inherited via AGameObject
 	void Update(float deltaTime) override;

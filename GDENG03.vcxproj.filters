@@ -192,7 +192,7 @@
     <ClCompile Include="src\Cube.cpp">
       <Filter>App\Entities\Primitives\3D</Filter>
     </ClCompile>
-    <ClCompile Include="src\PlaneEntity.cpp">
+    <ClCompile Include="src\Plane.cpp">
       <Filter>App\Entities\Primitives\3D</Filter>
     </ClCompile>
     <ClCompile Include="src\DepthBuffer.cpp">
@@ -323,7 +323,7 @@
     <ClInclude Include="src\Cube.h">
       <Filter>App\Entities\Primitives\3D</Filter>
     </ClInclude>
-    <ClInclude Include="src\PlaneEntity.h">
+    <ClInclude Include="src\Plane.h">
       <Filter>App\Entities\Primitives\3D</Filter>
     </ClInclude>
     <ClInclude Include="src\DepthBuffer.h">
@@ -352,6 +352,9 @@
     </ClInclude>
     <ClInclude Include="src\SceneCamera.h">
       <Filter>Engine\CameraSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Colors.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
