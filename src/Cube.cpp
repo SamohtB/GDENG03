@@ -6,8 +6,21 @@
 #include "GameObjectManager.h"
 #include "Random.h"
 
-Cube::Cube(String name, Vector3 color) : AGameObject(name)
+Cube::Cube(String name, Vector3 color) : AMeshObject(name, color)
 {
+    std::vector<POS_COL> vertices = {
+
+        {{-1.0f, -1.0f,  1.0f}, color}, // 0
+        {{ 1.0f, -1.0f,  1.0f}, color}, // 1
+        {{-1.0f,  1.0f,  1.0f}, color}, // 2
+        {{ 1.0f,  1.0f,  1.0f}, color}, // 3
+
+        {{-1.0f, -1.0f, -1.0f}, color}, // 4
+        {{ 1.0f, -1.0f, -1.0f}, color}, // 5
+        {{-1.0f,  1.0f, -1.0f}, color}, // 6
+        {{ 1.0f,  1.0f, -1.0f}, color}, // 7
+    };
+
     std::vector<unsigned int> indices =
     {
         2, 6, 7,
@@ -29,56 +42,14 @@ Cube::Cube(String name, Vector3 color) : AGameObject(name)
         4, 5, 7
     };
 
-    this->m_indexBuffer = std::make_unique<IndexBuffer>(indices);
-    this->m_indicesSize = static_cast<UINT>(indices.size());
-
-    std::vector<POS_COL> vertices = {
-
-        {{-1.0f, -1.0f,  1.0f}, color}, // 0
-        {{ 1.0f, -1.0f,  1.0f}, color}, // 1
-        {{-1.0f,  1.0f,  1.0f}, color}, // 2
-        {{ 1.0f,  1.0f,  1.0f}, color}, // 3
-
-        {{-1.0f, -1.0f, -1.0f}, color}, // 4
-        {{ 1.0f, -1.0f, -1.0f}, color}, // 5
-        {{-1.0f,  1.0f, -1.0f}, color}, // 6
-        {{ 1.0f,  1.0f, -1.0f}, color}, // 7
-    };
-
-    this->m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);
-    this->m_shader = ShaderType::DEFAULT_SHADER;
+	this->SetGeometry(vertices, indices);
 }
 
-void Cube::Update(float deltaTime)
+void Cube::OnUpdate(float deltaTime)
 {
     m_ticks += deltaTime;
 
     float t = 1.5f * sin(1.5f * m_ticks);
-
-    ObjectConstantsData objData = {};
-    objData.modelMatrix = this->GetLocalMatrix();
-    objData.objectId = this->GetId();
-
-    GameObjectManager::GetInstance()->UpdateConstantBuffer(this->GetId(), objData);
-}
-
-void Cube::Draw(DeviceContext* context)
-{
-    auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
-    auto frameIndex = renderSystem->GetCurrentFrameIndex();
-
-    /* Root Parameters must be set after setting PSO */
-    {
-        context->SetPSO(renderSystem->GetPipelineState(this->m_shader));
-        context->SetObjectConstants(GameObjectManager::GetInstance()->GetObjectConstantsAddress(this->GetId(), frameIndex));
-        context->SetFrameConstants(renderSystem->GetFrameConstantsAddress());
-        /* Set Textures And Mats here */
-    }
-
-    context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());
-    context->SetIndexBuffer(this->m_indexBuffer->GetIndexBufferViewPointer());
-
-    context->DrawIndexedTriangleList(m_indicesSize, 0, 0);
 }
 
 void Cube::SetRandomRotation()

@@ -213,6 +213,9 @@
     <ClCompile Include="src\SceneCamera.cpp">
       <Filter>Engine\CameraSystem</Filter>
     </ClCompile>
+    <ClCompile Include="src\AMeshObject.cpp">
+      <Filter>App\Entities\Primitives\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DescriptorHeapManager.h">
@@ -355,6 +358,9 @@
     </ClInclude>
     <ClInclude Include="src\Colors.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AMeshObject.h">
+      <Filter>App\Entities\Primitives\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
