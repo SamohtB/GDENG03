@@ -77,6 +77,12 @@ void CameraManager::ResumePossess()
 	}
 }
 
+void CameraManager::CopyPositionToSceneCamera(const CameraPtr& reference)
+{
+	this->m_sceneCamera->SetPosition(reference->GetLocalPosition());
+	this->m_sceneCamera->SetRotation(reference->GetLocalRotation());
+}
+
 int CameraManager::AddCamera(const CameraPtr& reference, bool setMain)
 {
 	this->m_cameraList.push_back(reference);
@@ -155,6 +161,7 @@ void CameraManager::UnpossessCamera()
 {
 	if (m_sceneCamera)
 	{
+		CopyPositionToSceneCamera(m_activeCamera);
 		m_previousCamera = m_activeCamera;
 		m_activeCamera = m_sceneCamera;
 		m_possessionState = UNPOSSESSED;
