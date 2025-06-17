@@ -15,6 +15,7 @@
 
 #include "Cube.h"
 #include "Plane.h"
+#include "Sphere.h"
 #include "Camera.h"
 
 #include "Debug.h"
@@ -35,22 +36,19 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 
+	ColorPalette palette;
+
+	auto sphere = std::make_shared<Sphere>("Sphere", palette.Orange);
+	sphere->SetPosition(0.0f, 5.0f, 0.0f);
+	sphere->SetScale(5.0f, 5.0f, 5.0f);
+	GameObjectManager::GetInstance()->AddGameObject(sphere);
+
 	auto plane = std::make_shared<Plane>("Plane");
 	plane->SetRotation(0.0f, 0.0f, 0.0f);
 	plane->SetScale(3.0f, 3.0f, 3.0f);
 	GameObjectManager::GetInstance()->AddGameObject(plane);
 
-	std::vector<Vector3> colorPalette = {
-	colors::red,
-	colors::orange,
-	colors::yellow,
-	colors::green,
-	colors::blue,
-	colors::violet,
-	colors::magenta,
-	colors::teal
-	};
-
+	auto colors = palette.GetPalette();
 	const float radius = 10.0f;
 	const float angleStep = 45.0f;
 
@@ -62,7 +60,7 @@ void GameWindow::OnCreate(HWND hwnd)
 		float x = radius * cos(angleRad);
 		float z = radius * sin(angleRad);
 
-		auto cube = std::make_shared<Cube>("Cube_" + std::to_string(i), colorPalette[i]);
+		auto cube = std::make_shared<Cube>("Cube_" + std::to_string(i), colors[i]);
 		cube->SetPosition(x, 0.5f, z);
 
 		GameObjectManager::GetInstance()->AddGameObject(cube);

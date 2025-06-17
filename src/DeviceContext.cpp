@@ -201,15 +201,18 @@ void DeviceContext::SetIndexBuffer(D3D12_INDEX_BUFFER_VIEW* indexBufferView)
     this->m_commandList->IASetIndexBuffer(indexBufferView);
 }
 
-void DeviceContext::DrawTriangleList(UINT vertexCount, UINT startVertexIndex)
+void DeviceContext::SetTopology(D3D12_PRIMITIVE_TOPOLOGY topology)
 {
-    this->m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    this->m_commandList->IASetPrimitiveTopology(topology);
+}
+
+void DeviceContext::DrawTriangleList(UINT vertexCount, UINT startVertexIndex)
+{    
     this->m_commandList->DrawInstanced(vertexCount, 1, startVertexIndex, 0);
 }
 
-void DeviceContext::DrawIndexedTriangleList(UINT indexCount, UINT startVertexIndex, UINT startIndexLocation)
+void DeviceContext::DrawIndexedTriangleStrip(UINT indexCount, UINT startVertexIndex, UINT startIndexLocation)
 {
-    this->m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     this->m_commandList->DrawIndexedInstanced(indexCount, 1, startIndexLocation, startVertexIndex, 0);
 }
 

@@ -151,6 +151,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Colors.cpp" />
+    <ClCompile Include="src\Sphere.cpp" />
     <ClCompile Include="src\AMeshObject.cpp" />
     <ClCompile Include="src\SceneCamera.cpp" />
     <ClCompile Include="src\CameraManager.cpp" />
@@ -194,6 +196,7 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\AMeshObject.h" />
     <ClInclude Include="src\Colors.h" />
     <ClInclude Include="src\SceneCamera.h" />

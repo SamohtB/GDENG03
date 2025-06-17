@@ -7,6 +7,8 @@ using Vector3 = DirectX::SimpleMath::Vector3;
 using Vector4 = DirectX::SimpleMath::Vector4;
 using Matrix = DirectX::SimpleMath::Matrix;
 
+#define M_PI 3.14159265358979323846f
+
 template<typename T>
 inline T Clamp(const T& value, const T& min, const T& max)
 {

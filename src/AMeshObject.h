@@ -19,7 +19,7 @@ class AMeshObject : public AGameObject
 {
 public:
 	using String = std::string;
-	AMeshObject(String name, Vector3 color = colors::white, ShaderType shader = ShaderType::DEFAULT_SHADER);
+	AMeshObject(String name, Vector3 color = ColorPalette::White, ShaderType shader = ShaderType::DEFAULT_SHADER);
 	virtual ~AMeshObject() = default;
 
 	virtual void Update(float deltaTime) override final;
@@ -28,15 +28,17 @@ public:
 protected:
 	template<typename T>
 	void SetGeometry(std::vector<T> vertices, std::vector<unsigned int> indices);
+	void SetTopology(D3D12_PRIMITIVE_TOPOLOGY topology);
 	virtual void OnUpdate(float deltaTime) = 0;
 
 private:
-	Vector3 m_color = colors::white; // Default color for the primitive
+	Vector3 m_color = ColorPalette::White; // Default color for the primitive
 
 	/* To DO: Move Buffers to a Mesh Manager and Create a primitve factory */
 	std::unique_ptr<VertexBuffer> m_vertexBuffer;
 	std::unique_ptr<IndexBuffer> m_indexBuffer;
 	UINT m_indicesSize = 0;
 	ShaderType m_shader = ShaderType::DEFAULT_SHADER;
+	D3D12_PRIMITIVE_TOPOLOGY m_topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 };
 

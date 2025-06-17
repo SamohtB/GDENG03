@@ -31,7 +31,13 @@ void AMeshObject::Draw(DeviceContext* context)
     context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());
     context->SetIndexBuffer(this->m_indexBuffer->GetIndexBufferViewPointer());
 
-    context->DrawIndexedTriangleList(m_indicesSize, 0, 0);
+	context->SetTopology(this->m_topology);
+    context->DrawIndexedTriangleStrip(m_indicesSize, 0, 0);
+}
+
+void AMeshObject::SetTopology(D3D12_PRIMITIVE_TOPOLOGY topology)
+{
+	this->m_topology = topology;
 }
 
 template<typename T>

@@ -1,15 +1,31 @@
 #pragma once
 #include "Math.h"
 
-namespace colors
-{
-	static const Vector3 white = { 1.0f, 1.0f, 1.0f };
-	static const Vector3 red = { 1.0f, 0.0f, 0.0f };
-	static const Vector3 orange = { 1.0f, 0.5f, 0.0f };
-	static const Vector3 yellow = { 1.0f, 1.0f, 0.0f };
-	static const Vector3 green = { 0.0f, 1.0f, 0.0f };
-	static const Vector3 violet = { 1.0f, 0.0f, 1.0f };
-	static const Vector3 magenta = { 0.8f, 0.2f, 0.54f };
-	static const Vector3 blue = { 0.0f, 0.0f, 1.0f };
-	static const Vector3 teal = { 0.0f, 0.5f, 0.5f };
+class ColorPalette {
+public:
+	static const Vector3 White; // Default color, not included in palette
+    static const Vector3 Red;
+    static const Vector3 Orange;
+    static const Vector3 Yellow;
+    static const Vector3 Green;
+    static const Vector3 Violet;
+    static const Vector3 Magenta;
+    static const Vector3 Blue;
+    static const Vector3 Teal;
+
+    // Get color palette vector (excluding white)
+    static const std::vector<Vector3>& GetPalette() {
+        static const std::vector<Vector3> palette = {
+            Red,
+            Orange,
+            Yellow,
+            Green,
+            Violet,
+            Magenta,
+            Blue,
+            Teal
+        };
+        return palette;
+    }
 };
+

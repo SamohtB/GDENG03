@@ -4,7 +4,7 @@
 class Cube : public AMeshObject
 {
 public:
-	Cube(String name, Vector3 color = colors::white);
+	Cube(String name, Vector3 color = ColorPalette::White);
 	~Cube() = default;
 
 	// Inherited via AMeshObject

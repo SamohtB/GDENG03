@@ -90,5 +90,5 @@ void PBSQuads::Draw(DeviceContext* context)
     context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());
     context->SetIndexBuffer(this->m_indexBuffer->GetIndexBufferViewPointer());
 
-    context->DrawIndexedTriangleList(m_indicesSize, 0, 0);
+    context->DrawIndexedTriangleStrip(m_indicesSize, 0, 0);
 }

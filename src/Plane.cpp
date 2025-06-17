@@ -19,6 +19,7 @@ Plane::Plane(String name, Vector3 color) : AMeshObject(name, color)
     };
 
 	this->SetGeometry(vertices, indices);
+	this->SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
 void Plane::OnUpdate(float deltaTime)

@@ -36,9 +36,10 @@ public:
 	void SetTexture(D3D12_GPU_DESCRIPTOR_HANDLE handle);
 	void SetVertexBuffer(D3D12_VERTEX_BUFFER_VIEW* vertexBufferView);
 	void SetIndexBuffer(D3D12_INDEX_BUFFER_VIEW* indexBufferView);
+	void SetTopology(D3D12_PRIMITIVE_TOPOLOGY topology);
 
 	void DrawTriangleList(UINT vertexCount, UINT startVertexIndex);
-	void DrawIndexedTriangleList(UINT indexCount, UINT startVertexIndex, UINT startIndexLocation);
+	void DrawIndexedTriangleStrip(UINT indexCount, UINT startVertexIndex, UINT startIndexLocation);
 
 	ID3D12CommandQueue* GetCommandQueue() const;
 

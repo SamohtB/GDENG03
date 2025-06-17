@@ -4,7 +4,7 @@
 class Plane : public AMeshObject
 {
 public:
-	Plane(String name, Vector3 color = colors::white);
+	Plane(String name, Vector3 color = ColorPalette::White);
 	~Plane() = default;
 
 	// Inherited via AMeshObject

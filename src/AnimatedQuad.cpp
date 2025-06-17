@@ -55,5 +55,5 @@ void AnimatedQuad::Draw(DeviceContext* context)
     context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());
     context->SetIndexBuffer(this->m_indexBuffer->GetIndexBufferViewPointer());
 
-    context->DrawIndexedTriangleList(static_cast<UINT>(m_indicesSize), 0, 0);
+    context->DrawIndexedTriangleStrip(static_cast<UINT>(m_indicesSize), 0, 0);
 }
