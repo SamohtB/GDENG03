@@ -106,6 +106,12 @@
     <Filter Include="Engine\InputSystem">
       <UniqueIdentifier>{4d6f795e-1643-4654-870d-3e0d0a1e2d13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\IMGUI">
+      <UniqueIdentifier>{3d4cba9c-e1e4-4250-ae85-7048000b0486}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\UI">
+      <UniqueIdentifier>{6daae538-ec63-4a2a-874f-a069104be511}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -221,6 +227,30 @@
     </ClCompile>
     <ClCompile Include="src\Colors.cpp">
       <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui.cpp">
+      <Filter>Engine\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_demo.cpp">
+      <Filter>Engine\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_draw.cpp">
+      <Filter>Engine\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_impl_dx12.cpp">
+      <Filter>Engine\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_impl_win32.cpp">
+      <Filter>Engine\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_tables.cpp">
+      <Filter>Engine\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_widgets.cpp">
+      <Filter>Engine\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CircleManager.cpp">
+      <Filter>App\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -370,6 +400,33 @@
     </ClInclude>
     <ClInclude Include="src\Sphere.h">
       <Filter>App\Entities\Primitives\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imconfig.h">
+      <Filter>Engine\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui.h">
+      <Filter>Engine\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui_impl_dx12.h">
+      <Filter>Engine\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui_impl_win32.h">
+      <Filter>Engine\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui_internal.h">
+      <Filter>Engine\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imstb_rectpack.h">
+      <Filter>Engine\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imstb_textedit.h">
+      <Filter>Engine\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imstb_truetype.h">
+      <Filter>Engine\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CircleManager.h">
+      <Filter>App\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

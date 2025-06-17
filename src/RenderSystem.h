@@ -28,6 +28,7 @@ public:
 	UINT GetCurrentFrameIndex();
 
 	ComPtr<ID3D12Device> GetD3DDevicePtr();
+	
 	RenderDevice* GetRenderDevice();
 	DeviceContext* GetDeviceContext();
 

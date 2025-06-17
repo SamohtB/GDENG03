@@ -51,6 +51,7 @@ private:
 	void CameraSwitcher();
 	void CycleCameras();
 	void ResumePossess();
+	void CopyPositionToSceneCamera(const CameraPtr& reference);
 	
 	static std::unique_ptr<CameraManager> sharedInstance;
 

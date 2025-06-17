@@ -77,6 +77,12 @@ void CameraManager::ResumePossess()
 	}
 }
 
+void CameraManager::CopyPositionToSceneCamera(const CameraPtr& reference)
+{
+	this->m_sceneCamera->SetPosition(reference->GetLocalPosition());
+	this->m_sceneCamera->SetRotation(reference->GetLocalRotation());
+}
+
 int CameraManager::AddCamera(const CameraPtr& reference, bool setMain)
 {
 	this->m_cameraList.push_back(reference);
@@ -155,6 +161,7 @@ void CameraManager::UnpossessCamera()
 {
 	if (m_sceneCamera)
 	{
+		this->CopyPositionToSceneCamera(m_activeCamera);
 		m_previousCamera = m_activeCamera;
 		m_activeCamera = m_sceneCamera;
 		m_possessionState = UNPOSSESSED;
@@ -186,7 +193,7 @@ void CameraManager::OnKeyPressed(int key)
 	case VK_F3: PossessCamera(3); break;
 	case VK_F4: PossessCamera(4); break;
 	case VK_F5: PossessCamera(5); break;
-	case VK_ESCAPE:
+	case VK_SPACE:
 
 		if (m_possessionState == POSSESSED)
 		{
