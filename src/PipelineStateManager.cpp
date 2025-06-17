@@ -17,8 +17,8 @@ PipelineStateManager::PipelineStateManager(ID3D12Device* device)
     RegisterPipeline(device, InputLayoutType::Pos_Tex_Col, vertexShaderDesc_Textured, pixelShaderDesc_Textured, L"Textured");
 
     // === PBS pipeline (Shader Model 6.6) ===
-    ShaderDesc vertexShaderDesc_PBS(L"Assets/Shaders/PBSVertexShader.hlsl", L"VSMain", L"vs_6_6");
-    ShaderDesc pixelShaderDesc_PBS(L"Assets/Shaders/PBSPixelShader.hlsl", L"PSMain", L"ps_6_6");
+    ShaderDesc vertexShaderDesc_PBS(L"Assets/Shaders/PBSVertexShader.hlsl", L"VSMain", L"vs_6_5");
+    ShaderDesc pixelShaderDesc_PBS(L"Assets/Shaders/PBSPixelShader.hlsl", L"PSMain", L"ps_6_5");
     RegisterPipeline(device, InputLayoutType::Pos_Tex_Nor_Tan_Bit, vertexShaderDesc_PBS, pixelShaderDesc_PBS, L"PBS");
 
     // === Animated ===
