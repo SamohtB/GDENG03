@@ -49,7 +49,7 @@ void GameWindow::OnCreate(HWND hwnd)
 	auto circleMan = std::make_shared<CircleManager>();
 	GameObjectManager::GetInstance()->AddGameObject(circleMan, false);
 
-	auto cam = std::make_shared<Camera>("Camera_1", 1024, 768);
+	auto cam = std::make_shared<Camera>("Camera_1", this->m_width, this->m_height);
 	cam->SetPosition(Vector3(0.0f, 0.0f, -10.0f));
 	cam->SetLookAt(Vector3(0.0f, 0.0f, 0.0f));
 	CameraManager::GetInstance()->AddCamera(cam, true);
