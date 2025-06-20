@@ -1,5 +1,5 @@
 #pragma once
-#include <stack>
+#include <deque>
 #include "AGameObject.h"
 #include "InputListener.h"
 
@@ -18,6 +18,7 @@ public:
 
 private:
 	void SpawnCircle();
+	void ActivateCircle(const std::shared_ptr<Circle>& circle);
 	void DeleteLastestCircle();
 	void DeleteAllCircles();
 	void CloseApplication();
@@ -25,7 +26,7 @@ private:
 	void Draw(DeviceContext* dvcContext) override;
 
 	std::vector<std::shared_ptr<Circle>> m_circlePool;
-	std::stack<std::shared_ptr<Circle>> m_activeCircles;
+	std::deque<std::shared_ptr<Circle>> m_activeCircles;
 
 	static const int MAX_CIRCLES = 100;
 };

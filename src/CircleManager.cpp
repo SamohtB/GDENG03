@@ -41,23 +41,41 @@ void CircleManager::OnKeyPressed(int key)
 
 void CircleManager::SpawnCircle()
 {
+	/* Try to find an inactive circle */
 	for (const auto& circle : m_circlePool)
 	{
 		if (!circle->IsActive())
 		{
-			Vector3 direction(Random::Range(-1.0f, 1.0f), Random::Range(-1.0f, 1.0f), 0.0f);
-			direction.Normalize();
-
-			circle->SetPosition(0.0f, 0.0f, 0.0f);
-			circle->SetDirection(direction);
-			circle->SetActive(true);
-
-			m_activeCircles.push(circle);
+			ActivateCircle(circle);
 			return;
 		}
 	}
 
-	Debug::LogWarning("No more circles! ObjectPool is empty");
+	/* If no inactive circle, reuse the most recent active one */
+	if (!m_activeCircles.empty())
+	{
+		auto oldest = m_activeCircles.front();
+		m_activeCircles.pop_front();
+
+		ActivateCircle(oldest);
+		Debug::LogWarning("Reusing latest active circle. Pool is full.");
+	}
+	else
+	{
+		Debug::LogWarning("No circles available to spawn.");
+	}
+}
+
+void CircleManager::ActivateCircle(const std::shared_ptr<Circle>& circle)
+{
+	Vector3 direction(Random::Range(-1.0f, 1.0f), Random::Range(-1.0f, 1.0f), 0.0f);
+	direction.Normalize();
+
+	circle->SetPosition(0.0f, 0.0f, 0.0f);
+	circle->SetDirection(direction);
+	circle->SetActive(true);
+
+	m_activeCircles.push_back(circle);
 }
 
 void CircleManager::DeleteLastestCircle()
@@ -68,9 +86,9 @@ void CircleManager::DeleteLastestCircle()
 		return;
 	}
 
-	auto last = m_activeCircles.top();
-	m_activeCircles.pop();
-	last->SetActive(false);
+	auto lastest = m_activeCircles.back();
+	m_activeCircles.pop_back();
+	lastest->SetActive(false);
 }
 
 void CircleManager::DeleteAllCircles()
@@ -81,7 +99,7 @@ void CircleManager::DeleteAllCircles()
 	}
 
 	while (!m_activeCircles.empty())
-		m_activeCircles.pop();
+		m_activeCircles.pop_front();
 }
 
 void CircleManager::CloseApplication()
