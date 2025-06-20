@@ -12,6 +12,8 @@
 #include "Quad.h"
 #include "PBSQuads.h"
 #include "AnimatedQuad.h"
+#include "Circle.h"
+#include "CircleManager.h"
 
 #include "Cube.h"
 #include "Plane.h"
@@ -39,15 +41,20 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
 
+	std::vector<float> clearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+	renderSystem->SetClearColor(clearColor);
+
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 
-	ColorPalette palette;
+	auto circleMan = std::make_shared<CircleManager>();
+	GameObjectManager::GetInstance()->AddGameObject(circleMan, false);
 
-	auto man = std::make_shared<CircleManager>();
-	GameObjectManager::GetInstance()->AddGameObject(man, false);
+	auto cam = std::make_shared<Camera>("Camera_1", 1024, 768);
+	cam->SetPosition(Vector3(0.0f, 0.0f, -10.0f));
+	cam->SetLookAt(Vector3(0.0f, 0.0f, 0.0f));
+	CameraManager::GetInstance()->AddCamera(cam, true);
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
-
 } 
 
 void GameWindow::OnUpdate()

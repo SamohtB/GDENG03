@@ -53,7 +53,7 @@ void RenderSystem::BeginFrame()
 
 	auto rtvHandle = this->m_renderDevice->GetDescriptorHeapManager()->GetRTVCPUHandleAt(currentFrameIndex);
 	auto dsvHandle = this->m_renderDevice->GetDescriptorHeapManager()->GetDSVCPUHandle();
-	this->m_deviceContext->ClearRenderTargetColor(rtvHandle, dsvHandle, 0.0f, 0.2f, 0.4f, 1.0f);
+	this->m_deviceContext->ClearRenderTargetColor(rtvHandle, dsvHandle, m_clearColor);
 }
 
 void RenderSystem::EndFrame()
@@ -113,4 +113,9 @@ RenderDevice* RenderSystem::GetRenderDevice()
 DeviceContext* RenderSystem::GetDeviceContext()
 {
 	return this->m_deviceContext.get();
+}
+
+void RenderSystem::SetClearColor(const std::vector<float>& color)
+{
+	this->m_clearColor = color;
 }

@@ -31,7 +31,7 @@ public:
 	void TransitionToDepthWrite(ID3D12Resource* resource);
 	void TransitionToDepthRead(ID3D12Resource* resource);
 
-	void ClearRenderTargetColor(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle, float red, float green, float blue, float alpha);
+	void ClearRenderTargetColor(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle, const std::vector<float>& color);
 
 	void SetTexture(D3D12_GPU_DESCRIPTOR_HANDLE handle);
 	void SetVertexBuffer(D3D12_VERTEX_BUFFER_VIEW* vertexBufferView);

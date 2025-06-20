@@ -228,29 +228,11 @@
     <ClCompile Include="src\Colors.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui.cpp">
-      <Filter>Engine\IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\imgui_demo.cpp">
-      <Filter>Engine\IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\imgui_draw.cpp">
-      <Filter>Engine\IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\imgui_impl_dx12.cpp">
-      <Filter>Engine\IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\imgui_impl_win32.cpp">
-      <Filter>Engine\IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\imgui_tables.cpp">
-      <Filter>Engine\IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\imgui_widgets.cpp">
-      <Filter>Engine\IMGUI</Filter>
-    </ClCompile>
     <ClCompile Include="src\CircleManager.cpp">
       <Filter>App\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Circle.cpp">
+      <Filter>App\Entities\Primitives\2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -401,32 +383,11 @@
     <ClInclude Include="src\Sphere.h">
       <Filter>App\Entities\Primitives\3D</Filter>
     </ClInclude>
-    <ClInclude Include="src\imconfig.h">
-      <Filter>Engine\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imgui.h">
-      <Filter>Engine\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imgui_impl_dx12.h">
-      <Filter>Engine\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imgui_impl_win32.h">
-      <Filter>Engine\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imgui_internal.h">
-      <Filter>Engine\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imstb_rectpack.h">
-      <Filter>Engine\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imstb_textedit.h">
-      <Filter>Engine\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imstb_truetype.h">
-      <Filter>Engine\IMGUI</Filter>
-    </ClInclude>
     <ClInclude Include="src\CircleManager.h">
       <Filter>App\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Circle.h">
+      <Filter>App\Entities\Primitives\2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

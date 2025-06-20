@@ -1,27 +1,32 @@
 #pragma once
+#include <stack>
 #include "AGameObject.h"
 #include "InputListener.h"
 
-class CircleManager :  public AGameObject, public InputListener
+class Circle;
+
+class CircleManager : public AGameObject, public InputListener
 {
 public:
 	using String = std::string;
 	CircleManager();
+	~CircleManager() = default;
 
 	void Update(float deltaTime) override;
 
-	virtual void OnKeyPressed(int key) override;
-	virtual void OnKeyReleased(int key) override;
+	void OnKeyPressed(int key) override;
 
 private:
 	void SpawnCircle();
-	void CloseApp();
-	void DeleteCircles();
-
-	std::unordered_set<int> m_heldKeys;
-
-	// Inherited via AGameObject
+	void DeleteLastestCircle();
+	void DeleteAllCircles();
+	void CloseApplication();
 
 	void Draw(DeviceContext* dvcContext) override;
+
+	std::vector<std::shared_ptr<Circle>> m_circlePool;
+	std::stack<std::shared_ptr<Circle>> m_activeCircles;
+
+	static const int MAX_CIRCLES = 100;
 };
 

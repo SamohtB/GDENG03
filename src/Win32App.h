@@ -13,6 +13,7 @@ public:
 
     bool IsRun();
     void Broadcast();
+    static void Quit();
 
 protected:
     static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -20,6 +21,6 @@ protected:
 private:
     ABaseWindow* m_window = nullptr;
 
-    HWND m_hwnd;
+    static HWND m_hwnd;
     bool m_isRun = true;
 };

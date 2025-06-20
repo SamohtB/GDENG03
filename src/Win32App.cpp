@@ -4,6 +4,8 @@
 #include "ABaseWindow.h"
 #include "Debug.h"
 
+HWND Win32App::m_hwnd = nullptr;
+
 Win32App::Win32App(ABaseWindow* window, std::wstring windowName) : m_window(window), m_isRun(true)
 {
 	WNDCLASSEX wc{};
@@ -111,6 +113,16 @@ void Win32App::Broadcast()
 
 	EngineTime::LogFrameEnd();
 	EngineTime::UpdateFPSCounter();
+}
+
+void Win32App::Quit()
+{
+	if (m_hwnd)
+	{
+		::PostMessage(m_hwnd, WM_CLOSE, 0, 0);
+		Debug::Log("Closing application...");
+	}
+		
 }
 
 
