@@ -9,6 +9,8 @@ public:
 
 	// Inherited via ABaseWindow
 	void OnCreate(HWND hwnd) override;
+	void Load_4();
+	void Load_7();
 	void OnUpdate() override;
 	void OnRender() override;
 	void OnDestroy() override;

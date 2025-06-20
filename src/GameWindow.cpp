@@ -41,21 +41,146 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
 
-	std::vector<float> clearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-	renderSystem->SetClearColor(clearColor);
-
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 
-	auto circleMan = std::make_shared<CircleManager>();
-	GameObjectManager::GetInstance()->AddGameObject(circleMan, false);
+	/* Load Single Cube */
+	//auto cube = std::make_shared<Cube>("Cube_1");
+	//GameObjectManager::GetInstance()->AddGameObject(cube);
 
-	auto cam = std::make_shared<Camera>("Camera_1", this->m_width, this->m_height);
-	cam->SetPosition(Vector3(0.0f, 0.0f, -10.0f));
-	cam->SetLookAt(Vector3(0.0f, 0.0f, 0.0f));
-	CameraManager::GetInstance()->AddCamera(cam, true);
+	//Load_4();
+	//Load_6();
+	Load_7();
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
-} 
+}
+
+void GameWindow::Load_6()
+{
+	auto cube = std::make_shared<Cube>("Cube_1");
+	cube->SetPosition(0.0f, 0.9f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	cube = std::make_shared<Cube>("Cube_2");
+	cube->SetPosition(-1.5f, 2.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	cube = std::make_shared<Cube>("Cube_3");
+	cube->SetPosition(-1.5f, 3.0f, -2.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	auto plane = std::make_shared<Plane>("Plane_1");
+	GameObjectManager::GetInstance()->AddGameObject(plane);
+}
+
+void GameWindow::Load_4()
+{
+	for (int i = 0; i < 50; i++)
+	{
+		auto cube = std::make_shared<Cube>("Cube_" + std::to_string(i));
+		cube->SetPosition(Random::Range(-4.5f, 4.5f), Random::Range(-3.75f, 3.75f), Random::Range(0.0f, 3.0f));
+		GameObjectManager::GetInstance()->AddGameObject(cube);
+	}
+}
+
+void GameWindow::Load_7()
+{
+	/* Bottom Stacks */
+	auto cube = std::make_shared<Cube>("Cube_White_Left_1");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-14.0f, -90.0f, 0.0f);
+	cube->SetPosition(-3.0f, 0.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	cube = std::make_shared<Cube>("Cube_White_Right_1");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-14.0f, 90.0f, 0.0f);
+	cube->SetPosition(-2.5f, 0.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	cube = std::make_shared<Cube>("Cube_White_Left_2");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-14.0f, -90.0f, 0.0f);
+	cube->SetPosition(-2.0f, 0.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	cube = std::make_shared<Cube>("Cube_White_Right_2");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-14.0f, 90.0f, 0.0f);
+	cube->SetPosition(-1.5f, 0.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	cube = std::make_shared<Cube>("Cube_White_Left_3");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-14.0f, -90.0f, 0.0f);
+	cube->SetPosition(-1.0f, 0.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	cube = std::make_shared<Cube>("Cube_White_Right_3");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-14.0f, 90.0f, 0.0f);
+	cube->SetPosition(-0.5f, 0.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	/* Flat 1 */
+	cube = std::make_shared<Cube>("Flat_1");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-90.0f, 90.0f, 0.0f);
+	cube->SetPosition(-2.5f, 1.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	/* Flat 2 */
+	cube = std::make_shared<Cube>("Flat_2");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-90.0f, 90.0f, 0.0f);
+	cube->SetPosition(-1.0f, 1.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	/* Second Layer */
+	cube = std::make_shared<Cube>("Cube_White_Left_4");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-14.0f, -90.0f, 0.0f);
+	cube->SetPosition(-2.5f, 2.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	cube = std::make_shared<Cube>("Cube_White_Right_4");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-14.0f, 90.0f, 0.0f);
+	cube->SetPosition(-2.0f, 2.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	cube = std::make_shared<Cube>("Cube_White_Left_5");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-14.0f, -90.0f, 0.0f);
+	cube->SetPosition(-1.5f, 2.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	cube = std::make_shared<Cube>("Cube_White_Right_5");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-14.0f, 90.0f, 0.0f);
+	cube->SetPosition(-1.0f, 2.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	/* Flat 3 */
+	cube = std::make_shared<Cube>("Flat_3");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-90.0f, 90.0f, 0.0f);
+	cube->SetPosition(-1.75f, 3.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	/* Third Layer */
+	cube = std::make_shared<Cube>("Cube_White_Left_6");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-14.0f, -90.0f, 0.0f);
+	cube->SetPosition(-2.0f, 4.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+
+	cube = std::make_shared<Cube>("Cube_White_Right_6");
+	cube->SetScale(1.0f, 2.0f, 0.01f);
+	cube->SetRotation(-14.0f, 90.0f, 0.0f);
+	cube->SetPosition(-1.5f, 4.0f, 0.0f);
+	GameObjectManager::GetInstance()->AddGameObject(cube);
+}
+
 
 void GameWindow::OnUpdate()
 {
