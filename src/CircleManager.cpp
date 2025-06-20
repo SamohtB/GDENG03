@@ -31,7 +31,6 @@ void CircleManager::Update(float deltaTime)
 	
 }
 
-void CircleManager::OnKeyReleased(int key)
 void CircleManager::OnKeyPressed(int key)
 {
 	if (key == VK_SPACE) SpawnCircle();
