@@ -28,8 +28,11 @@ public:
 	UINT GetCurrentFrameIndex();
 
 	ComPtr<ID3D12Device> GetD3DDevicePtr();
+	
 	RenderDevice* GetRenderDevice();
 	DeviceContext* GetDeviceContext();
+
+	void SetClearColor(const std::vector<float>& color);
 
 private:
 	std::unique_ptr<DepthBuffer> m_depthBuffer;
@@ -42,4 +45,6 @@ private:
 
 	CD3DX12_VIEWPORT m_viewport;
 	CD3DX12_RECT m_scissorRect;
+
+	std::vector<float> m_clearColor = { 0.0f, 0.2f, 0.4f, 1.0f };
 };

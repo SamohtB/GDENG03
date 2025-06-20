@@ -151,7 +151,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Circle.cpp" />
+    <ClCompile Include="src\CircleManager.cpp" />
     <ClCompile Include="src\Colors.cpp" />
+    <ClCompile Include="src\imgui.cpp" />
+    <ClCompile Include="src\imgui_demo.cpp" />
+    <ClCompile Include="src\imgui_draw.cpp" />
+    <ClCompile Include="src\imgui_impl_dx12.cpp" />
+    <ClCompile Include="src\imgui_impl_win32.cpp" />
+    <ClCompile Include="src\imgui_tables.cpp" />
+    <ClCompile Include="src\imgui_widgets.cpp" />
     <ClCompile Include="src\Sphere.cpp" />
     <ClCompile Include="src\AMeshObject.cpp" />
     <ClCompile Include="src\SceneCamera.cpp" />
@@ -196,6 +205,8 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Circle.h" />
+    <ClInclude Include="src\CircleManager.h" />
     <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\AMeshObject.h" />
     <ClInclude Include="src\Colors.h" />

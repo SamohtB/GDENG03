@@ -23,7 +23,7 @@ private:
 	void ZoomMode(float deltaTime);
 	void MouseMovement(float deltaTime);
 
-	float m_mouseSensitivity = 0.3f;
+	float m_mouseSensitivity = 25.0f;
 	float m_cameraMoveSpeed = 50.0f;
 	float m_scrollDelta = 0.0f;
 

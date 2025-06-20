@@ -177,12 +177,11 @@ void DeviceContext::TransitionToDepthRead(ID3D12Resource* resource)
     m_commandList->ResourceBarrier(1, &barrier);
 }
 
-void DeviceContext::ClearRenderTargetColor(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle, float red, float green, float blue, float alpha)
+void DeviceContext::ClearRenderTargetColor(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle, const std::vector<float>& color)
 {
     D3D12_CLEAR_FLAGS clearFlags = D3D12_CLEAR_FLAG_DEPTH;
     this->m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
-    const float clearColor[] = { red, green, blue, alpha };
-    this->m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+    this->m_commandList->ClearRenderTargetView(rtvHandle, color.data(), 0, nullptr);
     this->m_commandList->ClearDepthStencilView(dsvHandle, clearFlags, 1.0f, 0, 0, nullptr);
 }
 

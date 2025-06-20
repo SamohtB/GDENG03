@@ -159,23 +159,50 @@ void GameObjectManager::AddGameObject(GameObjectPtr gameObject, bool hasConstant
     m_objectTable[name] = gameObject;
 }
 
-void GameObjectManager::DeleteObject(GameObjectPtr game_object)
+void GameObjectManager::DeleteObject(GameObjectPtr gameObject)
 {
-    if (game_object)
+    if (!gameObject) return;
+
+    auto nameIt = m_objectTable.find(gameObject->GetName());
+    if (nameIt != m_objectTable.end())
     {
-        /*To Do: Add Unreserve Slot here */
-        m_renderedObjectList.erase(std::remove(m_renderedObjectList.begin(), m_renderedObjectList.end(), game_object), m_renderedObjectList.end());
-        m_objectTable.erase(game_object->GetName());
+        m_objectTable.erase(nameIt);
     }
+
+    m_renderedObjectList.erase(
+        std::remove(m_renderedObjectList.begin(), m_renderedObjectList.end(), gameObject),
+        m_renderedObjectList.end()
+    );
+
+	m_logicObjectList.erase(
+		std::remove(m_logicObjectList.begin(), m_logicObjectList.end(), gameObject),
+		m_logicObjectList.end()
+	);
+
+    /* To do: Add Unallocate slot */
 }
 
 void GameObjectManager::DeleteObjectByName(String name)
 {
     auto it = m_objectTable.find(name);
-    if (it != m_objectTable.end())
-    {
-        DeleteObject(it->second);
-    }
+    if (it == m_objectTable.end()) return;
+
+    GameObjectPtr gameObject = it->second;
+
+    // Remove from rendered object list
+    m_renderedObjectList.erase(
+        std::remove(m_renderedObjectList.begin(), m_renderedObjectList.end(), gameObject),
+        m_renderedObjectList.end()
+    );
+
+    // Remove from logic object list
+    m_logicObjectList.erase(
+        std::remove(m_logicObjectList.begin(), m_logicObjectList.end(), gameObject),
+        m_logicObjectList.end()
+    );
+
+    // Remove from name table
+    m_objectTable.erase(it);
 }
 
 void GameObjectManager::ClearAllObjects()

@@ -161,7 +161,7 @@ void CameraManager::UnpossessCamera()
 {
 	if (m_sceneCamera)
 	{
-		CopyPositionToSceneCamera(m_activeCamera);
+		this->CopyPositionToSceneCamera(m_activeCamera);
 		m_previousCamera = m_activeCamera;
 		m_activeCamera = m_sceneCamera;
 		m_possessionState = UNPOSSESSED;
@@ -187,13 +187,13 @@ void CameraManager::OnKeyPressed(int key)
 {
 	switch (key)
 	{
-	case VK_TAB: CycleCameras(); break;
+	//case VK_TAB: CycleCameras(); break;
 	case VK_F1: PossessCamera(1); break;
 	case VK_F2: PossessCamera(2); break;
 	case VK_F3: PossessCamera(3); break;
 	case VK_F4: PossessCamera(4); break;
 	case VK_F5: PossessCamera(5); break;
-	case VK_ESCAPE:
+	case VK_TAB:
 
 		if (m_possessionState == POSSESSED)
 		{

@@ -121,7 +121,10 @@ Matrix AGameObject::GetLocalMatrix()
 
 		Matrix scaleMatrix = Matrix::CreateScale(m_localScale);
 		Matrix rotationMatrix = Matrix::CreateFromYawPitchRoll(
-			m_localRotation.y, m_localRotation.x, m_localRotation.z);
+			DirectX::XMConvertToRadians(m_localRotation.y),
+			DirectX::XMConvertToRadians(m_localRotation.x),
+			DirectX::XMConvertToRadians(m_localRotation.z)
+		);
 		Matrix translationMatrix = Matrix::CreateTranslation(m_localPosition);
 
 		m_localMatrix = scaleMatrix * rotationMatrix * translationMatrix;
@@ -132,8 +135,8 @@ Matrix AGameObject::GetLocalMatrix()
 
 Vector3 AGameObject::GetForwardVector() const
 {
-	float pitch = m_localRotation.x;
-	float yaw = m_localRotation.y;
+	float pitch = DirectX::XMConvertToRadians(m_localRotation.x);
+	float yaw = DirectX::XMConvertToRadians(m_localRotation.y);
 
 	Vector3 vector = Vector3(cosf(pitch) * sinf(yaw), -sinf(pitch), cosf(pitch) * cosf(yaw));
 	vector.Normalize();
@@ -142,7 +145,7 @@ Vector3 AGameObject::GetForwardVector() const
 
 Vector3 AGameObject::GetRightVector() const
 {
-	float yaw = m_localRotation.y;
+	float yaw = DirectX::XMConvertToRadians(m_localRotation.y);
 
 	Vector3 vector = Vector3(cosf(yaw), 0.0f, -sinf(yaw));
 	vector.Normalize();

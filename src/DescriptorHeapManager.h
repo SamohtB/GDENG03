@@ -23,6 +23,8 @@ public:
     // DSV
     D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUHandle() const;
 
+    ID3D12DescriptorHeap* GetRTVHeap() const { return this->m_rtvHeap.Get(); }
+
 private:
     std::vector<ID3D12DescriptorHeap*> m_activeHeaps;
 
