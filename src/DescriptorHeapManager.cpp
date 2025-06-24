@@ -56,8 +56,21 @@ UINT DescriptorHeapManager::GetRTVDescriptorSize() const
 
 UINT DescriptorHeapManager::AllocateSRVSlot()
 {
+    if (!m_freeSRVIndices.empty())
+    {
+        UINT index = m_freeSRVIndices.top();
+        m_freeSRVIndices.pop();
+        return index;
+    }
+
     Debug::Assert(this->m_currentSRVOffset < MAX_SRV_COUNT, "Exceeded SRV descriptor heap capacity");
     return this->m_currentSRVOffset++;
+}
+
+void DescriptorHeapManager::FreeSRVSlot(UINT index)
+{
+	Debug::Assert(index < MAX_SRV_COUNT, "Invalid SRV index to free");
+	m_freeSRVIndices.push(index);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetSRVCPUHandleAt(UINT index) const
@@ -76,6 +89,16 @@ D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetSRVGPUHandleAt(UINT index)
         index,
         this->m_srvDescriptorSize
     );
+}
+
+ID3D12DescriptorHeap* DescriptorHeapManager::GetSRVHeap() const
+{
+    return this->m_srvHeap.Get();
+}
+
+UINT DescriptorHeapManager::GetSRVDescriptorSize() const
+{
+    return this->m_srvDescriptorSize;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapManager::GetDSVCPUHandle() const

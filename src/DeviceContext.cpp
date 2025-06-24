@@ -219,3 +219,8 @@ ID3D12CommandQueue* DeviceContext::GetCommandQueue() const
 {
     return this->m_commandQueue.Get();
 }
+
+ID3D12GraphicsCommandList* DeviceContext::GetCommandList() const
+{
+    return this->m_commandList.Get();
+}

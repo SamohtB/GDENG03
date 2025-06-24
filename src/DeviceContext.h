@@ -42,7 +42,7 @@ public:
 	void DrawIndexedTriangleStrip(UINT indexCount, UINT startVertexIndex, UINT startIndexLocation);
 
 	ID3D12CommandQueue* GetCommandQueue() const;
-	ID3D12GraphicsCommandList* GetCommandList() const { return m_commandList.Get(); }
+	ID3D12GraphicsCommandList* GetCommandList() const;
 private:
 	ComPtr<ID3D12Fence> m_fence;
 	ComPtr<ID3D12CommandQueue> m_commandQueue;

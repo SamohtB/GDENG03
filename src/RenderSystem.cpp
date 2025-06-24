@@ -1,7 +1,5 @@
 #include "RenderSystem.h"
 
-
-
 #include "Debug.h"
 
 #include "TextureManager.h"
@@ -53,13 +51,21 @@ void RenderSystem::BeginFrame()
 
 	auto rtvHandle = this->m_renderDevice->GetDescriptorHeapManager()->GetRTVCPUHandleAt(currentFrameIndex);
 	auto dsvHandle = this->m_renderDevice->GetDescriptorHeapManager()->GetDSVCPUHandle();
-	this->m_deviceContext->ClearRenderTargetColor(rtvHandle, dsvHandle, m_clearColor);
+	this->m_deviceContext->ClearRenderTargetColor(rtvHandle, dsvHandle, 0.0f, 0.2f, 0.4f, 1.0f);
+
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
 }
 
 void RenderSystem::EndFrame()
 {
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
 	auto renderTarget = this->m_renderTargetManager->GetRenderTarget(currentFrameIndex);
+
+	ImGui::Render();
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), this->m_deviceContext->GetCommandList());
+
 	this->m_deviceContext->TransitionToPresent(renderTarget);
 	this->m_deviceContext->ExecuteCommandList();
 

@@ -1,9 +1,20 @@
 #pragma once
+#include <array>
 #include "Math.h"
 
-class ColorPalette {
+class ColorUtils 
+{
 public:
-	static const Vector3 White; // Default color, not included in palette
+    static std::array<float, 4> ToFloatArray(const Vector3& vec) 
+    {
+        return { vec.x, vec.y, vec.z, 1.0f };
+    }
+};
+
+class ColorPalette 
+{
+public:
+    static const Vector3 White; // Default color, not included in palette
     static const Vector3 Red;
     static const Vector3 Orange;
     static const Vector3 Yellow;
@@ -28,4 +39,3 @@ public:
         return palette;
     }
 };
-

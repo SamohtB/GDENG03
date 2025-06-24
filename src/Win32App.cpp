@@ -60,6 +60,10 @@ bool Win32App::IsRun()
 
 LRESULT Win32App::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
+		return true;
+
 	if (msg == WM_CREATE)
 	{
 		auto* createStruct = reinterpret_cast<LPCREATESTRUCT>(lparam);

@@ -5,6 +5,7 @@
 #include "EngineTime.h"
 #include "InputSystem.h"
 #include "CameraManager.h"
+#include "EngineGUIManager.h"
 
 #include "RenderSystem.h"
 #include "BatchUploader.h"
@@ -38,148 +39,14 @@ void GameWindow::OnCreate(HWND hwnd)
 	EngineTime::Initialize(60);
 	InputSystem::Initialize();
 	CameraManager::Initialize(this->m_width, this->m_height);
+	EngineGUIManager::Initialize(hwnd, this->m_width, this->m_height);
 
 	auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 
-	/* Load Single Cube */
-	//auto cube = std::make_shared<Cube>("Cube_1");
-	//GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	//Load_4();
-	//Load_6();
-	Load_7();
-
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
-}
-
-void GameWindow::Load_6()
-{
-	auto cube = std::make_shared<Cube>("Cube_1");
-	cube->SetPosition(0.0f, 0.9f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	cube = std::make_shared<Cube>("Cube_2");
-	cube->SetPosition(-1.5f, 2.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	cube = std::make_shared<Cube>("Cube_3");
-	cube->SetPosition(-1.5f, 3.0f, -2.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	auto plane = std::make_shared<Plane>("Plane_1");
-	GameObjectManager::GetInstance()->AddGameObject(plane);
-}
-
-void GameWindow::Load_4()
-{
-	for (int i = 0; i < 50; i++)
-	{
-		auto cube = std::make_shared<Cube>("Cube_" + std::to_string(i));
-		cube->SetPosition(Random::Range(-4.5f, 4.5f), Random::Range(-3.75f, 3.75f), Random::Range(0.0f, 3.0f));
-		GameObjectManager::GetInstance()->AddGameObject(cube);
-	}
-}
-
-void GameWindow::Load_7()
-{
-	/* Bottom Stacks */
-	auto cube = std::make_shared<Cube>("Cube_White_Left_1");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-14.0f, -90.0f, 0.0f);
-	cube->SetPosition(-3.0f, 0.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	cube = std::make_shared<Cube>("Cube_White_Right_1");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-14.0f, 90.0f, 0.0f);
-	cube->SetPosition(-2.5f, 0.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	cube = std::make_shared<Cube>("Cube_White_Left_2");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-14.0f, -90.0f, 0.0f);
-	cube->SetPosition(-2.0f, 0.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	cube = std::make_shared<Cube>("Cube_White_Right_2");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-14.0f, 90.0f, 0.0f);
-	cube->SetPosition(-1.5f, 0.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	cube = std::make_shared<Cube>("Cube_White_Left_3");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-14.0f, -90.0f, 0.0f);
-	cube->SetPosition(-1.0f, 0.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	cube = std::make_shared<Cube>("Cube_White_Right_3");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-14.0f, 90.0f, 0.0f);
-	cube->SetPosition(-0.5f, 0.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	/* Flat 1 */
-	cube = std::make_shared<Cube>("Flat_1");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-90.0f, 90.0f, 0.0f);
-	cube->SetPosition(-2.5f, 1.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	/* Flat 2 */
-	cube = std::make_shared<Cube>("Flat_2");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-90.0f, 90.0f, 0.0f);
-	cube->SetPosition(-1.0f, 1.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	/* Second Layer */
-	cube = std::make_shared<Cube>("Cube_White_Left_4");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-14.0f, -90.0f, 0.0f);
-	cube->SetPosition(-2.5f, 2.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	cube = std::make_shared<Cube>("Cube_White_Right_4");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-14.0f, 90.0f, 0.0f);
-	cube->SetPosition(-2.0f, 2.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	cube = std::make_shared<Cube>("Cube_White_Left_5");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-14.0f, -90.0f, 0.0f);
-	cube->SetPosition(-1.5f, 2.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	cube = std::make_shared<Cube>("Cube_White_Right_5");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-14.0f, 90.0f, 0.0f);
-	cube->SetPosition(-1.0f, 2.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	/* Flat 3 */
-	cube = std::make_shared<Cube>("Flat_3");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-90.0f, 90.0f, 0.0f);
-	cube->SetPosition(-1.75f, 3.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	/* Third Layer */
-	cube = std::make_shared<Cube>("Cube_White_Left_6");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-14.0f, -90.0f, 0.0f);
-	cube->SetPosition(-2.0f, 4.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-
-	cube = std::make_shared<Cube>("Cube_White_Right_6");
-	cube->SetScale(1.0f, 2.0f, 0.01f);
-	cube->SetRotation(-14.0f, 90.0f, 0.0f);
-	cube->SetPosition(-1.5f, 4.0f, 0.0f);
-	GameObjectManager::GetInstance()->AddGameObject(cube);
-}
+} 
 
 
 void GameWindow::OnUpdate()
@@ -206,12 +73,45 @@ void GameWindow::OnRender()
 	GraphicsEngine::GetInstance()->GetRenderSystem()->BeginFrame();
 
 	GameObjectManager::GetInstance()->RenderAll(context);
+	bool my_tool_active = true;
+
+	ImGui::Begin("My First Tool", &my_tool_active, ImGuiWindowFlags_MenuBar);
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
+			if (ImGui::MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
+			if (ImGui::MenuItem("Close", "Ctrl+W")) { my_tool_active = false; }
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+
+	// Edit a color stored as 4 floats
+	std::array<float, 4> color = ColorUtils::ToFloatArray(ColorPalette::Red);
+	ImGui::ColorEdit4("Color", color.data());
+
+	// Generate samples and plot them
+	float samples[100];
+	for (int n = 0; n < 100; n++)
+		samples[n] = sinf(n * 0.2f + ImGui::GetTime() * 1.5f);
+	ImGui::PlotLines("Samples", samples, 100);
+
+	// Display contents in a scrolling region
+	ImGui::TextColored(ImVec4(1, 1, 0, 1), "Important Stuff");
+	ImGui::BeginChild("Scrolling");
+	for (int n = 0; n < 50; n++)
+		ImGui::Text("%04d: Some text", n);
+	ImGui::EndChild();
+	ImGui::End();
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->EndFrame();
 }
 
 void GameWindow::OnDestroy()
 {
+	EngineGUIManager::Destroy();
 	CameraManager::Destroy();
 	InputSystem::Destroy();
 	GameObjectManager::Destroy();

@@ -29,7 +29,7 @@
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
 #define IMGUI_VERSION       "1.92.0 WIP"
-#define IMGUI_VERSION_NUM   19198
+#define IMGUI_VERSION_NUM   19199
 #define IMGUI_HAS_TABLE             // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES          // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
 
@@ -1530,7 +1530,6 @@ enum ImGuiKey : int
     ImGuiKey_Space,
     ImGuiKey_Enter,
     ImGuiKey_Escape,
-    ImGuiKey_LeftCtrl, ImGuiKey_LeftShift, ImGuiKey_LeftAlt, ImGuiKey_LeftSuper,
     ImGuiKey_RightCtrl, ImGuiKey_RightShift, ImGuiKey_RightAlt, ImGuiKey_RightSuper,
     ImGuiKey_Menu,
     ImGuiKey_0, ImGuiKey_1, ImGuiKey_2, ImGuiKey_3, ImGuiKey_4, ImGuiKey_5, ImGuiKey_6, ImGuiKey_7, ImGuiKey_8, ImGuiKey_9,
@@ -1570,32 +1569,34 @@ enum ImGuiKey : int
     ImGuiKey_AppForward,
     ImGuiKey_Oem102,                // Non-US backslash.
 
-    // Gamepad (some of those are analog values, 0.0f to 1.0f)                          // NAVIGATION ACTION
+    // Gamepad
+    // (analog values are 0.0f to 1.0f)
     // (download controller mapping PNG/PSD at http://dearimgui.com/controls_sheets)
-    ImGuiKey_GamepadStart,          // Menu (Xbox)      + (Switch)   Start/Options (PS)
-    ImGuiKey_GamepadBack,           // View (Xbox)      - (Switch)   Share (PS)
-    ImGuiKey_GamepadFaceLeft,       // X (Xbox)         Y (Switch)   Square (PS)        // Tap: Toggle Menu. Hold: Windowing mode (Focus/Move/Resize windows)
-    ImGuiKey_GamepadFaceRight,      // B (Xbox)         A (Switch)   Circle (PS)        // Cancel / Close / Exit
-    ImGuiKey_GamepadFaceUp,         // Y (Xbox)         X (Switch)   Triangle (PS)      // Text Input / On-screen Keyboard
-    ImGuiKey_GamepadFaceDown,       // A (Xbox)         B (Switch)   Cross (PS)         // Activate / Open / Toggle / Tweak
-    ImGuiKey_GamepadDpadLeft,       // D-pad Left                                       // Move / Tweak / Resize Window (in Windowing mode)
-    ImGuiKey_GamepadDpadRight,      // D-pad Right                                      // Move / Tweak / Resize Window (in Windowing mode)
-    ImGuiKey_GamepadDpadUp,         // D-pad Up                                         // Move / Tweak / Resize Window (in Windowing mode)
-    ImGuiKey_GamepadDpadDown,       // D-pad Down                                       // Move / Tweak / Resize Window (in Windowing mode)
-    ImGuiKey_GamepadL1,             // L Bumper (Xbox)  L (Switch)   L1 (PS)            // Tweak Slower / Focus Previous (in Windowing mode)
-    ImGuiKey_GamepadR1,             // R Bumper (Xbox)  R (Switch)   R1 (PS)            // Tweak Faster / Focus Next (in Windowing mode)
-    ImGuiKey_GamepadL2,             // L Trig. (Xbox)   ZL (Switch)  L2 (PS) [Analog]
-    ImGuiKey_GamepadR2,             // R Trig. (Xbox)   ZR (Switch)  R2 (PS) [Analog]
-    ImGuiKey_GamepadL3,             // L Stick (Xbox)   L3 (Switch)  L3 (PS)
-    ImGuiKey_GamepadR3,             // R Stick (Xbox)   R3 (Switch)  R3 (PS)
-    ImGuiKey_GamepadLStickLeft,     // [Analog]                                         // Move Window (in Windowing mode)
-    ImGuiKey_GamepadLStickRight,    // [Analog]                                         // Move Window (in Windowing mode)
-    ImGuiKey_GamepadLStickUp,       // [Analog]                                         // Move Window (in Windowing mode)
-    ImGuiKey_GamepadLStickDown,     // [Analog]                                         // Move Window (in Windowing mode)
-    ImGuiKey_GamepadRStickLeft,     // [Analog]
-    ImGuiKey_GamepadRStickRight,    // [Analog]
-    ImGuiKey_GamepadRStickUp,       // [Analog]
-    ImGuiKey_GamepadRStickDown,     // [Analog]
+    //                              // XBOX        | SWITCH  | PLAYSTA. | -> ACTION
+    ImGuiKey_GamepadStart,          // Menu        | +       | Options  |
+    ImGuiKey_GamepadBack,           // View        | -       | Share    |
+    ImGuiKey_GamepadFaceLeft,       // X           | Y       | Square   | Tap: Toggle Menu. Hold: Windowing mode (Focus/Move/Resize windows)
+    ImGuiKey_GamepadFaceRight,      // B           | A       | Circle   | Cancel / Close / Exit
+    ImGuiKey_GamepadFaceUp,         // Y           | X       | Triangle | Text Input / On-screen Keyboard
+    ImGuiKey_GamepadFaceDown,       // A           | B       | Cross    | Activate / Open / Toggle / Tweak
+    ImGuiKey_GamepadDpadLeft,       // D-pad Left  | "       | "        | Move / Tweak / Resize Window (in Windowing mode)
+    ImGuiKey_GamepadDpadRight,      // D-pad Right | "       | "        | Move / Tweak / Resize Window (in Windowing mode)
+    ImGuiKey_GamepadDpadUp,         // D-pad Up    | "       | "        | Move / Tweak / Resize Window (in Windowing mode)
+    ImGuiKey_GamepadDpadDown,       // D-pad Down  | "       | "        | Move / Tweak / Resize Window (in Windowing mode)
+    ImGuiKey_GamepadL1,             // L Bumper    | L       | L1       | Tweak Slower / Focus Previous (in Windowing mode)
+    ImGuiKey_GamepadR1,             // R Bumper    | R       | R1       | Tweak Faster / Focus Next (in Windowing mode)
+    ImGuiKey_GamepadL2,             // L Trigger   | ZL      | L2       | [Analog]
+    ImGuiKey_GamepadR2,             // R Trigger   | ZR      | R2       | [Analog]
+    ImGuiKey_GamepadL3,             // L Stick     | L3      | L3       |
+    ImGuiKey_GamepadR3,             // R Stick     | R3      | R3       |
+    ImGuiKey_GamepadLStickLeft,     //             |         |          | [Analog] Move Window (in Windowing mode)
+    ImGuiKey_GamepadLStickRight,    //             |         |          | [Analog] Move Window (in Windowing mode)
+    ImGuiKey_GamepadLStickUp,       //             |         |          | [Analog] Move Window (in Windowing mode)
+    ImGuiKey_GamepadLStickDown,     //             |         |          | [Analog] Move Window (in Windowing mode)
+    ImGuiKey_GamepadRStickLeft,     //             |         |          | [Analog]
+    ImGuiKey_GamepadRStickRight,    //             |         |          | [Analog]
+    ImGuiKey_GamepadRStickUp,       //             |         |          | [Analog]
+    ImGuiKey_GamepadRStickDown,     //             |         |          | [Analog]
 
     // Aliases: Mouse Buttons (auto-submitted from AddMouseButtonEvent() calls)
     // - This is mirroring the data also written to io.MouseDown[], io.MouseWheel, in a format allowing them to be accessed via standard key API.
@@ -1603,11 +1604,15 @@ enum ImGuiKey : int
 
     // [Internal] Reserved for mod storage
     ImGuiKey_ReservedForModCtrl, ImGuiKey_ReservedForModShift, ImGuiKey_ReservedForModAlt, ImGuiKey_ReservedForModSuper,
+
+    // [Internal] If you need to iterate all keys (for e.g. an input mapper) you may use ImGuiKey_NamedKey_BEGIN..ImGuiKey_NamedKey_END.
     ImGuiKey_NamedKey_END,
+    ImGuiKey_NamedKey_COUNT = ImGuiKey_NamedKey_END - ImGuiKey_NamedKey_BEGIN,
 
     // Keyboard Modifiers (explicitly submitted by backend via AddKeyEvent() calls)
-    // - This is mirroring the data also written to io.KeyCtrl, io.KeyShift, io.KeyAlt, io.KeySuper, in a format allowing
-    //   them to be accessed via standard key API, allowing calls such as IsKeyPressed(), IsKeyReleased(), querying duration etc.
+    // - Any functions taking a ImGuiKeyChord parameter can binary-or those with regular keys, e.g. Shortcut(ImGuiMod_Ctrl | ImGuiKey_S).
+    // - Those are written back into io.KeyCtrl, io.KeyShift, io.KeyAlt, io.KeySuper for convenience,
+    //   but may be accessed via standard key API such as IsKeyPressed(), IsKeyReleased(), querying duration etc.
     // - Code polling every key (e.g. an interface to detect a key press for input mapping) might want to ignore those
     //   and prefer using the real keys (e.g. ImGuiKey_LeftCtrl, ImGuiKey_RightCtrl instead of ImGuiMod_Ctrl).
     // - In theory the value of keyboard modifiers should be roughly equivalent to a logical or of the equivalent left/right keys.
@@ -2514,7 +2519,7 @@ struct ImGuiIO
 
     // Other state maintained from data above + IO function calls
     ImGuiKeyChord KeyMods;                          // Key mods flags (any of ImGuiMod_Ctrl/ImGuiMod_Shift/ImGuiMod_Alt/ImGuiMod_Super flags, same as io.KeyCtrl/KeyShift/KeyAlt/KeySuper but merged into flags. Read-only, updated by NewFrame()
-    ImGuiKeyData  KeysData[ImGuiKey_NamedKey_COUNT];// Key state for all known keys. Use IsKeyXXX() functions to access this.
+    ImGuiKeyData  KeysData[ImGuiKey_NamedKey_COUNT];// Key state for all known keys. MUST use 'key - ImGuiKey_NamedKey_BEGIN' as index. Use IsKeyXXX() functions to access this.
     bool        WantCaptureMouseUnlessPopupClose;   // Alternative to WantCaptureMouse: (WantCaptureMouse == true && WantCaptureMouseUnlessPopupClose == false) when a click over void is expected to close a popup.
     ImVec2      MousePosPrev;                       // Previous mouse position (note that MouseDelta is not necessary == MousePos-MousePosPrev, in case either position is invalid)
     ImVec2      MouseClickedPos[5];                 // Position at time of clicking
@@ -2827,31 +2832,31 @@ struct ImGuiListClipper
 #define IMGUI_DEFINE_MATH_OPERATORS_IMPLEMENTED
 IM_MSVC_RUNTIME_CHECKS_OFF
 // ImVec2 operators
-static inline ImVec2  operator*(const ImVec2& lhs, const float rhs)     { return ImVec2(lhs.x * rhs, lhs.y * rhs); }
-static inline ImVec2  operator/(const ImVec2& lhs, const float rhs)     { return ImVec2(lhs.x / rhs, lhs.y / rhs); }
-static inline ImVec2  operator+(const ImVec2& lhs, const ImVec2& rhs)   { return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y); }
-static inline ImVec2  operator-(const ImVec2& lhs, const ImVec2& rhs)   { return ImVec2(lhs.x - rhs.x, lhs.y - rhs.y); }
-static inline ImVec2  operator*(const ImVec2& lhs, const ImVec2& rhs)   { return ImVec2(lhs.x * rhs.x, lhs.y * rhs.y); }
-static inline ImVec2  operator/(const ImVec2& lhs, const ImVec2& rhs)   { return ImVec2(lhs.x / rhs.x, lhs.y / rhs.y); }
-static inline ImVec2  operator-(const ImVec2& lhs)                      { return ImVec2(-lhs.x, -lhs.y); }
-static inline ImVec2& operator*=(ImVec2& lhs, const float rhs)          { lhs.x *= rhs; lhs.y *= rhs; return lhs; }
-static inline ImVec2& operator/=(ImVec2& lhs, const float rhs)          { lhs.x /= rhs; lhs.y /= rhs; return lhs; }
-static inline ImVec2& operator+=(ImVec2& lhs, const ImVec2& rhs)        { lhs.x += rhs.x; lhs.y += rhs.y; return lhs; }
-static inline ImVec2& operator-=(ImVec2& lhs, const ImVec2& rhs)        { lhs.x -= rhs.x; lhs.y -= rhs.y; return lhs; }
-static inline ImVec2& operator*=(ImVec2& lhs, const ImVec2& rhs)        { lhs.x *= rhs.x; lhs.y *= rhs.y; return lhs; }
-static inline ImVec2& operator/=(ImVec2& lhs, const ImVec2& rhs)        { lhs.x /= rhs.x; lhs.y /= rhs.y; return lhs; }
-static inline bool    operator==(const ImVec2& lhs, const ImVec2& rhs)  { return lhs.x == rhs.x && lhs.y == rhs.y; }
-static inline bool    operator!=(const ImVec2& lhs, const ImVec2& rhs)  { return lhs.x != rhs.x || lhs.y != rhs.y; }
+inline ImVec2  operator*(const ImVec2& lhs, const float rhs)    { return ImVec2(lhs.x * rhs, lhs.y * rhs); }
+inline ImVec2  operator/(const ImVec2& lhs, const float rhs)    { return ImVec2(lhs.x / rhs, lhs.y / rhs); }
+inline ImVec2  operator+(const ImVec2& lhs, const ImVec2& rhs)  { return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y); }
+inline ImVec2  operator-(const ImVec2& lhs, const ImVec2& rhs)  { return ImVec2(lhs.x - rhs.x, lhs.y - rhs.y); }
+inline ImVec2  operator*(const ImVec2& lhs, const ImVec2& rhs)  { return ImVec2(lhs.x * rhs.x, lhs.y * rhs.y); }
+inline ImVec2  operator/(const ImVec2& lhs, const ImVec2& rhs)  { return ImVec2(lhs.x / rhs.x, lhs.y / rhs.y); }
+inline ImVec2  operator-(const ImVec2& lhs)                     { return ImVec2(-lhs.x, -lhs.y); }
+inline ImVec2& operator*=(ImVec2& lhs, const float rhs)         { lhs.x *= rhs; lhs.y *= rhs; return lhs; }
+inline ImVec2& operator/=(ImVec2& lhs, const float rhs)         { lhs.x /= rhs; lhs.y /= rhs; return lhs; }
+inline ImVec2& operator+=(ImVec2& lhs, const ImVec2& rhs)       { lhs.x += rhs.x; lhs.y += rhs.y; return lhs; }
+inline ImVec2& operator-=(ImVec2& lhs, const ImVec2& rhs)       { lhs.x -= rhs.x; lhs.y -= rhs.y; return lhs; }
+inline ImVec2& operator*=(ImVec2& lhs, const ImVec2& rhs)       { lhs.x *= rhs.x; lhs.y *= rhs.y; return lhs; }
+inline ImVec2& operator/=(ImVec2& lhs, const ImVec2& rhs)       { lhs.x /= rhs.x; lhs.y /= rhs.y; return lhs; }
+inline bool    operator==(const ImVec2& lhs, const ImVec2& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
+inline bool    operator!=(const ImVec2& lhs, const ImVec2& rhs) { return lhs.x != rhs.x || lhs.y != rhs.y; }
 // ImVec4 operators
-static inline ImVec4  operator*(const ImVec4& lhs, const float rhs)     { return ImVec4(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs); }
-static inline ImVec4  operator/(const ImVec4& lhs, const float rhs)     { return ImVec4(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs); }
-static inline ImVec4  operator+(const ImVec4& lhs, const ImVec4& rhs)   { return ImVec4(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w); }
-static inline ImVec4  operator-(const ImVec4& lhs, const ImVec4& rhs)   { return ImVec4(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w); }
-static inline ImVec4  operator*(const ImVec4& lhs, const ImVec4& rhs)   { return ImVec4(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z, lhs.w * rhs.w); }
-static inline ImVec4  operator/(const ImVec4& lhs, const ImVec4& rhs)   { return ImVec4(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z, lhs.w / rhs.w); }
-static inline ImVec4  operator-(const ImVec4& lhs)                      { return ImVec4(-lhs.x, -lhs.y, -lhs.z, -lhs.w); }
-static inline bool    operator==(const ImVec4& lhs, const ImVec4& rhs)  { return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lhs.w == rhs.w; }
-static inline bool    operator!=(const ImVec4& lhs, const ImVec4& rhs)  { return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z || lhs.w != rhs.w; }
+inline ImVec4  operator*(const ImVec4& lhs, const float rhs)    { return ImVec4(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs); }
+inline ImVec4  operator/(const ImVec4& lhs, const float rhs)    { return ImVec4(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs); }
+inline ImVec4  operator+(const ImVec4& lhs, const ImVec4& rhs)  { return ImVec4(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w); }
+inline ImVec4  operator-(const ImVec4& lhs, const ImVec4& rhs)  { return ImVec4(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w); }
+inline ImVec4  operator*(const ImVec4& lhs, const ImVec4& rhs)  { return ImVec4(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z, lhs.w * rhs.w); }
+inline ImVec4  operator/(const ImVec4& lhs, const ImVec4& rhs)  { return ImVec4(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z, lhs.w / rhs.w); }
+inline ImVec4  operator-(const ImVec4& lhs)                     { return ImVec4(-lhs.x, -lhs.y, -lhs.z, -lhs.w); }
+inline bool    operator==(const ImVec4& lhs, const ImVec4& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lhs.w == rhs.w; }
+inline bool    operator!=(const ImVec4& lhs, const ImVec4& rhs) { return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z || lhs.w != rhs.w; }
 IM_MSVC_RUNTIME_CHECKS_RESTORE
 #endif
 
@@ -3439,8 +3444,8 @@ struct ImTextureData
     ~ImTextureData()    { DestroyPixels(); }
     IMGUI_API void      Create(ImTextureFormat format, int w, int h);
     IMGUI_API void      DestroyPixels();
-    unsigned char*      GetPixels()                 { IM_ASSERT(Pixels != NULL); return Pixels; }
-    unsigned char*      GetPixelsAt(int x, int y)   { IM_ASSERT(Pixels != NULL); return Pixels + (x + y * Width) * BytesPerPixel; }
+    void*               GetPixels()                 { IM_ASSERT(Pixels != NULL); return Pixels; }
+    void*               GetPixelsAt(int x, int y)   { IM_ASSERT(Pixels != NULL); return Pixels + (x + y * Width) * BytesPerPixel; }
     int                 GetSizeInBytes() const      { return Width * Height * BytesPerPixel; }
     int                 GetPitch() const            { return Width * BytesPerPixel; }
     ImTextureRef        GetTexRef()                 { ImTextureRef tex_ref; tex_ref._TexData = this; tex_ref._TexID = ImTextureID_Invalid; return tex_ref; }
@@ -3473,7 +3478,7 @@ struct ImFontConfig
     ImS8            OversampleV;            // 0 (1)    // Rasterize at higher quality for sub-pixel positioning. 0 == auto == 1. This is not really useful as we don't use sub-pixel positions on the Y axis.
     float           SizePixels;             //          // Size in pixels for rasterizer (more or less maps to the resulting font height).
     const ImWchar*  GlyphRanges;            // NULL     // *LEGACY* THE ARRAY DATA NEEDS TO PERSIST AS LONG AS THE FONT IS ALIVE. Pointer to a user-provided list of Unicode range (2 value per range, values are inclusive, zero-terminated list).
-    const ImWchar*  GlyphExcludeRanges;     // NULL     // Pointer to a VERY SHORT user-provided list of Unicode range (2 value per range, values are inclusive, zero-terminated list). This is very close to GlyphRanges[] but designed to exclude ranges from a font source, when merging fonts with overlapping glyphs. Use "Input Glyphs Overlap Detection Tool" to find about your overlapping ranges.
+    const ImWchar*  GlyphExcludeRanges;     // NULL     // Pointer to a small user-provided list of Unicode ranges (2 value per range, values are inclusive, zero-terminated list). This is very close to GlyphRanges[] but designed to exclude ranges from a font source, when merging fonts with overlapping glyphs. Use "Input Glyphs Overlap Detection Tool" to find about your overlapping ranges.
     //ImVec2        GlyphExtraSpacing;      // 0, 0     // (REMOVED AT IT SEEMS LARGELY OBSOLETE. PLEASE REPORT IF YOU WERE USING THIS). Extra spacing (in pixels) between glyphs when rendered: essentially add to glyph->AdvanceX. Only X axis is supported for now.
     ImVec2          GlyphOffset;            // 0, 0     // Offset (in pixels) all glyphs from this font input. Absolute value for default size, other sizes will scale this value.
     float           GlyphMinAdvanceX;       // 0        // Minimum AdvanceX for glyphs, set Min to align font icons, set both Min/Max to enforce mono-space font. Absolute value for default size, other sizes will scale this value.

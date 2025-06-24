@@ -17,8 +17,11 @@ public:
 
     // SRV
     UINT AllocateSRVSlot();
+    void FreeSRVSlot(UINT index);
     D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCPUHandleAt(UINT index) const;
     D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUHandleAt(UINT index) const;
+    ID3D12DescriptorHeap* GetSRVHeap() const;
+	UINT GetSRVDescriptorSize() const;
 
     // DSV
     D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUHandle() const;
@@ -35,6 +38,7 @@ private:
 
     // SRV + CBV
     ComPtr<ID3D12DescriptorHeap> m_srvHeap;
+    std::stack<UINT> m_freeSRVIndices;
     UINT m_srvDescriptorSize;
     UINT m_currentSRVOffset;
 
