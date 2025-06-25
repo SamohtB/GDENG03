@@ -6,6 +6,7 @@
 #include "InputSystem.h"
 #include "CameraManager.h"
 #include "EngineGUIManager.h"
+#include "NameRegistry.h"
 
 #include "RenderSystem.h"
 #include "BatchUploader.h"
@@ -14,12 +15,7 @@
 #include "PBSQuads.h"
 #include "AnimatedQuad.h"
 #include "Circle.h"
-#include "CircleManager.h"
 
-#include "Cube.h"
-#include "Plane.h"
-#include "Sphere.h"
-#include "Camera.h"
 #include "CircleManager.h"
 
 #include "Debug.h"
@@ -40,6 +36,7 @@ void GameWindow::OnCreate(HWND hwnd)
 	InputSystem::Initialize();
 	CameraManager::Initialize(this->m_width, this->m_height);
 	EngineGUIManager::Initialize(hwnd, this->m_width, this->m_height);
+	NameRegistry::Initialize();
 
 	auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
 
@@ -73,44 +70,21 @@ void GameWindow::OnRender()
 	GraphicsEngine::GetInstance()->GetRenderSystem()->BeginFrame();
 
 	GameObjectManager::GetInstance()->RenderAll(context);
-	bool my_tool_active = true;
 
-	ImGui::Begin("My First Tool", &my_tool_active, ImGuiWindowFlags_MenuBar);
-	if (ImGui::BeginMenuBar())
-	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
-			if (ImGui::MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
-			if (ImGui::MenuItem("Close", "Ctrl+W")) { my_tool_active = false; }
-			ImGui::EndMenu();
-		}
-		ImGui::EndMenuBar();
-	}
+	/*	Temporary Per Frame Batch Uploader Calls */
+	/* Shared Resources Coming Soon */
+	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 
-	// Edit a color stored as 4 floats
-	std::array<float, 4> color = ColorUtils::ToFloatArray(ColorPalette::Red);
-	ImGui::ColorEdit4("Color", color.data());
+	EngineGUIManager::GetInstance()->DrawAllUI();
 
-	// Generate samples and plot them
-	float samples[100];
-	for (int n = 0; n < 100; n++)
-		samples[n] = sinf(n * 0.2f + ImGui::GetTime() * 1.5f);
-	ImGui::PlotLines("Samples", samples, 100);
-
-	// Display contents in a scrolling region
-	ImGui::TextColored(ImVec4(1, 1, 0, 1), "Important Stuff");
-	ImGui::BeginChild("Scrolling");
-	for (int n = 0; n < 50; n++)
-		ImGui::Text("%04d: Some text", n);
-	ImGui::EndChild();
-	ImGui::End();
+	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->EndFrame();
 }
 
 void GameWindow::OnDestroy()
 {
+	NameRegistry::Destroy();
 	EngineGUIManager::Destroy();
 	CameraManager::Destroy();
 	InputSystem::Destroy();

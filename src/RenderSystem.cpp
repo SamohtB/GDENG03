@@ -51,7 +51,7 @@ void RenderSystem::BeginFrame()
 
 	auto rtvHandle = this->m_renderDevice->GetDescriptorHeapManager()->GetRTVCPUHandleAt(currentFrameIndex);
 	auto dsvHandle = this->m_renderDevice->GetDescriptorHeapManager()->GetDSVCPUHandle();
-	this->m_deviceContext->ClearRenderTargetColor(rtvHandle, dsvHandle, 0.0f, 0.2f, 0.4f, 1.0f);
+	this->m_deviceContext->ClearRenderTargetColor(rtvHandle, dsvHandle, this->m_clearColor);
 
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();

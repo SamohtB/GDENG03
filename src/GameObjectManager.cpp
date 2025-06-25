@@ -159,7 +159,7 @@ void GameObjectManager::AddGameObject(GameObjectPtr gameObject, bool hasConstant
     m_objectTable[name] = gameObject;
 }
 
-void GameObjectManager::DeleteObject(GameObjectPtr gameObject)
+void GameObjectManager::DeleteObject(AGameObject* gameObject)
 {
     if (!gameObject) return;
 
@@ -170,14 +170,26 @@ void GameObjectManager::DeleteObject(GameObjectPtr gameObject)
     }
 
     m_renderedObjectList.erase(
-        std::remove(m_renderedObjectList.begin(), m_renderedObjectList.end(), gameObject),
+        std::remove_if(
+            m_renderedObjectList.begin(), 
+            m_renderedObjectList.end(), 
+            [gameObject](const GameObjectPtr& ptr)
+            {
+				return ptr.get() == gameObject;
+            }),
         m_renderedObjectList.end()
     );
 
-	m_logicObjectList.erase(
-		std::remove(m_logicObjectList.begin(), m_logicObjectList.end(), gameObject),
-		m_logicObjectList.end()
-	);
+    m_logicObjectList.erase(
+        std::remove_if(
+            m_logicObjectList.begin(),
+            m_logicObjectList.end(),
+            [gameObject](const GameObjectPtr& ptr)
+            {
+                return ptr.get() == gameObject;
+            }),
+        m_logicObjectList.end()
+    );
 
     /* To do: Add Unallocate slot */
 }
@@ -210,6 +222,17 @@ void GameObjectManager::ClearAllObjects()
     m_renderedObjectList.clear();
     m_logicObjectList.clear();
     m_objectTable.clear();
+}
+
+AGameObject* GameObjectManager::GetSelectedObject() const
+{
+    return this->m_selectedObject;
+}
+
+void GameObjectManager::SetSelectedObject(AGameObject* object)
+{
+	if (object == this->m_selectedObject) return; // No change
+	this->m_selectedObject = object;
 }
 
 void GameObjectManager::UpdateConstantBuffer(UINT objId, const ObjectConstantsData& data)

@@ -151,6 +151,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\NameRegistry.cpp" />
+    <ClCompile Include="src\GameObjectSpawner.cpp" />
+    <ClCompile Include="src\Hierarchy.cpp" />
+    <ClCompile Include="src\AUIScreen.cpp" />
     <ClCompile Include="src\EngineGUIManager.cpp" />
     <ClCompile Include="src\Colors.cpp" />
     <ClCompile Include="src\imgui.cpp" />
@@ -202,8 +206,13 @@
     <ClCompile Include="src\Win32App.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\Toolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\NameRegistry.h" />
+    <ClInclude Include="src\GameObjectSpawner.h" />
+    <ClInclude Include="src\Hierarchy.h" />
+    <ClInclude Include="src\AUIScreen.h" />
     <ClInclude Include="src\EngineGUIManager.h" />
     <ClInclude Include="src\imconfig.h" />
     <ClInclude Include="src\imgui.h" />
@@ -262,6 +271,7 @@
     <ClInclude Include="src\TextureManager.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\TextureTypes.h" />
+    <ClInclude Include="src\Toolbar.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\DefaultVertexShader.hlsl">

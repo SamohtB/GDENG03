@@ -1,13 +1,14 @@
 #include "EngineTime.h"
 #include "Debug.h"
 
-EngineTime* EngineTime::sharedInstance = nullptr;
+std::unique_ptr<EngineTime> EngineTime::sharedInstance = nullptr;
+int EngineTime::currentFPS = 0;
 
 void EngineTime::Initialize(int frameRate)
 {
     try
     {
-        sharedInstance = new EngineTime(frameRate);
+        sharedInstance = std::make_unique<EngineTime>(frameRate);
     }
     catch (...)
     {
@@ -79,8 +80,13 @@ void EngineTime::UpdateFPSCounter()
     auto now = Clock::now();
     if (now - lastTime >= std::chrono::seconds(1))
     {
-        Debug::Log("FPS: " + std::to_string(frameCount));
+        currentFPS = frameCount;
         frameCount = 0;
         lastTime = now;
     }
+}
+
+int EngineTime::GetFPS()
+{
+    return currentFPS;
 }

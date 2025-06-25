@@ -4,7 +4,7 @@
 class UINames
 {
 public:
-    const std::string TOOL_BAR = "TOOL_BAR";
+    const std::string TOOLBAR = "TOOLBAR";
     const std::string HIERARCHY = "HIERARCHY";
     const std::string INSPECTOR = "INSPECTOR";
 };
@@ -26,6 +26,7 @@ public:
     void DrawAllUI();
 
     EngineGUIManager(HWND hwnd);
+    void PopulateGUI();
     ~EngineGUIManager();
     EngineGUIManager(EngineGUIManager const&) = delete;
     EngineGUIManager& operator=(EngineGUIManager const&) = delete;

@@ -5581,7 +5581,6 @@ begin:
         return;
 
     // Reserve vertices for remaining worse case (over-reserving is useful and easily amortized)
-    const int cmd_count = draw_list->CmdBuffer.Size;
     const int vtx_count_max = (int)(text_end - s) * 4;
     const int idx_count_max = (int)(text_end - s) * 6;
     const int idx_expected_size = draw_list->IdxBuffer.Size + idx_count_max;

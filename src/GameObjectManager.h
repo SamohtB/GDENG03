@@ -26,9 +26,12 @@ public:
     void RenderAll(DeviceContext* dvcContext);
 
     void AddGameObject(GameObjectPtr gameObject, bool hasConstantBuffer = true);
-    void DeleteObject(GameObjectPtr game_object);
+    void DeleteObject(AGameObject* game_object);
     void DeleteObjectByName(String name);
     void ClearAllObjects();
+
+    AGameObject* GetSelectedObject() const;
+    void SetSelectedObject(AGameObject* object);
 
     void UpdateConstantBuffer(UINT objId, const ObjectConstantsData& data);
     D3D12_GPU_VIRTUAL_ADDRESS GetObjectConstantsAddress(UINT objectId, UINT frameIndex);
@@ -52,6 +55,8 @@ private:
     UINT m_nextRenderedSlot = 0;
     UINT m_nextLogicSlot = 0;
     const int MAX_OBJECT_COUNT = 128;
+
+	AGameObject* m_selectedObject = nullptr;
 
     friend class AGameObject;
 };
