@@ -7,6 +7,7 @@ public:
     const std::string TOOLBAR = "TOOLBAR";
     const std::string HIERARCHY = "HIERARCHY";
     const std::string INSPECTOR = "INSPECTOR";
+    const std::string DEBUG = "DEBUG";
 };
 
 class AUIScreen;

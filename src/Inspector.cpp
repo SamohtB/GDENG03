@@ -8,6 +8,12 @@ Inspector::Inspector() : AUIScreen("Inspector")
 
 void Inspector::DrawUI()
 {
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, m_bodyColor);
+    ImGui::PushStyleColor(ImGuiCol_TitleBg, m_headerColor);
+    ImGui::PushStyleColor(ImGuiCol_TitleBgActive, m_headerColor);
+    ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, m_headerColor);
+    ImGui::PushStyleColor(ImGuiCol_Text, m_textColor);
+
     ImGui::Begin("Inspector");
 
     AGameObject* object = GameObjectManager::GetInstance()->GetSelectedObject();
@@ -23,6 +29,8 @@ void Inspector::DrawUI()
     }
 
     ImGui::End();
+
+    ImGui::PopStyleColor(5);
 }
 
 void Inspector::DrawTransformTab(AGameObject* object)

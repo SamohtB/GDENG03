@@ -9,24 +9,24 @@ Hierarchy::Hierarchy() : AUIScreen("Hierarchy")
 
 void Hierarchy::DrawUI()
 {
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f, 0.2f, 0.2f, 0.9f));
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, m_bodyColor);
+    ImGui::PushStyleColor(ImGuiCol_TitleBg, m_headerColor);
+    ImGui::PushStyleColor(ImGuiCol_TitleBgActive, m_headerColor);
+    ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, m_headerColor);
+    ImGui::PushStyleColor(ImGuiCol_Text, m_textColor);
 
-    ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
+	ImGui::Begin("Hierarchy");
 
-    if (ImGui::Begin("Hierarchy", nullptr, window_flags))
-    {
+	auto objectList = GameObjectManager::GetInstance()->GetAllObjects();
 
-        auto objectList = GameObjectManager::GetInstance()->GetAllObjects();
-
-        for (AGameObject* gameObject : objectList)
-        {
-            DrawGameObjectNode(gameObject);
-        }
-    }
+	for (AGameObject* gameObject : objectList)
+	{
+		DrawGameObjectNode(gameObject);
+	}
 
     ImGui::End();
 
-    ImGui::PopStyleColor();
+    ImGui::PopStyleColor(5);
 }
 
 void Hierarchy::DrawGameObjectNode(AGameObject* gameObject)

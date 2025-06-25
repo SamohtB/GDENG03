@@ -31,16 +31,19 @@ public:
         case PRIMITVE_CUBE:
             name = NameRegistry::GetInstance()->GenerateUniqueName("Cube");
             obj = std::make_shared<Cube>(name);
+            Debug::Log("Cube Spawned");
             break;
 
         case PRIMITVE_PLANE:
             name = NameRegistry::GetInstance()->GenerateUniqueName("Plane");
             obj = std::make_shared<Plane>(name);
+            Debug::Log("Plane Spawned");
             break;
 
         case PRIMITVE_SPHERE:
             name = NameRegistry::GetInstance()->GenerateUniqueName("Sphere");
             obj = std::make_shared<Sphere>(name);
+            Debug::Log("Sphere Spawned");
             break;
 
         default:

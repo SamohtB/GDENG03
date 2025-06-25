@@ -11,13 +11,12 @@ Toolbar::Toolbar() : AUIScreen("TOOLBAR")
 
 void Toolbar::DrawUI()
 {
-    if (ImGui::BeginMainMenuBar())
-    {
-        FileMenu();
-        GameObjects();
-        Windows();
-        DisplayFPS();
-    }
+    ImGui::BeginMainMenuBar();
+
+	FileMenu();
+	GameObjects();
+	Windows();
+	DisplayFPS();
 
     ImGui::EndMainMenuBar();
 }
