@@ -10,13 +10,10 @@ public:
     // Inherited via AUIScreen
     void DrawUI() override;
 
-    void DisplayFPS();
-
-    void GameObjects();
-
-    void FileMenu();
-
 private:
-
+    void FileMenu();
+    void GameObjects();
+    void DisplayFPS();
+    void Windows();
 };
 

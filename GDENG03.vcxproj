@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Inspector.cpp" />
     <ClCompile Include="src\NameRegistry.cpp" />
     <ClCompile Include="src\GameObjectSpawner.cpp" />
     <ClCompile Include="src\Hierarchy.cpp" />
@@ -209,6 +210,7 @@
     <ClCompile Include="src\Toolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Inspector.h" />
     <ClInclude Include="src\NameRegistry.h" />
     <ClInclude Include="src\GameObjectSpawner.h" />
     <ClInclude Include="src\Hierarchy.h" />

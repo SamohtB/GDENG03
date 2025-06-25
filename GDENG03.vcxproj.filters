@@ -121,6 +121,12 @@
     <Filter Include="Engine\EngineGUI\UIScreens\Toolbar">
       <UniqueIdentifier>{397acfcd-5ed5-43e6-b2eb-b2942e8beab0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\EngineGUI\UIScreens\Debug">
+      <UniqueIdentifier>{7282f782-0c3a-4a5b-8d61-3efc518b8175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\EngineGUI\UIScreens\Inspector">
+      <UniqueIdentifier>{63f04a21-a0d2-48c7-9e60-873ff1302070}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -275,6 +281,9 @@
     </ClCompile>
     <ClCompile Include="src\NameRegistry.cpp">
       <Filter>Engine\GameObjectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Inspector.cpp">
+      <Filter>Engine\EngineGUI\UIScreens\Inspector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -466,6 +475,9 @@
     </ClInclude>
     <ClInclude Include="src\NameRegistry.h">
       <Filter>Engine\GameObjectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Inspector.h">
+      <Filter>Engine\EngineGUI\UIScreens\Inspector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

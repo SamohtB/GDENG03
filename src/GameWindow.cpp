@@ -14,17 +14,10 @@
 #include "Quad.h"
 #include "PBSQuads.h"
 #include "AnimatedQuad.h"
-#include "Circle.h"
-
-#include "CircleManager.h"
 
 #include "Debug.h"
 #include "Random.h"
 #include "Colors.h"
-
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx12.h"
 
 GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
 

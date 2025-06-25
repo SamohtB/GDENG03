@@ -9,6 +9,7 @@
 
 #include "Hierarchy.h"
 #include "Toolbar.h"
+#include "Inspector.h"
 
 std::unique_ptr<EngineGUIManager> EngineGUIManager::sharedInstance = nullptr;
 
@@ -39,11 +40,23 @@ void EngineGUIManager::DrawAllUI()
 {
 	for (const auto& screen : m_uiList)
 	{
-		if (screen)
+		if (screen->IsVisible())
 		{
 			screen->DrawUI();
 		}
 	}
+}
+
+std::vector<AUIScreen*> EngineGUIManager::GetAllScreens()
+{
+	std::vector<AUIScreen*> allScreens;
+
+	for (const auto& screen : m_uiList)
+	{
+		allScreens.push_back(screen.get());
+	}
+
+	return allScreens;
 }
 
 EngineGUIManager::EngineGUIManager(HWND hwnd)
@@ -106,6 +119,9 @@ void EngineGUIManager::PopulateGUI()
 	this->m_uiTable[uiNames.HIERARCHY] = hierarchy;
 	this->m_uiList.push_back(hierarchy);
 
+	auto inspector = std::make_shared<Inspector>();
+	this->m_uiTable[uiNames.INSPECTOR] = inspector;
+	this->m_uiList.push_back(inspector);
 }
 
 EngineGUIManager::~EngineGUIManager()

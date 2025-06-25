@@ -2,6 +2,7 @@
 #include "GameObjectSpawner.h"
 #include "Win32App.h"
 #include "EngineTime.h"
+#include "EngineGUIManager.h"
 
 Toolbar::Toolbar() : AUIScreen("TOOLBAR")
 {
@@ -14,6 +15,7 @@ void Toolbar::DrawUI()
     {
         FileMenu();
         GameObjects();
+        Windows();
         DisplayFPS();
     }
 
@@ -61,4 +63,26 @@ void Toolbar::DisplayFPS()
     ImGui::SameLine(windowWidth - textWidth - 20.0f);
 
     ImGui::Text("%s", fpsText.c_str());
+}
+
+void Toolbar::Windows()
+{
+    if (ImGui::BeginMenu("Windows"))
+    {
+        auto uiList = EngineGUIManager::GetInstance()->GetAllScreens();
+ 
+        for (const auto& screen : uiList)
+        {
+            if (screen->GetName() == "TOOLBAR") continue; //exclude self
+
+            bool visible = screen->IsVisible();
+
+            if (ImGui::MenuItem(screen->GetName().c_str(), nullptr, visible))
+            {
+                screen->SetVisible(!visible);
+            }
+        }
+
+        ImGui::EndMenu();
+    }
 }

@@ -24,9 +24,9 @@ public:
     static void Destroy();
 
     void DrawAllUI();
+    std::vector<AUIScreen*> GetAllScreens();
 
     EngineGUIManager(HWND hwnd);
-    void PopulateGUI();
     ~EngineGUIManager();
     EngineGUIManager(EngineGUIManager const&) = delete;
     EngineGUIManager& operator=(EngineGUIManager const&) = delete;
@@ -35,4 +35,6 @@ private:
 
     UIList m_uiList;
     UITable m_uiTable;
+
+    void PopulateGUI();
 };

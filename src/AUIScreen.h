@@ -9,10 +9,14 @@ public:
     AUIScreen(String name);
     ~AUIScreen() = default;
 
-    String GetName();
     virtual void DrawUI() = 0;
 
+    String GetName();
+    bool IsVisible() const;
+    void SetVisible(bool visible);
+
 private:
-    String name;
+    String m_name;
+    bool m_visible;
 };
 
