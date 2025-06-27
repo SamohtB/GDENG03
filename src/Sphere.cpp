@@ -1,8 +1,8 @@
 #include "Sphere.h"
 
-Sphere::Sphere(String name, Vector3 color) : AMeshObject(name, color)
+Sphere::Sphere(String name) : AMeshObject(name)
 {
-    std::vector<POS_COL> vertices;
+    std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
     const uint32_t verticalSegments = TESSELLATION;
@@ -14,29 +14,32 @@ Sphere::Sphere(String name, Vector3 color) : AMeshObject(name, color)
         const float v = 1 - float(i) / float(verticalSegments);
 
         const float latitude = (float(i) * M_PI / float(verticalSegments)) - M_PI / 2.0f;
-        float dy, dxz;
 
+        float dy, dxz;
         DirectX::XMScalarSinCos(&dy, &dxz, latitude);
 
         // Create a single ring of vertices at this latitude.
         for (uint32_t j = 0; j <= horizontalSegments; j++)
         {
             const float u = float(j) / float(horizontalSegments);
-
             const float longitude = float(j) * (M_PI * 2.0f) / float(horizontalSegments);
-            float dx, dz;
 
+            float dx, dz;
             DirectX::XMScalarSinCos(&dx, &dz, longitude);
 
             dx *= dxz;
             dz *= dxz;
 
-            const Vector3 normal = Vector3(dx, dy, dz);
-            //const Vector2 textureCoordinate = Vector2(u, v);
+            Vector3 normal(dx, dy, dz);
+            Vector2 texcoord(u, v);
+            Vector3 position = normal * RADIUS;
 
-            Vector3 position = XMVectorScale(normal, RADIUS);
-            POS_COL vertexData = POS_COL(position, color);
-            vertices.push_back(vertexData);
+            vertices.push_back(Vertex{
+                position,
+                texcoord,
+                normal,
+                Vector3(0, 0, 0) // Placeholder tangent
+                });
         }
     }
 
@@ -60,11 +63,28 @@ Sphere::Sphere(String name, Vector3 color) : AMeshObject(name, color)
         }
     }
 
+    std::vector<Vector3> tangents(vertices.size());
+    std::vector<Vector3> positions(vertices.size());
+    std::vector<Vector3> normals(vertices.size());
+    std::vector<Vector2> texcoords(vertices.size());
+
+    for (size_t i = 0; i < vertices.size(); ++i)
+    {
+        positions[i] = vertices[i].position;
+        normals[i] = vertices[i].normal;
+        texcoords[i] = vertices[i].texcoord;
+    }
+
+    GeoMath::CalculateTangentFrame(indices, positions.data(), normals.data(), texcoords.data(), vertices.size(), tangents.data());
+
+    for (size_t i = 0; i < vertices.size(); ++i)
+        vertices[i].tangent = tangents[i];
+
     SetGeometry(vertices, indices);
-	this->SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void Sphere::OnUpdate(float deltaTime)
+void Sphere::Update(float deltaTime)
 {
 	
 }

@@ -1,5 +1,14 @@
 #pragma once
 #include "pch.h"
+#include "Math.h"
+
+struct Vertex
+{
+    Vector3 position;
+    Vector2 texcoord;
+    Vector3 normal;
+    Vector3 tangent;
+};
 
 class VertexBuffer
 {
@@ -7,9 +16,7 @@ public:
     VertexBuffer() = default;
 	~VertexBuffer() = default;
 
-    template <typename VertexType>
-    VertexBuffer(const std::vector<VertexType>& vertices);
-
+    VertexBuffer(const std::vector<Vertex>& vertices);
     D3D12_VERTEX_BUFFER_VIEW* GetVertexBufferViewPointer();
 
 private:

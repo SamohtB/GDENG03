@@ -1,12 +1,10 @@
 #pragma once
 #include <string>
 
-enum ShaderType : int
+struct ShaderNames
 {
-    DEFAULT_SHADER = 0,
-    TEXTURED = 1,
-    PBS = 2,
-    ANIMATED = 3
+	static inline const std::string LIT = "LIT";
+	static inline const std::string UNLIT = "UNLIT";
 };
 
 struct ShaderDesc

@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include "VertexBuffer.h"
 #include <ResourceUploadBatch.h>
 
 using namespace DirectX;
@@ -25,12 +26,9 @@ public:
 	void StartUpload();
 	void StopAndWaitUpload();
 
+	VertexBufferInfo SchedVertexBuffer(const std::vector<Vertex>& vertices);
 	IndexBufferInfo SchedIndexBuffer(const std::vector<unsigned int>& indices);
 	ComPtr<ID3D12Resource> SchedTexture(const std::wstring& filePath, D3D12_CPU_DESCRIPTOR_HANDLE handle);
-	ComPtr<ID3D12Resource> SchedWhitePixelTexture(D3D12_CPU_DESCRIPTOR_HANDLE handle);
-
-	template<typename VertexType>
-	VertexBufferInfo SchedVertexBuffer(const std::vector<VertexType>& vertices);
 
 private:
 	ComPtr<ID3D12Device> m_device;

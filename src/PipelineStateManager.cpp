@@ -6,32 +6,33 @@ PipelineStateManager::PipelineStateManager(ID3D12Device* device)
     this->m_shaderLoader = std::make_unique<ShaderLoader>();
 	CreateRootSignature(device);
 
-    // === Default ===
-    ShaderDesc vertexshaderDesc(L"Assets/Shaders/DefaultVertexShader.hlsl", L"VSMain", L"vs_6_5");
-    ShaderDesc pixelShaderDesc(L"Assets/Shaders/DefaultPixelShader.hlsl", L"PSMain", L"ps_6_5");
-    RegisterPipeline(device, InputLayoutType::Pos_Color, vertexshaderDesc, pixelShaderDesc, L"Default");
+    // === LIT - DEFAULT ===
+    ShaderDesc litVertex(L"Assets/Shaders/PBSVertexShader.hlsl", L"VSMain", L"vs_6_5");
+    ShaderDesc litPixel(L"Assets/Shaders/PBSPixelShader.hlsl", L"PSMain", L"ps_6_5");
+    RegisterPipeline(device, ShaderNames::LIT, litVertex, litPixel);
 
-    // === Textured ===
-    ShaderDesc vertexShaderDesc_Textured(L"Assets/Shaders/TexturedVertexShader.hlsl", L"VSMain", L"vs_6_5");
-    ShaderDesc pixelShaderDesc_Textured(L"Assets/Shaders/TexturedPixelShader.hlsl", L"PSMain", L"ps_6_5");
-    RegisterPipeline(device, InputLayoutType::Pos_Tex_Col, vertexShaderDesc_Textured, pixelShaderDesc_Textured, L"Textured");
-
-    // === PBS pipeline (Shader Model 6.6) ===
-    ShaderDesc vertexShaderDesc_PBS(L"Assets/Shaders/PBSVertexShader.hlsl", L"VSMain", L"vs_6_5");
-    ShaderDesc pixelShaderDesc_PBS(L"Assets/Shaders/PBSPixelShader.hlsl", L"PSMain", L"ps_6_5");
-    RegisterPipeline(device, InputLayoutType::Pos_Tex_Nor_Tan_Bit, vertexShaderDesc_PBS, pixelShaderDesc_PBS, L"PBS");
-
-    // === Animated ===
-    ShaderDesc vertexShaderDesc_Animated(L"Assets/Shaders/Pos2Col2Vertex.hlsl", L"VSMain", L"vs_6_5");
-    ShaderDesc pixelShaderDesc_Animated(L"Assets/Shaders/Pos2Col2Pixel.hlsl", L"PSMain", L"ps_6_5");
-    RegisterPipeline(device, InputLayoutType::Pos_Pos_Col_Col, vertexShaderDesc_Animated, pixelShaderDesc_Animated, L"Animated");
+    // === UNLIT ===
+    ShaderDesc unlitVertex(L"Assets/Shaders/DefaultVertexShader.hlsl", L"VSMain", L"vs_6_5");
+    ShaderDesc unlitPixel(L"Assets/Shaders/DefaultPixelShader.hlsl", L"PSMain", L"ps_6_5");
+    RegisterPipeline(device, ShaderNames::UNLIT, unlitVertex, unlitPixel);
 }
 
-ID3D12PipelineState* PipelineStateManager::GetPipelineState(InputLayoutType layout, const std::wstring& shaderName) const
+ID3D12PipelineState* PipelineStateManager::GetPipelineState(const std::string& shaderName) const
 {
-	PipelineMapKey key = { layout, shaderName };
-	auto it = m_pipelineStates.find(key);
-	return (it != m_pipelineStates.end()) ? it->second.Get() : nullptr;
+    auto it = m_pipelineStates.find(shaderName);
+    if (it != m_pipelineStates.end())
+    {
+        return it->second.Get();
+    }
+
+    Debug::LogError("[Pipeline] Shader not found: " + shaderName + ". Falling back to UNLIT.");
+
+    auto fallback = m_pipelineStates.find(ShaderNames::UNLIT);
+    if (fallback != m_pipelineStates.end())
+        return fallback->second.Get();
+
+    Debug::LogError("[Pipeline] Fallback UNLIT pipeline also not found!");
+    return nullptr;
 }
 
 ID3D12RootSignature* PipelineStateManager::GetRootSignature() const
@@ -39,14 +40,22 @@ ID3D12RootSignature* PipelineStateManager::GetRootSignature() const
 	return m_rootSignature.Get();
 }
 
-void PipelineStateManager::RegisterPipeline(ID3D12Device* device, InputLayoutType layout, const ShaderDesc& vertexDesc, const ShaderDesc& pixelDesc, const std::wstring& shaderName)
+void PipelineStateManager::RegisterPipeline(ID3D12Device* device, const std::string& shaderName, const ShaderDesc& vertexDesc, const ShaderDesc& pixelDesc)
 {
-	const auto& inputLayout = InputLayouts::Get(layout); 
-    auto vs = m_shaderLoader->CompileShader(vertexDesc);
-    auto ps = m_shaderLoader->CompileShader(pixelDesc);
-	auto pso = CreatePipelineState(device, inputLayout, vs, ps);
+    try 
+    {
+        auto vs = m_shaderLoader->CompileShader(vertexDesc);
+        auto ps = m_shaderLoader->CompileShader(pixelDesc);
 
-	m_pipelineStates[{layout, shaderName}] = pso;
+        auto pso = CreatePipelineState(device, vs, ps);
+
+        m_pipelineStates[shaderName] = pso;
+    }
+    catch (...) 
+    {
+        Debug::LogError("Failed to register pipeline for " + shaderName);
+    }
+    
 }
 
 void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
@@ -93,9 +102,15 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
         "Root Signature creation failed!");
 }
 
-ComPtr<ID3D12PipelineState> PipelineStateManager::CreatePipelineState(ID3D12Device* device, const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout,
-    ComPtr<IDxcBlob> vs, ComPtr<IDxcBlob> ps)
+ComPtr<ID3D12PipelineState> PipelineStateManager::CreatePipelineState(ID3D12Device* device, ComPtr<IDxcBlob> vs, ComPtr<IDxcBlob> ps)
 {
+    std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout =
+    {
+        { "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,    0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "TANGENT",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+    };
 
     D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
     depthStencilDesc.DepthEnable = TRUE;

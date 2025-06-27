@@ -1,9 +1,6 @@
 #pragma once
 #include "pch.h"
 
-#include "ShaderTypes.h"
-#include "MaterialTypes.h"
-
 #include "ConstantBuffer.h"
 #include "DepthBuffer.h"
 
@@ -24,7 +21,7 @@ public:
 	void UpdateFrameConstants(const FrameConstantsData& data);
 	D3D12_GPU_VIRTUAL_ADDRESS GetFrameConstantsAddress();
 
-	ID3D12PipelineState* GetPipelineState(const ShaderType& type) const;
+	ID3D12PipelineState* GetPipelineState(const std::string& shaderName) const;
 	UINT GetCurrentFrameIndex();
 
 	ComPtr<ID3D12Device> GetD3DDevicePtr();

@@ -1,83 +1,74 @@
 #include "MaterialManager.h"
 #include "Debug.h"
 
-MaterialManager::MaterialManager(ID3D12Device* device)
+MaterialManager::MaterialManager(ComPtr<ID3D12Device> device) : m_device(device)
 {
-    this->m_materialConstantsBuffer = std::make_unique<MaterialConstantsBuffer>(device, MAX_MATERIAL_COUNT * FRAME_COUNT);
 }
 
 void MaterialManager::LoadInitialMaterials()
 {
-    LoadMaterial(MaterialType::DEFAULT_MAT, MaterialData::Materials.at(MaterialType::DEFAULT_MAT));
-    Debug::Log("DEFAULT_MAT Material Loaded");
+    CreateMaterial(MaterialNames::DEFAULT,
+        TextureNames::DEFAULT, Vector4(1, 1, 1, 1),
+        TextureNames::DEFAULT, 0.0f,
+        TextureNames::DEFAULT, 0.0f,
+        TextureNames::DEFAULT, 0.0f,
+        TextureNames::DEFAULT, 0.0f);
 
-    LoadMaterial(MaterialType::ROCK_0, MaterialData::Materials.at(MaterialType::ROCK_0));
-    Debug::Log("ROCK_0 Material Loaded");
+    CreateMaterial(MaterialNames::ROCK,
+        TextureNames::ROCK_COLOR, Vector4(1, 1, 1, 1),
+        TextureNames::ROCK_NORMAL, 1.0f,
+        TextureNames::DEFAULT, 0.0f,
+        TextureNames::ROCK_ROUGH, 1.0f,
+        TextureNames::ROCK_AO, 1.0f);
 
-    LoadMaterial(MaterialType::ROCK_1, MaterialData::Materials.at(MaterialType::ROCK_1));
-    Debug::Log("ROCK_1 Material Loaded");
+    CreateMaterial(MaterialNames::METAL,
+        TextureNames::METAL_COLOR, Vector4(1, 1, 1, 1),
+        TextureNames::METAL_NORMAL, 1.0f,
+        TextureNames::METAL_METAL, 0.8f,
+        TextureNames::METAL_ROUGH, 1.0f,
+        TextureNames::DEFAULT, 0.0f);
 
-    LoadMaterial(MaterialType::METAL_PLATE_0, MaterialData::Materials.at(MaterialType::METAL_PLATE_0));
-    Debug::Log("METAL_PLATE_0 Material Loaded");
-
-    LoadMaterial(MaterialType::METAL_PLATE_1, MaterialData::Materials.at(MaterialType::METAL_PLATE_1));
-    Debug::Log("METAL_PLATE_1 Material Loaded");
-
-    LoadMaterial(MaterialType::BRICKS_0, MaterialData::Materials.at(MaterialType::BRICKS_0));
-    Debug::Log("BRICKS_0 Material Loaded");
-
-    LoadMaterial(MaterialType::BRICKS_1, MaterialData::Materials.at(MaterialType::BRICKS_1));
-    Debug::Log("BRICKS_1 Material Loaded");
+    CreateMaterial(MaterialNames::BRICKS,
+        TextureNames::BRICKS_COLOR, Vector4(1, 1, 1, 1),
+        TextureNames::BRICKS_NORMAL, 1.0f,
+        TextureNames::DEFAULT, 0.0f,
+        TextureNames::BRICKS_ROUGH, 1.0f,
+        TextureNames::BRICKS_AO, 1.0f);
+    
 }
 
-
-void MaterialManager::LoadMaterial(const MaterialType& type, const MaterialDescription& description)
+void MaterialManager::CreateMaterial(const std::string& materialName)
 {
-    std::array<UINT, FRAME_COUNT> cbIndices{};
-
-    MaterialConstantsData matData = {};
-    matData.diffuseHandleIndex = description.albedoTextureIndex;
-    matData.normalHandleIndex = description.normalTextureIndex;
-    matData.normalStr = description.normalStr;
-    matData.metalHandleIndex = description.metallicTextureIndex;
-    matData.metalStr = description.metallicStr;
-    matData.roughHandleIndex = description.roughTextureIndex;
-    matData.roughStr = description.roughStr;
-    matData.ambientOcclussionHandleIndex = description.ambientOcclusionTextureIndex;
-    matData.ambientOcclussionStr = description.ambientOcclusionStr;
-    matData.materialFlags = MaterialData::GetFlags(description);
-
-    for (int i = 0; i < FRAME_COUNT; i++)
+    if (m_materialMap.find(materialName) != m_materialMap.end())
     {
-        cbIndices[i] = ReserveSlot();
-        m_materialConstantsBuffer->Update(matData, cbIndices[i]);
+        Debug::LogWarning("Duplicated Material! " + materialName);
     }
 
-    auto mat = std::make_unique<Material>(description, matData);
-
-    this->m_cbMap[type] = cbIndices;
-    this->m_materialMap[type] = std::move(mat);
+    auto material = std::make_unique<Material>(m_device.Get(), materialName);
+    m_materialMap[materialName] = std::move(material);
+    Debug::Log("Created " + materialName);
 }
 
-void MaterialManager::UpdateMaterialConstants(const MaterialType& type, UINT frameIndex)
+void MaterialManager::CreateMaterial(const std::string& materialName, const std::string& albedoTex, const Vector4& albedoColor, const std::string& normalTex, float normalStrength, const std::string& metalTex, float metalStrength, const std::string& roughTex, float roughStrength, const std::string& aoTex, float aoStrength)
 {
-    UINT cbIndex = this->m_cbMap[type][frameIndex];
-    auto data = this->m_materialMap[type]->GetMaterialData();
-    m_materialConstantsBuffer->Update(data, cbIndex);
+    if (m_materialMap.find(materialName) != m_materialMap.end())
+    {
+        Debug::LogWarning("Duplicated Material! " + materialName);
+    }
+
+    auto material = std::make_unique<Material>(m_device.Get(), materialName, albedoTex, albedoColor, normalTex, normalStrength,
+        metalTex, metalStrength, roughTex, roughStrength, aoTex, aoStrength);
+    m_materialMap[materialName] = std::move(material);
+    Debug::Log("Created " + materialName);
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS MaterialManager::GetMaterialConstantsAddress(MaterialType type, UINT frameIndex)
+Material* MaterialManager::GetMaterial(const String& materialName)
 {
-    UINT cbIndex = m_cbMap[type][frameIndex];
-    return this->m_materialConstantsBuffer->GetGPUVirtualAddress(cbIndex);
+    return this->m_materialMap[materialName].get();
 }
 
-UINT MaterialManager::ReserveSlot()
+D3D12_GPU_VIRTUAL_ADDRESS MaterialManager::GetMaterialDataAddress(const String& materialName, UINT frameIndex)
 {
-    if (m_nextSlot < static_cast<UINT>(MAX_MATERIAL_COUNT))
-        return m_nextSlot++;
-
-    Debug::LogError(" MaterialManager::ReserveSlot - No available constant buffer slots left.");
-    Debug::Assert(false, "Exceeded material constant buffer capacity!");
-    return UINT_MAX;
+    return this->m_materialMap[materialName]->GetCBufferAddress(frameIndex);
 }
+

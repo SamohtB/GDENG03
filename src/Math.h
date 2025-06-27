@@ -18,12 +18,11 @@ inline T Clamp(const T& value, const T& min, const T& max)
 namespace GeoMath
 {
 	static void CalculateTangentFrame(const std::vector<unsigned int>& indices, const Vector3* positions, const Vector3* normals,
-		const Vector2* texcoords, size_t vertexCount, Vector3* tangents, Vector3* bitangents)
+		const Vector2* texcoords, size_t vertexCount, Vector3* tangents)
 	{
 		for (int i = 0; i < vertexCount; ++i)
 		{
 			tangents[i] = Vector3(0.0f, 0.0f, 0.0f);
-			bitangents[i] = Vector3(0.0f, 0.0f, 0.0f);
 		}
 
         for (int i = 0; i < indices.size(); i += 3)
@@ -49,21 +48,15 @@ namespace GeoMath
             float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
 
             Vector3 tangent = f * (deltaUV2.y * edge1 - deltaUV1.y * edge2);
-            Vector3 bitangent = f * (-deltaUV2.x * edge1 + deltaUV1.x * edge2);
 
             tangents[i0] += tangent;
             tangents[i1] += tangent;
             tangents[i2] += tangent;
-
-            bitangents[i0] += bitangent;
-            bitangents[i1] += bitangent;
-            bitangents[i2] += bitangent;
         }
 
         for (int i = 0; i < vertexCount; ++i)
         {
             tangents[i].Normalize();
-            bitangents[i].Normalize();
         }
 
 	};

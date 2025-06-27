@@ -11,10 +11,6 @@
 #include "RenderSystem.h"
 #include "BatchUploader.h"
 
-#include "Quad.h"
-#include "PBSQuads.h"
-#include "AnimatedQuad.h"
-
 #include "Debug.h"
 #include "Random.h"
 #include "Colors.h"
@@ -24,7 +20,7 @@ GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
 void GameWindow::OnCreate(HWND hwnd)
 {
 	GraphicsEngine::Initialize(this->m_width, this->m_height, hwnd);
-	GameObjectManager::Initialize(GraphicsEngine::GetInstance()->GetRenderSystem()->GetD3DDevicePtr().Get());
+	GameObjectManager::Initialize();
 	EngineTime::Initialize(60);
 	InputSystem::Initialize();
 	CameraManager::Initialize(this->m_width, this->m_height);

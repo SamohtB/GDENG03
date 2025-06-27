@@ -4,11 +4,11 @@
 class Sphere : public AMeshObject
 {
 public:
-    Sphere(String name, Vector3 color = ColorPalette::White);
+    Sphere(String name);
     virtual ~Sphere() = default;
 
 protected:
-	void OnUpdate(float deltaTime) override;
+	void Update(float deltaTime) override;
 
 private:
     static const uint32_t TESSELLATION = 16;

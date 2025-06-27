@@ -46,7 +46,7 @@ GraphicsEngine::GraphicsEngine(UINT width, UINT height, HWND hwnd)
 
 	try
 	{
-		this->m_materialManager = std::make_unique<MaterialManager>(device.Get());
+		this->m_materialManager = std::make_unique<MaterialManager>(device);
 	}
 	catch (...)
 	{

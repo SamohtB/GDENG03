@@ -1,32 +1,32 @@
 #include "AMeshObject.h"
 
+#include "GraphicsEngine.h"
+#include "TextureManager.h"
+#include "MaterialManager.h"
 #include "DeviceContext.h"
 #include "RenderSystem.h"
-#include "RenderDevice.h"
-#include "GraphicsEngine.h"
+
 #include "GameObjectManager.h"
 
-AMeshObject::AMeshObject(String name, Vector3 color, ShaderType shader) : AGameObject(name), m_shader(shader), m_color(color) {}
+AMeshObject::AMeshObject(String name, String shaderName) 
+    : AGameObject(name), m_shaderName(shaderName), m_indicesSize(0), m_topology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) {}
 
 void AMeshObject::Update(float deltaTime)
 {
-	this->OnUpdate(deltaTime);
-
-    ObjectConstantsData objData = {};
-    objData.modelMatrix = this->GetLocalMatrix();
-    objData.objectId = this->GetId();
-
-    GameObjectManager::GetInstance()->UpdateConstantBuffer(this->GetId(), objData);
 }
 
 void AMeshObject::Draw(DeviceContext* context)
 {
-    auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
+    auto graphicsEngine = GraphicsEngine::GetInstance();
+    auto renderSystem = graphicsEngine->GetRenderSystem();
+    auto materialManager = graphicsEngine->GetMaterialManager();
     auto frameIndex = renderSystem->GetCurrentFrameIndex();
 
-    context->SetPSO(renderSystem->GetPipelineState(this->m_shader));
-    context->SetObjectConstants(GameObjectManager::GetInstance()->GetObjectConstantsAddress(this->GetId(), frameIndex));
+    context->SetPSO(renderSystem->GetPipelineState(this->m_shaderName));
+    context->SetTexture(graphicsEngine->GetTextureManager()->GetSRVStart());
+    context->SetObjectConstants(this->m_constantBuffer->GetGPUVirtualAddress(frameIndex));
     context->SetFrameConstants(renderSystem->GetFrameConstantsAddress());
+    context->SetMaterialConstants(materialManager->GetMaterialDataAddress(this->m_materialName, frameIndex));
 
     context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());
     context->SetIndexBuffer(this->m_indexBuffer->GetIndexBufferViewPointer());
@@ -40,13 +40,9 @@ void AMeshObject::SetTopology(D3D12_PRIMITIVE_TOPOLOGY topology)
 	this->m_topology = topology;
 }
 
-template<typename T>
-void AMeshObject::SetGeometry(std::vector<T> vertices, std::vector<unsigned int> indices)
+void AMeshObject::SetGeometry(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 {
     m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);
     m_indexBuffer = std::make_unique<IndexBuffer>(indices);
     m_indicesSize = static_cast<UINT>(indices.size());
 }
-
-/* Add Other Preset Input Layouts */
-template void AMeshObject::SetGeometry(std::vector<POS_COL>, std::vector<unsigned int>);

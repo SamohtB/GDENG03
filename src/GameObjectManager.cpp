@@ -11,11 +11,11 @@ GameObjectManager* GameObjectManager::GetInstance()
     return sharedInstance;
 }
 
-void GameObjectManager::Initialize(ID3D12Device* device)
+void GameObjectManager::Initialize()
 {
     try 
     {
-        sharedInstance = new GameObjectManager(device);
+        sharedInstance = new GameObjectManager();
     }
     catch (...)
     {
@@ -28,19 +28,8 @@ void GameObjectManager::Destroy()
     delete sharedInstance;
 }
 
-UINT GameObjectManager::ReserveSlot()
+GameObjectManager::GameObjectManager()
 {
-    if (m_nextRenderedSlot < MAX_OBJECT_COUNT * FRAME_COUNT)
-        return m_nextRenderedSlot++;
-
-    Debug::LogError("GameObjectManager::ReserveSlot - No available constant buffer slots left.");
-    Debug::Assert(false, "Exceeded material constant buffer capacity!");
-    return UINT_MAX;
-}
-
-GameObjectManager::GameObjectManager(ID3D12Device* device)
-{
-    this->m_objectConstantsBuffer = std::make_unique<ObjectConstantsBuffer>(device, MAX_OBJECT_COUNT * FRAME_COUNT);
 }
 
 AGameObject* GameObjectManager::FindObjectByName(String name)
@@ -59,7 +48,7 @@ std::vector<AGameObject*> GameObjectManager::GetAllObjects()
 {
     std::vector<AGameObject*> allObjects;
 
-    for (const auto& obj : m_renderedObjectList)
+    for (const auto& obj : m_objectList)
     {
         allObjects.push_back(obj.get());
     }
@@ -71,7 +60,7 @@ int GameObjectManager::ActiveObjects()
 {
     int activeCount = 0;
 
-    for (const auto& object : this->m_logicObjectList)
+    for (const auto& object : this->m_objectList)
     {
         if (object->IsActive())
         {
@@ -79,27 +68,12 @@ int GameObjectManager::ActiveObjects()
         }
     }
 
-    for (const auto& obj : m_renderedObjectList)
-    {
-        if (obj->IsActive())
-        {
-            activeCount++;
-        }
-    }
     return activeCount;
 }
 
 void GameObjectManager::UpdateAll(float deltaTime)
 {
-    for (const auto& object : this->m_logicObjectList)
-    {
-        if (object->IsActive())
-        {
-            object->Update(deltaTime);
-        }
-    }
-
-    for (const auto& object : this->m_renderedObjectList)
+    for (const auto& object : this->m_objectList)
     {
         if (object->IsActive())
         {
@@ -110,7 +84,7 @@ void GameObjectManager::UpdateAll(float deltaTime)
 
 void GameObjectManager::RenderAll(DeviceContext* dvcContext)
 {
-    for (const auto& object : m_renderedObjectList)
+    for (const auto& object : m_objectList)
     {
         if (object->IsActive())
         {
@@ -123,40 +97,9 @@ void GameObjectManager::AddGameObject(GameObjectPtr gameObject, bool hasConstant
 {
 	if (!gameObject) return;
 
-    if (hasConstantBuffer)
-    {
-        std::array<UINT, FRAME_COUNT> cbIndices{};
-
-        for (int i = 0; i < FRAME_COUNT; i++)
-        {
-            cbIndices[i] = this->ReserveSlot();
-
-            ObjectConstantsData objData = {};
-            objData.modelMatrix = gameObject->GetLocalMatrix();
-            objData.objectId = cbIndices[i];
-
-            m_objectConstantsBuffer->Update(objData, cbIndices[i]);
-        }
-
-        gameObject->SetId(cbIndices[0]);
-        m_cbMap[cbIndices[0]] = cbIndices;
-        m_renderedObjectList.push_back(gameObject);
-    }
-
-    else
-    {
-        gameObject->SetId(this->m_nextLogicSlot);
-        this->m_nextLogicSlot++;
-        m_logicObjectList.push_back(gameObject);
-    }
-
-    const std::string& name = gameObject->GetName();
-    if (m_objectTable.contains(name))
-    {
-        Debug::LogWarning("GameObjectManager::AddGameObject: Object with name '" + name + "' already exists. Overwriting.");
-    }
-
-    m_objectTable[name] = gameObject;
+    gameObject->SetId(0);
+    m_objectList.push_back(gameObject);
+    m_objectTable[gameObject->GetName()] = gameObject;
 }
 
 void GameObjectManager::DeleteObject(AGameObject* gameObject)
@@ -169,29 +112,16 @@ void GameObjectManager::DeleteObject(AGameObject* gameObject)
         m_objectTable.erase(nameIt);
     }
 
-    m_renderedObjectList.erase(
+    m_objectList.erase(
         std::remove_if(
-            m_renderedObjectList.begin(), 
-            m_renderedObjectList.end(), 
+            m_objectList.begin(),
+            m_objectList.end(),
             [gameObject](const GameObjectPtr& ptr)
             {
 				return ptr.get() == gameObject;
             }),
-        m_renderedObjectList.end()
+        m_objectList.end()
     );
-
-    m_logicObjectList.erase(
-        std::remove_if(
-            m_logicObjectList.begin(),
-            m_logicObjectList.end(),
-            [gameObject](const GameObjectPtr& ptr)
-            {
-                return ptr.get() == gameObject;
-            }),
-        m_logicObjectList.end()
-    );
-
-    /* To do: Add Unallocate slot */
 }
 
 void GameObjectManager::DeleteObjectByName(String name)
@@ -202,15 +132,9 @@ void GameObjectManager::DeleteObjectByName(String name)
     GameObjectPtr gameObject = it->second;
 
     // Remove from rendered object list
-    m_renderedObjectList.erase(
-        std::remove(m_renderedObjectList.begin(), m_renderedObjectList.end(), gameObject),
-        m_renderedObjectList.end()
-    );
-
-    // Remove from logic object list
-    m_logicObjectList.erase(
-        std::remove(m_logicObjectList.begin(), m_logicObjectList.end(), gameObject),
-        m_logicObjectList.end()
+    m_objectList.erase(
+        std::remove(m_objectList.begin(), m_objectList.end(), gameObject),
+        m_objectList.end()
     );
 
     // Remove from name table
@@ -219,8 +143,7 @@ void GameObjectManager::DeleteObjectByName(String name)
 
 void GameObjectManager::ClearAllObjects()
 {
-    m_renderedObjectList.clear();
-    m_logicObjectList.clear();
+    m_objectList.clear();
     m_objectTable.clear();
 }
 
@@ -233,18 +156,4 @@ void GameObjectManager::SetSelectedObject(AGameObject* object)
 {
 	if (object == this->m_selectedObject) return; // No change
 	this->m_selectedObject = object;
-}
-
-void GameObjectManager::UpdateConstantBuffer(UINT objId, const ObjectConstantsData& data)
-{
-    auto frameIndex = GraphicsEngine::GetInstance()->GetRenderSystem()->GetCurrentFrameIndex();
-    UINT cbIndex = this->m_cbMap[objId][frameIndex];
-
-    m_objectConstantsBuffer->Update(data, cbIndex);
-}
-
-D3D12_GPU_VIRTUAL_ADDRESS GameObjectManager::GetObjectConstantsAddress(UINT objectId, UINT frameIndex)
-{
-    UINT cbIndex = m_cbMap[objectId][frameIndex];
-    return m_objectConstantsBuffer->GetGPUVirtualAddress(cbIndex);
 }

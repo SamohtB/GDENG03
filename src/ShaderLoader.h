@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "ShaderTypes.h"
+#include "ShaderNames.h"
 #include <dxcapi.h>
 
 class ShaderLoader

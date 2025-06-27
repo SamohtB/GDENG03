@@ -4,13 +4,12 @@
 class Plane : public AMeshObject
 {
 public:
-	Plane(String name, Vector3 color = ColorPalette::White);
+	Plane(String name);
 	~Plane() = default;
 
 	// Inherited via AMeshObject
-	void OnUpdate(float deltaTime) override;
+	void Update(float deltaTime) override;
 
 private:
-	float m_ticks = 0.0f;
 };
 

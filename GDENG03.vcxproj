@@ -151,7 +151,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\DebugConsole.cpp" />
     <ClCompile Include="src\Inspector.cpp" />
     <ClCompile Include="src\NameRegistry.cpp" />
     <ClCompile Include="src\GameObjectSpawner.cpp" />
@@ -181,17 +180,14 @@
     </ClCompile>
     <ClCompile Include="src\Plane.cpp" />
     <ClCompile Include="src\Cube.cpp" />
-    <ClCompile Include="src\AnimatedQuad.cpp" />
     <ClCompile Include="src\EngineTime.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\MaterialManager.cpp" />
     <ClCompile Include="src\ShaderLoader.cpp" />
-    <ClCompile Include="src\PBSQuads.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\BatchUploader.cpp" />
     <ClCompile Include="src\RenderDevice.cpp" />
     <ClCompile Include="src\DeviceContext.cpp" />
-    <ClCompile Include="src\Quad.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
     <ClCompile Include="src\GameObjectManager.cpp" />
     <ClCompile Include="src\GameWindow.cpp" />
@@ -211,7 +207,8 @@
     <ClCompile Include="src\Toolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\DebugConsole.h" />
+    <ClInclude Include="src\MaterialNames.h" />
+    <ClInclude Include="src\ShaderNames.h" />
     <ClInclude Include="src\Inspector.h" />
     <ClInclude Include="src\NameRegistry.h" />
     <ClInclude Include="src\GameObjectSpawner.h" />
@@ -242,22 +239,16 @@
     <ClInclude Include="src\Random.h" />
     <ClInclude Include="src\ConstantBuffer.h" />
     <ClInclude Include="src\Cube.h" />
-    <ClInclude Include="src\AnimatedQuad.h" />
     <ClInclude Include="src\EngineTime.h" />
     <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\MaterialManager.h" />
     <ClInclude Include="src\ShaderLoader.h" />
-    <ClInclude Include="src\MaterialTypes.h" />
     <ClInclude Include="src\Math.h" />
-    <ClInclude Include="src\PBSQuads.h" />
-    <ClInclude Include="src\ShaderTypes.h" />
     <ClInclude Include="src\IndexBuffer.h" />
     <ClInclude Include="src\BatchUploader.h" />
     <ClInclude Include="src\RenderDevice.h" />
     <ClInclude Include="src\DeviceContext.h" />
     <ClInclude Include="src\Debug.h" />
-    <ClInclude Include="src\InputLayouts.h" />
-    <ClInclude Include="src\Quad.h" />
     <ClInclude Include="src\AGameObject.h" />
     <ClInclude Include="src\GameObjectManager.h" />
     <ClInclude Include="src\GameWindow.h" />
@@ -271,11 +262,10 @@
     <ClInclude Include="src\SwapChainManager.h" />
     <ClInclude Include="src\VertexBuffer.h" />
     <ClInclude Include="src\Win32App.h" />
-    <ClInclude Include="src\VertexTypes.h" />
     <ClInclude Include="src\TextureManager.h" />
     <ClInclude Include="src\Texture.h" />
-    <ClInclude Include="src\TextureTypes.h" />
     <ClInclude Include="src\Toolbar.h" />
+    <ClInclude Include="src\TextureNames.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\DefaultVertexShader.hlsl">
@@ -287,46 +277,6 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </FxCompile>
-    <FxCompile Include="Assets\Shaders\Pos2Col2Pixel.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </FxCompile>
-    <FxCompile Include="Assets\Shaders\Pos2Col2Vertex.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </FxCompile>
-    <FxCompile Include="Assets\Shaders\TexturedPixelShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </FxCompile>
-    <FxCompile Include="Assets\Shaders\TexturedVertexShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

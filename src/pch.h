@@ -29,4 +29,5 @@
 
 // WRL
 using Microsoft::WRL::ComPtr;
+using String = std::string;
 

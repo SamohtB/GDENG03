@@ -3,31 +3,27 @@
 #include "FrameConstants.h"
 
 #include "ConstantBuffer.h"
-#include "MaterialTypes.h"
+#include "MaterialNames.h"
 #include "Material.h"
 
 class MaterialManager
 {
 public:
-    MaterialManager(ID3D12Device* device);
+    MaterialManager(ComPtr<ID3D12Device> device);
     ~MaterialManager() = default;
 
     using MaterialPtr = std::unique_ptr<Material>;
-    using MaterialMap = std::unordered_map<MaterialType, MaterialPtr>;
-    using CBMap = std::unordered_map<MaterialType, std::array<UINT, FRAME_COUNT>>;
+    using MaterialMap = std::unordered_map<String, MaterialPtr>;    
 
     void LoadInitialMaterials();
-    void LoadMaterial(const MaterialType& type, const MaterialDescription& description);
-    void UpdateMaterialConstants(const MaterialType& type, UINT frameIndex);
-    D3D12_GPU_VIRTUAL_ADDRESS GetMaterialConstantsAddress(MaterialType type, UINT frameIndex);
+    void CreateMaterial(const std::string& materialName);
+    void CreateMaterial(const std::string& materialName, const std::string& albedoTex, const Vector4& albedoColor, const std::string& normalTex, float normalStrength, 
+        const std::string& metalTex, float metalStrength, const std::string& roughTex, float roughStrength, const std::string& aoTex, float aoStrength);
+    
+    Material* GetMaterial(const String& materialName);
+    D3D12_GPU_VIRTUAL_ADDRESS GetMaterialDataAddress(const String& materialName, UINT frameIndex);
 
 private:
-    UINT ReserveSlot();
-
-    CBMap m_cbMap;
+    ComPtr<ID3D12Device> m_device;
     MaterialMap m_materialMap;
-    std::unique_ptr<MaterialConstantsBuffer> m_materialConstantsBuffer;
-    
-    UINT m_nextSlot = 0;
-    const int MAX_MATERIAL_COUNT = 128;
 };

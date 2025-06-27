@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include "FrameConstants.h"
 #include "Math.h"
 #include "Debug.h"
 
@@ -12,12 +13,11 @@ template<typename T>
 class ConstantBuffer
 {
 public:
-    ConstantBuffer(ID3D12Device* device, UINT count);
+    ConstantBuffer(ID3D12Device* device);
     virtual ~ConstantBuffer();
 
     D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress(UINT index) const;
     void Update(const T& data, UINT index);
-
 
 protected:
     ComPtr<ID3D12Resource> m_resource;
@@ -26,10 +26,10 @@ protected:
 };
 
 template<typename T>
-inline ConstantBuffer<T>::ConstantBuffer(ID3D12Device* device, UINT count)
+inline ConstantBuffer<T>::ConstantBuffer(ID3D12Device* device)
 {
     m_alignedSize = Align256(sizeof(T));
-    UINT totalBufferSize = m_alignedSize * count;
+    UINT totalBufferSize = m_alignedSize * FRAME_COUNT;
 
     Debug::Assert(totalBufferSize <= 65536, "CB size too big for a single constant buffer (max 64KB)");
 
@@ -67,14 +67,15 @@ inline void ConstantBuffer<T>::Update(const T& data, UINT index)
 
 struct alignas(256) MaterialConstantsData
 {
-    uint32_t diffuseHandleIndex = 0;
+    uint32_t albedoHandleIndex = 0;
+    Vector4 baseColor;
     uint32_t normalHandleIndex = 0;
     float normalStr = 0;
     uint32_t metalHandleIndex = 0;
     float metalStr = 0;
     uint32_t roughHandleIndex = 0;
     float roughStr = 0;
-    uint32_t ambientOcclussionHandleIndex = 0;
+    uint32_t ambientOcclusionHandleIndex = 0;
     float ambientOcclussionStr = 0;
     uint32_t materialFlags = 0;
 };
@@ -88,7 +89,6 @@ public:
 struct alignas(256) ObjectConstantsData
 {
     Matrix modelMatrix;
-    UINT objectId;
 };
 
 class ObjectConstantsBuffer : public ConstantBuffer<ObjectConstantsData>
