@@ -7,6 +7,8 @@
 #include "CameraManager.h"
 #include "EngineGUIManager.h"
 #include "NameRegistry.h"
+#include "TextureManager.h"
+#include "MaterialManager.h"
 
 #include "RenderSystem.h"
 #include "BatchUploader.h"
@@ -30,6 +32,9 @@ void GameWindow::OnCreate(HWND hwnd)
 	auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
+
+	GraphicsEngine::GetInstance()->GetTextureManager()->LoadInitialTextures();
+	GraphicsEngine::GetInstance()->GetMaterialManager()->LoadInitialMaterials();
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
 } 

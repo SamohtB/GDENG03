@@ -9,8 +9,6 @@ Material::Material(ID3D12Device* device, const String& name) : m_name(name)
     m_handleCache.fill(0);
     m_constantBuffer = std::make_unique<MaterialConstantsBuffer>(device);
     m_isDirty = true;
-
-    UpdateIfDirty();
 }
 
 Material::Material(ID3D12Device* device, const String& name, const String& albedoTexture, const Vector4& albedoColor, const String& normalTexture, float normalStrength,
@@ -27,7 +25,6 @@ Material::Material(ID3D12Device* device, const String& name, const String& albed
     SetMap(MaterialMapType::AO, aoTexture, aoStrength);
 
     m_isDirty = true;
-    UpdateIfDirty();
 }
 
 void Material::SetAlbedoTexture(const String& textureName, const Vector4& color)
@@ -39,14 +36,12 @@ void Material::SetAlbedoTexture(const String& textureName, const Vector4& color)
     m_baseColor = color;
 
     UpdateFlags();
-    BakeConstants(index);
     this->m_isDirty = true;
 }
 
 void Material::SetMap(MaterialMapType type, const String& textureName, float strength)
 {
     assert(type != MaterialMapType::ALBEDO && "Use SetAlbedoTexture for ALBEDO");
-    UINT index = GraphicsEngine::GetInstance()->GetRenderSystem()->GetCurrentFrameIndex();
     auto textureManager = GraphicsEngine::GetInstance()->GetTextureManager();
 
     m_textureNames[type] = textureName;
@@ -62,7 +57,6 @@ void Material::SetMap(MaterialMapType type, const String& textureName, float str
     }
 
     UpdateFlags();
-    BakeConstants(index);
     this->m_isDirty = true;
 }
 
@@ -82,25 +76,12 @@ uint32_t Material::GetSRVIndex(MaterialMapType type) const
     return m_handleCache[type];
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS Material::GetCBufferAddress(UINT frameIndex)
+D3D12_GPU_VIRTUAL_ADDRESS Material::GetCBufferAddress()
 {
-    return this->m_constantBuffer->GetGPUVirtualAddress(frameIndex);
+    return this->m_constantBuffer->GetGPUVirtualAddress();
 }
 
-void Material::UpdateIfDirty()
-{
-    if (m_isDirty)
-    {
-        for (UINT i = 0; i < FRAME_COUNT; i++)
-        {
-            BakeConstants(i);
-        }
-
-        m_isDirty = false;
-    }
-}
-
-void Material::BakeConstants(UINT index) const
+void Material::UpdateMaterialConstants()
 {
     MaterialConstantsData data{};
     data.albedoHandleIndex = m_handleCache[MaterialMapType::ALBEDO];
@@ -115,7 +96,13 @@ void Material::BakeConstants(UINT index) const
     data.ambientOcclussionStr = m_aoStrength;
     data.materialFlags = m_flags;
 
-    m_constantBuffer->Update(data, index);
+    m_constantBuffer->Update(data);
+    this->m_isDirty = false;
+}
+
+bool Material::IsDirty() const
+{
+    return this->m_isDirty;
 }
 
 void Material::UpdateFlags()

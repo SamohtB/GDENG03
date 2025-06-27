@@ -77,14 +77,12 @@ void RenderSystem::EndFrame()
 
 void RenderSystem::UpdateFrameConstants(const FrameConstantsData& data)
 {
-	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
-	this->m_frameConstantsBuffer->Update(data, currentFrameIndex);
+	this->m_frameConstantsBuffer->Update(data);
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS RenderSystem::GetFrameConstantsAddress()
 {
-	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
-	return this->m_frameConstantsBuffer->GetGPUVirtualAddress(currentFrameIndex);
+	return this->m_frameConstantsBuffer->GetGPUVirtualAddress();
 }
 
 ID3D12PipelineState* RenderSystem::GetPipelineState(const std::string& shaderName) const

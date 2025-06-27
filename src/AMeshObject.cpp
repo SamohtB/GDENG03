@@ -8,8 +8,11 @@
 
 #include "GameObjectManager.h"
 
-AMeshObject::AMeshObject(String name, String shaderName) 
-    : AGameObject(name), m_shaderName(shaderName), m_indicesSize(0), m_topology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) {}
+AMeshObject::AMeshObject(String name, String shaderName, String materialName)
+    : AGameObject(name), m_shaderName(shaderName), m_materialName(materialName), m_indicesSize(0), m_topology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) 
+{
+    this->m_constantBuffer = std::make_unique<ObjectConstantsBuffer>(GraphicsEngine::GetInstance()->GetRenderSystem()->GetD3DDevicePtr().Get());
+}
 
 void AMeshObject::Update(float deltaTime)
 {
@@ -20,13 +23,17 @@ void AMeshObject::Draw(DeviceContext* context)
     auto graphicsEngine = GraphicsEngine::GetInstance();
     auto renderSystem = graphicsEngine->GetRenderSystem();
     auto materialManager = graphicsEngine->GetMaterialManager();
-    auto frameIndex = renderSystem->GetCurrentFrameIndex();
+
+    /* Update Constant Buffers */
+    ObjectConstantsData data;
+    data.modelMatrix = this->GetLocalMatrix();
+    this->m_constantBuffer->Update(data);
 
     context->SetPSO(renderSystem->GetPipelineState(this->m_shaderName));
     context->SetTexture(graphicsEngine->GetTextureManager()->GetSRVStart());
-    context->SetObjectConstants(this->m_constantBuffer->GetGPUVirtualAddress(frameIndex));
+    context->SetObjectConstants(this->m_constantBuffer->GetGPUVirtualAddress());
     context->SetFrameConstants(renderSystem->GetFrameConstantsAddress());
-    context->SetMaterialConstants(materialManager->GetMaterialDataAddress(this->m_materialName, frameIndex));
+    context->SetMaterialConstants(materialManager->GetMaterialDataAddress(this->m_materialName));
 
     context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());
     context->SetIndexBuffer(this->m_indexBuffer->GetIndexBufferViewPointer());

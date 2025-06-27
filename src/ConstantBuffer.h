@@ -16,8 +16,8 @@ public:
     ConstantBuffer(ID3D12Device* device);
     virtual ~ConstantBuffer();
 
-    D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress(UINT index) const;
-    void Update(const T& data, UINT index);
+    D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
+    void Update(const T& data);
 
 protected:
     ComPtr<ID3D12Resource> m_resource;
@@ -29,7 +29,7 @@ template<typename T>
 inline ConstantBuffer<T>::ConstantBuffer(ID3D12Device* device)
 {
     m_alignedSize = Align256(sizeof(T));
-    UINT totalBufferSize = m_alignedSize * FRAME_COUNT;
+    UINT totalBufferSize = m_alignedSize;
 
     Debug::Assert(totalBufferSize <= 65536, "CB size too big for a single constant buffer (max 64KB)");
 
@@ -54,15 +54,15 @@ inline ConstantBuffer<T>::~ConstantBuffer()
 }
 
 template<typename T>
-inline D3D12_GPU_VIRTUAL_ADDRESS ConstantBuffer<T>::GetGPUVirtualAddress(UINT index) const
+inline D3D12_GPU_VIRTUAL_ADDRESS ConstantBuffer<T>::GetGPUVirtualAddress() const
 {
-    return m_resource->GetGPUVirtualAddress() + index * Align256(sizeof(T));
+    return m_resource->GetGPUVirtualAddress();
 }
 
 template<typename T>
-inline void ConstantBuffer<T>::Update(const T& data, UINT index)
+inline void ConstantBuffer<T>::Update(const T& data)
 {
-    memcpy(reinterpret_cast<uint8_t*>(m_mappedData) + index * m_alignedSize, &data, sizeof(T));
+    memcpy(reinterpret_cast<uint8_t*>(m_mappedData), &data, sizeof(T));
 }
 
 struct alignas(256) MaterialConstantsData

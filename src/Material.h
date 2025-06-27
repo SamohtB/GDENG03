@@ -16,10 +16,10 @@ public:
     void SetMap(MaterialMapType type, const String& textureName, float strength);
 
     uint32_t GetSRVIndex(MaterialMapType type) const;
-    D3D12_GPU_VIRTUAL_ADDRESS GetCBufferAddress(UINT frameIndex);
+    D3D12_GPU_VIRTUAL_ADDRESS GetCBufferAddress();
 
-    void UpdateIfDirty();
-    void BakeConstants(UINT index) const;
+    void UpdateMaterialConstants();
+    bool IsDirty() const;
 
 private:
 

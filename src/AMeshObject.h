@@ -16,13 +16,13 @@ class DeviceContext;
 class AMeshObject : public AGameObject
 {
 public:
-	AMeshObject(String name, String shaderName = ShaderNames::LIT);
-	virtual ~AMeshObject() = default;
-
 	virtual void Update(float deltaTime) override;
 	virtual void Draw(DeviceContext* context) override;
 
 protected:
+	AMeshObject(String name, String shaderName = ShaderNames::LIT, String materialName = MaterialNames::DEFAULT);
+	virtual ~AMeshObject() = default;
+
 	void SetGeometry(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 	void SetTopology(D3D12_PRIMITIVE_TOPOLOGY topology);
 

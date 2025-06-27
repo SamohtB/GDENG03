@@ -21,7 +21,7 @@ public:
         const std::string& metalTex, float metalStrength, const std::string& roughTex, float roughStrength, const std::string& aoTex, float aoStrength);
     
     Material* GetMaterial(const String& materialName);
-    D3D12_GPU_VIRTUAL_ADDRESS GetMaterialDataAddress(const String& materialName, UINT frameIndex);
+    D3D12_GPU_VIRTUAL_ADDRESS GetMaterialDataAddress(const String& materialName);
 
 private:
     ComPtr<ID3D12Device> m_device;

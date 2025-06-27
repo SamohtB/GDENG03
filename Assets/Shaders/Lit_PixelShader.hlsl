@@ -9,9 +9,10 @@ struct PSINPUT
     float3 positionWS : POSITION1;
 };
 
-cbuffer MaterialBuffer : register(b0)
+cbuffer MaterialBuffer : register(b2)
 {
     uint albedoTextureIndex;
+    float3 albedoColor;
     uint normalTextureIndex;
     float normalStr;
     uint metallicTextureIndex;
@@ -92,7 +93,6 @@ float3 fresnelSchlick(float cosTheta, float3 F0)
 SampledTextureMaps SampleTextures(PSINPUT input)
 {
     // === Default Values ===
-    float3 d_albedo = float3(1, 1, 1);
     float3 d_normal = float3(0, 0, 1); 
     float d_metallic = 0.0f;
     float d_roughness = 1.0f;
@@ -103,11 +103,11 @@ SampledTextureMaps SampleTextures(PSINPUT input)
     // === Check Flags ===
     if ((materialFlags & HasAlbedoMap) != 0)
     {
-        samples.albedo = pow(Textures[albedoTextureIndex].Sample(Samplers[0], input.texcoord).rgb, 2.2);
+        samples.albedo = pow(Textures[albedoTextureIndex].Sample(Samplers[0], input.texcoord).rgb, 2.2) * albedoColor;
     }
     else
     {
-        samples.albedo = d_albedo;
+        samples.albedo = albedoColor;
     }
     
     if ((materialFlags & HasNormalMap) != 0)

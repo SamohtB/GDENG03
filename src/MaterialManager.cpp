@@ -67,8 +67,8 @@ Material* MaterialManager::GetMaterial(const String& materialName)
     return this->m_materialMap[materialName].get();
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS MaterialManager::GetMaterialDataAddress(const String& materialName, UINT frameIndex)
+D3D12_GPU_VIRTUAL_ADDRESS MaterialManager::GetMaterialDataAddress(const String& materialName)
 {
-    return this->m_materialMap[materialName]->GetCBufferAddress(frameIndex);
+    return this->m_materialMap[materialName]->GetCBufferAddress();
 }
 

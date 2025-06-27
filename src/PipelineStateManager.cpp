@@ -7,13 +7,13 @@ PipelineStateManager::PipelineStateManager(ID3D12Device* device)
 	CreateRootSignature(device);
 
     // === LIT - DEFAULT ===
-    ShaderDesc litVertex(L"Assets/Shaders/PBSVertexShader.hlsl", L"VSMain", L"vs_6_5");
-    ShaderDesc litPixel(L"Assets/Shaders/PBSPixelShader.hlsl", L"PSMain", L"ps_6_5");
+    ShaderDesc litVertex(L"Assets/Shaders/Default_VertexShader.hlsl", L"VSMain", L"vs_6_5");
+    ShaderDesc litPixel(L"Assets/Shaders/Lit_PixelShader.hlsl", L"PSMain", L"ps_6_5");
     RegisterPipeline(device, ShaderNames::LIT, litVertex, litPixel);
 
     // === UNLIT ===
-    ShaderDesc unlitVertex(L"Assets/Shaders/DefaultVertexShader.hlsl", L"VSMain", L"vs_6_5");
-    ShaderDesc unlitPixel(L"Assets/Shaders/DefaultPixelShader.hlsl", L"PSMain", L"ps_6_5");
+    ShaderDesc unlitVertex(L"Assets/Shaders/Default_VertexShader.hlsl", L"VSMain", L"vs_6_5");
+    ShaderDesc unlitPixel(L"Assets/Shaders/Unlit_PixelShader.hlsl", L"PSMain", L"ps_6_5");
     RegisterPipeline(device, ShaderNames::UNLIT, unlitVertex, unlitPixel);
 }
 
