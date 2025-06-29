@@ -62,17 +62,6 @@ void Material::SetMap(MaterialMapType type, const String& textureName, float str
 
 uint32_t Material::GetSRVIndex(MaterialMapType type) const
 {
-    MaterialConstantsData data{};
-    data.albedoHandleIndex = m_handleCache[MaterialMapType::ALBEDO];
-    data.baseColor = m_baseColor;
-    data.normalHandleIndex = m_handleCache[MaterialMapType::NORMAL];
-    data.normalStr = m_normalStrength;
-    data.metalHandleIndex = m_handleCache[MaterialMapType::METAL];
-    data.metalStr = m_metalStrength;
-    data.roughHandleIndex = m_handleCache[MaterialMapType::ROUGH];
-    data.roughStr = m_roughStrength;
-    data.ambientOcclusionHandleIndex = m_handleCache[MaterialMapType::AO];
-    data.ambientOcclussionStr = m_aoStrength;
     return m_handleCache[type];
 }
 

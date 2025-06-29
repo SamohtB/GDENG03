@@ -207,6 +207,7 @@
     <ClCompile Include="src\Toolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\IMGUI_InputListener.h" />
     <ClInclude Include="src\MaterialNames.h" />
     <ClInclude Include="src\ShaderNames.h" />
     <ClInclude Include="src\Inspector.h" />

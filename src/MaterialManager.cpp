@@ -72,3 +72,14 @@ D3D12_GPU_VIRTUAL_ADDRESS MaterialManager::GetMaterialDataAddress(const String& 
     return this->m_materialMap[materialName]->GetCBufferAddress();
 }
 
+void MaterialManager::BakeConstants()
+{
+    for (const auto& mat : this->m_materialMap)
+    {
+        if (mat.second->IsDirty())
+        {
+            mat.second->UpdateMaterialConstants();
+        }
+    }
+}
+

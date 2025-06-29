@@ -452,24 +452,24 @@
     <ClInclude Include="src\MaterialNames.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="src\IMGUI_InputListener.h">
+      <Filter>Engine\InputSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Assets\Shaders\DefaultVertexShader.hlsl">
+    <FxCompile Include="Assets\Shaders\Default_VertexShader.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Assets\Shaders\PBSPixelShader.hlsl">
+    <FxCompile Include="Assets\Shaders\Lit_PixelShader.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Assets\Shaders\PBSVertexShader.hlsl">
-      <Filter>Assets\Shaders</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="Assets\Shaders\DefaultPixelShader.hlsl">
-      <Filter>Assets\Shaders</Filter>
-    </Object>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="Assets\Shaders\Unlit_PixelShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </Object>
   </ItemGroup>
 </Project>

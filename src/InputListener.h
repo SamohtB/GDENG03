@@ -19,7 +19,7 @@ public:
 	virtual void OnKeyReleased(int key) {}
 	virtual void OnKeyHeld(int key) {}
 
-	virtual void OnMouseMove(const Vector2& deltaMousePos) {}
+	virtual void OnMouseMove(const Vector2& mousePos) {}
 	virtual void OnMouseWheel(const float& delta) {}
 
 	virtual void OnLeftMousePressed(const Vector2& mousePos) {}

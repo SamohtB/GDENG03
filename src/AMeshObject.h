@@ -20,7 +20,7 @@ public:
 	virtual void Draw(DeviceContext* context) override;
 
 protected:
-	AMeshObject(String name, String shaderName = ShaderNames::LIT, String materialName = MaterialNames::DEFAULT);
+	AMeshObject(String name, String shaderName = ShaderNames::UNLIT, String materialName = MaterialNames::DEFAULT);
 	virtual ~AMeshObject() = default;
 
 	void SetGeometry(std::vector<Vertex> vertices, std::vector<unsigned int> indices);

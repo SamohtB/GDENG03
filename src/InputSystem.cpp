@@ -1,5 +1,6 @@
 #include "InputSystem.h"
 #include "InputListener.h"
+#include "IMGUI_InputListener.h"
 #include "Windows.h"
 
 InputSystem* InputSystem::sharedInstance = nullptr;
@@ -26,7 +27,11 @@ void InputSystem::Destroy()
 	delete sharedInstance;
 }
 
-InputSystem::InputSystem() {}
+InputSystem::InputSystem() 
+{
+	auto uiInput = new ImGuiInputListener();
+	this->AddListener(uiInput);
+}
 
 void InputSystem::ProcessInput()
 {

@@ -63,6 +63,8 @@ void GameWindow::OnRender()
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->BeginFrame();
 
+	GraphicsEngine::GetInstance()->GetMaterialManager()->BakeConstants();
+
 	GameObjectManager::GetInstance()->RenderAll(context);
 
 	/*	Temporary Per Frame Batch Uploader Calls */

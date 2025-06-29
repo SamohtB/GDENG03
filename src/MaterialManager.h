@@ -23,6 +23,8 @@ public:
     Material* GetMaterial(const String& materialName);
     D3D12_GPU_VIRTUAL_ADDRESS GetMaterialDataAddress(const String& materialName);
 
+    void BakeConstants();
+
 private:
     ComPtr<ID3D12Device> m_device;
     MaterialMap m_materialMap;
