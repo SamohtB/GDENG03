@@ -24,7 +24,7 @@ public:
 	void UpdateFrameConstants(const FrameConstantsData& data);
 	D3D12_GPU_VIRTUAL_ADDRESS GetFrameConstantsAddress();
 
-	ID3D12PipelineState* GetPipelineState(const ShaderType& type) const;
+	ID3D12PipelineState* GetPipelineState(const String& shaderName) const;
 	UINT GetCurrentFrameIndex();
 
 	ComPtr<ID3D12Device> GetD3DDevicePtr();

@@ -6,7 +6,7 @@
 #include "GraphicsEngine.h"
 #include "GameObjectManager.h"
 
-AMeshObject::AMeshObject(String name, Vector3 color, ShaderType shader) : AGameObject(name), m_shader(shader), m_color(color) {}
+AMeshObject::AMeshObject(String name, String shader) : AGameObject(name), m_shader(shader) {}
 
 void AMeshObject::Update(float deltaTime)
 {
@@ -40,13 +40,9 @@ void AMeshObject::SetTopology(D3D12_PRIMITIVE_TOPOLOGY topology)
 	this->m_topology = topology;
 }
 
-template<typename T>
-void AMeshObject::SetGeometry(std::vector<T> vertices, std::vector<unsigned int> indices)
+void AMeshObject::SetGeometry(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 {
     m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);
     m_indexBuffer = std::make_unique<IndexBuffer>(indices);
     m_indicesSize = static_cast<UINT>(indices.size());
 }
-
-/* Add Other Preset Input Layouts */
-template void AMeshObject::SetGeometry(std::vector<POS_COL>, std::vector<unsigned int>);

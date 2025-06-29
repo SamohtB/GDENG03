@@ -11,10 +11,6 @@
 #include "RenderSystem.h"
 #include "BatchUploader.h"
 
-#include "Quad.h"
-#include "PBSQuads.h"
-#include "AnimatedQuad.h"
-
 #include "Debug.h"
 #include "Random.h"
 #include "Colors.h"

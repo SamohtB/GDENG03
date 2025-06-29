@@ -87,18 +87,9 @@ D3D12_GPU_VIRTUAL_ADDRESS RenderSystem::GetFrameConstantsAddress()
 	return this->m_frameConstantsBuffer->GetGPUVirtualAddress(currentFrameIndex);
 }
 
-ID3D12PipelineState* RenderSystem::GetPipelineState(const ShaderType& type) const
+ID3D12PipelineState* RenderSystem::GetPipelineState(const String& shaderName) const
 {
-	auto psoManager = this->m_renderDevice->GetPSOManager();
-
-	switch (type)
-	{
-	case TEXTURED: return psoManager->GetPipelineState(InputLayoutType::Pos_Tex_Col, L"Textured");
-	case ANIMATED: return psoManager->GetPipelineState(InputLayoutType::Pos_Pos_Col_Col, L"Animated");
-	case PBS: return psoManager->GetPipelineState(InputLayoutType::Pos_Tex_Nor_Tan_Bit, L"PBS");
-	default: return psoManager->GetPipelineState(InputLayoutType::Pos_Color, L"Default");
-	}
-	
+	return m_renderDevice->GetPSOManager()->GetPipelineState(shaderName);
 }
 
 UINT RenderSystem::GetCurrentFrameIndex()

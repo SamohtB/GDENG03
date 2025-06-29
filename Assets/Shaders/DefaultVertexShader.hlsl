@@ -1,13 +1,15 @@
 struct VSInput
 {
     float3 position : POSITION;
-    float3 color : COLOR;
+    float2 texcoord : TEXCOORD;
+    float3 normal : NORMAL;
+    float3 tangent : TANGENT;
 };
 
 struct VSOutput
 {
     float4 position : SV_POSITION;
-    float3 color : COLOR;
+    float2 texcoord : TEXCOORD;
 };
 
 cbuffer ObjectConstants : register(b0)
@@ -30,8 +32,7 @@ VSOutput VSMain(VSInput input)
     float4 viewPos = mul(worldPos, view);
     float4 projPos = mul(viewPos, projection);
     output.position = projPos;
-
-    output.color = input.color;
+    output.texcoord = input.texcoord;
 
     return output;
 }

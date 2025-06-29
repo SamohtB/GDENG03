@@ -9,29 +9,27 @@ PipelineStateManager::PipelineStateManager(ID3D12Device* device)
     // === Default ===
     ShaderDesc vertexshaderDesc(L"Assets/Shaders/DefaultVertexShader.hlsl", L"VSMain", L"vs_6_5");
     ShaderDesc pixelShaderDesc(L"Assets/Shaders/DefaultPixelShader.hlsl", L"PSMain", L"ps_6_5");
-    RegisterPipeline(device, InputLayoutType::Pos_Color, vertexshaderDesc, pixelShaderDesc, L"Default");
+    RegisterPipeline(device, ShaderNames::UNLIT, vertexshaderDesc, pixelShaderDesc);
 
-    // === Textured ===
-    ShaderDesc vertexShaderDesc_Textured(L"Assets/Shaders/TexturedVertexShader.hlsl", L"VSMain", L"vs_6_5");
-    ShaderDesc pixelShaderDesc_Textured(L"Assets/Shaders/TexturedPixelShader.hlsl", L"PSMain", L"ps_6_5");
-    RegisterPipeline(device, InputLayoutType::Pos_Tex_Col, vertexShaderDesc_Textured, pixelShaderDesc_Textured, L"Textured");
 
     // === PBS pipeline (Shader Model 6.6) ===
     ShaderDesc vertexShaderDesc_PBS(L"Assets/Shaders/PBSVertexShader.hlsl", L"VSMain", L"vs_6_5");
     ShaderDesc pixelShaderDesc_PBS(L"Assets/Shaders/PBSPixelShader.hlsl", L"PSMain", L"ps_6_5");
-    RegisterPipeline(device, InputLayoutType::Pos_Tex_Nor_Tan_Bit, vertexShaderDesc_PBS, pixelShaderDesc_PBS, L"PBS");
-
-    // === Animated ===
-    ShaderDesc vertexShaderDesc_Animated(L"Assets/Shaders/Pos2Col2Vertex.hlsl", L"VSMain", L"vs_6_5");
-    ShaderDesc pixelShaderDesc_Animated(L"Assets/Shaders/Pos2Col2Pixel.hlsl", L"PSMain", L"ps_6_5");
-    RegisterPipeline(device, InputLayoutType::Pos_Pos_Col_Col, vertexShaderDesc_Animated, pixelShaderDesc_Animated, L"Animated");
+    RegisterPipeline(device, ShaderNames::LIT, vertexShaderDesc_PBS, pixelShaderDesc_PBS);
 }
 
-ID3D12PipelineState* PipelineStateManager::GetPipelineState(InputLayoutType layout, const std::wstring& shaderName) const
+ID3D12PipelineState* PipelineStateManager::GetPipelineState(String shaderName) const
 {
-	PipelineMapKey key = { layout, shaderName };
-	auto it = m_pipelineStates.find(key);
-	return (it != m_pipelineStates.end()) ? it->second.Get() : nullptr;
+	auto it = m_pipelineStates.find(shaderName);
+    if (it != m_pipelineStates.end())
+    {
+        return it->second.Get();
+    }
+    else
+    {
+        Debug::LogError("Invalid Shader Name: " + shaderName);
+        return nullptr;
+    }
 }
 
 ID3D12RootSignature* PipelineStateManager::GetRootSignature() const
@@ -39,14 +37,20 @@ ID3D12RootSignature* PipelineStateManager::GetRootSignature() const
 	return m_rootSignature.Get();
 }
 
-void PipelineStateManager::RegisterPipeline(ID3D12Device* device, InputLayoutType layout, const ShaderDesc& vertexDesc, const ShaderDesc& pixelDesc, const std::wstring& shaderName)
-{
-	const auto& inputLayout = InputLayouts::Get(layout); 
+void PipelineStateManager::RegisterPipeline(ID3D12Device* device, String shaderName, const ShaderDesc& vertexDesc, const ShaderDesc& pixelDesc)
+{ 
     auto vs = m_shaderLoader->CompileShader(vertexDesc);
     auto ps = m_shaderLoader->CompileShader(pixelDesc);
-	auto pso = CreatePipelineState(device, inputLayout, vs, ps);
+	auto pso = CreatePipelineState(device, vs, ps);
 
-	m_pipelineStates[{layout, shaderName}] = pso;
+    if (pso == nullptr)
+    {
+        Debug::LogWarning(shaderName + " shader creation failed!");
+        return;
+    }
+
+	m_pipelineStates[shaderName] = pso;
+    Debug::Log(shaderName +  " shader creation success!");
 }
 
 void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
@@ -93,9 +97,14 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
         "Root Signature creation failed!");
 }
 
-ComPtr<ID3D12PipelineState> PipelineStateManager::CreatePipelineState(ID3D12Device* device, const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout,
-    ComPtr<IDxcBlob> vs, ComPtr<IDxcBlob> ps)
+ComPtr<ID3D12PipelineState> PipelineStateManager::CreatePipelineState(ID3D12Device* device, ComPtr<IDxcBlob> vs, ComPtr<IDxcBlob> ps)
 {
+    std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+    };
 
     D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
     depthStencilDesc.DepthEnable = TRUE;
@@ -119,7 +128,8 @@ ComPtr<ID3D12PipelineState> PipelineStateManager::CreatePipelineState(ID3D12Devi
     psoDesc.SampleDesc.Count = 1;
 
     ComPtr<ID3D12PipelineState> pipelineState;
-    Debug::ThrowIfFailed(device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState)), "PSO creation failed!");
+    auto hr = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState));
 
-    return pipelineState;
+    if (SUCCEEDED(hr)) return pipelineState;
+    else return nullptr;
 }

@@ -3,7 +3,6 @@
 #include <BufferHelpers.h>
 #include <WICTextureLoader.h>
 
-#include "VertexTypes.h"
 #include "Debug.h"
 
 BatchUploader::BatchUploader(ComPtr<ID3D12Device> device) : m_device(device)
@@ -106,12 +105,11 @@ ComPtr<ID3D12Resource> BatchUploader::SchedWhitePixelTexture(D3D12_CPU_DESCRIPTO
     return textureBuffer;
 }
 
-template<typename VertexType>
-VertexBufferInfo BatchUploader::SchedVertexBuffer(const std::vector<VertexType>& vertices)
+VertexBufferInfo BatchUploader::SchedVertexBuffer(const std::vector<Vertex>& vertices)
 {
     Debug::Assert(this->m_uploadStarted, "Upload Not Yet Started! | Invalid Shedule!");
 
-    size_t vertexBufferSize = vertices.size() * sizeof(VertexType);
+    size_t vertexBufferSize = vertices.size() * sizeof(Vertex);
     VertexBufferInfo vertexBufferInfo;
 
     Debug::ThrowIfFailed(DirectX::CreateStaticBuffer(
@@ -123,13 +121,8 @@ VertexBufferInfo BatchUploader::SchedVertexBuffer(const std::vector<VertexType>&
     ));
 
     vertexBufferInfo.view.BufferLocation = vertexBufferInfo.buffer->GetGPUVirtualAddress();
-    vertexBufferInfo.view.StrideInBytes = sizeof(VertexType);
+    vertexBufferInfo.view.StrideInBytes = sizeof(Vertex);
     vertexBufferInfo.view.SizeInBytes = static_cast<UINT>(vertexBufferSize);
 
     return vertexBufferInfo;
 }
-
-template VertexBufferInfo BatchUploader::SchedVertexBuffer(const std::vector<POS_COL>&);
-template VertexBufferInfo BatchUploader::SchedVertexBuffer(const std::vector<POS_TEX_COL>&);
-template VertexBufferInfo BatchUploader::SchedVertexBuffer(const std::vector<POS_TEX_NOR_TAN_BIT>&);
-template VertexBufferInfo BatchUploader::SchedVertexBuffer(const std::vector<POS_POS_COL_COL>&);

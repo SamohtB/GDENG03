@@ -20,6 +20,7 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <d3dcompiler.h>
+#include <dxcapi.h>
 #include "d3dx12.h"
 
 // === DEAR IMGUI ===
@@ -29,4 +30,5 @@
 
 // WRL
 using Microsoft::WRL::ComPtr;
+using String = std::string;
 

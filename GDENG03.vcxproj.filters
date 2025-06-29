@@ -85,9 +85,6 @@
     <Filter Include="App\Entities\Primitives\3D">
       <UniqueIdentifier>{1e3c48b4-7ef3-4d66-afc2-258e9a834c39}</UniqueIdentifier>
     </Filter>
-    <Filter Include="App\Entities\Primitives\2D">
-      <UniqueIdentifier>{032b75a3-0a85-459c-8b3c-166e92e28600}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\GraphicsEngine\RenderSystem\DepthBuffer">
       <UniqueIdentifier>{abded308-e74e-4365-8598-679a877682bd}</UniqueIdentifier>
     </Filter>
@@ -200,15 +197,6 @@
     </ClCompile>
     <ClCompile Include="src\EngineTime.cpp">
       <Filter>Engine\EngineTime</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AnimatedQuad.cpp">
-      <Filter>App\Entities\Primitives\2D</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PBSQuads.cpp">
-      <Filter>App\Entities\Primitives\2D</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Quad.cpp">
-      <Filter>App\Entities\Primitives\2D</Filter>
     </ClCompile>
     <ClCompile Include="src\Cube.cpp">
       <Filter>App\Entities\Primitives\3D</Filter>
@@ -338,12 +326,6 @@
     <ClInclude Include="src\RenderSystem.h">
       <Filter>Engine\GraphicsEngine\RenderSystem</Filter>
     </ClInclude>
-    <ClInclude Include="src\VertexTypes.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InputLayouts.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="src\BatchUploader.h">
       <Filter>Engine\GraphicsEngine\BatchUploader</Filter>
     </ClInclude>
@@ -382,15 +364,6 @@
     </ClInclude>
     <ClInclude Include="src\Random.h">
       <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AnimatedQuad.h">
-      <Filter>App\Entities\Primitives\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PBSQuads.h">
-      <Filter>App\Entities\Primitives\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Quad.h">
-      <Filter>App\Entities\Primitives\2D</Filter>
     </ClInclude>
     <ClInclude Include="src\Cube.h">
       <Filter>App\Entities\Primitives\3D</Filter>
@@ -481,15 +454,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Assets\Shaders\TexturedVertexShader.hlsl">
-      <Filter>Assets\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Assets\Shaders\Pos2Col2Vertex.hlsl">
-      <Filter>Assets\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Assets\Shaders\Pos2Col2Pixel.hlsl">
-      <Filter>Assets\Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Assets\Shaders\DefaultVertexShader.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
@@ -497,9 +461,6 @@
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Assets\Shaders\PBSVertexShader.hlsl">
-      <Filter>Assets\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Assets\Shaders\TexturedPixelShader.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

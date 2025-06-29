@@ -4,7 +4,7 @@
 class Sphere : public AMeshObject
 {
 public:
-    Sphere(String name, Vector3 color = ColorPalette::White);
+    Sphere(String name);
     virtual ~Sphere() = default;
 
 protected:
