@@ -34,9 +34,8 @@ public:
             {
                 LogError(message);
             }
-            LogError(HrToString(hr));
+            LogError(std::to_string(hr));
 
-            Break();
             throw HrException(hr);
             
         }

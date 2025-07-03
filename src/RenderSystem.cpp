@@ -2,6 +2,7 @@
 
 #include "Debug.h"
 
+#include "GraphicsEngine.h"
 #include "TextureManager.h"
 #include "MaterialManager.h"
 
@@ -48,6 +49,8 @@ void RenderSystem::BeginFrame()
 	
 	auto renderTarget = this->m_renderTargetManager->GetRenderTarget(currentFrameIndex);
 	this->m_deviceContext->TransitionToRenderTarget(renderTarget);
+
+	GraphicsEngine::GetInstance()->GetMaterialManager()->BeginFrame(currentFrameIndex);
 
 	auto rtvHandle = this->m_renderDevice->GetDescriptorHeapManager()->GetRTVCPUHandleAt(currentFrameIndex);
 	auto dsvHandle = this->m_renderDevice->GetDescriptorHeapManager()->GetDSVCPUHandle();

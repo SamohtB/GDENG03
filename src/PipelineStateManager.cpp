@@ -9,13 +9,13 @@ PipelineStateManager::PipelineStateManager(ID3D12Device* device)
     // === Default ===
     ShaderDesc vertexshaderDesc(L"Assets/Shaders/DefaultVertexShader.hlsl", L"VSMain", L"vs_6_5");
     ShaderDesc pixelShaderDesc(L"Assets/Shaders/DefaultPixelShader.hlsl", L"PSMain", L"ps_6_5");
-    RegisterPipeline(device, ShaderNames::UNLIT, vertexshaderDesc, pixelShaderDesc);
+    RegisterPipeline(device, ShaderTypes::UNLIT, vertexshaderDesc, pixelShaderDesc);
 
 
     // === PBS pipeline (Shader Model 6.6) ===
     ShaderDesc vertexShaderDesc_PBS(L"Assets/Shaders/PBSVertexShader.hlsl", L"VSMain", L"vs_6_5");
     ShaderDesc pixelShaderDesc_PBS(L"Assets/Shaders/PBSPixelShader.hlsl", L"PSMain", L"ps_6_5");
-    RegisterPipeline(device, ShaderNames::LIT, vertexShaderDesc_PBS, pixelShaderDesc_PBS);
+    RegisterPipeline(device, ShaderTypes::LIT, vertexShaderDesc_PBS, pixelShaderDesc_PBS);
 }
 
 ID3D12PipelineState* PipelineStateManager::GetPipelineState(String shaderName) const

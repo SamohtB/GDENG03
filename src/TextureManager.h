@@ -14,18 +14,21 @@ public:
     ~TextureManager() = default;
 
     using TexturePtr = std::unique_ptr<Texture>;
-    using TextureMap = std::unordered_map<TextureType, TexturePtr>;
-    using SRVMap = std::unordered_map<TextureType, UINT>;
+    using TextureMap = std::unordered_map<String, TexturePtr>;
+    using SRVMap = std::unordered_map<String, UINT>;
 
     void LoadInitialTextures();
-    void LoadTexture(const TextureType& type, const std::wstring& filePath);
+    void LoadTexture(const String& textureName, const std::wstring& filePath);
     D3D12_GPU_DESCRIPTOR_HANDLE GetSRVStart();
+
+    UINT GetTextureSRVIndex(const String& textureName);
 
 private:
     void CreateDefaultWhiteTexture();
 
     std::shared_ptr<DescriptorHeapManager> m_heapManager;
     std::shared_ptr<BatchUploader> m_uploader;
+    D3D12_GPU_DESCRIPTOR_HANDLE m_startHandle;
     SRVMap m_srvMap;
     TextureMap m_textureMap;
 };

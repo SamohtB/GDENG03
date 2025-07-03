@@ -1,85 +1,99 @@
 #pragma once
+#include <string>
 #include "TextureTypes.h"
-#include <iostream>
-#include <unordered_map>
+#include "Math.h"
 
-enum MaterialType : int
+class MaterialType
 {
-	DEFAULT_MAT = 0,
-	ROCK_0 = 1,
-	ROCK_1,
-	METAL_PLATE_0,
-	METAL_PLATE_1,
-	BRICKS_0,
-	BRICKS_1
+public:
+    inline static constexpr const char* DEFAULT = "DEFAULT";
+    inline static constexpr const char* ROCK = "ROCK";
+    inline static constexpr const char* METAL_PLATE = "METAL_PLATE";
+    inline static constexpr const char* BRICKS = "BRICKS";
+};
+
+enum MaterialMapType : int
+{
+    ALBEDO = 0,
+    NORMAL,
+    METAL,
+    ROUGH,
+    AO,
+    HEIGHT,
+    EMMISSIVE
+};
+
+constexpr size_t MATERIAL_MAP_COUNT = 7;
+
+enum MaterialFlags : uint32_t
+{
+    HasAlbedoMap = 1 << 0,
+    HasNormalMap = 1 << 1,
+    HasMetallicMap = 1 << 2,
+    HasRoughnessMap = 1 << 3,
+    HasAOMap = 1 << 4,
+    HasEmissiveMap = 1 << 5,
+    HasHeightMap = 1 << 6
+};
+
+struct alignas(16) MaterialConstants
+{
+    uint32_t diffuseHandleIndex;
+    uint32_t normalHandleIndex;
+    uint32_t metalHandleIndex;
+    uint32_t roughHandleIndex;
+
+    uint32_t aoHandleIndex;
+    uint32_t emmissiveHandleIndex;
+    uint32_t heightHandleIndex;
+    uint32_t materialFlags = 0;
+
+    Vector4 baseColor;
+
+    float normalStr;
+    float metalStr;
+    float roughStr;
+    float aoStr;
+
+    float emmissiveStr;
+    float heightStr;
+    Vector2 pad;
 };
 
 struct MaterialDescription
 {
-    uint32_t albedoTextureIndex;
-    uint32_t normalTextureIndex;
-    float normalStr;
-    uint32_t metallicTextureIndex;
-    float metallicStr;
-    uint32_t roughTextureIndex;
-    float roughStr;
-    uint32_t ambientOcclusionTextureIndex;
-    float ambientOcclusionStr;
-
-    MaterialDescription() = default;
+    std::string albedoTex;
+    Vector4 albedoColor;
+    std::string normalTex;
+    float normalStrength;
+    std::string metalTex;
+    float metalStrength;
+    std::string roughTex;
+    float roughStrength;
+    std::string aoTex;
+    float aoStrength;
+    std::string emissiveTex;
+    float emissiveStrength;
+    std::string heightTex;
+    float heightStrength;
 
     MaterialDescription(
-        uint32_t albedoIdx,
-        uint32_t normalIdx, float normalStrength,
-        uint32_t metallicIdx, float metallicStrength,
-        uint32_t roughIdx, float roughStrength,
-        uint32_t aoIdx, float aoStrength)
-        : albedoTextureIndex(albedoIdx),
-        normalTextureIndex(normalIdx), normalStr(normalStrength),
-        metallicTextureIndex(metallicIdx), metallicStr(metallicStrength),
-        roughTextureIndex(roughIdx), roughStr(roughStrength),
-        ambientOcclusionTextureIndex(aoIdx), ambientOcclusionStr(aoStrength)
+        const std::string& albedoTex = "",
+        const Vector4& albedoColor = Vector4(1, 1, 1, 1),
+        const std::string& normalTex = "", float normalStrength = 1.0f,
+        const std::string& metalTex = "", float metalStrength = 0.0f,
+        const std::string& roughTex = "", float roughStrength = 1.0f,
+        const std::string& aoTex = "", float aoStrength = 1.0f,
+        const std::string& emissiveTex = "", float emissiveStrength = 0.0f,
+        const std::string& heightTex = "", float heightStrength = 0.0f)
+        : albedoTex(albedoTex), albedoColor(albedoColor),
+        normalTex(normalTex), normalStrength(normalStrength),
+        metalTex(metalTex), metalStrength(metalStrength),
+        roughTex(roughTex), roughStrength(roughStrength),
+        aoTex(aoTex), aoStrength(aoStrength),
+        emissiveTex(emissiveTex), emissiveStrength(emissiveStrength),
+        heightTex(heightTex), heightStrength(heightStrength)
     {
     }
 };
-
-
-
-namespace MaterialData
-{
-    enum Flags : uint32_t
-    {
-        HasAlbedoMap = 1 << 0,
-        HasNormalMap = 1 << 1,
-        HasMetallicMap = 1 << 2,
-        HasRoughnessMap = 1 << 3,
-        HasAOMap = 1 << 4,
-    };
-
-    inline uint32_t GetFlags(const MaterialDescription& mat)
-    {
-        uint32_t flags = 0;
-
-        if (mat.albedoTextureIndex != DEFAULT_TEXTURE)      flags |= HasAlbedoMap;
-        if (mat.normalTextureIndex != DEFAULT_TEXTURE)      flags |= HasNormalMap;
-        if (mat.metallicTextureIndex != DEFAULT_TEXTURE)    flags |= HasMetallicMap;
-        if (mat.roughTextureIndex != DEFAULT_TEXTURE)       flags |= HasRoughnessMap;
-        if (mat.ambientOcclusionTextureIndex != DEFAULT_TEXTURE) flags |= HasAOMap;
-
-        return flags;
-    }
-
-    static const std::unordered_map<MaterialType, MaterialDescription> Materials = {
-        //                     Albedo       Normal        NormalStr  Metallic       MetallicStr  Roughness      RoughStr  AO              AOStr
-        { DEFAULT_MAT,      { DEFAULT_TEXTURE, DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f,   DEFAULT_TEXTURE, 0.0f } },
-        { ROCK_0,           { ROCK_COLOR,      DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f,   DEFAULT_TEXTURE, 0.0f } },
-        { ROCK_1,           { ROCK_COLOR,      ROCK_NORMAL,     1.0f, DEFAULT_TEXTURE, 0.0f, ROCK_ROUGH,      1.0f,   ROCK_AO,         1.0f } },
-        { METAL_PLATE_0,    { METAL_COLOR,     DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f,   DEFAULT_TEXTURE, 0.0f } },
-        { METAL_PLATE_1,    { METAL_COLOR,     METAL_NORMAL,    1.0f, METAL_METAL,     0.8f, METAL_ROUGH,     1.0f,   DEFAULT_TEXTURE, 0.0f } },
-        { BRICKS_0,         { BRICKS_COLOR,    DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f, DEFAULT_TEXTURE, 0.0f,   DEFAULT_TEXTURE, 0.0f } },
-        { BRICKS_1,         { BRICKS_COLOR,    BRICKS_NORMAL,   1.0f, DEFAULT_TEXTURE, 0.0f, BRICKS_ROUGH,    1.0f,   BRICKS_AO,       1.0f } },
-    };
-}
-
-
 

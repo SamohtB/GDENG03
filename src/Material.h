@@ -1,17 +1,19 @@
 #pragma once
-#include "ConstantBuffer.h"
+#include "pch.h"
 #include "MaterialTypes.h"
 
 class Material
 {
 public:
-	Material(MaterialDescription desc, const MaterialConstantsData& data);
+	Material(String name, const std::vector<D3D12_GPU_VIRTUAL_ADDRESS>& perFrameAddress, MaterialConstants constants);
 	~Material() = default;
 
-	MaterialConstantsData GetMaterialData();
+	D3D12_GPU_VIRTUAL_ADDRESS GetCBAddress(UINT currentFrameIndex);
 
 private:
-	MaterialConstantsData m_data;
-	MaterialDescription m_description;
+	String m_name;
+	std::vector<D3D12_GPU_VIRTUAL_ADDRESS> m_gpuAddresses;
+	MaterialConstants m_data;
+	UINT m_version;
 };
 

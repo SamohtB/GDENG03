@@ -273,6 +273,9 @@
     <ClCompile Include="src\Inspector.cpp">
       <Filter>Engine\EngineGUI\UIScreens\Inspector</Filter>
     </ClCompile>
+    <ClCompile Include="src\DynamicConstantBufferPool.cpp">
+      <Filter>Engine\Resources\ConstantBuffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DescriptorHeapManager.h">
@@ -451,6 +454,9 @@
     </ClInclude>
     <ClInclude Include="src\Inspector.h">
       <Filter>Engine\EngineGUI\UIScreens\Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DynamicConstantBufferPool.h">
+      <Filter>Engine\Resources\ConstantBuffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,8 @@
 
 #include "RenderSystem.h"
 #include "BatchUploader.h"
+#include "MaterialManager.h"
+#include "TextureManager.h"
 
 #include "Debug.h"
 #include "Random.h"
@@ -27,9 +29,10 @@ void GameWindow::OnCreate(HWND hwnd)
 	EngineGUIManager::Initialize(hwnd, this->m_width, this->m_height);
 	NameRegistry::Initialize();
 
-	auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
-
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
+
+	GraphicsEngine::GetInstance()->GetTextureManager()->LoadInitialTextures();
+	GraphicsEngine::GetInstance()->GetMaterialManager()->LoadInitialMaterials();
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
 } 

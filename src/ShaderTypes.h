@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
 
-class ShaderNames
+class ShaderTypes
 {
 public:
-	inline static const std::string UNLIT = "UNLIT";
-	inline static const std::string LIT = "LIT";
+	inline static constexpr const char* UNLIT = "UNLIT";
+	inline static constexpr const char* LIT = "LIT";
 };
 
 struct ShaderDesc

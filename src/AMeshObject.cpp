@@ -5,8 +5,10 @@
 #include "RenderDevice.h"
 #include "GraphicsEngine.h"
 #include "GameObjectManager.h"
+#include "TextureManager.h"
+#include "MaterialManager.h"
 
-AMeshObject::AMeshObject(String name, String shader) : AGameObject(name), m_shader(shader) {}
+AMeshObject::AMeshObject(String name, String shader, String material) : AGameObject(name), m_shader(shader), m_material(material) {}
 
 void AMeshObject::Update(float deltaTime)
 {
@@ -27,6 +29,8 @@ void AMeshObject::Draw(DeviceContext* context)
     context->SetPSO(renderSystem->GetPipelineState(this->m_shader));
     context->SetObjectConstants(GameObjectManager::GetInstance()->GetObjectConstantsAddress(this->GetId(), frameIndex));
     context->SetFrameConstants(renderSystem->GetFrameConstantsAddress());
+    context->SetTexture(GraphicsEngine::GetInstance()->GetTextureManager()->GetSRVStart());
+    context->SetMaterialConstants(GraphicsEngine::GetInstance()->GetMaterialManager()->GetMaterialHandle(this->m_material, frameIndex));
 
     context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());
     context->SetIndexBuffer(this->m_indexBuffer->GetIndexBufferViewPointer());
