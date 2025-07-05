@@ -108,13 +108,13 @@ void GameObjectManager::UpdateAll(float deltaTime)
     }
 }
 
-void GameObjectManager::RenderAll(DeviceContext* dvcContext)
+void GameObjectManager::RenderAll(DeviceContext* context, String shader)
 {
     for (const auto& object : m_renderedObjectList)
     {
         if (object->IsActive())
         {
-            object->Draw(dvcContext);
+            object->Draw(context, shader);
         }
     }
 }

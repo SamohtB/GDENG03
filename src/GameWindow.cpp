@@ -58,10 +58,11 @@ void GameWindow::OnUpdate()
 void GameWindow::OnRender()
 {
 	auto context = GraphicsEngine::GetInstance()->GetRenderSystem()->GetDeviceContext();
+	auto shader = GraphicsEngine::GetInstance()->GetRenderSystem()->GetActiveShader();
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->BeginFrame();
 
-	GameObjectManager::GetInstance()->RenderAll(context);
+	GameObjectManager::GetInstance()->RenderAll(context, shader);
 
 	/*	Temporary Per Frame Batch Uploader Calls */
 	/* Shared Resources Coming Soon */

@@ -9,6 +9,8 @@
 #include "PipelineStateManager.h"
 #include "DescriptorHeapManager.h"
 
+#include "ShaderTypes.h"
+
 RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 	m_viewport(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height)),
 	m_scissorRect(0, 0, static_cast<LONG>(width), static_cast<LONG>(height))
@@ -113,6 +115,28 @@ RenderDevice* RenderSystem::GetRenderDevice()
 DeviceContext* RenderSystem::GetDeviceContext()
 {
 	return this->m_deviceContext.get();
+}
+
+String RenderSystem::GetActiveShader() const
+{
+	return this->m_activeShader;
+}
+
+void RenderSystem::SetActiveShader(const String& shaderName)
+{
+	if (this->m_activeShader == shaderName)
+	{
+		Debug::Log(shaderName + "shader already active!");
+		return;
+	}
+
+	if (!ShaderTypes::IsValid(shaderName)) 
+	{
+		Debug::Log("Invalid shader: " + shaderName);
+		return;
+	}
+
+	this->m_activeShader = shaderName;
 }
 
 void RenderSystem::SetClearColor(const std::vector<float>& color)

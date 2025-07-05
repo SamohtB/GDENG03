@@ -17,10 +17,10 @@ public:
 	virtual ~AMeshObject() = default;
 
 	virtual void Update(float deltaTime) override final;
-	virtual void Draw(DeviceContext* context) override;
+	virtual void Draw(DeviceContext* context, String shader) override;
 
-	void SetShader(String shader) { m_shader = shader; }
-	void SetMaterial(String material) { m_material = material; }
+	void SetMaterial(String material);
+	String GetMaterial() const;
 
 protected:
 	void SetGeometry(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
@@ -33,7 +33,6 @@ private:
 	std::unique_ptr<IndexBuffer> m_indexBuffer;
 
 	UINT m_indicesSize;
-	String m_shader;
 	String m_material;
 	D3D12_PRIMITIVE_TOPOLOGY m_topology;
 };

@@ -36,5 +36,5 @@ protected:
 	float m_oFarZ = 4.0f;
 
 private:
-	void Draw(DeviceContext* dvcContext) override;
+	void Draw(DeviceContext* context, String shader) override;
 };

@@ -3,6 +3,8 @@
 #include "Win32App.h"
 #include "EngineTime.h"
 #include "EngineGUIManager.h"
+#include "GraphicsEngine.h"
+#include "RenderSystem.h"
 
 Toolbar::Toolbar() : AUIScreen("TOOLBAR")
 {
@@ -16,6 +18,7 @@ void Toolbar::DrawUI()
         FileMenu();
         GameObjects();
         Windows();
+        ShaderSelector();
         DisplayFPS();
     }
 
@@ -84,5 +87,43 @@ void Toolbar::Windows()
         }
 
         ImGui::EndMenu();
+    }
+}
+
+void Toolbar::ShaderSelector()
+{
+    static const char* shaderOptions[] = 
+    {
+        ShaderTypes::UNLIT,
+        ShaderTypes::LIT
+    };
+
+    static int currentShaderIndex = 0;
+
+    std::string label = shaderOptions[currentShaderIndex];
+    float labelWidth = ImGui::CalcTextSize(label.c_str()).x + 40.0f;
+    float windowWidth = ImGui::GetWindowWidth();
+
+    // Reserve space: FPS is ~90px, shader selector sits to its left with padding
+    float comboPos = windowWidth - 90.0f - labelWidth - 20.0f;
+
+    ImGui::SameLine();
+    ImGui::SetCursorPosX(comboPos);
+    ImGui::SetNextItemWidth(labelWidth);
+
+    if (ImGui::BeginCombo("##ShaderSelector", shaderOptions[currentShaderIndex], ImGuiComboFlags_NoArrowButton))
+    {
+        for (int i = 0; i < IM_ARRAYSIZE(shaderOptions); ++i)
+        {
+            bool isSelected = (i == currentShaderIndex);
+            if (ImGui::Selectable(shaderOptions[i], isSelected))
+            {
+                currentShaderIndex = i;
+                GraphicsEngine::GetInstance()->GetRenderSystem()->SetActiveShader(shaderOptions[i]);
+            }
+            if (isSelected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
     }
 }

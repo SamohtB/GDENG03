@@ -12,6 +12,10 @@ public:
     // Inherited via AUIScreen
     void DrawUI() override;
 
+private:
+	void DrawObjectInfo(AGameObject* object);
     void DrawTransformTab(AGameObject* object);
+    void DrawMaterialTab(AGameObject* object);
+
 };
 

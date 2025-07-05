@@ -14,7 +14,9 @@ void Inspector::DrawUI()
 
     if (object != nullptr)
     {
+		DrawObjectInfo(object);
         DrawTransformTab(object);
+		DrawMaterialTab(object);
     }
 
     else
@@ -25,13 +27,16 @@ void Inspector::DrawUI()
     ImGui::End();
 }
 
+void Inspector::DrawObjectInfo(AGameObject* object)
+{
+    ImGui::Text("Name: %s", object->GetName().c_str());
+}
+
 void Inspector::DrawTransformTab(AGameObject* object)
 {
     Vector3 position = object->GetLocalPosition();
     Vector3 rotation = object->GetLocalRotation();
     Vector3 scale = object->GetLocalScale();
-
-    ImGui::Text("Object: %s", object->GetName().c_str());
 
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 
@@ -52,4 +57,17 @@ void Inspector::DrawTransformTab(AGameObject* object)
 
         ImGui::TreePop();
     }
+}
+
+void Inspector::DrawMaterialTab(AGameObject* object)
+{
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+
+    if (ImGui::TreeNode("Material"))
+    {
+
+        ImGui::TreePop();
+    }
+
+    
 }

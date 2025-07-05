@@ -1,11 +1,20 @@
 #pragma once
 #include <string>
+#include <unordered_set>
 
 class ShaderTypes
 {
 public:
+	using String = std::string;
+
 	inline static constexpr const char* UNLIT = "UNLIT";
 	inline static constexpr const char* LIT = "LIT";
+
+	static bool IsValid(const String& shader)
+	{
+		static const std::unordered_set<String> valid = { UNLIT, LIT };
+		return valid.find(shader) != valid.end();
+	}
 };
 
 struct ShaderDesc

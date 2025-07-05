@@ -8,7 +8,7 @@
 #include "TextureManager.h"
 #include "MaterialManager.h"
 
-AMeshObject::AMeshObject(String name, String shader, String material) : AGameObject(name), m_shader(shader), m_material(material) {}
+AMeshObject::AMeshObject(String name, String shader, String material) : AGameObject(name), m_material(material) {}
 
 void AMeshObject::Update(float deltaTime)
 {
@@ -21,12 +21,12 @@ void AMeshObject::Update(float deltaTime)
     GameObjectManager::GetInstance()->UpdateConstantBuffer(this->GetId(), objData);
 }
 
-void AMeshObject::Draw(DeviceContext* context)
+void AMeshObject::Draw(DeviceContext* context, String shader)
 {
     auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
     auto frameIndex = renderSystem->GetCurrentFrameIndex();
 
-    context->SetPSO(renderSystem->GetPipelineState(this->m_shader));
+    context->SetPSO(renderSystem->GetPipelineState(shader));
     context->SetObjectConstants(GameObjectManager::GetInstance()->GetObjectConstantsAddress(this->GetId(), frameIndex));
     context->SetFrameConstants(renderSystem->GetFrameConstantsAddress());
     context->SetTexture(GraphicsEngine::GetInstance()->GetTextureManager()->GetSRVStart());
@@ -37,6 +37,19 @@ void AMeshObject::Draw(DeviceContext* context)
 
 	context->SetTopology(this->m_topology);
     context->DrawIndexedTriangleStrip(m_indicesSize, 0, 0);
+}
+
+void AMeshObject::SetMaterial(String material)
+{
+	if (material != this->m_material)
+	{
+		this->m_material = material;
+	}
+}
+
+String AMeshObject::GetMaterial() const
+{
+    return this->m_material;
 }
 
 void AMeshObject::SetTopology(D3D12_PRIMITIVE_TOPOLOGY topology)

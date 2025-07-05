@@ -23,7 +23,7 @@ public:
     std::vector<AGameObject*> GetAllObjects();
     int ActiveObjects();
     void UpdateAll(float deltaTime);
-    void RenderAll(DeviceContext* dvcContext);
+    void RenderAll(DeviceContext* context, String shader);
 
     void AddGameObject(GameObjectPtr gameObject, bool hasConstantBuffer = true);
     void DeleteObject(AGameObject* game_object);
