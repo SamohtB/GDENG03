@@ -78,7 +78,7 @@ void MaterialManager::CreateMaterial(const String& materialName, MaterialDescrip
 
     for (UINT i = 0; i < FRAME_COUNT; ++i)
     {
-        m_materialBuffer->BeginFrame(i);
+        m_materialBuffer->SetCurrentFrameIndex(i);
         auto cb = m_materialBuffer->Allocate(sizeof(MaterialConstants));
         memcpy(cb.cpuPtr, &constants, sizeof(MaterialConstants));
         perFrameAddress[i] = cb.gpuAddr;

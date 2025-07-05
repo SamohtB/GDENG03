@@ -47,10 +47,10 @@ void RenderSystem::BeginFrame()
 	this->m_deviceContext->SetViewport(&m_viewport);
 	this->m_deviceContext->SetScissorRect(&m_scissorRect);
 	
+	GraphicsEngine::GetInstance()->GetMaterialManager()->BeginFrame(currentFrameIndex);
+
 	auto renderTarget = this->m_renderTargetManager->GetRenderTarget(currentFrameIndex);
 	this->m_deviceContext->TransitionToRenderTarget(renderTarget);
-
-	GraphicsEngine::GetInstance()->GetMaterialManager()->BeginFrame(currentFrameIndex);
 
 	auto rtvHandle = this->m_renderDevice->GetDescriptorHeapManager()->GetRTVCPUHandleAt(currentFrameIndex);
 	auto dsvHandle = this->m_renderDevice->GetDescriptorHeapManager()->GetDSVCPUHandle();

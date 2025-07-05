@@ -37,7 +37,7 @@ void TextureManager::LoadTexture(const String& textureName, const std::wstring& 
     TexturePtr texture = std::make_unique<Texture>(buffer, srvIndex);
     this->m_srvMap[textureName] = srvIndex;
     this->m_textureMap[textureName] = std::move(texture);
-    Debug::Log(textureName + " Loaded");
+    Debug::Log(textureName + " Loaded at " + std::to_string(srvIndex));
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSRVStart()

@@ -9,25 +9,37 @@ struct PSINPUT
     float3 positionWS : POSITION1;
 };
 
-cbuffer MaterialBuffer : register(b0)
+cbuffer MaterialConstants : register(b2)
 {
-    uint albedoTextureIndex;
-    uint normalTextureIndex;
-    float normalStr;
-    uint metallicTextureIndex;
-    float metallicStr;
-    uint roughTextureIndex;
-    float roughStr;
-    uint ambientOcclussionTextureIndex;
-    float ambientOcclussionStr;
+    uint diffuseHandleIndex;
+    uint normalHandleIndex;
+    uint metalHandleIndex;
+    uint roughHandleIndex;
+
+    uint aoHandleIndex;
+    uint emmissiveHandleIndex;
+    uint heightHandleIndex;
     uint materialFlags;
-}
+
+    float4 baseColor;
+
+    float normalStr;
+    float metalStr;
+    float roughStr;
+    float aoStr;
+
+    float emmissiveStr;
+    float heightStr;
+    float2 pad;
+};
 
 static const uint HasAlbedoMap = 1 << 0;
 static const uint HasNormalMap = 1 << 1;
 static const uint HasMetallicMap = 1 << 2;
 static const uint HasRoughnessMap = 1 << 3;
 static const uint HasAOMap = 1 << 4;
+static const uint HasEmissiveMap = 1 << 5;
+static const uint HasHeightMap = 1 << 6;
 
 struct SampledTextureMaps
 {
@@ -92,27 +104,26 @@ float3 fresnelSchlick(float cosTheta, float3 F0)
 SampledTextureMaps SampleTextures(PSINPUT input)
 {
     // === Default Values ===
-    float3 d_albedo = float3(1, 1, 1);
     float3 d_normal = float3(0, 0, 1); 
     float d_metallic = 0.0f;
-    float d_roughness = 1.0f;
-    float d_ao = 1.0f;
+    float d_roughness = 0.0f;
+    float d_ao = 0.0f;
     
     SampledTextureMaps samples;
     
     // === Check Flags ===
     if ((materialFlags & HasAlbedoMap) != 0)
     {
-        samples.albedo = pow(Textures[albedoTextureIndex].Sample(Samplers[0], input.texcoord).rgb, 2.2);
+        samples.albedo = (pow(Textures[diffuseHandleIndex].Sample(Samplers[0], input.texcoord).rgb, 2.2), 1.0f) * baseColor.rgb;
     }
     else
     {
-        samples.albedo = d_albedo;
+        samples.albedo = baseColor.rgb;
     }
     
     if ((materialFlags & HasNormalMap) != 0)
     {
-        float3 normal = Textures[normalTextureIndex].Sample(Samplers[0], input.texcoord).rgb;
+        float3 normal = Textures[normalHandleIndex].Sample(Samplers[0], input.texcoord).rgb;
         samples.normal = lerp(d_normal, normal, normalStr);
     }
     else
@@ -122,8 +133,8 @@ SampledTextureMaps SampleTextures(PSINPUT input)
     
     if ((materialFlags & HasMetallicMap) != 0)
     {
-        float metal = Textures[metallicTextureIndex].Sample(Samplers[0], input.texcoord).r;
-        samples.MRAO.r = lerp(d_metallic, metal, metallicStr);
+        float metal = Textures[metalHandleIndex].Sample(Samplers[0], input.texcoord).r;
+        samples.MRAO.r = lerp(d_metallic, metal, metalStr);
     }
     else
     {
@@ -132,7 +143,7 @@ SampledTextureMaps SampleTextures(PSINPUT input)
     
     if ((materialFlags & HasRoughnessMap) != 0)
     {
-        float rough = Textures[roughTextureIndex].Sample(Samplers[0], input.texcoord).r;
+        float rough = Textures[roughHandleIndex].Sample(Samplers[0], input.texcoord).r;
         samples.MRAO.g = lerp(d_roughness, rough, roughStr);
     }
     else
@@ -142,8 +153,8 @@ SampledTextureMaps SampleTextures(PSINPUT input)
     
     if ((materialFlags & HasAOMap) != 0)
     {
-        float ao = Textures[ambientOcclussionTextureIndex].Sample(Samplers[0], input.texcoord).r;
-        samples.MRAO.b = lerp(d_ao, ao, ambientOcclussionStr);
+        float ao = Textures[aoHandleIndex].Sample(Samplers[0], input.texcoord).r;
+        samples.MRAO.b = lerp(d_ao, ao, aoStr);
     }
     
     else

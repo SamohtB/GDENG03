@@ -98,6 +98,8 @@ Cube::Cube(String name) : AMeshObject(name)
 
     SetGeometry(vertices, indices);
     SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	SetShader(ShaderTypes::LIT);
+	SetMaterial(MaterialType::ROCK);
 }
 
 void Cube::OnUpdate(float deltaTime)

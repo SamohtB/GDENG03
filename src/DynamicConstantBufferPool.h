@@ -19,18 +19,17 @@ public:
     ~DynamicConstantBufferPool();
 
     void BeginFrame(uint32_t frameIndex);
+    void SetCurrentFrameIndex(UINT frameIndex);
     Allocation Allocate(size_t size);
-
-    ID3D12Resource* GetCurrentResource() const;
 
 private:
     void CreateBuffers(ID3D12Device* device);
 
     UINT m_currentFrameIndex = 0;
-    size_t m_currentOffset = 0;
     size_t m_bufferSizePerFrame;
 
     std::vector<ComPtr<ID3D12Resource>> m_buffers;
+    std::vector<size_t> m_currentOffsets;
     std::vector<void*> m_mappedPtrs;
 };
 

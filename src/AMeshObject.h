@@ -19,6 +19,9 @@ public:
 	virtual void Update(float deltaTime) override final;
 	virtual void Draw(DeviceContext* context) override;
 
+	void SetShader(String shader) { m_shader = shader; }
+	void SetMaterial(String material) { m_material = material; }
+
 protected:
 	void SetGeometry(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 	void SetTopology(D3D12_PRIMITIVE_TOPOLOGY topology);
