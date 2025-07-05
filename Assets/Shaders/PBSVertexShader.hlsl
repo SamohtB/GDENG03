@@ -12,6 +12,7 @@ struct VSOutput
     float2 texcoord : TEXCOORD;
     float3x3 TBN : TBN;
     float3 positionWS : POSITION1;
+    float3 normal : NORMAL;
 };
 
 cbuffer ObjectConstants : register(b0)
@@ -35,7 +36,7 @@ VSOutput VSMain(VSInput input)
     float4 projPos = mul(viewPos, projection);
     output.position = projPos;
 
-    output.texcoord = input.texcoord;
+    output.texcoord = float2(input.texcoord.x, -input.texcoord.y);
     output.positionWS = worldPos.xyz;
     
     float3 worldNormal = normalize(mul(input.normal, (float3x3) model));
@@ -43,6 +44,7 @@ VSOutput VSMain(VSInput input)
     float3 worldBitangent = normalize(cross(worldNormal, worldTangent));
     
     output.TBN = float3x3(worldTangent, worldBitangent, worldNormal);
+    output.normal = normalize(mul(input.normal, (float3x3) model));
 
     return output;
 }

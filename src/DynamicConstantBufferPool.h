@@ -29,7 +29,7 @@ private:
     size_t m_bufferSizePerFrame;
 
     std::vector<ComPtr<ID3D12Resource>> m_buffers;
-    std::vector<size_t> m_currentOffsets;
     std::vector<void*> m_mappedPtrs;
+    std::vector<size_t> m_currentOffsets;
 };
 

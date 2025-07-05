@@ -21,12 +21,6 @@ DynamicConstantBufferPool::~DynamicConstantBufferPool()
             m_buffers[i]->Unmap(0, &emptyRange);
             m_mappedPtrs[i] = nullptr;
         }
-
-        if (m_buffers[i])
-        {
-            m_buffers[i]->Release();
-            m_buffers[i] = nullptr;
-        }
     }
 }
 

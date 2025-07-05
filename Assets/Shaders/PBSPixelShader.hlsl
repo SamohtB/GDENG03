@@ -7,6 +7,7 @@ struct PSINPUT
     float2 texcoord : TEXCOORD;
     float3x3 TBN : TBN;
     float3 positionWS : POSITION1;
+    float3 normal : NORMAL;
 };
 
 cbuffer MaterialConstants : register(b2)
@@ -128,7 +129,7 @@ SampledTextureMaps SampleTextures(PSINPUT input)
     }
     else
     {
-        samples.normal = d_normal;
+        samples.normal = input.normal;
     }
     
     if ((materialFlags & HasMetallicMap) != 0)
