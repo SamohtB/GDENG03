@@ -10,9 +10,10 @@ struct VSOutput
 {
     float4 position : SV_POSITION;
     float2 texcoord : TEXCOORD;
-    float3x3 TBN : TBN;
+    float3 tangentWS : TANGENT;
+    float3 bitangentWS : BITANGENT;
+    float3 normalWS : NORMAL;
     float3 positionWS : POSITION1;
-    float3 normal : NORMAL;
 };
 
 cbuffer ObjectConstants : register(b0)
@@ -25,6 +26,7 @@ cbuffer FrameConstants : register(b1)
 {
     float4x4 view;
     float4x4 projection;
+    float3 cameraPosition;
 }
 
 VSOutput VSMain(VSInput input)
@@ -36,15 +38,12 @@ VSOutput VSMain(VSInput input)
     float4 projPos = mul(viewPos, projection);
     output.position = projPos;
 
-    output.texcoord = float2(input.texcoord.x, -input.texcoord.y);
+    output.texcoord = input.texcoord;
     output.positionWS = worldPos.xyz;
     
-    float3 worldNormal = normalize(mul(input.normal, (float3x3) model));
-    float3 worldTangent = normalize(mul(input.tangent, (float3x3) model));
-    float3 worldBitangent = normalize(cross(worldNormal, worldTangent));
-    
-    output.TBN = float3x3(worldTangent, worldBitangent, worldNormal);
-    output.normal = normalize(mul(input.normal, (float3x3) model));
+    output.normalWS = normalize(mul(input.normal, (float3x3) model));
+    output.tangentWS = normalize(mul(input.tangent, (float3x3) model));
+    output.bitangentWS = normalize(cross(worldNormal, worldTangent));
 
     return output;
 }

@@ -27,6 +27,7 @@ public:
 	
 	Matrix GetActiveCameraViewMatrix();
 	Matrix GetActiveCameraProjMatrix();
+	Vector3 GetActiveCameraPosition();
 
 	void Update(float deltaTime);
 	void UpdateViewportSize(UINT width, UINT height);

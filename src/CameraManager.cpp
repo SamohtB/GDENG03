@@ -117,6 +117,11 @@ Matrix CameraManager::GetActiveCameraProjMatrix()
 	return this->m_activeCamera->GetProjectionMatrix();
 }
 
+Vector3 CameraManager::GetActiveCameraPosition()
+{
+	return this->m_activeCamera->GetLocalPosition();
+}
+
 void CameraManager::UpdateViewportSize(UINT width, UINT height)
 {
 	for (const auto& camera : this->m_cameraList)

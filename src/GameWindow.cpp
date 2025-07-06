@@ -50,7 +50,8 @@ void GameWindow::OnUpdate()
 
 	FrameConstantsData frameData = {};
 	frameData.viewMatrix = CameraManager::GetInstance()->GetActiveCameraViewMatrix();
-	frameData.projMatrix = CameraManager::GetInstance()->GetActiveCameraProjMatrix();;
+	frameData.projMatrix = CameraManager::GetInstance()->GetActiveCameraProjMatrix();
+	frameData.cameraPosition = CameraManager::GetInstance()->GetActiveCameraPosition();
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->UpdateFrameConstants(frameData);
 }

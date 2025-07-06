@@ -81,7 +81,7 @@ Sphere::Sphere(String name) : AMeshObject(name)
         vertices[i].tangent = tangents[i];
 
     SetGeometry(vertices, indices);
-    SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void Sphere::OnUpdate(float deltaTime)

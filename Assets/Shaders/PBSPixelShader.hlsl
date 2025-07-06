@@ -5,10 +5,18 @@ struct PSINPUT
 {
     float4 position : SV_POSITION;
     float2 texcoord : TEXCOORD;
-    float3x3 TBN : TBN;
+    float3 tangentWS : TANGENT;
+    float3 bitangentWS : BITANGENT;
+    float3 normalWS : NORMAL;
     float3 positionWS : POSITION1;
-    float3 normal : NORMAL;
 };
+
+cbuffer FrameConstants : register(b1)
+{
+    float4x4 view;
+    float4x4 projection;
+    float3 cameraPosition;
+}
 
 cbuffer MaterialConstants : register(b2)
 {
@@ -59,7 +67,6 @@ static const float3 defaultLightColors[1] =
     float3(200.0, 200.0, 200.0),
 };
 
-static const float3 defaultCamPos = float3(0.0, 0.0, -1.0);
 static const float PI = 3.14159265359;
 
 float DistributionGGX(float3 N, float3 H, float roughness)
@@ -115,7 +122,8 @@ SampledTextureMaps SampleTextures(PSINPUT input)
     // === Check Flags ===
     if ((materialFlags & HasAlbedoMap) != 0)
     {
-        samples.albedo = (pow(Textures[diffuseHandleIndex].Sample(Samplers[0], input.texcoord).rgb, 2.2), 1.0f) * baseColor.rgb;
+        float3 albedoTex = Textures[diffuseHandleIndex].Sample(Samplers[0], input.texcoord).rgb;
+        samples.albedo = pow(albedoTex, 2.2f) * baseColor.rgb;
     }
     else
     {
@@ -124,12 +132,13 @@ SampledTextureMaps SampleTextures(PSINPUT input)
     
     if ((materialFlags & HasNormalMap) != 0)
     {
-        float3 normal = Textures[normalHandleIndex].Sample(Samplers[0], input.texcoord).rgb;
-        samples.normal = lerp(d_normal, normal, normalStr);
+        float3 sampledNormal = Textures[normalHandleIndex].Sample(Samplers[0], input.texcoord).rgb;
+        sampledNormal = normalize(sampledNormal * 2.0 - 1.0);
+        samples.normal = normalize(lerp(d_normal, sampledNormal, normalStr));
     }
     else
     {
-        samples.normal = input.normal;
+        samples.normal = input.normalWS;
     }
     
     if ((materialFlags & HasMetallicMap) != 0)
@@ -170,8 +179,9 @@ float4 PSMain(PSINPUT input) : SV_TARGET
 {
     SampledTextureMaps samples = SampleTextures(input);
     
-    float3 N = normalize(mul(input.TBN, normalize(samples.normal * 2.0 - 1.0)));
-    float3 V = normalize(defaultCamPos - input.positionWS);
+    float3x3 TBN = float3x3(input.tangentWS, input.bitangentWS, input.normalWS);
+    float3 N = normalize(mul(TBN, normalize(samples.normal * 2.0 - 1.0)));
+    float3 V = normalize(cameraPosition - input.positionWS);
     float3 F0 = lerp(float3(0.04, 0.04, 0.04), samples.albedo, samples.MRAO.r);
     float3 Lo = float3(0.0, 0.0, 0.0);
     

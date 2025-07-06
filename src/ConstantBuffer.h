@@ -101,6 +101,7 @@ struct alignas(256) FrameConstantsData
 {
     Matrix viewMatrix;
     Matrix projMatrix;
+	Vector3 cameraPosition;
 };
 
 class FrameConstantsBuffer : public ConstantBuffer<FrameConstantsData>

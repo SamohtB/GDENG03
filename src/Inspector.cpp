@@ -1,6 +1,8 @@
 #include "Inspector.h"
 #include "GameObjectManager.h"
 #include "AGameObject.h"
+#include "AMeshObject.h"
+#include "MaterialTypes.h"
 
 Inspector::Inspector() : AUIScreen("Inspector")
 {
@@ -65,6 +67,31 @@ void Inspector::DrawMaterialTab(AGameObject* object)
 
     if (ImGui::TreeNode("Material"))
     {
+        static const char* materialOptions[] = 
+        {
+            MaterialType::DEFAULT,
+            MaterialType::ROCK,
+            MaterialType::METAL_PLATE,
+            MaterialType::BRICKS
+        };
+
+		auto meshObject = dynamic_cast<AMeshObject*>(object);
+        auto currentMat = meshObject->GetMaterial();
+        int currentIndex = 0;
+
+        for (int i = 0; i < IM_ARRAYSIZE(materialOptions); ++i)
+        {
+            if (currentMat == materialOptions[i])
+            {
+                currentIndex = i;
+                break;
+            }
+        }
+
+        if (ImGui::Combo("Material", &currentIndex, materialOptions, IM_ARRAYSIZE(materialOptions)))
+        {
+            meshObject->SetMaterial(materialOptions[currentIndex]);
+        }
 
         ImGui::TreePop();
     }
