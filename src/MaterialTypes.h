@@ -63,18 +63,19 @@ struct alignas(16) MaterialConstants
 struct MaterialDescription
 {
     std::string albedoTex;
-    Vector4 albedoColor;
     std::string normalTex;
-    float normalStrength;
     std::string metalTex;
-    float metalStrength;
     std::string roughTex;
-    float roughStrength;
     std::string aoTex;
-    float aoStrength;
+    Vector4 albedoColor;
     std::string emissiveTex;
-    float emissiveStrength;
     std::string heightTex;
+
+    float normalStrength;
+    float metalStrength;
+    float roughStrength;
+    float aoStrength;
+    float emissiveStrength;
     float heightStrength;
 
     MaterialDescription(

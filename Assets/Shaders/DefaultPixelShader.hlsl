@@ -41,13 +41,12 @@ float4 PSMain(PSINPUT input) : SV_TARGET
     {
         float3 albedoTex = Textures[diffuseHandleIndex].Sample(Samplers[0], input.texcoord).rgb;
         color = pow(albedoTex, 2.2f) * baseColor.rgb;
+        color = pow(color, 1.0 / 2.2);
     }
     else
     {
         color = baseColor.rgb;
     }
-    
-    color = pow(color, 1.0 / 2.2);
 
     return float4(color, 1.0);
 }

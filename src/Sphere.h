@@ -12,6 +12,6 @@ protected:
 
 private:
     static const uint32_t TESSELLATION = 16;
-    inline static const float RADIUS = 1.0f;
+    inline static const float RADIUS = 0.5f;
 };
 

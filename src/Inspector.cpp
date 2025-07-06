@@ -3,6 +3,9 @@
 #include "AGameObject.h"
 #include "AMeshObject.h"
 #include "MaterialTypes.h"
+#include "GraphicsEngine.h"
+#include "MaterialManager.h"
+#include "TextureManager.h"
 
 Inspector::Inspector() : AUIScreen("Inspector")
 {
@@ -93,8 +96,48 @@ void Inspector::DrawMaterialTab(AGameObject* object)
             meshObject->SetMaterial(materialOptions[currentIndex]);
         }
 
+        auto matDesc = GraphicsEngine::GetInstance()->GetMaterialManager()->GetMaterialDescription(currentMat);
+
+        ImGui::SeparatorText("Albedo");
+        DrawTextureField("Albedo Texture", matDesc.albedoTex);
+        ImGui::ColorEdit4("Albedo Color", &matDesc.albedoColor.x);
+
+        ImGui::SeparatorText("Normal Map");
+        DrawTextureField("Normal Texture", matDesc.normalTex);
+        ImGui::SliderFloat("Normal Strength", &matDesc.normalStrength, 0.0f, 2.0f);
+
+        ImGui::SeparatorText("Metallic");
+        DrawTextureField("Metal Texture", matDesc.metalTex);
+        ImGui::SliderFloat("Metal Strength", &matDesc.metalStrength, 0.0f, 1.0f);
+
+        ImGui::SeparatorText("Roughness");
+        DrawTextureField("Rough Texture", matDesc.roughTex);
+        ImGui::SliderFloat("Rough Strength", &matDesc.roughStrength, 0.0f, 1.0f);
+
+        ImGui::SeparatorText("Ambient Occlusion");
+        DrawTextureField("AO Texture", matDesc.aoTex);
+        ImGui::SliderFloat("AO Strength", &matDesc.aoStrength, 0.0f, 1.0f);
+
+        ImGui::SeparatorText("Emissive");
+        DrawTextureField("Emissive Texture", matDesc.emissiveTex);
+        ImGui::SliderFloat("Emissive Strength", &matDesc.emissiveStrength, 0.0f, 10.0f);
+
+        ImGui::SeparatorText("Height");
+        DrawTextureField("Height Texture", matDesc.heightTex);
+        ImGui::SliderFloat("Height Strength", &matDesc.heightStrength, 0.0f, 1.0f);
+
         ImGui::TreePop();
     }
+}
 
-    
+void Inspector::DrawTextureField(const char* label, std::string& textureName)
+{
+    ImGui::Text("%s", label);
+
+    ImTextureID texID = GraphicsEngine::GetInstance()->GetTextureManager()->GetThumbnail(textureName);
+
+    if (texID)  
+    {
+        ImGui::Image(texID, ImVec2(64, 64));
+    }
 }

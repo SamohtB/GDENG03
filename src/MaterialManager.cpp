@@ -84,7 +84,7 @@ void MaterialManager::CreateMaterial(const String& materialName, MaterialDescrip
         perFrameAddress[i] = cb.gpuAddr;
     }
 
-    MaterialPtr newMaterial = std::make_unique<Material>(materialName, perFrameAddress, constants);
+    MaterialPtr newMaterial = std::make_unique<Material>(materialName, perFrameAddress, materialDesc);
     m_materialMap[materialName] = std::move(newMaterial);
 
     Debug::Log(materialName + " Material Created");
@@ -98,6 +98,11 @@ void MaterialManager::BeginFrame(UINT currentFrameIndex)
 D3D12_GPU_VIRTUAL_ADDRESS MaterialManager::GetMaterialHandle(const String& materialName, UINT currentFrameIndex)
 {
     return this->m_materialMap[materialName]->GetCBAddress(currentFrameIndex);
+}
+
+MaterialDescription MaterialManager::GetMaterialDescription(const String& materialName)
+{
+    return this->m_materialMap[materialName]->GetDescription();
 }
 
 MaterialConstants MaterialManager::CreateMaterialConstants(const MaterialDescription& desc)

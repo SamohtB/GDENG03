@@ -1,4 +1,5 @@
 #pragma once
+
 // === System headers ===
 #include <windows.h>
 #include <wrl.h>                

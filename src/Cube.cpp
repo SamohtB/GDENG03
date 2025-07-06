@@ -98,7 +98,7 @@ Cube::Cube(String name) : AMeshObject(name)
 
     SetGeometry(vertices, indices);
     SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	SetMaterial(MaterialType::ROCK);
+	SetMaterial(MaterialType::DEFAULT);
 }
 
 void Cube::OnUpdate(float deltaTime)

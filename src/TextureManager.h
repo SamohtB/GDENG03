@@ -22,6 +22,7 @@ public:
     D3D12_GPU_DESCRIPTOR_HANDLE GetSRVStart();
 
     UINT GetTextureSRVIndex(const String& textureName);
+    ImTextureID GetThumbnail(const String& textureName);
 
 private:
     void CreateDefaultWhiteTexture();

@@ -9,7 +9,8 @@ TextureManager::TextureManager(std::shared_ptr<DescriptorHeapManager> heapManage
 
 void TextureManager::LoadInitialTextures()
 {
-    CreateDefaultWhiteTexture();
+    LoadTexture(TextureType::DEFAULT, L"Assets/Textures/default.png");
+    //CreateDefaultWhiteTexture();
 
     LoadTexture(TextureType::ROCK_COLOR, L"Assets/Textures/rock_d.jpg");
     LoadTexture(TextureType::ROCK_NORMAL, L"Assets/Textures/rock_n.jpg");
@@ -54,6 +55,22 @@ UINT TextureManager::GetTextureSRVIndex(const String& textureName)
 
     Debug::LogError(textureName + " Not Found!");
     return 0;     
+}
+
+ImTextureID TextureManager::GetThumbnail(const String& textureName)
+{
+	auto it = this->m_srvMap.find(textureName);
+    if (it != this->m_srvMap.end())
+    {
+        /* Get UINT Handle Index */
+		auto& handleIndex = it->second;
+
+		ImTextureID textureID = (ImTextureID)m_heapManager->GetSRVGPUHandleAt(handleIndex).ptr;
+        return textureID;
+	}
+
+    Debug::LogError("Thumbnail for " + textureName + " not found or invalid handle.");
+    return (ImTextureID)nullptr;
 }
 
 void TextureManager::CreateDefaultWhiteTexture()

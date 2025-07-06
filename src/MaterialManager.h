@@ -21,6 +21,7 @@ public:
 
     void BeginFrame(UINT currentFrameIndex);
     D3D12_GPU_VIRTUAL_ADDRESS GetMaterialHandle(const String& materialName, UINT currentFrameIndex);
+    MaterialDescription GetMaterialDescription(const String& materialName);
 
 private:
     MaterialConstants CreateMaterialConstants(const MaterialDescription& desc);
