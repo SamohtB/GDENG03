@@ -43,7 +43,7 @@ VSOutput VSMain(VSInput input)
     
     output.normalWS = normalize(mul(input.normal, (float3x3) model));
     output.tangentWS = normalize(mul(input.tangent, (float3x3) model));
-    output.bitangentWS = normalize(cross(worldNormal, worldTangent));
+    output.bitangentWS = normalize(cross(output.normalWS, output.tangentWS));
 
     return output;
 }

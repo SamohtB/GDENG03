@@ -57,15 +57,8 @@ struct SampledTextureMaps
     float3 MRAO;
 };
 
-static const float3 defaultLightPositions[1] =
-{
-    float3(-5.0, 5.0, 5.0),
-};
-
-static const float3 defaultLightColors[1] =
-{
-    float3(200.0, 200.0, 200.0),
-};
+static const float3 globalLightDir = normalize(float3(-0.5, -1.0, -0.25));
+static const float3 globalLightColor = float3(1.0f, 1.0f, 1.0f);
 
 static const float PI = 3.14159265359;
 
@@ -185,26 +178,28 @@ float4 PSMain(PSINPUT input) : SV_TARGET
     float3 F0 = lerp(float3(0.04, 0.04, 0.04), samples.albedo, samples.MRAO.r);
     float3 Lo = float3(0.0, 0.0, 0.0);
     
-        // === Direct Lighting ===
-        float3 L = normalize(defaultLightPositions[0] - input.positionWS);
-        float3 H = normalize(V + L);
-        float distance = length(defaultLightPositions[0] - input.positionWS);
-        float attenuation = 1.0 / (distance * distance);
-        float3 radiance = defaultLightColors[0] * attenuation;
+    // === Global Directional Lighting ===
+    float3 L = normalize(-globalLightDir);
+    float3 H = normalize(V + L);
+    float3 radiance = globalLightColor;
+    
+        /* Point Light Calc Stuff */ 
+        //float distance = length(defaultLightPositions[0] - input.positionWS);
+        //float attenuation = 1.0 / (distance * distance);
+    
+    float NDF = DistributionGGX(N, H, samples.MRAO.g);
+    float G = GeometrySmith(N, V, L, samples.MRAO.g);
+    float3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
 
-        float NDF = DistributionGGX(N, H, samples.MRAO.g);
-        float G = GeometrySmith(N, V, L, samples.MRAO.g);
-        float3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+    float3 kS = F;
+    float3 kD = (1.0 - kS) * (1.0 - samples.MRAO.r);
 
-        float3 kS = F;
-        float3 kD = (1.0 - kS) * (1.0 - samples.MRAO.r);
+    float3 numerator = NDF * G * F;
+    float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
+    float3 specular = numerator / denominator;
 
-        float3 numerator = NDF * G * F;
-        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
-        float3 specular = numerator / denominator;
-
-        float NdotL = max(dot(N, L), 0.0);
-        Lo += (kD * samples.albedo / PI + specular) * radiance * NdotL;
+    float NdotL = max(dot(N, L), 0.0);
+    Lo += (kD * samples.albedo / PI + specular) * radiance * NdotL;
 
     float3 ambient = float3(0.03, 0.03, 0.03) * samples.albedo * samples.MRAO.b;
     float3 color = ambient + Lo;

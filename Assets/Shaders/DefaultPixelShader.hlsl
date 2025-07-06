@@ -1,5 +1,5 @@
-Texture2D myTexture : register(t0);
-SamplerState mySampler : register(s0);
+Texture2D Textures[] : register(t0, space0);
+SamplerState Samplers[] : register(s0, space0);
 
 struct PSINPUT
 {
@@ -7,7 +7,47 @@ struct PSINPUT
     float2 texcoord : TEXCOORD;
 };
 
+cbuffer MaterialConstants : register(b2)
+{
+    uint diffuseHandleIndex;
+    uint normalHandleIndex;
+    uint metalHandleIndex;
+    uint roughHandleIndex;
+
+    uint aoHandleIndex;
+    uint emmissiveHandleIndex;
+    uint heightHandleIndex;
+    uint materialFlags;
+
+    float4 baseColor;
+
+    float normalStr;
+    float metalStr;
+    float roughStr;
+    float aoStr;
+
+    float emmissiveStr;
+    float heightStr;
+    float2 pad;
+};
+
+static const uint HasAlbedoMap = 1 << 0;
+
 float4 PSMain(PSINPUT input) : SV_TARGET
 {
-    return float4(1.0f, 1.0f, 1.0f, 1.0f);
+    float3 color;
+
+    if ((materialFlags & HasAlbedoMap) != 0)
+    {
+        float3 albedoTex = Textures[diffuseHandleIndex].Sample(Samplers[0], input.texcoord).rgb;
+        color = pow(albedoTex, 2.2f) * baseColor.rgb;
+    }
+    else
+    {
+        color = baseColor.rgb;
+    }
+    
+    color = pow(color, 1.0 / 2.2);
+
+    return float4(color, 1.0);
 }
