@@ -12,10 +12,11 @@
 #include "TextureManager.h"
 #include "MaterialManager.h"
 #include "LightManager.h"
+#include "MeshManager.h"
 
 #include "Debug.h"
 
-AMeshObject::AMeshObject(String name, String material) : AGameObject(name), m_material(material)
+AMeshObject::AMeshObject(String name, String mesh, String material) : AGameObject(name), m_mesh(mesh), m_material(material)
 {
     m_gpuAddresses.resize(FRAME_COUNT);
 }
@@ -29,6 +30,7 @@ void AMeshObject::Draw(DeviceContext* context)
     auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
     auto frameIndex = renderSystem->GetCurrentFrameIndex();
     auto shader = GraphicsEngine::GetInstance()->GetMaterialManager()->GetMaterialShader(this->m_material, frameIndex);
+	auto meshData = GraphicsEngine::GetInstance()->GetMeshManager()->GetMeshData(this->m_mesh);
 
     context->SetPSO(renderSystem->GetPipelineState(shader));
     context->SetObjectConstants(this->m_gpuAddresses[frameIndex]);
@@ -37,11 +39,11 @@ void AMeshObject::Draw(DeviceContext* context)
     context->SetMaterialConstants(GraphicsEngine::GetInstance()->GetMaterialManager()->GetMaterialHandle(this->m_material, frameIndex));
     context->SetLightConstants(GraphicsEngine::GetInstance()->GetLightManager()->GetLightBuffer(frameIndex));
 
-    context->SetVertexBuffer(this->m_vertexBuffer->GetVertexBufferViewPointer());
-    context->SetIndexBuffer(this->m_indexBuffer->GetIndexBufferViewPointer());
+    context->SetVertexBuffer(meshData->m_vertexBuffer->GetVertexBufferViewPointer());
+    context->SetIndexBuffer(meshData->m_indexBuffer->GetIndexBufferViewPointer());
 
     context->SetTopology(this->m_topology);
-    context->DrawIndexedTriangleStrip(m_indicesSize, 0, 0);
+    context->DrawIndexedTriangleStrip(meshData->m_indicesSize, 0, 0);
 }
 
 void AMeshObject::SetMaterial(String material)
@@ -66,11 +68,4 @@ void AMeshObject::SetGPUAddress(UINT frameIndex, D3D12_GPU_VIRTUAL_ADDRESS addre
 void AMeshObject::SetTopology(D3D12_PRIMITIVE_TOPOLOGY topology)
 {
     this->m_topology = topology;
-}
-
-void AMeshObject::SetGeometry(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
-{
-    m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);
-    m_indexBuffer = std::make_unique<IndexBuffer>(indices);
-    m_indicesSize = static_cast<UINT>(indices.size());
 }

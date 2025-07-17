@@ -7,7 +7,5 @@ public:
 	Cube(String name);
 	~Cube() = default;
 
-	// Inherited via AMeshObject
 	void Update(float deltaTime) override;
-private:
 };

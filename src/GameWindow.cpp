@@ -33,8 +33,7 @@ void GameWindow::OnCreate(HWND hwnd)
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 
-	GraphicsEngine::GetInstance()->GetTextureManager()->LoadInitialTextures();
-	GraphicsEngine::GetInstance()->GetMaterialManager()->LoadInitialMaterials();
+	GraphicsEngine::GetInstance()->LoadInitialResources();
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
 }

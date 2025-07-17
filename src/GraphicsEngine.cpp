@@ -6,6 +6,7 @@
 #include "TextureManager.h"
 #include "MaterialManager.h"
 #include "LightManager.h"
+#include "MeshManager.h"
 
 #include "Debug.h"
 
@@ -65,6 +66,16 @@ GraphicsEngine::GraphicsEngine(UINT width, UINT height, HWND hwnd)
 		Debug::LogError("Light Manager initialization failed!");
 		return;
 	}
+
+	try
+	{
+		this->m_meshManager = std::make_unique<MeshManager>(this->m_batchUploader);
+	}
+	catch (...)
+	{
+		Debug::LogError("Mesh Manager initialization failed!");
+		return;
+	}
 }
 
 GraphicsEngine* GraphicsEngine::GetInstance()
@@ -90,6 +101,13 @@ void GraphicsEngine::Destroy()
 	sharedInstance.reset();
 }
 
+void GraphicsEngine::LoadInitialResources()
+{
+	this->m_meshManager->LoadInitialMeshes();
+	this->m_textureManager->LoadInitialTextures();
+	this->m_materialManager->LoadInitialMaterials();
+}
+
 RenderSystem* GraphicsEngine::GetRenderSystem()
 {
 	return this->m_renderSystem.get();
@@ -113,4 +131,9 @@ MaterialManager* GraphicsEngine::GetMaterialManager()
 LightManager* GraphicsEngine::GetLightManager()
 {
 	return this->m_lightManager.get();
+}
+
+MeshManager* GraphicsEngine::GetMeshManager()
+{
+	return this->m_meshManager.get();
 }

@@ -5,6 +5,7 @@ class BatchUploader;
 class TextureManager;
 class MaterialManager;
 class LightManager;
+class MeshManager;
 
 /* central graphics subsystem entry point */
 class GraphicsEngine
@@ -14,11 +15,14 @@ public:
 	static void Initialize(UINT width, UINT height, HWND hwnd);
 	static void Destroy();
 
+	void LoadInitialResources();
+
 	RenderSystem* GetRenderSystem();
 	BatchUploader* GetBatchUploader();
 	TextureManager* GetTextureManager();
 	MaterialManager* GetMaterialManager();
 	LightManager* GetLightManager();
+	MeshManager* GetMeshManager();
 
 	GraphicsEngine(UINT width, UINT height, HWND hwnd);
 	~GraphicsEngine() = default;
@@ -33,4 +37,5 @@ private:
 	std::unique_ptr<TextureManager> m_textureManager = nullptr;
 	std::unique_ptr<MaterialManager> m_materialManager = nullptr;
 	std::unique_ptr<LightManager> m_lightManager = nullptr;
+	std::unique_ptr<MeshManager> m_meshManager = nullptr;
 };

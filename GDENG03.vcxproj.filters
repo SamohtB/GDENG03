@@ -130,6 +130,9 @@
     <Filter Include="Engine\PhysicsSystem">
       <UniqueIdentifier>{8cab4255-3db5-45ae-9b7d-041e356126a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GraphicsEngine\MeshManager">
+      <UniqueIdentifier>{42cb3123-bed4-4d42-84c5-3ec2bde4ba62}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -296,6 +299,9 @@
     </ClCompile>
     <ClCompile Include="src\PhysicsComponent.cpp">
       <Filter>App\ComponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MeshManager.cpp">
+      <Filter>Engine\GraphicsEngine\MeshManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -499,6 +505,15 @@
     </ClInclude>
     <ClInclude Include="src\PhysicsComponent.h">
       <Filter>App\ComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MeshManager.h">
+      <Filter>Engine\GraphicsEngine\MeshManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MeshTypes.h">
+      <Filter>Engine\GraphicsEngine\MeshManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tiny_obj_loader.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

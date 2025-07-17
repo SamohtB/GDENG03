@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\MeshManager.cpp" />
     <ClCompile Include="src\PhysicsComponent.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\PhysicsSystem.cpp" />
@@ -219,6 +220,8 @@
     <ClCompile Include="src\Toolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\MeshTypes.h" />
+    <ClInclude Include="src\MeshManager.h" />
     <ClInclude Include="src\PhysicsComponent.h" />
     <ClInclude Include="src\AComponent.h" />
     <ClInclude Include="src\PhysicsSystem.h" />
@@ -280,6 +283,7 @@
     <ClInclude Include="src\RenderSystem.h" />
     <ClInclude Include="src\RenderTargetManager.h" />
     <ClInclude Include="src\SwapChainManager.h" />
+    <ClInclude Include="src\tiny_obj_loader.h" />
     <ClInclude Include="src\VertexBuffer.h" />
     <ClInclude Include="src\Win32App.h" />
     <ClInclude Include="src\TextureManager.h" />
