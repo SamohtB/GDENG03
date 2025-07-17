@@ -145,7 +145,7 @@ MaterialDescription MaterialManager::GetMaterialDescription(const String& materi
     return this->m_materialMap[materialName]->GetDescription();
 }
 
-const std::vector<const char*>& MaterialManager::GetAllMaterialNames() const
+std::vector<const char*> MaterialManager::GetAllMaterialNames() const
 {
     std::vector<const char*> materialNames;
     materialNames.reserve(m_materialMap.size());

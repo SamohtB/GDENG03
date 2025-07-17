@@ -7,13 +7,13 @@
 
 HWND Win32App::m_hwnd = nullptr;
 
-Win32App::Win32App(ABaseWindow* window, std::wstring windowName) : m_window(window), m_isRun(true)
+Win32App::Win32App(ABaseWindow* window, std::string windowName) : m_window(window), m_isRun(true)
 {
 	WNDCLASSEX wc{};
 	wc.cbSize = sizeof(WNDCLASSEX);
 	wc.lpfnWndProc = &WindowProc;
 	wc.hInstance = GetModuleHandle(nullptr);
-	wc.lpszClassName = L"MyWindowClass";
+	wc.lpszClassName = "MyWindowClass";
 
 	if (!RegisterClassEx(&wc)) 
 	{
@@ -32,7 +32,7 @@ Win32App::Win32App(ABaseWindow* window, std::wstring windowName) : m_window(wind
 
 	m_hwnd = CreateWindowEx(
 		WS_EX_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX,
-		L"MyWindowClass",		//Window
+		"MyWindowClass",		//Window
 		windowName.c_str(),				//Window Name
 		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU, //Style
 		CW_USEDEFAULT, CW_USEDEFAULT, // Window Position

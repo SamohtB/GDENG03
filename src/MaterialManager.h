@@ -23,7 +23,7 @@ public:
     D3D12_GPU_VIRTUAL_ADDRESS GetMaterialHandle(const String& materialName, UINT currentFrameIndex);
     MaterialDescription GetMaterialDescription(const String& materialName);
 
-    const std::vector<const char*>& GetAllMaterialNames() const;
+    std::vector<const char*> GetAllMaterialNames() const;
 private:
     MaterialConstants CreateMaterialConstants(const MaterialDescription& desc);
     MaterialMap m_materialMap;

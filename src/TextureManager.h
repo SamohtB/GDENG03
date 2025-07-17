@@ -21,7 +21,7 @@ public:
     UINT GetTextureSRVIndex(const String& textureName);
     ImTextureID GetThumbnail(const String& textureName);
 
-    const std::vector<const char*>& GetAllTextureNames() const;
+    std::vector<const char*> GetAllTextureNames() const;
 
 private:
     std::shared_ptr<DescriptorHeapManager> m_heapManager;

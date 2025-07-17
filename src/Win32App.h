@@ -5,7 +5,7 @@ class ABaseWindow;
 class Win32App
 {
 public:
-    Win32App(ABaseWindow* window, std::wstring windowName);
+    Win32App(ABaseWindow* window, std::string windowName);
     HWND GetHwnd();
 
     bool IsRun();

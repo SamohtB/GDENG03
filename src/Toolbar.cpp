@@ -37,13 +37,33 @@ void Toolbar::Lighting()
 
 void Toolbar::GameObjects()
 {
-    /* Primitive Spawners */
-    if (ImGui::BeginMenu("Primitives"))
+    if (ImGui::BeginMenu("Game Objects"))
     {
-        if (ImGui::MenuItem("Cube")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_CUBE); }
-        if (ImGui::MenuItem("Plane")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_PLANE); }
-        if (ImGui::MenuItem("Sphere")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_SPHERE); }
-        if (ImGui::MenuItem("Cylinder")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_CYLINDER); }
+        // -------------------- Primitives --------------------
+        if (ImGui::BeginMenu("Primitives"))
+        {
+            if (ImGui::MenuItem("Cube")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_CUBE); }
+            if (ImGui::MenuItem("Plane")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_PLANE); }
+            if (ImGui::MenuItem("Sphere")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_SPHERE); }
+            if (ImGui::MenuItem("Cylinder")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_CYLINDER); }
+            ImGui::EndMenu();
+        }
+
+        // -------------------- Physics Objects --------------------
+        if (ImGui::BeginMenu("Physics Objects"))
+        {
+            if (ImGui::MenuItem("Physics Cube")) { GameObjectSpawner::CreatePhysicsCube(); }
+            if (ImGui::MenuItem("Physics Cube x 16"))  { for (int i = 0; i < 16; ++i)    GameObjectSpawner::CreatePhysicsCube(); }
+			if (ImGui::MenuItem("Static Physics Plane")) { GameObjectSpawner::CreateStaticPhysicsPlane(); }
+            ImGui::EndMenu();
+        }
+
+        // -------------------- Custom Meshes --------------------
+        if (ImGui::BeginMenu("Custom Meshes"))
+        {
+            ImGui::EndMenu();
+        }
+
         ImGui::EndMenu();
     }
 }

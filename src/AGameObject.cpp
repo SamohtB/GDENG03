@@ -134,6 +134,19 @@ Matrix AGameObject::GetLocalMatrix()
 	return m_localMatrix;
 }
 
+Matrix AGameObject::GetPhysicsLocalMatrix()
+{
+	Matrix localMatrix = this->GetLocalMatrix();
+	return localMatrix.Transpose();
+}
+
+void AGameObject::SetLocalMatrix(const float* matrixData)
+{
+	Matrix rawMatrix = *reinterpret_cast<const Matrix*>(matrixData);
+	this->m_localMatrix = rawMatrix.Transpose();
+	this->m_dirty = false;
+}
+
 Vector3 AGameObject::GetForwardVector() const
 {
 	float pitch = DirectX::XMConvertToRadians(m_localRotation.x);
@@ -159,3 +172,83 @@ Vector3 AGameObject::GetUpVector() const
 	vector.Normalize();
 	return vector;
 }
+
+void AGameObject::AttachComponent(std::shared_ptr<AComponent> component)
+{
+	this->m_componentList.push_back(component);
+	component->AttachOwner(shared_from_this());
+}
+
+void AGameObject::DetachComponent(std::shared_ptr<AComponent> component)
+{
+	auto it = std::find(this->m_componentList.begin(), this->m_componentList.end(), component);
+
+	if (it != this->m_componentList.end()) 
+	{
+		(*it)->DetachOwner(); 
+		this->m_componentList.erase(it);
+	}
+}
+
+AComponent* AGameObject::FindComponentByName(String name)
+{
+	for (const auto& comp : m_componentList)
+	{
+		if (comp->GetName() == name)
+		{
+			return comp.get();
+		}
+	}
+
+	return nullptr;
+}
+
+AComponent* AGameObject::FindComponentOfType(AComponent::ComponentType type, String name)
+{
+	for (const auto& comp : m_componentList)
+	{
+		if (comp->GetType() == type && comp->GetName() == name)
+		{
+			return comp.get();
+		}		
+	}
+
+	return nullptr;
+}
+
+AGameObject::ComponentList AGameObject::GetComponentsOfType(AComponent::ComponentType type)
+{
+	ComponentList foundList;
+
+	for (const auto& comp : m_componentList)
+	{
+		if (comp->GetType() == type)
+		{
+			foundList.push_back(comp);
+		}		
+	}
+
+	return foundList;
+}
+
+AGameObject::ComponentList AGameObject::GetComponentsOfTypeRecursive(AComponent::ComponentType type)
+{
+	ComponentList foundList;
+
+	// Add from this object
+	for (const auto& comp : m_componentList)
+	{
+		if (comp->GetType() == type)
+			foundList.push_back(comp);
+	}
+
+	// Recurse if you have children
+	/*for (const auto& child : m_children)
+	{
+		ComponentList childList = child->GetComponentsOfTypeRecursive(type);
+		foundList.insert(foundList.end(), childList.begin(), childList.end());
+	}*/
+
+	return foundList;
+}
+

@@ -7,6 +7,7 @@
 #include "InputSystem.h"
 #include "CameraManager.h"
 #include "EngineGUIManager.h"
+#include "PhysicsSystem.h"
 #include "NameRegistry.h"
 
 #include "RenderSystem.h"
@@ -27,6 +28,7 @@ void GameWindow::OnCreate(HWND hwnd)
 	InputSystem::Initialize();
 	CameraManager::Initialize(this->m_width, this->m_height);
 	EngineGUIManager::Initialize(hwnd, this->m_width, this->m_height);
+	PhysicsSystem::Initialize();
 	NameRegistry::Initialize();
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
@@ -47,6 +49,7 @@ void GameWindow::OnUpdate()
 
 	CameraManager::GetInstance()->Update(deltaTime);
 	GameObjectManager::GetInstance()->UpdateAll(deltaTime);
+	PhysicsSystem::GetInstance()->UpdateAllComponents(deltaTime);
 
 	FrameConstantsData frameData = {};
 	frameData.viewMatrix = CameraManager::GetInstance()->GetActiveCameraViewMatrix();
@@ -78,6 +81,7 @@ void GameWindow::OnRender()
 void GameWindow::OnDestroy()
 {
 	NameRegistry::Destroy();
+	PhysicsSystem::Destroy();
 	EngineGUIManager::Destroy();
 	CameraManager::Destroy();
 	InputSystem::Destroy();

@@ -15,7 +15,7 @@ int main()
 	try
 	{
 		GameWindow game = GameWindow(1366, 768);
-		Win32App app = Win32App(&game, L"DirectX Application");
+		Win32App app = Win32App(&game, "DirectX Application");
 
 		while (app.IsRun()) 
 		{

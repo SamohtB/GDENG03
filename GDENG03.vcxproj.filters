@@ -16,9 +16,6 @@
     <Filter Include="Assets\Shaders">
       <UniqueIdentifier>{369b47e0-e6f4-4759-af6f-3b7d5415d3d9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="App\Managers">
-      <UniqueIdentifier>{86f45cfa-d9ed-47c6-b1d1-f33c9763936f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="App\Entities">
       <UniqueIdentifier>{e29ec9af-29b4-475c-a942-4ff85f385fe0}</UniqueIdentifier>
     </Filter>
@@ -126,6 +123,12 @@
     </Filter>
     <Filter Include="App\Entities\Mesh\3DPrimitives">
       <UniqueIdentifier>{1e3c48b4-7ef3-4d66-afc2-258e9a834c39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\ComponentSystem">
+      <UniqueIdentifier>{86f45cfa-d9ed-47c6-b1d1-f33c9763936f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\PhysicsSystem">
+      <UniqueIdentifier>{8cab4255-3db5-45ae-9b7d-041e356126a5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -284,6 +287,15 @@
     </ClCompile>
     <ClCompile Include="src\Cylinder.cpp">
       <Filter>App\Entities\Mesh\3DPrimitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PhysicsSystem.cpp">
+      <Filter>Engine\PhysicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AComponent.cpp">
+      <Filter>App\ComponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PhysicsComponent.cpp">
+      <Filter>App\ComponentSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -478,6 +490,15 @@
     </ClInclude>
     <ClInclude Include="src\Cylinder.h">
       <Filter>App\Entities\Mesh\3DPrimitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PhysicsSystem.h">
+      <Filter>Engine\PhysicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AComponent.h">
+      <Filter>App\ComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PhysicsComponent.h">
+      <Filter>App\ComponentSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

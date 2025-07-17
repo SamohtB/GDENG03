@@ -76,7 +76,7 @@ ImTextureID TextureManager::GetThumbnail(const String& textureName)
     return (ImTextureID)nullptr;
 }
 
-const std::vector<const char*>& TextureManager::GetAllTextureNames() const
+std::vector<const char*> TextureManager::GetAllTextureNames() const
 {
     std::vector<const char*> textureNames;
     textureNames.reserve(m_textureMap.size());

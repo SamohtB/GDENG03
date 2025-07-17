@@ -10,6 +10,10 @@
 #include "GraphicsEngine.h"
 #include "LightManager.h"
 #include "NameRegistry.h"
+
+#include "PhysicsSystem.h"
+#include "PhysicsComponent.h"
+
 #include "Debug.h"
 
 enum ObjectType
@@ -29,6 +33,47 @@ public:
         GraphicsEngine::GetInstance()->GetLightManager()->CreateLight(
             name, Vector3(1.0f, 1.0f, 1.0f), 2.0f, 50.0f);
     }
+
+    static void CreatePhysicsCube()
+    {
+        std::string name = NameRegistry::GetInstance()->GenerateUniqueName("PhysicsCube");
+        auto obj = std::make_shared<Cube>(name);
+		obj->SetPosition(0.0f, 10.0f, 0.0f);
+		obj->SetMaterial(MaterialType::ROCK);
+
+        if (obj)
+        {
+            auto physicsComponent = std::make_shared<PhysicsComponent>(name, obj);
+            obj->AttachComponent(physicsComponent);
+            PhysicsSystem::GetInstance()->RegisterComponent(physicsComponent);
+
+            GameObjectManager::GetInstance()->AddGameObject(obj);
+        }
+        else
+        {
+            Debug::LogError("Physics Cube not Created! Error Occured GameObjectSpawner::CreatePhysicsCube ");
+        }
+	}
+
+    static void CreateStaticPhysicsPlane()
+    {
+        std::string name = NameRegistry::GetInstance()->GenerateUniqueName("PhysicsPlane");
+        auto obj = std::make_shared<Cube>(name);
+		obj->SetScale(5.0f, 0.01f, 5.0f);
+
+        if (obj)
+        {
+            auto physicsComponent = std::make_shared<PhysicsComponent>(name, obj);
+            physicsComponent->SetBodyType(reactphysics3d::BodyType::STATIC);
+            obj->AttachComponent(physicsComponent);
+            PhysicsSystem::GetInstance()->RegisterComponent(physicsComponent);
+            GameObjectManager::GetInstance()->AddGameObject(obj);
+        }
+        else
+        {
+            Debug::LogError("Static Physics Plane not Created! Error Occured GameObjectSpawner::CreateStaticPhysicsPlane ");
+        }
+	}
 
     static void CreatePrimitive(ObjectType type)
     {

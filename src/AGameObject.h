@@ -1,11 +1,15 @@
 #pragma once
 #include "Math.h"
+#include "AComponent.h"
 
 class DeviceContext;
 
-class AGameObject
+class AGameObject : public std::enable_shared_from_this<AGameObject>
 {
 public:
+	using ComponentPtr = std::shared_ptr<AComponent>;
+    using ComponentList = std::vector<ComponentPtr>;
+
     AGameObject(String name);
     virtual ~AGameObject() = default;
 
@@ -37,19 +41,31 @@ public:
     Vector3 GetLocalScale();
 
     Matrix GetLocalMatrix();
+    Matrix GetPhysicsLocalMatrix(); //Transposed
+    void SetLocalMatrix(const float* matrixData);
 
     Vector3 GetForwardVector() const;
     Vector3 GetRightVector() const;
     Vector3 GetUpVector() const;
 
+    void AttachComponent(std::shared_ptr<AComponent> component);
+    void DetachComponent(std::shared_ptr<AComponent> component);
+
+    AComponent* FindComponentByName(String name);
+    AComponent* FindComponentOfType(AComponent::ComponentType type, String name);
+    ComponentList GetComponentsOfType(AComponent::ComponentType type);
+    ComponentList GetComponentsOfTypeRecursive(AComponent::ComponentType type);
+
 protected:
-    unsigned int m_id = 0;
-    String m_name{};
-    bool m_active = true;
-    bool m_dirty = false;
+    unsigned int m_id;
+    String m_name;
+    bool m_active;
+    bool m_dirty;
 
     Vector3 m_localPosition;
     Vector3 m_localRotation;
     Vector3 m_localScale;
     Matrix m_localMatrix;
+
+    ComponentList m_componentList;
 };
