@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "AGameObject.h"
 
 AGameObject::AGameObject(String name) : m_id(0), m_name(name), m_active(true), m_dirty(false)
@@ -28,7 +29,7 @@ void AGameObject::SetId(const UINT id)
 	this->m_id = id;
 }
 
-AGameObject::String AGameObject::GetName() const
+String AGameObject::GetName() const
 {
 	return this->m_name;
 }

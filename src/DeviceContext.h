@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 #include "FrameConstants.h"
 
 /* Reset -> Transition Barrier -> Set Params (Root/PSO/CBV/DescHeaps/Viewport/Rect) -> Draw Calls -> Transition Barrier */
@@ -19,9 +18,12 @@ public:
 	void SetRootSignature(ID3D12RootSignature* rootSignature);
 	void SetPSO(ID3D12PipelineState* pipelineState);
 	void SetDescriptorHeaps(const std::vector<ID3D12DescriptorHeap*>& heaps);
+
 	void SetObjectConstants(D3D12_GPU_VIRTUAL_ADDRESS address);
 	void SetMaterialConstants(D3D12_GPU_VIRTUAL_ADDRESS address);
 	void SetFrameConstants(D3D12_GPU_VIRTUAL_ADDRESS address);
+	void SetLightConstants(D3D12_GPU_VIRTUAL_ADDRESS address);
+
 	void SetViewport(CD3DX12_VIEWPORT* viewport);
 	void SetScissorRect(CD3DX12_RECT* rect);
 
@@ -53,4 +55,3 @@ private:
 	UINT64 m_fenceValues[FRAME_COUNT];
 	UINT64 m_nextFenceValue;
 };
-

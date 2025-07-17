@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "RenderTargetManager.h"
 #include "Debug.h"
 

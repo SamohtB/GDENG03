@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GameWindow.h"
 
 #include "GraphicsEngine.h"
@@ -15,7 +16,6 @@
 
 #include "Debug.h"
 #include "Random.h"
-#include "Colors.h"
 
 GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
 
@@ -35,7 +35,7 @@ void GameWindow::OnCreate(HWND hwnd)
 	GraphicsEngine::GetInstance()->GetMaterialManager()->LoadInitialMaterials();
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
-} 
+}
 
 
 void GameWindow::OnUpdate()
@@ -59,11 +59,10 @@ void GameWindow::OnUpdate()
 void GameWindow::OnRender()
 {
 	auto context = GraphicsEngine::GetInstance()->GetRenderSystem()->GetDeviceContext();
-	auto shader = GraphicsEngine::GetInstance()->GetRenderSystem()->GetActiveShader();
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->BeginFrame();
 
-	GameObjectManager::GetInstance()->RenderAll(context, shader);
+	GameObjectManager::GetInstance()->RenderAll(context);
 
 	/*	Temporary Per Frame Batch Uploader Calls */
 	/* Shared Resources Coming Soon */

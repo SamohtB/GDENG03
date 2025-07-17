@@ -8,10 +8,9 @@ public:
     virtual ~Sphere() = default;
 
 protected:
-	void OnUpdate(float deltaTime) override;
+    void Update(float deltaTime) override;
 
 private:
-    static const uint32_t TESSELLATION = 16;
-    inline static const float RADIUS = 0.5f;
+    int m_tessellation = 20;
+    float m_radius = 0.5f;
 };
-

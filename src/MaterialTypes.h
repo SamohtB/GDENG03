@@ -1,15 +1,19 @@
 #pragma once
 #include <string>
+#include "ShaderTypes.h"
 #include "TextureTypes.h"
 #include "Math.h"
 
 class MaterialType
 {
 public:
-    inline static constexpr const char* DEFAULT = "DEFAULT";
-    inline static constexpr const char* ROCK = "ROCK";
-    inline static constexpr const char* METAL_PLATE = "METAL_PLATE";
-    inline static constexpr const char* BRICKS = "BRICKS";
+    inline static const std::string DEFAULT = "DEFAULT";
+    inline static const std::string ROCK = "ROCK";
+    inline static const std::string METAL_PLATE = "METAL_PLATE";
+    inline static const std::string BRICKS = "BRICKS";
+    inline static const std::string BLANK_1 = "BLANK_1";
+    inline static const std::string BLANK_2 = "BLANK_2";
+    inline static const std::string BLANK_3 = "BLANK_3";
 };
 
 enum MaterialMapType : int
@@ -52,24 +56,31 @@ struct alignas(16) MaterialConstants
 
     float normalStr;
     float metalStr;
-    float roughStr;
+    float smoothStr;
     float aoStr;
 
     float emmissiveStr;
     float heightStr;
+
+    Vector2 tiling;
+    Vector2 offset;
+
     Vector2 pad;
 };
 
 struct MaterialDescription
 {
+    std::string shader;
+
     std::string albedoTex;
     std::string normalTex;
     std::string metalTex;
     std::string roughTex;
     std::string aoTex;
-    Vector4 albedoColor;
     std::string emissiveTex;
     std::string heightTex;
+
+    Vector4 albedoColor;
 
     float normalStrength;
     float metalStrength;
@@ -78,7 +89,11 @@ struct MaterialDescription
     float emissiveStrength;
     float heightStrength;
 
+    Vector2 tiling;
+    Vector2 offset;
+
     MaterialDescription(
+        const std::string& shader = "UNLIT",
         const std::string& albedoTex = "",
         const Vector4& albedoColor = Vector4(1, 1, 1, 1),
         const std::string& normalTex = "", float normalStrength = 1.0f,
@@ -86,15 +101,17 @@ struct MaterialDescription
         const std::string& roughTex = "", float roughStrength = 1.0f,
         const std::string& aoTex = "", float aoStrength = 1.0f,
         const std::string& emissiveTex = "", float emissiveStrength = 0.0f,
-        const std::string& heightTex = "", float heightStrength = 0.0f)
-        : albedoTex(albedoTex), albedoColor(albedoColor),
+        const std::string& heightTex = "", float heightStrength = 0.0f,
+        const Vector2& tiling = Vector2(1.0f, 1.0f),
+        const Vector2& offset = Vector2(0.0f, 0.0f))
+        : shader(shader), albedoTex(albedoTex), albedoColor(albedoColor),
         normalTex(normalTex), normalStrength(normalStrength),
         metalTex(metalTex), metalStrength(metalStrength),
         roughTex(roughTex), roughStrength(roughStrength),
         aoTex(aoTex), aoStrength(aoStrength),
         emissiveTex(emissiveTex), emissiveStrength(emissiveStrength),
-        heightTex(heightTex), heightStrength(heightStrength)
+        heightTex(heightTex), heightStrength(heightStrength),
+        tiling(tiling), offset(offset)
     {
     }
 };
-

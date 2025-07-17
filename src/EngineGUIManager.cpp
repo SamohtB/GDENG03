@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "EngineGUIManager.h"
 #include "GraphicsEngine.h"
 #include "RenderSystem.h"
@@ -108,19 +109,16 @@ EngineGUIManager::EngineGUIManager(HWND hwnd)
 
 void EngineGUIManager::PopulateGUI()
 {
-	/* Populate */
-	UINames uiNames;
-
 	auto toolbar = std::make_shared<Toolbar>();
-	this->m_uiTable[uiNames.TOOLBAR] = toolbar;
+	this->m_uiTable[UINames::TOOLBAR] = toolbar;
 	this->m_uiList.push_back(toolbar);
 
 	auto hierarchy = std::make_shared<Hierarchy>();
-	this->m_uiTable[uiNames.HIERARCHY] = hierarchy;
+	this->m_uiTable[UINames::HIERARCHY] = hierarchy;
 	this->m_uiList.push_back(hierarchy);
 
 	auto inspector = std::make_shared<Inspector>();
-	this->m_uiTable[uiNames.INSPECTOR] = inspector;
+	this->m_uiTable[UINames::INSPECTOR] = inspector;
 	this->m_uiList.push_back(inspector);
 }
 

@@ -22,9 +22,6 @@
     <Filter Include="App\Entities">
       <UniqueIdentifier>{e29ec9af-29b4-475c-a942-4ff85f385fe0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="App\Entities\Primitives">
-      <UniqueIdentifier>{1d1582e5-48b1-4713-99b1-e2f55bb39140}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utility">
       <UniqueIdentifier>{f7fe2064-d657-4b4b-9094-2929e103b730}</UniqueIdentifier>
     </Filter>
@@ -82,9 +79,6 @@
     <Filter Include="Engine\EngineTime">
       <UniqueIdentifier>{a5580be4-e8cf-43c0-827c-0007e7f8eb7e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="App\Entities\Primitives\3D">
-      <UniqueIdentifier>{1e3c48b4-7ef3-4d66-afc2-258e9a834c39}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\GraphicsEngine\RenderSystem\DepthBuffer">
       <UniqueIdentifier>{abded308-e74e-4365-8598-679a877682bd}</UniqueIdentifier>
     </Filter>
@@ -93,9 +87,6 @@
     </Filter>
     <Filter Include="Engine\GraphicsEngine\TextureManager">
       <UniqueIdentifier>{93b0d9aa-689f-434b-a657-df74fa665943}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\CameraSystem">
-      <UniqueIdentifier>{9945129f-188c-43a8-8880-b462990c3f69}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\InputSystem">
       <UniqueIdentifier>{4d6f795e-1643-4654-870d-3e0d0a1e2d13}</UniqueIdentifier>
@@ -123,6 +114,18 @@
     </Filter>
     <Filter Include="Engine\EngineGUI\UIScreens\Inspector">
       <UniqueIdentifier>{63f04a21-a0d2-48c7-9e60-873ff1302070}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Entities\Light">
+      <UniqueIdentifier>{90445a05-1890-4290-a5f7-f6461e36315b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Entities\CameraSystem">
+      <UniqueIdentifier>{9945129f-188c-43a8-8880-b462990c3f69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Entities\Mesh">
+      <UniqueIdentifier>{1d1582e5-48b1-4713-99b1-e2f55bb39140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Entities\Mesh\3DPrimitives">
+      <UniqueIdentifier>{1e3c48b4-7ef3-4d66-afc2-258e9a834c39}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -158,9 +161,6 @@
     </ClCompile>
     <ClCompile Include="src\AGameObject.cpp">
       <Filter>App\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameObjectManager.cpp">
-      <Filter>Engine\GameObjectManager</Filter>
     </ClCompile>
     <ClCompile Include="src\TextureManager.cpp">
       <Filter>Engine\GraphicsEngine\TextureManager</Filter>
@@ -199,37 +199,34 @@
       <Filter>Engine\EngineTime</Filter>
     </ClCompile>
     <ClCompile Include="src\Cube.cpp">
-      <Filter>App\Entities\Primitives\3D</Filter>
+      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
     </ClCompile>
     <ClCompile Include="src\Plane.cpp">
-      <Filter>App\Entities\Primitives\3D</Filter>
+      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
     </ClCompile>
     <ClCompile Include="src\DepthBuffer.cpp">
       <Filter>Engine\GraphicsEngine\RenderSystem\DepthBuffer</Filter>
     </ClCompile>
     <ClCompile Include="src\Camera.cpp">
-      <Filter>Engine\CameraSystem</Filter>
+      <Filter>App\Entities\CameraSystem</Filter>
     </ClCompile>
     <ClCompile Include="src\InputSystem.cpp">
       <Filter>Engine\InputSystem</Filter>
     </ClCompile>
     <ClCompile Include="src\CameraManager.cpp">
-      <Filter>Engine\CameraSystem</Filter>
+      <Filter>App\Entities\CameraSystem</Filter>
     </ClCompile>
     <ClCompile Include="src\pch.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="src\SceneCamera.cpp">
-      <Filter>Engine\CameraSystem</Filter>
+      <Filter>App\Entities\CameraSystem</Filter>
     </ClCompile>
     <ClCompile Include="src\AMeshObject.cpp">
-      <Filter>App\Entities\Primitives</Filter>
+      <Filter>App\Entities\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="src\Sphere.cpp">
-      <Filter>App\Entities\Primitives\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Colors.cpp">
-      <Filter>Utility</Filter>
+      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineGUIManager.cpp">
       <Filter>Engine\EngineGUI</Filter>
@@ -264,9 +261,6 @@
     <ClCompile Include="src\Toolbar.cpp">
       <Filter>Engine\EngineGUI\UIScreens\Toolbar</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameObjectSpawner.cpp">
-      <Filter>Engine\EngineGUI\UIScreens\Toolbar</Filter>
-    </ClCompile>
     <ClCompile Include="src\NameRegistry.cpp">
       <Filter>Engine\GameObjectManager</Filter>
     </ClCompile>
@@ -275,6 +269,21 @@
     </ClCompile>
     <ClCompile Include="src\DynamicConstantBufferPool.cpp">
       <Filter>Engine\Resources\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ALight.cpp">
+      <Filter>App\Entities\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObjectManager.cpp">
+      <Filter>App\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LightManager.cpp">
+      <Filter>App\Entities\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PointLight.cpp">
+      <Filter>App\Entities\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Cylinder.cpp">
+      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -308,9 +317,6 @@
     <ClInclude Include="src\AGameObject.h">
       <Filter>App\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameObjectManager.h">
-      <Filter>Engine\GameObjectManager</Filter>
-    </ClInclude>
     <ClInclude Include="src\TextureManager.h">
       <Filter>Engine\GraphicsEngine\TextureManager</Filter>
     </ClInclude>
@@ -338,16 +344,10 @@
     <ClInclude Include="src\Texture.h">
       <Filter>Engine\Resources\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="src\TextureTypes.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="src\Math.h">
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\ShaderTypes.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MaterialTypes.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="src\ShaderLoader.h">
@@ -369,10 +369,10 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\Cube.h">
-      <Filter>App\Entities\Primitives\3D</Filter>
+      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
     </ClInclude>
     <ClInclude Include="src\Plane.h">
-      <Filter>App\Entities\Primitives\3D</Filter>
+      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
     </ClInclude>
     <ClInclude Include="src\DepthBuffer.h">
       <Filter>Engine\GraphicsEngine\RenderSystem\DepthBuffer</Filter>
@@ -387,7 +387,7 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\Camera.h">
-      <Filter>Engine\CameraSystem</Filter>
+      <Filter>App\Entities\CameraSystem</Filter>
     </ClInclude>
     <ClInclude Include="src\InputListener.h">
       <Filter>Engine\InputSystem</Filter>
@@ -396,19 +396,16 @@
       <Filter>Engine\InputSystem</Filter>
     </ClInclude>
     <ClInclude Include="src\CameraManager.h">
-      <Filter>Engine\CameraSystem</Filter>
+      <Filter>App\Entities\CameraSystem</Filter>
     </ClInclude>
     <ClInclude Include="src\SceneCamera.h">
-      <Filter>Engine\CameraSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Colors.h">
-      <Filter>Utility</Filter>
+      <Filter>App\Entities\CameraSystem</Filter>
     </ClInclude>
     <ClInclude Include="src\AMeshObject.h">
-      <Filter>App\Entities\Primitives</Filter>
+      <Filter>App\Entities\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="src\Sphere.h">
-      <Filter>App\Entities\Primitives\3D</Filter>
+      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
     </ClInclude>
     <ClInclude Include="src\EngineGUIManager.h">
       <Filter>Engine\EngineGUI</Filter>
@@ -457,6 +454,30 @@
     </ClInclude>
     <ClInclude Include="src\DynamicConstantBufferPool.h">
       <Filter>Engine\Resources\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MaterialTypes.h">
+      <Filter>Engine\GraphicsEngine\MaterialManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureTypes.h">
+      <Filter>Engine\GraphicsEngine\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ALight.h">
+      <Filter>App\Entities\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LightTypes.h">
+      <Filter>App\Entities\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObjectManager.h">
+      <Filter>App\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LightManager.h">
+      <Filter>App\Entities\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PointLight.h">
+      <Filter>App\Entities\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cylinder.h">
+      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

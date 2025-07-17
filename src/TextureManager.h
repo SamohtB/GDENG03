@@ -1,7 +1,4 @@
 #pragma once
-#include <memory>
-#include <unordered_map>
-
 #include "DescriptorHeapManager.h"
 #include "BatchUploader.h"
 #include "TextureTypes.h"
@@ -24,9 +21,9 @@ public:
     UINT GetTextureSRVIndex(const String& textureName);
     ImTextureID GetThumbnail(const String& textureName);
 
-private:
-    void CreateDefaultWhiteTexture();
+    const std::vector<const char*>& GetAllTextureNames() const;
 
+private:
     std::shared_ptr<DescriptorHeapManager> m_heapManager;
     std::shared_ptr<BatchUploader> m_uploader;
     D3D12_GPU_DESCRIPTOR_HANDLE m_startHandle;

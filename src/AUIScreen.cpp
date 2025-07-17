@@ -1,10 +1,11 @@
+#include "pch.h"
 #include "AUIScreen.h"
 
 AUIScreen::AUIScreen(String name) : m_name(name), m_visible(true)
 {
 }
 
-std::string AUIScreen::GetName()
+String AUIScreen::GetName()
 {
     return this->m_name;
 }

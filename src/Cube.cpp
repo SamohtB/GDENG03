@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Cube.h"
 #include "DeviceContext.h"
 #include "RenderSystem.h"
@@ -70,12 +71,12 @@ Cube::Cube(String name) : AMeshObject(name)
     {
         int offset = i * 4;
         indices.push_back(offset + 0);
-        indices.push_back(offset + 1);
         indices.push_back(offset + 2);
+        indices.push_back(offset + 1);
 
         indices.push_back(offset + 2);
-        indices.push_back(offset + 1);
         indices.push_back(offset + 3);
+        indices.push_back(offset + 1);
     }
 
     // Calculate tangents
@@ -98,10 +99,10 @@ Cube::Cube(String name) : AMeshObject(name)
 
     SetGeometry(vertices, indices);
     SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	SetMaterial(MaterialType::DEFAULT);
+    SetMaterial(MaterialType::DEFAULT);
 }
 
-void Cube::OnUpdate(float deltaTime)
+void Cube::Update(float deltaTime)
 {
 
 }

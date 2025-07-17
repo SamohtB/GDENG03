@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Toolbar.h"
 #include "GameObjectSpawner.h"
 #include "Win32App.h"
@@ -17,12 +18,21 @@ void Toolbar::DrawUI()
     {
         FileMenu();
         GameObjects();
+        Lighting();
         Windows();
-        ShaderSelector();
         DisplayFPS();
     }
 
     ImGui::EndMainMenuBar();
+}
+
+void Toolbar::Lighting()
+{
+    if (ImGui::BeginMenu("Lighting"))
+    {
+        if (ImGui::MenuItem("Point Light")) { GameObjectSpawner::CreateLight(); }
+        ImGui::EndMenu();
+    }
 }
 
 void Toolbar::GameObjects()
@@ -30,9 +40,10 @@ void Toolbar::GameObjects()
     /* Primitive Spawners */
     if (ImGui::BeginMenu("Primitives"))
     {
-        if (ImGui::MenuItem("Cube")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITVE_CUBE); }
-        if (ImGui::MenuItem("Plane")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITVE_PLANE); }
-        if (ImGui::MenuItem("Sphere")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITVE_SPHERE); }
+        if (ImGui::MenuItem("Cube")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_CUBE); }
+        if (ImGui::MenuItem("Plane")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_PLANE); }
+        if (ImGui::MenuItem("Sphere")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_SPHERE); }
+        if (ImGui::MenuItem("Cylinder")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_CYLINDER); }
         ImGui::EndMenu();
     }
 }
@@ -73,7 +84,7 @@ void Toolbar::Windows()
     if (ImGui::BeginMenu("Windows"))
     {
         auto uiList = EngineGUIManager::GetInstance()->GetAllScreens();
- 
+
         for (const auto& screen : uiList)
         {
             if (screen->GetName() == "TOOLBAR") continue; //exclude self
@@ -87,43 +98,5 @@ void Toolbar::Windows()
         }
 
         ImGui::EndMenu();
-    }
-}
-
-void Toolbar::ShaderSelector()
-{
-    static const char* shaderOptions[] = 
-    {
-        ShaderTypes::UNLIT,
-        ShaderTypes::LIT
-    };
-
-    static int currentShaderIndex = 0;
-
-    std::string label = shaderOptions[currentShaderIndex];
-    float labelWidth = ImGui::CalcTextSize(label.c_str()).x + 40.0f;
-    float windowWidth = ImGui::GetWindowWidth();
-
-    // Reserve space: FPS is ~90px, shader selector sits to its left with padding
-    float comboPos = windowWidth - 90.0f - labelWidth - 20.0f;
-
-    ImGui::SameLine();
-    ImGui::SetCursorPosX(comboPos);
-    ImGui::SetNextItemWidth(labelWidth);
-
-    if (ImGui::BeginCombo("##ShaderSelector", shaderOptions[currentShaderIndex], ImGuiComboFlags_NoArrowButton))
-    {
-        for (int i = 0; i < IM_ARRAYSIZE(shaderOptions); ++i)
-        {
-            bool isSelected = (i == currentShaderIndex);
-            if (ImGui::Selectable(shaderOptions[i], isSelected))
-            {
-                currentShaderIndex = i;
-                GraphicsEngine::GetInstance()->GetRenderSystem()->SetActiveShader(shaderOptions[i]);
-            }
-            if (isSelected)
-                ImGui::SetItemDefaultFocus();
-        }
-        ImGui::EndCombo();
     }
 }

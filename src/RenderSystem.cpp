@@ -1,15 +1,17 @@
+#include "pch.h"
 #include "RenderSystem.h"
-
-#include "Debug.h"
 
 #include "GraphicsEngine.h"
 #include "TextureManager.h"
 #include "MaterialManager.h"
+#include "LightManager.h"
+#include "GameObjectManager.h"
 
 #include "PipelineStateManager.h"
 #include "DescriptorHeapManager.h"
 
 #include "ShaderTypes.h"
+#include "Debug.h"
 
 RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 	m_viewport(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height)),
@@ -37,7 +39,7 @@ RenderSystem::RenderSystem(UINT width, UINT height, HWND hwnd) :
 void RenderSystem::BeginFrame()
 {
 	UINT currentFrameIndex = this->m_swapChainManager->GetCurrentFrameIndex();
-	
+
 	this->m_deviceContext->WaitForFrameGPU(currentFrameIndex);
 	this->m_deviceContext->ResetCommands(currentFrameIndex);
 
@@ -48,8 +50,10 @@ void RenderSystem::BeginFrame()
 
 	this->m_deviceContext->SetViewport(&m_viewport);
 	this->m_deviceContext->SetScissorRect(&m_scissorRect);
-	
-	GraphicsEngine::GetInstance()->GetMaterialManager()->BeginFrame(currentFrameIndex);
+
+	GameObjectManager::GetInstance()->UploadObjectConstants(currentFrameIndex);
+	GraphicsEngine::GetInstance()->GetMaterialManager()->UploadMaterialConstants(currentFrameIndex);
+	GraphicsEngine::GetInstance()->GetLightManager()->UploadLightConstants(currentFrameIndex);
 
 	auto renderTarget = this->m_renderTargetManager->GetRenderTarget(currentFrameIndex);
 	this->m_deviceContext->TransitionToRenderTarget(renderTarget);
@@ -115,28 +119,6 @@ RenderDevice* RenderSystem::GetRenderDevice()
 DeviceContext* RenderSystem::GetDeviceContext()
 {
 	return this->m_deviceContext.get();
-}
-
-String RenderSystem::GetActiveShader() const
-{
-	return this->m_activeShader;
-}
-
-void RenderSystem::SetActiveShader(const String& shaderName)
-{
-	if (this->m_activeShader == shaderName)
-	{
-		Debug::Log(shaderName + "shader already active!");
-		return;
-	}
-
-	if (!ShaderTypes::IsValid(shaderName)) 
-	{
-		Debug::Log("Invalid shader: " + shaderName);
-		return;
-	}
-
-	this->m_activeShader = shaderName;
 }
 
 void RenderSystem::SetClearColor(const std::vector<float>& color)

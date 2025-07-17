@@ -1,6 +1,5 @@
 #pragma once
 #include <Windows.h>
-#include <string>
 
 /* pure interface for game/application window behavior */
 class ABaseWindow

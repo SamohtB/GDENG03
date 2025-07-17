@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 #include "Math.h"
 
 class DeviceContext;
@@ -7,13 +6,10 @@ class DeviceContext;
 class AGameObject
 {
 public:
-    using String = std::string;
-
     AGameObject(String name);
     virtual ~AGameObject() = default;
 
     virtual void Update(float deltaTime) = 0;
-    virtual void Draw(DeviceContext* context, String shader) = 0;
 
     bool IsActive() const;
     void SetActive(bool value);
@@ -42,12 +38,12 @@ public:
 
     Matrix GetLocalMatrix();
 
-	Vector3 GetForwardVector() const;
-	Vector3 GetRightVector() const;
-	Vector3 GetUpVector() const;
+    Vector3 GetForwardVector() const;
+    Vector3 GetRightVector() const;
+    Vector3 GetUpVector() const;
 
 protected:
-    unsigned int m_id = 0;    
+    unsigned int m_id = 0;
     String m_name{};
     bool m_active = true;
     bool m_dirty = false;
@@ -57,4 +53,3 @@ protected:
     Vector3 m_localScale;
     Matrix m_localMatrix;
 };
-

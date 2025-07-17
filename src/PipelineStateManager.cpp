@@ -1,26 +1,27 @@
+#include "pch.h"
 #include "PipelineStateManager.h"
 #include "Debug.h"
 
 PipelineStateManager::PipelineStateManager(ID3D12Device* device)
 {
     this->m_shaderLoader = std::make_unique<ShaderLoader>();
-	CreateRootSignature(device);
+    CreateRootSignature(device);
 
     // === Default ===
-    ShaderDesc vertexshaderDesc(L"Assets/Shaders/DefaultVertexShader.hlsl", L"VSMain", L"vs_6_5");
-    ShaderDesc pixelShaderDesc(L"Assets/Shaders/DefaultPixelShader.hlsl", L"PSMain", L"ps_6_5");
-    RegisterPipeline(device, ShaderTypes::UNLIT, vertexshaderDesc, pixelShaderDesc);
+    ShaderDesc vertexshaderDesc(L"Assets/Shaders/UnlitVertexShader.hlsl", L"VSMain", L"vs_6_5");
+    ShaderDesc pixelShaderDesc(L"Assets/Shaders/UnlitPixelShader.hlsl", L"PSMain", L"ps_6_5");
+    RegisterPipeline(device, ShaderType::UNLIT, vertexshaderDesc, pixelShaderDesc);
 
 
     // === PBS pipeline (Shader Model 6.6) ===
-    ShaderDesc vertexShaderDesc_PBS(L"Assets/Shaders/PBSVertexShader.hlsl", L"VSMain", L"vs_6_5");
-    ShaderDesc pixelShaderDesc_PBS(L"Assets/Shaders/PBSPixelShader.hlsl", L"PSMain", L"ps_6_5");
-    RegisterPipeline(device, ShaderTypes::LIT, vertexShaderDesc_PBS, pixelShaderDesc_PBS);
+    ShaderDesc vertexShaderDesc_PBS(L"Assets/Shaders/LitVertexShader.hlsl", L"VSMain", L"vs_6_5");
+    ShaderDesc pixelShaderDesc_PBS(L"Assets/Shaders/LitPixelShader.hlsl", L"PSMain", L"ps_6_5");
+    RegisterPipeline(device, ShaderType::LIT, vertexShaderDesc_PBS, pixelShaderDesc_PBS);
 }
 
 ID3D12PipelineState* PipelineStateManager::GetPipelineState(String shaderName) const
 {
-	auto it = m_pipelineStates.find(shaderName);
+    auto it = m_pipelineStates.find(shaderName);
     if (it != m_pipelineStates.end())
     {
         return it->second.Get();
@@ -34,14 +35,14 @@ ID3D12PipelineState* PipelineStateManager::GetPipelineState(String shaderName) c
 
 ID3D12RootSignature* PipelineStateManager::GetRootSignature() const
 {
-	return m_rootSignature.Get();
+    return m_rootSignature.Get();
 }
 
 void PipelineStateManager::RegisterPipeline(ID3D12Device* device, String shaderName, const ShaderDesc& vertexDesc, const ShaderDesc& pixelDesc)
-{ 
+{
     auto vs = m_shaderLoader->CompileShader(vertexDesc);
     auto ps = m_shaderLoader->CompileShader(pixelDesc);
-	auto pso = CreatePipelineState(device, vs, ps);
+    auto pso = CreatePipelineState(device, vs, ps);
 
     if (pso == nullptr)
     {
@@ -49,8 +50,21 @@ void PipelineStateManager::RegisterPipeline(ID3D12Device* device, String shaderN
         return;
     }
 
-	m_pipelineStates[shaderName] = pso;
-    Debug::Log(shaderName +  " shader creation success!");
+    m_pipelineStates[shaderName] = pso;
+    Debug::Log(shaderName + " shader creation success!");
+}
+
+std::vector<const char*> PipelineStateManager::GetAllShaderNames() const
+{
+    std::vector<const char*> shaderNames;
+    shaderNames.reserve(m_pipelineStates.size());
+
+    for (const auto& pair : m_pipelineStates)
+    {
+        shaderNames.push_back(pair.first.c_str());
+    }
+
+    return shaderNames;
 }
 
 void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
@@ -64,11 +78,13 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
     CD3DX12_DESCRIPTOR_RANGE1 rootRanges[1];
     rootRanges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, MAX_SRV_COUNT, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_VOLATILE);
 
-    CD3DX12_ROOT_PARAMETER1 rootParams[4];
-    rootParams[RootDescriptorIndex::OBJECT_CONSTANTS].InitAsConstantBufferView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_VOLATILE, D3D12_SHADER_VISIBILITY_ALL);
-    rootParams[RootDescriptorIndex::FRAME_CONSTANTS].InitAsConstantBufferView(1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC, D3D12_SHADER_VISIBILITY_ALL);
-    rootParams[RootDescriptorIndex::TEXTURES].InitAsDescriptorTable(1, &rootRanges[0], D3D12_SHADER_VISIBILITY_ALL);
-    rootParams[RootDescriptorIndex::MATERIAL_CONSTANTS].InitAsConstantBufferView(2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_VOLATILE, D3D12_SHADER_VISIBILITY_ALL);
+    CD3DX12_ROOT_PARAMETER1 rootParams[5];
+    rootParams[RootDescriptorIndex::OBJECT_CONSTANTS].InitAsConstantBufferView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_VOLATILE, D3D12_SHADER_VISIBILITY_VERTEX);
+    rootParams[RootDescriptorIndex::FRAME_CONSTANTS].InitAsConstantBufferView(1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC, D3D12_SHADER_VISIBILITY_VERTEX);
+    rootParams[RootDescriptorIndex::TEXTURES].InitAsDescriptorTable(1, &rootRanges[0], D3D12_SHADER_VISIBILITY_PIXEL);
+    rootParams[RootDescriptorIndex::MATERIAL_CONSTANTS].InitAsConstantBufferView(2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_VOLATILE, D3D12_SHADER_VISIBILITY_PIXEL);
+    rootParams[RootDescriptorIndex::LIGHT_CONSTANTS].InitAsConstantBufferView(3, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC, D3D12_SHADER_VISIBILITY_PIXEL);
+
 
     D3D12_STATIC_SAMPLER_DESC sampler = {};
     sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
@@ -93,18 +109,24 @@ void PipelineStateManager::CreateRootSignature(ID3D12Device* device)
     Debug::ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, featureData.HighestVersion, &signature, &error),
         "Root Description creation failed!");
 
-    Debug::ThrowIfFailed(device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(),IID_PPV_ARGS(&m_rootSignature)),
+    Debug::ThrowIfFailed(device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootSignature)),
         "Root Signature creation failed!");
 }
 
 ComPtr<ID3D12PipelineState> PipelineStateManager::CreatePipelineState(ID3D12Device* device, ComPtr<IDxcBlob> vs, ComPtr<IDxcBlob> ps)
 {
     std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
     };
+
+    D3D12_RASTERIZER_DESC rasterDesc = {};
+    rasterDesc.FillMode = D3D12_FILL_MODE_SOLID;
+    rasterDesc.CullMode = D3D12_CULL_MODE_BACK;
+    rasterDesc.FrontCounterClockwise = TRUE;
+    rasterDesc.DepthClipEnable = TRUE;
 
     D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
     depthStencilDesc.DepthEnable = TRUE;
@@ -115,17 +137,18 @@ ComPtr<ID3D12PipelineState> PipelineStateManager::CreatePipelineState(ID3D12Devi
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
     psoDesc.InputLayout = { inputLayout.data(), static_cast<UINT>(inputLayout.size()) };
     psoDesc.pRootSignature = m_rootSignature.Get();
-    psoDesc.VS = CD3DX12_SHADER_BYTECODE( { vs->GetBufferPointer(), vs->GetBufferSize() });
-    psoDesc.PS = CD3DX12_SHADER_BYTECODE( { ps->GetBufferPointer(), ps->GetBufferSize() });
+    psoDesc.VS = CD3DX12_SHADER_BYTECODE({ vs->GetBufferPointer(), vs->GetBufferSize() });
+    psoDesc.PS = CD3DX12_SHADER_BYTECODE({ ps->GetBufferPointer(), ps->GetBufferSize() });
     psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
     psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
     psoDesc.DepthStencilState = depthStencilDesc;
-	psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+    psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
     psoDesc.SampleMask = UINT_MAX;
     psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
     psoDesc.NumRenderTargets = 1;
     psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
     psoDesc.SampleDesc.Count = 1;
+    psoDesc.RasterizerState = rasterDesc;
 
     ComPtr<ID3D12PipelineState> pipelineState;
     auto hr = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState));

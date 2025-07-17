@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "NameRegistry.h"
 #include "Debug.h"
 

@@ -1,3 +1,4 @@
+#include "pch.h"
 // dear imgui, v1.92.0 WIP
 // (drawing and font code)
 
@@ -135,6 +136,7 @@ namespace IMGUI_STB_NAMESPACE
 #endif
 
 #ifdef  IMGUI_ENABLE_STB_TRUETYPE
+#include "pch.h"
 #ifndef STB_TRUETYPE_IMPLEMENTATION                         // in case the user already have an implementation in the _same_ compilation unit (e.g. unity builds)
 #ifndef IMGUI_DISABLE_STB_TRUETYPE_IMPLEMENTATION           // in case the user already have an implementation in another compilation unit
 #define STBTT_malloc(x,u)   ((void)(u), IM_ALLOC(x))

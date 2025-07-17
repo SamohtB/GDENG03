@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Camera.h"
 #include "InputSystem.h"
 #include "Debug.h"
@@ -48,8 +49,4 @@ void Camera::SetLookAt(Vector3 lookat)
     float pitch = asinf(-forward.y);
 
 	this->SetRotation(pitch, yaw, 0.0f);
-}
-
-void Camera::Draw(DeviceContext* context, String shader)
-{
 }

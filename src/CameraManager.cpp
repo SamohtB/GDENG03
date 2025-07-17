@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "CameraManager.h"
 #include "InputSystem.h"
 #include "SceneCamera.h"

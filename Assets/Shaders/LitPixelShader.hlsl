@@ -9,14 +9,8 @@ struct PSINPUT
     float3 bitangentWS : BITANGENT;
     float3 normalWS : NORMAL;
     float3 positionWS : POSITION1;
+    float3 cameraPosition : CAMERA_POSITION;
 };
-
-cbuffer FrameConstants : register(b1)
-{
-    float4x4 view;
-    float4x4 projection;
-    float3 cameraPosition;
-}
 
 cbuffer MaterialConstants : register(b2)
 {
@@ -34,12 +28,32 @@ cbuffer MaterialConstants : register(b2)
 
     float normalStr;
     float metalStr;
-    float roughStr;
+    float smoothStr;
     float aoStr;
 
     float emmissiveStr;
     float heightStr;
+    
+    float2 tiling;
+    float2 offset;
+    
     float2 pad;
+};
+
+struct PointLightData
+{
+    float3 position;
+    float range;
+
+    float3 color;
+    float intensity;
+};
+
+cbuffer LightConstants : register(b3)
+{
+    PointLightData pointLights[4];
+    uint pointLightCount;
+    float3 padding;
 };
 
 static const uint HasAlbedoMap = 1 << 0;
@@ -56,9 +70,6 @@ struct SampledTextureMaps
     float3 normal;
     float3 MRAO;
 };
-
-static const float3 globalLightDir = normalize(float3(-0.5, -1.0, -0.25));
-static const float3 globalLightColor = float3(1.0f, 1.0f, 1.0f);
 
 static const float PI = 3.14159265359;
 
@@ -102,20 +113,39 @@ float3 fresnelSchlick(float cosTheta, float3 F0)
     return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }
 
-SampledTextureMaps SampleTextures(PSINPUT input)
+SampledTextureMaps SampleTextures(PSINPUT input, float3x3 TBN, float3 V)
 {
     // === Default Values ===
     float3 d_normal = float3(0, 0, 1); 
     float d_metallic = 0.0f;
-    float d_roughness = 0.0f;
-    float d_ao = 0.0f;
+    float d_smoothness = 0.0f;
+    float d_ao = 1.0f;
+    
+    float2 parallaxUV = input.texcoord * tiling + offset;
     
     SampledTextureMaps samples;
     
     // === Check Flags ===
+    
+    // Check Height Map first to determine if we need to apply parallax mapping
+    // === Height Map ===
+    if ((materialFlags & HasHeightMap) != 0 && heightStr > 0.0f)
+    {
+        float3 viewDirTS = normalize(mul(TBN, V));   
+        float height = Textures[heightHandleIndex].Sample(Samplers[0], input.texcoord).r;
+
+        float parallaxScale = 0.04f;
+        float parallaxBias = 0.01f;
+        
+        float2 offset = viewDirTS.xy * (height * parallaxScale - parallaxBias) * heightStr;
+        parallaxUV += offset;
+    }
+    
+    // === Albedo Map ===
     if ((materialFlags & HasAlbedoMap) != 0)
     {
-        float3 albedoTex = Textures[diffuseHandleIndex].Sample(Samplers[0], input.texcoord).rgb;
+        float3 albedoTex = Textures[diffuseHandleIndex].
+        Sample(Samplers[0], parallaxUV).rgb;
         samples.albedo = pow(albedoTex, 2.2f) * baseColor.rgb;
     }
     else
@@ -123,9 +153,10 @@ SampledTextureMaps SampleTextures(PSINPUT input)
         samples.albedo = baseColor.rgb;
     }
     
-    if ((materialFlags & HasNormalMap) != 0)
+    // === Normal Map ===
+    if ((materialFlags & HasNormalMap) != 0 && normalStr > 0.0f)
     {
-        float3 sampledNormal = Textures[normalHandleIndex].Sample(Samplers[0], input.texcoord).rgb;
+        float3 sampledNormal = Textures[normalHandleIndex].Sample(Samplers[0], parallaxUV).rgb;
         sampledNormal = normalize(sampledNormal * 2.0 - 1.0);
         samples.normal = normalize(lerp(d_normal, sampledNormal, normalStr));
     }
@@ -134,9 +165,10 @@ SampledTextureMaps SampleTextures(PSINPUT input)
         samples.normal = input.normalWS;
     }
     
-    if ((materialFlags & HasMetallicMap) != 0)
+    // === Metallic ===
+    if ((materialFlags & HasMetallicMap) != 0 && metalStr > 0.0f)
     {
-        float metal = Textures[metalHandleIndex].Sample(Samplers[0], input.texcoord).r;
+        float metal = Textures[metalHandleIndex].Sample(Samplers[0], parallaxUV).r;
         samples.MRAO.r = lerp(d_metallic, metal, metalStr);
     }
     else
@@ -144,19 +176,21 @@ SampledTextureMaps SampleTextures(PSINPUT input)
         samples.MRAO.r = d_metallic;
     }
     
-    if ((materialFlags & HasRoughnessMap) != 0)
+    // === Smoothness ===
+    if ((materialFlags & HasRoughnessMap) != 0 && smoothStr > 0.0f)
     {
-        float rough = Textures[roughHandleIndex].Sample(Samplers[0], input.texcoord).r;
-        samples.MRAO.g = lerp(d_roughness, rough, roughStr);
+        float smooth = 1 - Textures[roughHandleIndex].Sample(Samplers[0], parallaxUV).r;
+        samples.MRAO.g = lerp(d_smoothness, smooth, smoothStr);
     }
     else
     {
-        samples.MRAO.g = d_roughness;
+        samples.MRAO.g = d_smoothness;
     }
     
-    if ((materialFlags & HasAOMap) != 0)
+    // === AO Map ===
+    if ((materialFlags & HasAOMap) != 0 && aoStr > 0.0f)
     {
-        float ao = Textures[aoHandleIndex].Sample(Samplers[0], input.texcoord).r;
+        float ao = Textures[aoHandleIndex].Sample(Samplers[0], parallaxUV).r;
         samples.MRAO.b = lerp(d_ao, ao, aoStr);
     }
     
@@ -170,36 +204,44 @@ SampledTextureMaps SampleTextures(PSINPUT input)
 
 float4 PSMain(PSINPUT input) : SV_TARGET
 {
-    SampledTextureMaps samples = SampleTextures(input);
     
     float3x3 TBN = float3x3(input.tangentWS, input.bitangentWS, input.normalWS);
+    float3 V = input.cameraPosition - input.positionWS;
+    
+    SampledTextureMaps samples = SampleTextures(input, TBN, V);
+    
+    V = normalize(V);
     float3 N = normalize(mul(TBN, normalize(samples.normal * 2.0 - 1.0)));
-    float3 V = normalize(cameraPosition - input.positionWS);
     float3 F0 = lerp(float3(0.04, 0.04, 0.04), samples.albedo, samples.MRAO.r);
     float3 Lo = float3(0.0, 0.0, 0.0);
     
-    // === Global Directional Lighting ===
-    float3 L = normalize(-globalLightDir);
-    float3 H = normalize(V + L);
-    float3 radiance = globalLightColor;
-    
-        /* Point Light Calc Stuff */ 
-        //float distance = length(defaultLightPositions[0] - input.positionWS);
-        //float attenuation = 1.0 / (distance * distance);
-    
-    float NDF = DistributionGGX(N, H, samples.MRAO.g);
-    float G = GeometrySmith(N, V, L, samples.MRAO.g);
-    float3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+    for (uint i = 0; i < pointLightCount; ++i)
+    {
+        PointLightData light = pointLights[i];
+        float3 L = light.position - input.positionWS;
+        float distance = length(L);
+        L = L / distance;
 
-    float3 kS = F;
-    float3 kD = (1.0 - kS) * (1.0 - samples.MRAO.r);
+        float3 H = normalize(V + L);
+        float attenuation = saturate(1.0 - distance / light.range);
+        attenuation *= attenuation; // optional quadratic falloff
 
-    float3 numerator = NDF * G * F;
-    float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
-    float3 specular = numerator / denominator;
+        float3 radiance = light.color * light.intensity * attenuation;
 
-    float NdotL = max(dot(N, L), 0.0);
-    Lo += (kD * samples.albedo / PI + specular) * radiance * NdotL;
+        float NDF = DistributionGGX(N, H, samples.MRAO.g);
+        float G = GeometrySmith(N, V, L, samples.MRAO.g);
+        float3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+
+        float3 kS = F;
+        float3 kD = (1.0 - kS) * (1.0 - samples.MRAO.r);
+
+        float3 numerator = NDF * G * F;
+        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
+        float3 specular = numerator / denominator;
+
+        float NdotL = max(dot(N, L), 0.0);
+        Lo += (kD * samples.albedo / PI + specular) * radiance * NdotL;
+    }
 
     float3 ambient = float3(0.03, 0.03, 0.03) * samples.albedo * samples.MRAO.b;
     float3 color = ambient + Lo;

@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Inspector.h"
 #include "GameObjectManager.h"
 #include "AGameObject.h"
@@ -6,24 +7,41 @@
 #include "GraphicsEngine.h"
 #include "MaterialManager.h"
 #include "TextureManager.h"
+#include "RenderSystem.h"
+#include "RenderDevice.h"
+#include "PipelineStateManager.h"
 
-Inspector::Inspector() : AUIScreen("Inspector")
-{
-}
+Inspector::Inspector() : AUIScreen("Inspector") {}
 
 void Inspector::DrawUI()
 {
-    ImGui::Begin("Inspector");
+    ImGui::Begin("Inspector", &this->m_visible);
 
     AGameObject* object = GameObjectManager::GetInstance()->GetSelectedObject();
-
     if (object != nullptr)
     {
-		DrawObjectInfo(object);
-        DrawTransformTab(object);
-		DrawMaterialTab(object);
-    }
+        DrawObjectInfo(object);
+        ImGui::Spacing();
 
+        if (ImGui::BeginTabBar("InspectorTabs"))
+        {
+            if (ImGui::BeginTabItem("Properties"))
+            {
+                DrawTransformTab(object);
+                ImGui::EndTabItem();
+            }
+
+            if (dynamic_cast<AMeshObject*>(object) != nullptr)
+            {
+                if (ImGui::BeginTabItem("Material"))
+                {
+                    DrawMaterialTab(object);
+                    ImGui::EndTabItem();
+                }
+            }
+            ImGui::EndTabBar();
+        }
+    }
     else
     {
         ImGui::Text("No object selected.");
@@ -44,100 +62,138 @@ void Inspector::DrawTransformTab(AGameObject* object)
     Vector3 scale = object->GetLocalScale();
 
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-
     if (ImGui::TreeNode("Transform"))
     {
-        if (ImGui::DragFloat3("Position", &position.x, 0.1f))
-        {
-            object->SetPosition(position);
-        }
-        if (ImGui::DragFloat3("Rotation", &rotation.x, 0.1f))
-        {
-            object->SetRotation(rotation);
-        }
-        if (ImGui::DragFloat3("Scale", &scale.x, 0.1f))
-        {
-            object->SetScale(scale);
-        }
-
+        if (ImGui::DragFloat3("Position", &position.x, 0.1f)) { object->SetPosition(position); }
+        if (ImGui::DragFloat3("Rotation", &rotation.x, 0.1f)) { object->SetRotation(rotation); }
+        if (ImGui::DragFloat3("Scale", &scale.x, 0.1f)) { object->SetScale(scale); }
         ImGui::TreePop();
     }
 }
 
 void Inspector::DrawMaterialTab(AGameObject* object)
 {
-    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    auto meshObject = dynamic_cast<AMeshObject*>(object);
+    if (!meshObject) return;
 
-    if (ImGui::TreeNode("Material"))
+	auto materialOptions = GraphicsEngine::GetInstance()->GetMaterialManager()->GetAllMaterialNames();
+
+    std::string currentMat = meshObject->GetMaterial();
+    int currentIndex = 0;
+    for (int i = 0; i < materialOptions.size(); ++i)
     {
-        static const char* materialOptions[] = 
+        if (currentMat == materialOptions[i])
         {
-            MaterialType::DEFAULT,
-            MaterialType::ROCK,
-            MaterialType::METAL_PLATE,
-            MaterialType::BRICKS
-        };
+            currentIndex = i;
+            break;
+        }
+    }
 
-		auto meshObject = dynamic_cast<AMeshObject*>(object);
-        auto currentMat = meshObject->GetMaterial();
-        int currentIndex = 0;
+    if (ImGui::Combo("Material", &currentIndex, materialOptions.data(), static_cast<int>(materialOptions.size())))
+    {
+        meshObject->SetMaterial(materialOptions[currentIndex]);
+        return;
+    }
 
-        for (int i = 0; i < IM_ARRAYSIZE(materialOptions); ++i)
+    MaterialDescription matDesc = GraphicsEngine::GetInstance()->GetMaterialManager()->GetMaterialDescription(currentMat);
+    bool propertyChanged = false;
+
+    ImGui::Separator();
+
+	auto shaderOptions = GraphicsEngine::GetInstance()->GetRenderSystem()->GetRenderDevice()->GetPSOManager()->GetAllShaderNames();
+
+    int shaderIndex = 0;
+    for (int i = 0; i < shaderOptions.size(); ++i)
+    {
+        if (matDesc.shader == shaderOptions[i])
         {
-            if (currentMat == materialOptions[i])
+            shaderIndex = i;
+            break;
+        }
+    }
+
+    if (ImGui::Combo("Shader", &shaderIndex, shaderOptions.data(), static_cast<int>(shaderOptions.size())))
+    {
+        matDesc.shader = shaderOptions[shaderIndex];
+        propertyChanged = true;
+    }
+
+    ImGui::SeparatorText("Main Maps");
+    if (DrawTextureField("Albedo", matDesc.albedoTex)) { propertyChanged = true; }
+    ImGui::SameLine();
+    if (ImGui::ColorEdit4("Color", &matDesc.albedoColor.x)) { propertyChanged = true; }
+
+    if (DrawTextureField("Metallic", matDesc.metalTex)) { propertyChanged = true; }
+
+    if (matDesc.metalTex != TextureType::DEFAULT)
+    {
+        ImGui::SameLine();
+        if (ImGui::SliderFloat("##MetalStrength", &matDesc.metalStrength, 0.0f, 1.0f)) { propertyChanged = true; }
+    }
+
+    if (DrawTextureField("Smoothness", matDesc.roughTex)) { propertyChanged = true; }
+    if (matDesc.roughTex != TextureType::DEFAULT)
+    {
+        ImGui::SameLine();
+        if (ImGui::SliderFloat("##SmoothStrength", &matDesc.roughStrength, 0.0f, 1.0f)) { propertyChanged = true; }
+    }
+
+    if (DrawTextureField("Normal", matDesc.normalTex)) { propertyChanged = true; }
+    if (matDesc.normalTex != TextureType::DEFAULT)
+    {
+        ImGui::SameLine();
+        if (ImGui::SliderFloat("##NormalStrength", &matDesc.normalStrength, 0.0f, 2.0f)) { propertyChanged = true; }
+    }
+
+    if (DrawTextureField("Occlusion", matDesc.aoTex)) { propertyChanged = true; }
+    if (matDesc.aoTex != TextureType::DEFAULT)
+    {
+        ImGui::SameLine();
+        if (ImGui::SliderFloat("##AOStrength", &matDesc.aoStrength, 0.0f, 1.0f)) { propertyChanged = true; }
+    }
+
+    ImGui::Text("Tiling");
+    ImGui::SameLine();
+    if (ImGui::DragFloat2("##Tiling", &matDesc.tiling.x, 0.01f, 0.01f, 100.0f)) { propertyChanged = true; }
+
+    ImGui::Text("Offset");
+    ImGui::SameLine();
+    if (ImGui::DragFloat2("##Offset", &matDesc.offset.x, 0.01f, -10.0f, 10.0f)) { propertyChanged = true; }
+
+    if (propertyChanged)
+    {
+        GraphicsEngine::GetInstance()->GetMaterialManager()->UpdateMaterialDescription(currentMat, matDesc);
+    }
+}
+
+bool Inspector::DrawTextureField(const char* label, std::string& textureName)
+{
+    bool changed = false;
+    ImGui::Text("%s: %s", label, textureName.c_str());
+
+    ImTextureID texID = GraphicsEngine::GetInstance()->GetTextureManager()->GetThumbnail(textureName);
+
+    if (ImGui::ImageButton(label, (void*)texID, ImVec2(16, 16)))
+    {
+        ImGui::OpenPopup(label);
+    }
+
+    if (ImGui::BeginPopup(label))
+    {
+        auto textureList = GraphicsEngine::GetInstance()->GetTextureManager()->GetAllTextureNames();
+
+        for (const char* texName : textureList)
+        {
+            if (ImGui::Selectable(texName))
             {
-                currentIndex = i;
+                textureName = texName;
+                changed = true;
+                ImGui::CloseCurrentPopup();
                 break;
             }
         }
 
-        if (ImGui::Combo("Material", &currentIndex, materialOptions, IM_ARRAYSIZE(materialOptions)))
-        {
-            meshObject->SetMaterial(materialOptions[currentIndex]);
-        }
-
-        auto matDesc = GraphicsEngine::GetInstance()->GetMaterialManager()->GetMaterialDescription(currentMat);
-
-        ImGui::SeparatorText("Albedo");
-        DrawTextureField("Albedo Texture", matDesc.albedoTex);
-        ImGui::ColorEdit4("Albedo Color", &matDesc.albedoColor.x);
-
-        ImGui::SeparatorText("Normal Map");
-        DrawTextureField("Normal Texture", matDesc.normalTex);
-        ImGui::SliderFloat("Normal Strength", &matDesc.normalStrength, 0.0f, 2.0f);
-
-        ImGui::SeparatorText("Metallic");
-        DrawTextureField("Metal Texture", matDesc.metalTex);
-        ImGui::SliderFloat("Metal Strength", &matDesc.metalStrength, 0.0f, 1.0f);
-
-        ImGui::SeparatorText("Roughness");
-        DrawTextureField("Rough Texture", matDesc.roughTex);
-        ImGui::SliderFloat("Rough Strength", &matDesc.roughStrength, 0.0f, 1.0f);
-
-        ImGui::SeparatorText("Ambient Occlusion");
-        DrawTextureField("AO Texture", matDesc.aoTex);
-        ImGui::SliderFloat("AO Strength", &matDesc.aoStrength, 0.0f, 1.0f);
-
-        ImGui::SeparatorText("Emissive");
-        DrawTextureField("Emissive Texture", matDesc.emissiveTex);
-        ImGui::SliderFloat("Emissive Strength", &matDesc.emissiveStrength, 0.0f, 10.0f);
-
-        ImGui::SeparatorText("Height");
-        DrawTextureField("Height Texture", matDesc.heightTex);
-        ImGui::SliderFloat("Height Strength", &matDesc.heightStrength, 0.0f, 1.0f);
-
-        ImGui::TreePop();
+        ImGui::EndPopup();
     }
-}
-
-void Inspector::DrawTextureField(const char* label, std::string& textureName)
-{
-    ImGui::Text("%s", label);
-
-    ImTextureID texID = GraphicsEngine::GetInstance()->GetTextureManager()->GetThumbnail(textureName);
-
-    if (texID)  
-    {
-        ImGui::Image(texID, ImVec2(64, 64));
-    }
+    return changed;
 }

@@ -1,12 +1,11 @@
 #pragma once
-#include "pch.h"
 
 class UINames
 {
 public:
-    const std::string TOOLBAR = "TOOLBAR";
-    const std::string HIERARCHY = "HIERARCHY";
-    const std::string INSPECTOR = "INSPECTOR";
+    inline static const std::string TOOLBAR = "TOOLBAR";
+    inline static const std::string HIERARCHY = "HIERARCHY";
+    inline static const std::string INSPECTOR = "INSPECTOR";
 };
 
 class AUIScreen;
@@ -14,8 +13,7 @@ class AUIScreen;
 class EngineGUIManager
 {
 public:
-    using String = std::string;
-	using UIPtr = std::shared_ptr<AUIScreen>;
+    using UIPtr = std::shared_ptr<AUIScreen>;
     using UIList = std::vector<UIPtr>;
     using UITable = std::unordered_map<String, UIPtr>;
 
@@ -25,6 +23,7 @@ public:
 
     void DrawAllUI();
     std::vector<AUIScreen*> GetAllScreens();
+    AUIScreen* GetUI(const String& name);
 
     EngineGUIManager(HWND hwnd);
     ~EngineGUIManager();

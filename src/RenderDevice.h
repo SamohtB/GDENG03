@@ -1,6 +1,4 @@
 #pragma once
-#include "pch.h"
-
 #include "DeviceManager.h"
 #include "DescriptorHeapManager.h"
 #include "PipelineStateManager.h"

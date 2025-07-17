@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "ABaseWindow.h"
 
 ABaseWindow::ABaseWindow(UINT width, UINT height) : m_width(width), m_height(height)

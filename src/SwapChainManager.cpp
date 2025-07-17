@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "SwapChainManager.h"
 #include "Debug.h"
 

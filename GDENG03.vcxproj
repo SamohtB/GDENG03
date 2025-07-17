@@ -123,6 +123,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,6 +143,8 @@
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,14 +155,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Cylinder.cpp" />
+    <ClCompile Include="src\PointLight.cpp" />
+    <ClCompile Include="src\LightManager.cpp" />
+    <ClCompile Include="src\ALight.cpp" />
     <ClCompile Include="src\DynamicConstantBufferPool.cpp" />
     <ClCompile Include="src\Inspector.cpp" />
     <ClCompile Include="src\NameRegistry.cpp" />
-    <ClCompile Include="src\GameObjectSpawner.cpp" />
     <ClCompile Include="src\Hierarchy.cpp" />
     <ClCompile Include="src\AUIScreen.cpp" />
     <ClCompile Include="src\EngineGUIManager.cpp" />
-    <ClCompile Include="src\Colors.cpp" />
     <ClCompile Include="src\imgui.cpp" />
     <ClCompile Include="src\imgui_demo.cpp" />
     <ClCompile Include="src\imgui_draw.cpp" />
@@ -208,6 +214,11 @@
     <ClCompile Include="src\Toolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Cylinder.h" />
+    <ClInclude Include="src\PointLight.h" />
+    <ClInclude Include="src\LightManager.h" />
+    <ClInclude Include="src\LightTypes.h" />
+    <ClInclude Include="src\ALight.h" />
     <ClInclude Include="src\DynamicConstantBufferPool.h" />
     <ClInclude Include="src\Inspector.h" />
     <ClInclude Include="src\NameRegistry.h" />
@@ -225,7 +236,6 @@
     <ClInclude Include="src\imstb_truetype.h" />
     <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\AMeshObject.h" />
-    <ClInclude Include="src\Colors.h" />
     <ClInclude Include="src\SceneCamera.h" />
     <ClInclude Include="src\CameraManager.h" />
     <ClInclude Include="src\Camera.h" />

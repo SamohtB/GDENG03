@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Plane.h"
 
 Plane::Plane(String name) : AMeshObject(name)
@@ -35,8 +36,8 @@ Plane::Plane(String name) : AMeshObject(name)
 
     indices =
     {
-        0, 1, 2,
-        2, 1, 3
+        0, 2, 1,
+        2, 3, 1
     };
 
     std::vector<Vector3> tangents(vertices.size());
@@ -51,6 +52,6 @@ Plane::Plane(String name) : AMeshObject(name)
     SetMaterial(MaterialType::DEFAULT);
 }
 
-void Plane::OnUpdate(float deltaTime)
+void Plane::Update(float deltaTime)
 {
 }

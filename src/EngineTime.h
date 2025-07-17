@@ -1,8 +1,4 @@
 #pragma once
-#include <iostream>
-#include <chrono>
-#include <ctime>
-#include <thread>
 
 class Win32App;
 

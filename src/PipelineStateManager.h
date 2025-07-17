@@ -1,6 +1,4 @@
 #pragma once
-#include "pch.h"
-
 #include "GraphicsCommons.h"
 #include "ShaderTypes.h"
 #include "ShaderLoader.h"
@@ -17,6 +15,7 @@ public:
 	ID3D12RootSignature* GetRootSignature() const;
 
 	void RegisterPipeline(ID3D12Device* device, String shaderName, const ShaderDesc& vertexDesc, const ShaderDesc& pixelDesc);
+	std::vector<const char*> GetAllShaderNames() const;
 
 private:
 	void CreateRootSignature(ID3D12Device* device);

@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "DeviceContext.h"
 #include "GraphicsCommons.h"
 #include "Debug.h"
@@ -7,7 +8,7 @@ DeviceContext::DeviceContext(ID3D12Device* device) : m_nextFenceValue(1)
     /* Create Command Queue */
     D3D12_COMMAND_QUEUE_DESC queueDesc = {};
     queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-    
+
     Debug::ThrowIfFailed(device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_commandQueue)), "Command Queue creation failed!");
 
     /* Create Command Allocators */
@@ -20,7 +21,7 @@ DeviceContext::DeviceContext(ID3D12Device* device) : m_nextFenceValue(1)
     }
 
     /* Create and Close Command List */
-    Debug::ThrowIfFailed(device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocators[0].Get(), 
+    Debug::ThrowIfFailed(device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocators[0].Get(),
         nullptr, IID_PPV_ARGS(&m_commandList)), "Command List creation failed!");
     Debug::ThrowIfFailed(this->m_commandList->Close());
 
@@ -119,6 +120,11 @@ void DeviceContext::SetFrameConstants(D3D12_GPU_VIRTUAL_ADDRESS address)
     this->m_commandList->SetGraphicsRootConstantBufferView(RootDescriptorIndex::FRAME_CONSTANTS, address);
 }
 
+void DeviceContext::SetLightConstants(D3D12_GPU_VIRTUAL_ADDRESS address)
+{
+    this->m_commandList->SetGraphicsRootConstantBufferView(RootDescriptorIndex::LIGHT_CONSTANTS, address);
+}
+
 void DeviceContext::SetViewport(CD3DX12_VIEWPORT* viewport)
 {
     m_commandList->RSSetViewports(1, viewport);
@@ -206,7 +212,7 @@ void DeviceContext::SetTopology(D3D12_PRIMITIVE_TOPOLOGY topology)
 }
 
 void DeviceContext::DrawTriangleList(UINT vertexCount, UINT startVertexIndex)
-{    
+{
     this->m_commandList->DrawInstanced(vertexCount, 1, startVertexIndex, 0);
 }
 

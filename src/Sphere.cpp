@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Sphere.h"
 
 Sphere::Sphere(String name) : AMeshObject(name)
@@ -5,8 +6,8 @@ Sphere::Sphere(String name) : AMeshObject(name)
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
-    const uint32_t verticalSegments = TESSELLATION;
-    const uint32_t horizontalSegments = TESSELLATION * 2;
+    const uint32_t verticalSegments = m_tessellation;
+    const uint32_t horizontalSegments = m_tessellation * 2;
 
     // Create rings of vertices at progressively higher latitudes.
     for (uint32_t i = 0; i <= verticalSegments; i++)
@@ -32,7 +33,7 @@ Sphere::Sphere(String name) : AMeshObject(name)
 
             Vector3 normal(dx, dy, dz);
             Vector2 texcoord(u, v);
-            Vector3 position = normal * RADIUS;
+            Vector3 position = normal * m_radius;
 
             vertices.push_back(Vertex{
                 position,
@@ -54,12 +55,12 @@ Sphere::Sphere(String name) : AMeshObject(name)
             const uint32_t nextJ = (j + 1) % stride;
 
             indices.push_back(i * stride + j);
-            indices.push_back(nextI * stride + j);
             indices.push_back(i * stride + nextJ);
+            indices.push_back(nextI * stride + j);
 
             indices.push_back(i * stride + nextJ);
-            indices.push_back(nextI * stride + j);
             indices.push_back(nextI * stride + nextJ);
+            indices.push_back(nextI * stride + j);
         }
     }
 
@@ -82,9 +83,10 @@ Sphere::Sphere(String name) : AMeshObject(name)
 
     SetGeometry(vertices, indices);
     SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    SetMaterial(MaterialType::DEFAULT);
 }
 
-void Sphere::OnUpdate(float deltaTime)
+void Sphere::Update(float deltaTime)
 {
-	
+
 }

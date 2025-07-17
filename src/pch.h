@@ -16,6 +16,10 @@
 #include <memory>
 #include <stack>
 #include <cassert>
+#include <iostream>
+#include <chrono>
+#include <ctime>
+#include <thread>
 
 // === DirectX 12 core === 
 #include <d3d12.h>

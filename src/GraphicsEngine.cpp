@@ -1,9 +1,11 @@
+#include "pch.h"
 #include "GraphicsEngine.h"
 
 #include "RenderSystem.h"
 #include "RenderDevice.h"
 #include "TextureManager.h"
 #include "MaterialManager.h"
+#include "LightManager.h"
 
 #include "Debug.h"
 
@@ -53,6 +55,16 @@ GraphicsEngine::GraphicsEngine(UINT width, UINT height, HWND hwnd)
 		Debug::LogError("Material Manager initialization failed!");
 		return;
 	}
+
+	try
+	{
+		this->m_lightManager = std::make_unique<LightManager>(device.Get());
+	}
+	catch (...)
+	{
+		Debug::LogError("Light Manager initialization failed!");
+		return;
+	}
 }
 
 GraphicsEngine* GraphicsEngine::GetInstance()
@@ -98,3 +110,7 @@ MaterialManager* GraphicsEngine::GetMaterialManager()
 	return this->m_materialManager.get();
 }
 
+LightManager* GraphicsEngine::GetLightManager()
+{
+	return this->m_lightManager.get();
+}

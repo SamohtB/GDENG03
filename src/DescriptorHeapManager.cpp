@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "DescriptorHeapManager.h"
 #include <DirectXHelpers.h>
 #include <BufferHelpers.h>

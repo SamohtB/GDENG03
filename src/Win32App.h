@@ -1,6 +1,4 @@
 #pragma once
-#include "pch.h"
-
 class ABaseWindow;
 
 /* Win32 platform-specific window application host. */

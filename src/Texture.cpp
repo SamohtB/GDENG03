@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Texture.h"
 
 Texture::Texture(ComPtr<ID3D12Resource> buffer, UINT index)
