@@ -61,6 +61,9 @@ void Toolbar::GameObjects()
         // -------------------- Custom Meshes --------------------
         if (ImGui::BeginMenu("Custom Meshes"))
         {
+            if (ImGui::MenuItem("Teapot")) { GameObjectSpawner::CreateCustomMesh(CustomObjectType::TEAPOT); }
+            if (ImGui::MenuItem("Bunny")) { GameObjectSpawner::CreateCustomMesh(CustomObjectType::BUNNY); }
+            if (ImGui::MenuItem("Armadillo")) { GameObjectSpawner::CreateCustomMesh(CustomObjectType::ARMADILLO); }
             ImGui::EndMenu();
         }
 

@@ -4,12 +4,14 @@
 #include "Plane.h"
 #include "Sphere.h"
 #include "Cylinder.h"
+#include "CustomMesh.h"
 #include "Camera.h"
 
 #include "GameObjectManager.h"
 #include "GraphicsEngine.h"
 #include "LightManager.h"
 #include "NameRegistry.h"
+#include "MeshTypes.h"
 
 #include "PhysicsSystem.h"
 #include "PhysicsComponent.h"
@@ -22,6 +24,13 @@ enum ObjectType
     PRIMITIVE_PLANE,
     PRIMITIVE_SPHERE,
     PRIMITIVE_CYLINDER
+};
+
+enum CustomObjectType
+{
+    BUNNY = 0,
+	ARMADILLO,
+    TEAPOT
 };
 
 class GameObjectSpawner
@@ -74,6 +83,44 @@ public:
             Debug::LogError("Static Physics Plane not Created! Error Occured GameObjectSpawner::CreateStaticPhysicsPlane ");
         }
 	}
+
+
+    static void CreateCustomMesh(CustomObjectType type)
+    {
+        using GameObjectPtr = std::shared_ptr<AGameObject>;
+        GameObjectPtr obj = nullptr;
+        std::string name{};
+
+        switch (type)
+        {
+        case BUNNY:
+            name = NameRegistry::GetInstance()->GenerateUniqueName("Bunny");
+            obj = std::make_shared<CustomMesh>(name, MeshType::STANFORD_BUNNY);
+            break;
+
+        case ARMADILLO:
+            name = NameRegistry::GetInstance()->GenerateUniqueName("Armadillo");
+            obj = std::make_shared<CustomMesh>(name, MeshType::STANFORD_ARMADILLO);
+            break;
+
+        case TEAPOT:
+            name = NameRegistry::GetInstance()->GenerateUniqueName("Teapot");
+            obj = std::make_shared<CustomMesh>(name, MeshType::UTAH_TEAPOT);
+            break;
+
+        default:
+            return;
+        }
+
+        if (obj)
+        {
+            GameObjectManager::GetInstance()->AddGameObject(obj);
+        }
+        else
+        {
+            Debug::LogError("CustomMesh not Created! Error Occured GameObjectSpawner::CreateCustomMesh");
+        }
+    }
 
     static void CreatePrimitive(ObjectType type)
     {

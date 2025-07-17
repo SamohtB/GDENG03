@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CustomMesh.cpp" />
     <ClCompile Include="src\MeshManager.cpp" />
     <ClCompile Include="src\PhysicsComponent.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
@@ -220,6 +221,7 @@
     <ClCompile Include="src\Toolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\CustomMesh.h" />
     <ClInclude Include="src\MeshTypes.h" />
     <ClInclude Include="src\MeshManager.h" />
     <ClInclude Include="src\PhysicsComponent.h" />

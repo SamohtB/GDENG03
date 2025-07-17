@@ -15,10 +15,98 @@ void MeshManager::LoadInitialMeshes()
 	LoadPlanePrimitive();
 	LoadSpherePrimitive();
 	LoadCylinderPrimitive();
+    LoadMesh(MeshType::UTAH_TEAPOT, L"Assets/Meshes/teapot.obj");
+    LoadMesh(MeshType::STANFORD_BUNNY, L"Assets/Meshes/bunny.obj");
+    LoadMesh(MeshType::STANFORD_ARMADILLO, L"Assets/Meshes/armadillo.obj");
 }
 
 void MeshManager::LoadMesh(const String& meshName, const std::wstring& filePath)
 {
+    std::string inputFile(filePath.begin(), filePath.end());
+
+    tinyobj::attrib_t attrib;
+    std::vector<tinyobj::shape_t> shapes;
+    std::vector<tinyobj::material_t> materials;
+    std::string warn, err;
+
+    bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, inputFile.c_str());
+
+    if (!warn.empty())
+        Debug::LogWarning(warn.c_str());
+
+    if (!err.empty())
+        Debug::LogError(err.c_str());
+
+    if (!ret)
+    {
+        Debug::LogError("Failed to load mesh: " + meshName);
+        return;
+    }
+
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+
+    for (const auto& shape : shapes)
+    {
+        for (const auto& index : shape.mesh.indices)
+        {
+            Vertex vertex = {};
+
+            if (index.vertex_index >= 0)
+            {
+                vertex.position = {
+                    attrib.vertices[3 * index.vertex_index + 0],
+                    attrib.vertices[3 * index.vertex_index + 1],
+                    attrib.vertices[3 * index.vertex_index + 2]
+                };
+            }
+
+            if (index.texcoord_index >= 0)
+            {
+                vertex.texcoord = {
+                    attrib.texcoords[2 * index.texcoord_index + 0],
+                    1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
+                };
+            }
+
+            if (index.normal_index >= 0)
+            {
+                vertex.normal = {
+                    attrib.normals[3 * index.normal_index + 0],
+                    attrib.normals[3 * index.normal_index + 1],
+                    attrib.normals[3 * index.normal_index + 2]
+                };
+            }
+
+            vertices.push_back(vertex);
+            indices.push_back(static_cast<unsigned int>(indices.size()));
+        }
+    }
+
+    std::vector<Vector3> positions(vertices.size());
+    std::vector<Vector3> normals(vertices.size());
+    std::vector<Vector2> texcoords(vertices.size());
+    std::vector<Vector3> tangents(vertices.size());
+
+    for (size_t i = 0; i < vertices.size(); ++i)
+    {
+        positions[i] = vertices[i].position;
+        normals[i] = vertices[i].normal;
+        texcoords[i] = vertices[i].texcoord;
+    }
+
+    GeoMath::CalculateTangentFrame(indices, positions.data(), normals.data(), texcoords.data(), vertices.size(), tangents.data());
+
+    for (size_t i = 0; i < vertices.size(); ++i)
+        vertices[i].tangent = tangents[i];
+
+    MeshData meshData;
+    meshData.m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);
+    meshData.m_indexBuffer = std::make_unique<IndexBuffer>(indices);
+    meshData.m_indicesSize = static_cast<UINT>(indices.size());
+
+    m_meshMap[meshName] = std::move(meshData);
+    Debug::Log("MeshManager: Loaded " + meshName);
 }
 
 MeshData* MeshManager::GetMeshData(const String& meshName)

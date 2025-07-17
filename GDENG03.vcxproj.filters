@@ -303,6 +303,9 @@
     <ClCompile Include="src\MeshManager.cpp">
       <Filter>Engine\GraphicsEngine\MeshManager</Filter>
     </ClCompile>
+    <ClCompile Include="src\CustomMesh.cpp">
+      <Filter>App\Entities\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DescriptorHeapManager.h">
@@ -514,6 +517,9 @@
     </ClInclude>
     <ClInclude Include="src\tiny_obj_loader.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CustomMesh.h">
+      <Filter>App\Entities\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
