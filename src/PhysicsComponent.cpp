@@ -15,7 +15,7 @@ PhysicsComponent::PhysicsComponent(String name, std::weak_ptr<AGameObject> owner
     if (meshType == MeshType::PRIMITIVE_PLANE)
     {
         float half = 5.0f;
-        boxShape = physicsCommon->createBoxShape(rp3d::Vector3(half * scale.x, 0.01f , half * scale.z));
+        boxShape = physicsCommon->createBoxShape(rp3d::Vector3(half * scale.x, 0.10f , half * scale.z));
     }
     else
     {
@@ -30,10 +30,13 @@ PhysicsComponent::PhysicsComponent(String name, std::weak_ptr<AGameObject> owner
     m_rigidbody = physicsWorld->createRigidBody(startTransform);
     m_rigidbody->setType(rp3d::BodyType::DYNAMIC);
     m_rigidbody->enableGravity(true);
+	m_rigidbody->setIsAllowedToSleep(true);
+	m_rigidbody->setAngularDamping(0.8f);
+	m_rigidbody->setLinearDamping(0.5f);
 
     rp3d::Transform identity = rp3d::Transform::identity();
     rp3d::Collider* collider = m_rigidbody->addCollider(boxShape, identity);
-    collider->getMaterial().setFrictionCoefficient(0.5f);
+    collider->getMaterial().setFrictionCoefficient(1.0f);
     collider->getMaterial().setBounciness(0.0f);
 
     m_rigidbody->updateMassPropertiesFromColliders();
