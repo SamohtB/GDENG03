@@ -99,14 +99,23 @@ void SceneCamera::ZoomMode(float deltaTime)
 
 void SceneCamera::MouseMovement(float deltaTime)
 {
+    constexpr float DEG2RAD = 3.14159265359f / 180.0f;
+
     float yawDelta = m_mouseDelta.x * m_mouseSensitivity * deltaTime;
     float pitchDelta = m_mouseDelta.y * m_mouseSensitivity * deltaTime;
-    Vector3 rotation = this->GetLocalRotation();
 
-    rotation.y += yawDelta;
-    rotation.x += pitchDelta;
-    rotation.x = Clamp(rotation.x, -89.9f, 89.9f);
+    m_pitch += pitchDelta;
+    m_yaw += yawDelta;
 
-    this->SetRotation(rotation);
+
+    m_pitch = Clamp(m_pitch, -89.9f, 89.9f);
+
+    rp3d::Quaternion pitchQuat = rp3d::Quaternion::fromEulerAngles(m_pitch * DEG2RAD, 0.0f, 0.0f);
+    rp3d::Quaternion yawQuat = rp3d::Quaternion::fromEulerAngles(0.0f, m_yaw * DEG2RAD, 0.0f);
+
+    rp3d::Quaternion finalRotation = yawQuat * pitchQuat;
+
+    SetRotation(finalRotation);
+
     m_mouseDelta = Vector2(0.0f, 0.0f);
 }

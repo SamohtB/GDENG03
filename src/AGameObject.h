@@ -32,8 +32,10 @@ public:
 
     void SetRotation(float pitch, float yaw, float roll);
     void SetRotation(Vector3 vector);
+	void SetRotation(rp3d::Quaternion quaternion);
     void Rotate(float pitch, float yaw, float roll);
     Vector3 GetLocalRotation();
+	rp3d::Quaternion GetLocalQuaternion() const;
 
     void SetScale(float x, float y, float z);
     void SetScale(Vector3 vector);
@@ -63,7 +65,7 @@ protected:
     bool m_dirty;
 
     Vector3 m_localPosition;
-    Vector3 m_localRotation;
+    rp3d::Quaternion m_localRotation;
     Vector3 m_localScale;
     Matrix m_localMatrix;
 

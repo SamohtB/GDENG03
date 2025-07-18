@@ -1,10 +1,11 @@
 #pragma once
 #include "AComponent.h"
+#include "MeshTypes.h"
 
 class PhysicsComponent : public AComponent, public std::enable_shared_from_this<PhysicsComponent>
 {
 public:
-    PhysicsComponent(String name, std::weak_ptr<AGameObject> owner);
+    PhysicsComponent(String name, std::weak_ptr<AGameObject> owner, String meshType);
     ~PhysicsComponent();
 
     void Perform(float deltaTime) override;

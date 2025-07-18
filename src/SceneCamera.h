@@ -29,6 +29,9 @@ private:
 
 	bool m_rightMousePressed = false;
 
+	float m_pitch = 0.0f;
+	float m_yaw = 0.0f;
+
 	Vector2 m_mouseDelta = Vector2(0.0f, 0.0f);
 	Vector2 m_lastMousePosition = Vector2(0.0f, 0.0f);
 

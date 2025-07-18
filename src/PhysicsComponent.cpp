@@ -4,32 +4,40 @@
 #include "AGameObject.h"
 #include "Debug.h"
 
-PhysicsComponent::PhysicsComponent(String name, std::weak_ptr<AGameObject> owner) : AComponent(name, ComponentType::Physics, owner)
+PhysicsComponent::PhysicsComponent(String name, std::weak_ptr<AGameObject> owner, String meshType) : AComponent(name, ComponentType::Physics, owner)
 {
-    reactphysics3d::PhysicsCommon* physicsCommon = PhysicsSystem::GetInstance()->GetPhysicsCommon();
-    reactphysics3d::PhysicsWorld* physicsWorld = PhysicsSystem::GetInstance()->GetPhysicsWorld();
- 
-    Vector3 scale = this->m_owner.lock()->GetLocalScale();
-    reactphysics3d::BoxShape* boxShape = physicsCommon->createBoxShape(reactphysics3d::Vector3(scale.x / 2, scale.y / 2, scale.z / 2));
+    auto* physicsCommon = PhysicsSystem::GetInstance()->GetPhysicsCommon();
+    auto* physicsWorld = PhysicsSystem::GetInstance()->GetPhysicsWorld();
 
+    Vector3 scale = m_owner.lock()->GetLocalScale();
+    rp3d::BoxShape* boxShape;
 
-    Vector3 position = this->m_owner.lock()->GetLocalPosition();
-	Vector3 rotation = this->m_owner.lock()->GetLocalRotation();
+    if (meshType == MeshType::PRIMITIVE_PLANE)
+    {
+        float half = 5.0f;
+        boxShape = physicsCommon->createBoxShape(rp3d::Vector3(half * scale.x, 0.01f , half * scale.z));
+    }
+    else
+    {
+        float half = 0.5f;
+        boxShape = physicsCommon->createBoxShape(rp3d::Vector3(half * scale.x, half * scale.y, half * scale.z));
+    }
 
-    reactphysics3d::Vector3 rp3dPosition(position.x, position.y, position.z);
-    reactphysics3d::Quaternion orientation = reactphysics3d::Quaternion::fromEulerAngles(
-        DirectX::XMConvertToRadians(rotation.x),
-        DirectX::XMConvertToRadians(rotation.y),
-        DirectX::XMConvertToRadians(rotation.z)
-	);
+    Vector3 pos = m_owner.lock()->GetLocalPosition();
+    rp3d::Quaternion rot = m_owner.lock()->GetLocalQuaternion();
+    rp3d::Transform startTransform(rp3d::Vector3(pos.x, pos.y, pos.z), rot);
 
-    reactphysics3d::Transform transform(rp3dPosition, orientation);
+    m_rigidbody = physicsWorld->createRigidBody(startTransform);
+    m_rigidbody->setType(rp3d::BodyType::DYNAMIC);
+    m_rigidbody->enableGravity(true);
 
-    this->m_rigidbody = physicsWorld->createRigidBody(transform);
-    this->m_rigidbody->addCollider(boxShape, transform);
-    this->m_rigidbody->updateMassPropertiesFromColliders();
-    this->m_rigidbody->setMass(this->m_mass);
-    this->m_rigidbody->setType(reactphysics3d::BodyType::DYNAMIC);
+    rp3d::Transform identity = rp3d::Transform::identity();
+    rp3d::Collider* collider = m_rigidbody->addCollider(boxShape, identity);
+    collider->getMaterial().setFrictionCoefficient(0.5f);
+    collider->getMaterial().setBounciness(0.0f);
+
+    m_rigidbody->updateMassPropertiesFromColliders();
+    m_rigidbody->setMass(this->m_mass);
 }
 
 PhysicsComponent::~PhysicsComponent()
@@ -52,26 +60,12 @@ PhysicsComponent::~PhysicsComponent()
 void PhysicsComponent::Perform(float deltaTime)
 {
     const reactphysics3d::Transform transform = this->m_rigidbody->getTransform();
-    float matrix[16];
-    transform.getOpenGLMatrix(matrix);
 
     rp3d::Vector3 position = transform.getPosition();
     this->GetOwner()->SetPosition(position.x, position.y, position.z);
 
     rp3d::Quaternion orientation = transform.getOrientation();
-    DirectX::XMVECTOR quaternion = DirectX::XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w);
-
-    // Convert to Euler angles in radians
-    DirectX::XMFLOAT3 eulerRadians;
-    XMStoreFloat3(&eulerRadians, DirectX::XMQuaternionRotationRollPitchYawFromVector(quaternion));
-
-    Vector3 eulerDegrees = Vector3(
-        DirectX::XMConvertToDegrees(eulerRadians.x),
-        DirectX::XMConvertToDegrees(eulerRadians.y),
-        DirectX::XMConvertToDegrees(eulerRadians.z)
-    );
-
-    this->GetOwner()->SetRotation(eulerDegrees);
+    this->GetOwner()->SetRotation(orientation);
 }
 
 reactphysics3d::RigidBody* PhysicsComponent::GetRigidBody()

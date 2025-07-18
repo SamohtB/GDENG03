@@ -54,10 +54,9 @@ public:
 
         if (obj)
         {
-            auto physicsComponent = std::make_shared<PhysicsComponent>(name, obj);
+            auto physicsComponent = std::make_shared<PhysicsComponent>(name, obj, MeshType::PRIMITIVE_CUBE);
             obj->AttachComponent(physicsComponent);
             PhysicsSystem::GetInstance()->RegisterComponent(physicsComponent);
-
             GameObjectManager::GetInstance()->AddGameObject(obj);
         }
         else
@@ -69,12 +68,11 @@ public:
     static void CreateStaticPhysicsPlane()
     {
         std::string name = NameRegistry::GetInstance()->GenerateUniqueName("PhysicsPlane");
-        auto obj = std::make_shared<Cube>(name);
-		obj->SetScale(5.0f, 0.01f, 5.0f);
+        auto obj = std::make_shared<Plane>(name);
 
         if (obj)
         {
-            auto physicsComponent = std::make_shared<PhysicsComponent>(name, obj);
+            auto physicsComponent = std::make_shared<PhysicsComponent>(name, obj, MeshType::PRIMITIVE_PLANE);
             physicsComponent->SetBodyType(reactphysics3d::BodyType::STATIC);
             obj->AttachComponent(physicsComponent);
             PhysicsSystem::GetInstance()->RegisterComponent(physicsComponent);
