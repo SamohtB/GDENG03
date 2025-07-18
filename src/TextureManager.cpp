@@ -11,6 +11,7 @@ TextureManager::TextureManager(std::shared_ptr<DescriptorHeapManager> heapManage
 void TextureManager::LoadInitialTextures()
 {
     LoadTexture(TextureType::DEFAULT, L"Assets/Textures/default.png");
+    LoadTexture(TextureType::BRICK, L"Assets/Textures/brick.png");
 
     LoadTexture(TextureType::ROCK_COLOR, L"Assets/Textures/rock_d.png");
     LoadTexture(TextureType::ROCK_NORMAL, L"Assets/Textures/rock_n.png");
@@ -29,7 +30,6 @@ void TextureManager::LoadInitialTextures()
     LoadTexture(TextureType::BRICKS_ROUGH, L"Assets/Textures/bricks_r.png");
     LoadTexture(TextureType::BRICKS_AO, L"Assets/Textures/bricks_ao.png");
     LoadTexture(TextureType::BRICKS_HEIGHT, L"Assets/Textures/bricks_h.png");
-
 }
 
 void TextureManager::LoadTexture(const String& textureName, const std::wstring& filePath)

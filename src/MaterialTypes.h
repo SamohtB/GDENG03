@@ -8,6 +8,7 @@ class MaterialType
 {
 public:
     inline static const std::string DEFAULT = "DEFAULT";
+    inline static const std::string BRICK_TEX = "BRICK";
     inline static const std::string ROCK = "ROCK";
     inline static const std::string METAL_PLATE = "METAL_PLATE";
     inline static const std::string BRICKS = "BRICKS";

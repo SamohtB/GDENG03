@@ -29,7 +29,7 @@ void MeshManager::LoadMesh(const String& meshName, const std::wstring& filePath)
     std::vector<tinyobj::material_t> materials;
     std::string warn, err;
 
-    bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, inputFile.c_str());
+    bool res = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, inputFile.c_str());
 
     if (!warn.empty())
         Debug::LogWarning(warn.c_str());
@@ -37,49 +37,73 @@ void MeshManager::LoadMesh(const String& meshName, const std::wstring& filePath)
     if (!err.empty())
         Debug::LogError(err.c_str());
 
-    if (!ret)
+    if (!res)
     {
         Debug::LogError("Failed to load mesh: " + meshName);
         return;
     }
 
+    if (shapes.size() > 1)
+    {
+		Debug::LogWarning("Mesh '" + meshName + "' has multiple shapes. Only the first shape will be used.");
+    }
+
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
-    for (const auto& shape : shapes)
+    for (size_t s = 0; s < shapes.size(); s++)
     {
-        for (const auto& index : shape.mesh.indices)
+		size_t indexOffset = 0;
+
+        for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
         {
-            Vertex vertex = {};
+			unsigned char numFaceVertices = shapes[s].mesh.num_face_vertices[f];
 
-            if (index.vertex_index >= 0)
+            std::vector<unsigned int> faceIndices;
+
+            for (unsigned char v = 0; v < numFaceVertices; v++)
             {
-                vertex.position = {
-                    attrib.vertices[3 * index.vertex_index + 0],
-                    attrib.vertices[3 * index.vertex_index + 1],
-                    attrib.vertices[3 * index.vertex_index + 2]
-                };
+                tinyobj::index_t index = shapes[s].mesh.indices[indexOffset + v];
+
+                Vertex vertex = {};
+
+                if (index.vertex_index >= 0)
+                {
+                    vertex.position.x = attrib.vertices[index.vertex_index * 3 + 0];
+                    vertex.position.y = attrib.vertices[index.vertex_index * 3 + 1];
+                    vertex.position.z = attrib.vertices[index.vertex_index * 3 + 2];
+                }
+
+                if (index.normal_index >= 0)
+                {
+                    vertex.normal.x = attrib.normals[index.normal_index * 3 + 0];
+                    vertex.normal.y = attrib.normals[index.normal_index * 3 + 1];
+                    vertex.normal.z = attrib.normals[index.normal_index * 3 + 2];
+                }
+
+                if (index.texcoord_index >= 0)
+                {
+                    vertex.texcoord.x = attrib.texcoords[index.texcoord_index * 2 + 0];
+                    vertex.texcoord.y = 1.0f - attrib.texcoords[index.texcoord_index * 2 + 1];
+                }
+
+                vertices.push_back(vertex);
+                faceIndices.push_back(static_cast<unsigned int>(vertices.size() - 1));
             }
 
-            if (index.texcoord_index >= 0)
+            if (faceIndices.size() == 3)
             {
-                vertex.texcoord = {
-                    attrib.texcoords[2 * index.texcoord_index + 0],
-                    1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-                };
+                indices.push_back(faceIndices[2]);
+                indices.push_back(faceIndices[1]);
+                indices.push_back(faceIndices[0]);
+            }
+            else
+            {
+                for (int i = 0; i < faceIndices.size(); ++i)
+                    indices.push_back(faceIndices[i]);
             }
 
-            if (index.normal_index >= 0)
-            {
-                vertex.normal = {
-                    attrib.normals[3 * index.normal_index + 0],
-                    attrib.normals[3 * index.normal_index + 1],
-                    attrib.normals[3 * index.normal_index + 2]
-                };
-            }
-
-            vertices.push_back(vertex);
-            indices.push_back(static_cast<unsigned int>(indices.size()));
+            indexOffset += numFaceVertices;
         }
     }
 

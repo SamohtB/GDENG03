@@ -24,7 +24,7 @@ private:
 	void MouseMovement(float deltaTime);
 
 	float m_mouseSensitivity = 15.0f;
-	float m_cameraMoveSpeed = 40.0f;
+	float m_cameraMoveSpeed = 20.0f;
 	float m_scrollDelta = 0.0f;
 
 	bool m_rightMousePressed = false;

@@ -16,6 +16,20 @@ void MaterialManager::LoadInitialMaterials()
     CreateBlankMaterial(MaterialType::DEFAULT);
 
     /* MaterialDesc Sequence: Shader, Albedo, Normal, Metal, Rough, AO, Emmissive, Height, Tiling, Offset */
+    CreateMaterial(MaterialType::BRICK_TEX,
+        {
+        ShaderType::UNLIT,
+        TextureType::BRICK,    Vector4(1, 1, 1, 1),
+        TextureType::DEFAULT,   0.0f,
+        TextureType::DEFAULT,   0.0f,
+        TextureType::DEFAULT,   0.0f,
+        TextureType::DEFAULT,   0.0f,
+        TextureType::DEFAULT,   0.0f,
+        TextureType::DEFAULT,   0.0f,
+        Vector2(1.0f, 1.0f),
+        Vector2(0.0f, 0.0f)
+        });
+
     CreateMaterial(MaterialType::ROCK,
         {
         ShaderType::LIT,

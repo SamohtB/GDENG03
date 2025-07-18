@@ -5,6 +5,7 @@ class TextureType
 {
 public:
     inline static const std::string DEFAULT = "DEFAULT";
+    inline static const std::string BRICK = "BRICK";
 
     inline static const std::string ROCK_COLOR = "ROCK_COLOR";
     inline static const std::string ROCK_NORMAL = "ROCK_NORMAL";

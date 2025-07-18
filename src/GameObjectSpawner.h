@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AMeshObject.h"
 #include "Cube.h"
 #include "Plane.h"
 #include "Sphere.h"
@@ -16,6 +17,7 @@
 #include "PhysicsSystem.h"
 #include "PhysicsComponent.h"
 
+#include "MaterialManager.h"
 #include "Debug.h"
 
 enum ObjectType
@@ -87,7 +89,7 @@ public:
 
     static void CreateCustomMesh(CustomObjectType type)
     {
-        using GameObjectPtr = std::shared_ptr<AGameObject>;
+        using GameObjectPtr = std::shared_ptr<AMeshObject>;
         GameObjectPtr obj = nullptr;
         std::string name{};
 
@@ -106,6 +108,7 @@ public:
         case TEAPOT:
             name = NameRegistry::GetInstance()->GenerateUniqueName("Teapot");
             obj = std::make_shared<CustomMesh>(name, MeshType::UTAH_TEAPOT);
+            obj->SetMaterial(MaterialType::BRICK_TEX);
             break;
 
         default:
