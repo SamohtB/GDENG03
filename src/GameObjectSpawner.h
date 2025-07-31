@@ -55,6 +55,7 @@ public:
         if (obj)
         {
             auto physicsComponent = std::make_shared<PhysicsComponent>(name, obj, MeshType::PRIMITIVE_CUBE);
+            physicsComponent->SetSelf(physicsComponent);
             obj->AttachComponent(physicsComponent);
             PhysicsSystem::GetInstance()->RegisterComponent(physicsComponent);
             GameObjectManager::GetInstance()->AddGameObject(obj);

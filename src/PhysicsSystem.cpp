@@ -102,7 +102,7 @@ PhysicsComponent* PhysicsSystem::FindComponentByName(String name)
     return nullptr;
 }
 
-PhysicsSystem::ComponentList PhysicsSystem::GetAllComponents()
+PhysicsSystem::PhysicsComponentList PhysicsSystem::GetAllComponents()
 {
     return this->m_componentList;
 }

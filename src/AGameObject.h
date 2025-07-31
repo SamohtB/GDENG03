@@ -11,7 +11,7 @@ public:
     using ComponentList = std::vector<ComponentPtr>;
 
     AGameObject(String name);
-    virtual ~AGameObject() = default;
+    virtual ~AGameObject();
 
     virtual void Update(float deltaTime) = 0;
 
@@ -57,6 +57,7 @@ public:
     AComponent* FindComponentOfType(AComponent::ComponentType type, String name);
     ComponentList GetComponentsOfType(AComponent::ComponentType type);
     ComponentList GetComponentsOfTypeRecursive(AComponent::ComponentType type);
+    ComponentList GetAllComponents();
 
 protected:
     unsigned int m_id;

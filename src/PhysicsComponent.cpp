@@ -4,7 +4,8 @@
 #include "AGameObject.h"
 #include "Debug.h"
 
-PhysicsComponent::PhysicsComponent(String name, std::weak_ptr<AGameObject> owner, String meshType) : AComponent(name, ComponentType::Physics, owner)
+PhysicsComponent::PhysicsComponent(String name, std::weak_ptr<AGameObject> owner, String meshType) 
+    : AComponent(name, ComponentType::Physics, owner), m_mass(100.0f), m_bodyType(reactphysics3d::BodyType::STATIC)
 {
     auto* physicsCommon = PhysicsSystem::GetInstance()->GetPhysicsCommon();
     auto* physicsWorld = PhysicsSystem::GetInstance()->GetPhysicsWorld();
@@ -12,6 +13,7 @@ PhysicsComponent::PhysicsComponent(String name, std::weak_ptr<AGameObject> owner
     Vector3 scale = m_owner.lock()->GetLocalScale();
     rp3d::BoxShape* boxShape;
 
+    // Todo: Fix Shape Setting
     if (meshType == MeshType::PRIMITIVE_PLANE)
     {
         float half = 5.0f;
@@ -28,7 +30,7 @@ PhysicsComponent::PhysicsComponent(String name, std::weak_ptr<AGameObject> owner
     rp3d::Transform startTransform(rp3d::Vector3(pos.x, pos.y, pos.z), rot);
 
     m_rigidbody = physicsWorld->createRigidBody(startTransform);
-    m_rigidbody->setType(rp3d::BodyType::DYNAMIC);
+    m_rigidbody->setType(m_bodyType);
     m_rigidbody->enableGravity(true);
 	m_rigidbody->setIsAllowedToSleep(true);
 	m_rigidbody->setAngularDamping(0.8f);
@@ -45,18 +47,13 @@ PhysicsComponent::PhysicsComponent(String name, std::weak_ptr<AGameObject> owner
 
 PhysicsComponent::~PhysicsComponent()
 {
-    PhysicsSystem::GetInstance()->UnregisterComponent(shared_from_this());
-
     if (this->m_rigidbody)
     {
-        reactphysics3d::PhysicsWorld* physicsWorld = PhysicsSystem::GetInstance()->GetPhysicsWorld();
-
+        auto* physicsWorld = PhysicsSystem::GetInstance()->GetPhysicsWorld();
         if (physicsWorld)
         {
             physicsWorld->destroyRigidBody(this->m_rigidbody);
         }
-
-        this->m_rigidbody = nullptr;
     }
 }
 
@@ -71,6 +68,66 @@ void PhysicsComponent::Perform(float deltaTime)
     this->GetOwner()->SetRotation(orientation);
 }
 
+void PhysicsComponent::DrawUI()
+{
+    if (ImGui::CollapsingHeader("Physics Component", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        // === Set Mass ===
+        ImGui::Text("Mass:");
+        ImGui::SetNextItemWidth(200.0f);
+        if (ImGui::DragFloat("##MassInput", &this->m_mass, 0.1f, 1.0f, 1000000.0f, "%.2f"))
+        {
+            this->m_rigidbody->setMass(this->m_mass);
+        }
+
+        // === Set Body Type ===
+        static const char* bodyTypeNames[] = { "Static", "Kinematic", "Dynamic" };
+        static int selectedBodyType = static_cast<int>(this->m_bodyType);
+        ImGui::Text("Body Type:");
+        if (ImGui::Combo("##BodyType", &selectedBodyType, bodyTypeNames, IM_ARRAYSIZE(bodyTypeNames)))
+        {
+            this->SetBodyType(static_cast<reactphysics3d::BodyType>(selectedBodyType));
+            this->m_bodyType = static_cast<reactphysics3d::BodyType>(selectedBodyType);
+        }
+
+        // === Gravity Settings ===
+        bool gravityEnabled = this->m_rigidbody->isGravityEnabled();
+        if (ImGui::Checkbox("Enable Gravity", &gravityEnabled))
+        {
+            this->m_rigidbody->enableGravity(gravityEnabled);
+        }
+
+        // === Linear Damping ===
+        ImGui::Text("Linear Damping:");
+        ImGui::SetNextItemWidth(200.0f);
+        float linearDamping = this->m_rigidbody->getLinearDamping();
+        if (ImGui::SliderFloat("##LinearDamping", &linearDamping, 0.0f, 10.0f, "%.2f"))
+        {
+            this->m_rigidbody->setLinearDamping(linearDamping);
+        }
+
+        // === Angular Damping ===
+        ImGui::Text("Angular Damping:");
+        ImGui::SetNextItemWidth(200.0f);
+        float angularDamping = this->m_rigidbody->getAngularDamping();
+        if (ImGui::SliderFloat("##AngularDamping", &angularDamping, 0.0f, 10.0f, "%.2f"))
+        {
+            this->m_rigidbody->setAngularDamping(angularDamping);
+        }
+
+
+        // === Detach Component Button ===
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::Spacing();
+
+        if (ImGui::Button("Delete Component"))
+        {
+            this->m_owner.lock()->DetachComponent(shared_from_this());
+        }
+    }
+}
+
 reactphysics3d::RigidBody* PhysicsComponent::GetRigidBody()
 {
     return this->m_rigidbody;
@@ -79,5 +136,12 @@ reactphysics3d::RigidBody* PhysicsComponent::GetRigidBody()
 void PhysicsComponent::SetBodyType(reactphysics3d::BodyType type)
 {
     this->m_rigidbody->setType(type);
+    this->m_bodyType = type;
+}
+
+void PhysicsComponent::SetMass(float mass)
+{
+    this->m_rigidbody->setMass(mass);
+    this->m_mass = mass;
 }
 

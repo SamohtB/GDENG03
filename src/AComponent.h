@@ -16,6 +16,7 @@ public:
     String GetName();
 
     virtual void Perform(float deltaTime) = 0;
+    virtual void DrawUI() = 0;
 
 protected:
     std::weak_ptr<AGameObject> m_owner;

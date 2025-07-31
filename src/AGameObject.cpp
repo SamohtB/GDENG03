@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "AGameObject.h"
+#include "PhysicsSystem.h"
+#include "PhysicsComponent.h"
+#include "Debug.h"
 
 AGameObject::AGameObject(String name) : m_id(0), m_name(name), m_active(true), m_dirty(false)
 {
@@ -7,6 +10,22 @@ AGameObject::AGameObject(String name) : m_id(0), m_name(name), m_active(true), m
 	this->m_localRotation = rp3d::Quaternion::identity();
 	this->m_localScale = Vector3(1, 1, 1);
 	this->m_localMatrix = GetLocalMatrix();
+}
+
+AGameObject::~AGameObject()
+{
+	for (auto& component : m_componentList)
+	{
+		if (component->GetType() == AComponent::ComponentType::Physics)
+		{
+			if (auto phys = std::dynamic_pointer_cast<PhysicsComponent>(component))
+			{
+				PhysicsSystem::GetInstance()->UnregisterComponent(phys);
+			}
+		}
+
+		component->DetachOwner();
+	}
 }
 
 bool AGameObject::IsActive() const
@@ -258,13 +277,21 @@ void AGameObject::AttachComponent(std::shared_ptr<AComponent> component)
 
 void AGameObject::DetachComponent(std::shared_ptr<AComponent> component)
 {
-	auto it = std::find(this->m_componentList.begin(), this->m_componentList.end(), component);
+	auto it = std::find(m_componentList.begin(), m_componentList.end(), component);
+	if (it == m_componentList.end()) return;
 
-	if (it != this->m_componentList.end()) 
+	if (component->GetType() == AComponent::ComponentType::Physics)
 	{
-		(*it)->DetachOwner(); 
-		this->m_componentList.erase(it);
+		if (auto physicsComponent = std::dynamic_pointer_cast<PhysicsComponent>(component))
+		{
+			PhysicsSystem::GetInstance()->UnregisterComponent(physicsComponent);
+		}
 	}
+
+	component->DetachOwner();
+	m_componentList.erase(it);
+
+	Debug::Log("Detached " + component->GetName());
 }
 
 AComponent* AGameObject::FindComponentByName(String name)
@@ -329,3 +356,7 @@ AGameObject::ComponentList AGameObject::GetComponentsOfTypeRecursive(AComponent:
 	return foundList;
 }
 
+AGameObject::ComponentList AGameObject::GetAllComponents()
+{
+	return this->m_componentList;
+}

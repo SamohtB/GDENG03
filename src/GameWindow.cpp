@@ -66,13 +66,7 @@ void GameWindow::OnRender()
 
 	GameObjectManager::GetInstance()->RenderAll(context);
 
-	/*	Temporary Per Frame Batch Uploader Calls */
-	/* Shared Resources Coming Soon */
-	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
-
 	EngineGUIManager::GetInstance()->DrawAllUI();
-
-	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->EndFrame();
 }

@@ -6,7 +6,7 @@ class PhysicsSystem
 public:
     using PhysicsPtr = std::shared_ptr<PhysicsComponent>;
     using ComponentTable = std::unordered_map<String, PhysicsPtr>;
-    using ComponentList = std::vector<PhysicsPtr>;
+    using PhysicsComponentList = std::vector<PhysicsPtr>;
 
     static PhysicsSystem* GetInstance();
     static void Initialize();
@@ -16,7 +16,7 @@ public:
     void UnregisterComponent(PhysicsPtr physicsComponent);
     void UnregisterComponentByName(String name);
     PhysicsComponent* FindComponentByName(String name);
-    ComponentList GetAllComponents();
+    PhysicsComponentList GetAllComponents();
 
     void UpdateAllComponents(float deltaTime);
     reactphysics3d::PhysicsWorld* GetPhysicsWorld();
@@ -31,7 +31,7 @@ private:
     static std::unique_ptr<PhysicsSystem> sharedInstance;
 
     ComponentTable m_componentTable;
-    ComponentList m_componentList;
+    PhysicsComponentList m_componentList;
 
     std::unique_ptr<reactphysics3d::PhysicsCommon> m_physicsCommon;
     reactphysics3d::PhysicsWorld* m_physicsWorld;

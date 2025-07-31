@@ -20,26 +20,14 @@ void Inspector::DrawUI()
     AGameObject* object = GameObjectManager::GetInstance()->GetSelectedObject();
     if (object != nullptr)
     {
-        DrawObjectInfo(object);
+        ImGui::Text("Name: %s", object->GetName().c_str());
         ImGui::Spacing();
+        
+        auto components = object->GetAllComponents();
 
-        if (ImGui::BeginTabBar("InspectorTabs"))
+        for (const auto& component : components)
         {
-            if (ImGui::BeginTabItem("Properties"))
-            {
-                DrawTransformTab(object);
-                ImGui::EndTabItem();
-            }
-
-            if (dynamic_cast<AMeshObject*>(object) != nullptr)
-            {
-                if (ImGui::BeginTabItem("Material"))
-                {
-                    DrawMaterialTab(object);
-                    ImGui::EndTabItem();
-                }
-            }
-            ImGui::EndTabBar();
+            component->DrawUI();
         }
     }
     else
@@ -52,7 +40,7 @@ void Inspector::DrawUI()
 
 void Inspector::DrawObjectInfo(AGameObject* object)
 {
-    ImGui::Text("Name: %s", object->GetName().c_str());
+    
 }
 
 void Inspector::DrawTransformTab(AGameObject* object)
