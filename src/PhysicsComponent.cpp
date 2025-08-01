@@ -4,8 +4,8 @@
 #include "AGameObject.h"
 #include "Debug.h"
 
-PhysicsComponent::PhysicsComponent(String name, std::weak_ptr<AGameObject> owner, String meshType) 
-    : AComponent(name, ComponentType::Physics, owner), m_mass(100.0f), m_bodyType(reactphysics3d::BodyType::STATIC)
+PhysicsComponent::PhysicsComponent(String name, String meshType, std::weak_ptr<AGameObject> owner)
+    : AComponent(name, ComponentType::Physics, owner), m_mass(100.0f), m_bodyType(reactphysics3d::BodyType::STATIC), m_deltaTime(0)
 {
     auto* physicsCommon = PhysicsSystem::GetInstance()->GetPhysicsCommon();
     auto* physicsWorld = PhysicsSystem::GetInstance()->GetPhysicsWorld();
@@ -57,7 +57,7 @@ PhysicsComponent::~PhysicsComponent()
     }
 }
 
-void PhysicsComponent::Perform(float deltaTime)
+void PhysicsComponent::Perform()
 {
     const reactphysics3d::Transform transform = this->m_rigidbody->getTransform();
 
@@ -121,9 +121,9 @@ void PhysicsComponent::DrawUI()
         ImGui::Separator();
         ImGui::Spacing();
 
-        if (ImGui::Button("Delete Component"))
+        if (ImGui::Button("Delete Physics Component"))
         {
-            this->m_owner.lock()->DetachComponent(shared_from_this());
+			this->DetachSelfFromOwner();
         }
     }
 }

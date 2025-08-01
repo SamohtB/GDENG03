@@ -2,13 +2,13 @@
 #include "AComponent.h"
 #include "MeshTypes.h"
 
-class PhysicsComponent : public AComponent, public std::enable_shared_from_this<PhysicsComponent>
+class PhysicsComponent : public AComponent
 {
 public:
-    PhysicsComponent(String name, std::weak_ptr<AGameObject> owner, String meshType);
+    PhysicsComponent(String name, String meshType,  std::weak_ptr<AGameObject> owner);
     ~PhysicsComponent();
 
-    void Perform(float deltaTime) override;
+    void Perform() override;
 	void DrawUI() override;
 
     void SetSelf(std::shared_ptr<PhysicsComponent> self) { m_self = self; }
@@ -19,6 +19,7 @@ public:
 	void SetMass(float mass);
 
 private:
+    float m_deltaTime;
     float m_mass;
     reactphysics3d::BodyType m_bodyType;
     reactphysics3d::RigidBody* m_rigidbody;

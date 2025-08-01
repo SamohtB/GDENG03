@@ -1,37 +1,39 @@
 #pragma once
+#include "AComponent.h"
 #include "FrameConstants.h"
 
 #include "TextureTypes.h"
 #include "ShaderTypes.h"
 #include "MaterialTypes.h"
 
-#include "AGameObject.h"
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
 
 class DeviceContext;
 
-class AMeshObject : public AGameObject
+class MeshComponent : public AComponent
 {
 public:
-	AMeshObject(String name, String mesh, String material = MaterialType::DEFAULT);
-	virtual ~AMeshObject() = default;
+	MeshComponent(String name, String mesh, std::weak_ptr<AGameObject> owner);
+	~MeshComponent() = default;
 
-	virtual void Update(float deltaTime) override;
-	virtual void Draw(DeviceContext* context);
+	void SetDeviceContext(DeviceContext* context);
+
+	void Perform() override;
+	void DrawUI() override;
 
 	void SetMaterial(String material);
 	String GetMaterial() const;
 
 	void SetGPUAddress(UINT frameIndex, D3D12_GPU_VIRTUAL_ADDRESS address);
-
-protected:
 	void SetTopology(D3D12_PRIMITIVE_TOPOLOGY topology);
-
 private:
 	std::vector<D3D12_GPU_VIRTUAL_ADDRESS> m_gpuAddresses;
 
+	DeviceContext* m_context;
 	String m_material;
 	String m_mesh;
 	D3D12_PRIMITIVE_TOPOLOGY m_topology;
+
 };
+

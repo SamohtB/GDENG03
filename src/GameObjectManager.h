@@ -46,7 +46,6 @@ private:
     std::unique_ptr<DynamicConstantBufferPool> m_objectConstantsBuffer;
 
     ObjectList m_objectList;
-    RenderedList m_renderedList;
     Table m_objectTable;
 
     AGameObject* m_selectedObject = nullptr;

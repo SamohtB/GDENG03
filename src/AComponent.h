@@ -1,7 +1,7 @@
 #pragma once
 class AGameObject;
 
-class AComponent
+class AComponent : public std::enable_shared_from_this<AComponent>
 {
 public:
     enum ComponentType { NotSet = -1, Script = 0, Renderer, Input, Physics, Transform };
@@ -15,8 +15,10 @@ public:
     ComponentType GetType();
     String GetName();
 
-    virtual void Perform(float deltaTime) = 0;
+    virtual void Perform() = 0;
     virtual void DrawUI() = 0;
+
+    void DetachSelfFromOwner();
 
 protected:
     std::weak_ptr<AGameObject> m_owner;

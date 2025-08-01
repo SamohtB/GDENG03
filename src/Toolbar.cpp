@@ -6,10 +6,11 @@
 #include "EngineGUIManager.h"
 #include "GraphicsEngine.h"
 #include "RenderSystem.h"
+#include "NameRegistry.h"
+#include "GameObjectBuilder.h"
 
 Toolbar::Toolbar() : AUIScreen("TOOLBAR")
 {
-
 }
 
 void Toolbar::DrawUI()
@@ -42,28 +43,165 @@ void Toolbar::GameObjects()
         // -------------------- Primitives --------------------
         if (ImGui::BeginMenu("Primitives"))
         {
-            if (ImGui::MenuItem("Cube")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_CUBE); }
-            if (ImGui::MenuItem("Plane")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_PLANE); }
-            if (ImGui::MenuItem("Sphere")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_SPHERE); }
-            if (ImGui::MenuItem("Cylinder")) { GameObjectSpawner::CreatePrimitive(ObjectType::PRIMITIVE_CYLINDER); }
+            if (ImGui::MenuItem("Cube"))
+            {
+                auto name = NameRegistry::GetInstance()->GenerateUniqueName("Cube");
+                auto cube = GameObjectBuilder()
+                    .SetName(name)
+                    .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT)
+                    .Build();
+
+                if (cube)
+                {
+                    GameObjectManager::GetInstance()->AddGameObject(cube);
+                }
+                else
+                {
+                    Debug::LogError("Cube not created! Error in primitive spawn menu");
+                }
+            }
+
+            if (ImGui::MenuItem("Plane"))
+            {
+                auto name = NameRegistry::GetInstance()->GenerateUniqueName("Plane");
+                auto plane = GameObjectBuilder()
+                    .SetName(name)
+                    .AddMeshComponent(MeshType::PRIMITIVE_PLANE, MaterialType::DEFAULT)
+                    .Build();
+
+                if (plane)
+                {
+                    GameObjectManager::GetInstance()->AddGameObject(plane);
+                }
+                else
+                {
+                    Debug::LogError("Plane not created! Error in primitive spawn menu");
+                }
+            }
+
+            if (ImGui::MenuItem("Sphere"))
+            {
+                auto name = NameRegistry::GetInstance()->GenerateUniqueName("Sphere");
+                auto sphere = GameObjectBuilder()
+                    .SetName(name)
+                    .AddMeshComponent(MeshType::PRIMITIVE_SPHERE, MaterialType::DEFAULT)
+                    .Build();
+
+                if (sphere)
+                {
+                    GameObjectManager::GetInstance()->AddGameObject(sphere);
+                }
+                else
+                {
+                    Debug::LogError("Sphere not created! Error in primitive spawn menu");
+                }
+            }
+
+            if (ImGui::MenuItem("Cylinder"))
+            {
+                auto name = NameRegistry::GetInstance()->GenerateUniqueName("Cylinder");
+                auto cylinder = GameObjectBuilder()
+                    .SetName(name)
+                    .AddMeshComponent(MeshType::PRIMITIVE_CYLINDER, MaterialType::DEFAULT)
+                    .Build();
+
+                if (cylinder)
+                {
+                    GameObjectManager::GetInstance()->AddGameObject(cylinder);
+                }
+                else
+                {
+                    Debug::LogError("Cylinder not created! Error in primitive spawn menu");
+                }
+            }
             ImGui::EndMenu();
         }
 
         // -------------------- Physics Objects --------------------
         if (ImGui::BeginMenu("Physics Objects"))
         {
-            if (ImGui::MenuItem("Physics Cube")) { GameObjectSpawner::CreatePhysicsCube(); }
-            if (ImGui::MenuItem("Physics Cube x 16"))  { for (int i = 0; i < 16; ++i)    GameObjectSpawner::CreatePhysicsCube(); }
-			if (ImGui::MenuItem("Static Physics Plane")) { GameObjectSpawner::CreateStaticPhysicsPlane(); }
+            if (ImGui::MenuItem("Dynamic Physics Cube"))
+            {
+                auto name = NameRegistry::GetInstance()->GenerateUniqueName("PhysicsCube");
+
+                auto obj = GameObjectBuilder()
+                    .SetName(name)
+                    .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT)
+                    .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
+                    .Build();
+
+                GameObjectManager::GetInstance()->AddGameObject(obj);
+            }
+
+            if (ImGui::MenuItem("Dynamic Physics Cube x 16"))
+            {
+                for (int i = 0; i < 16; ++i)
+                {
+                    auto name = NameRegistry::GetInstance()->GenerateUniqueName("PhysicsCube");
+
+                    auto obj = GameObjectBuilder()
+                        .SetName(name)
+                        .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT)
+                        .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
+                        .Build();
+
+                    GameObjectManager::GetInstance()->AddGameObject(obj);
+                }
+            }
+
+            if (ImGui::MenuItem("Static Physics Plane"))
+            {
+                auto name = NameRegistry::GetInstance()->GenerateUniqueName("PhysicsPlane");
+
+                auto obj = GameObjectBuilder()
+                    .SetName(name)
+                    .AddMeshComponent(MeshType::PRIMITIVE_PLANE, MaterialType::DEFAULT)
+                    .AddPhysicsComponent(MeshType::PRIMITIVE_PLANE, true)
+                    .Build();
+
+                GameObjectManager::GetInstance()->AddGameObject(obj);
+            }
             ImGui::EndMenu();
         }
 
         // -------------------- Custom Meshes --------------------
         if (ImGui::BeginMenu("Custom Meshes"))
         {
-            if (ImGui::MenuItem("Teapot")) { GameObjectSpawner::CreateCustomMesh(CustomObjectType::TEAPOT); }
-            if (ImGui::MenuItem("Bunny")) { GameObjectSpawner::CreateCustomMesh(CustomObjectType::BUNNY); }
-            if (ImGui::MenuItem("Armadillo")) { GameObjectSpawner::CreateCustomMesh(CustomObjectType::ARMADILLO); }
+            if (ImGui::MenuItem("Teapot"))
+            {
+                auto name = NameRegistry::GetInstance()->GenerateUniqueName("Teapot");
+
+                auto obj = GameObjectBuilder()
+                    .SetName(name)
+                    .AddMeshComponent(MeshType::UTAH_TEAPOT, MaterialType::BRICK_TEX)
+                    .Build();
+
+                GameObjectManager::GetInstance()->AddGameObject(obj);
+            }
+
+            if (ImGui::MenuItem("Bunny"))
+            {
+                auto name = NameRegistry::GetInstance()->GenerateUniqueName("Bunny");
+
+                auto obj = GameObjectBuilder()
+                    .SetName(name)
+                    .AddMeshComponent(MeshType::STANFORD_BUNNY, MaterialType::DEFAULT)
+                    .Build();
+
+                GameObjectManager::GetInstance()->AddGameObject(obj);
+            }
+
+            if (ImGui::MenuItem("Armadillo"))
+            {
+                auto name = NameRegistry::GetInstance()->GenerateUniqueName("Armadillo");
+
+                auto obj = GameObjectBuilder()
+                    .SetName(name)
+                    .AddMeshComponent(MeshType::STANFORD_ARMADILLO, MaterialType::DEFAULT)
+                    .Build();
+
+                GameObjectManager::GetInstance()->AddGameObject(obj);
+            }
             ImGui::EndMenu();
         }
 

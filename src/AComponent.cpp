@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "AComponent.h"
+#include "AGameObject.h"
 
 AComponent::AComponent(String name, ComponentType type, std::weak_ptr<AGameObject> owner) : m_name(name), m_component_type(type), m_owner(owner)
 {
@@ -32,4 +33,9 @@ AComponent::ComponentType AComponent::GetType()
 String AComponent::GetName()
 {
     return this->m_name;
+}
+
+void AComponent::DetachSelfFromOwner()
+{
+    this->m_owner.lock()->DetachComponent(shared_from_this());
 }

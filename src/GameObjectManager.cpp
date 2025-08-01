@@ -4,7 +4,7 @@
 #include "FrameConstants.h"
 #include "RenderSystem.h"
 #include "AGameObject.h"
-#include "AMeshObject.h"
+#include "MeshComponent.h"
 #include "Debug.h"
 
 std::unique_ptr<GameObjectManager> GameObjectManager::sharedInstance = nullptr;
@@ -88,11 +88,20 @@ void GameObjectManager::UpdateAll(float deltaTime)
 
 void GameObjectManager::RenderAll(DeviceContext* context)
 {
-    for (const auto& object : m_renderedList)
+    for (const auto& object : m_objectList)
     {
-        if (object->IsActive())
+        if (!object->IsActive()) continue;
+
+        const auto& rendererComponents = object->GetComponentsOfType(AComponent::ComponentType::Renderer);
+
+        for (const auto& component : rendererComponents)
         {
-            object->Draw(context);
+            auto meshComponent = std::dynamic_pointer_cast<MeshComponent>(component);
+            if (meshComponent)
+            {
+                meshComponent->SetDeviceContext(context);
+                meshComponent->Perform();
+            }
         }
     }
 }
@@ -107,20 +116,6 @@ void GameObjectManager::AddGameObject(GameObjectPtr gameObject, bool isRendered)
 
     this->m_objectTable[name] = gameObject;
     this->m_objectList.push_back(gameObject);
-
-    if (isRendered)
-    {
-        auto mesh = std::dynamic_pointer_cast<AMeshObject>(gameObject);
-
-        if (mesh)
-        {
-            this->m_renderedList.push_back(mesh);
-        }
-        else
-        {
-            Debug::LogWarning("AddGameObject: Object marked as rendered is not a mesh. Skipping render list insertion.");
-        }
-    }
 }
 
 void GameObjectManager::DeleteObject(AGameObject* gameObject)
@@ -143,21 +138,6 @@ void GameObjectManager::DeleteObject(AGameObject* gameObject)
             }),
         m_objectList.end()
     );
-
-    auto mesh = dynamic_cast<AMeshObject*>(gameObject);
-    if (mesh)
-    {
-        m_renderedList.erase(
-            std::remove_if(
-                m_renderedList.begin(),
-                m_renderedList.end(),
-                [mesh](const std::shared_ptr<AMeshObject>& ptr)
-                {
-                    return ptr.get() == mesh;
-                }),
-            m_renderedList.end()
-        );
-    }
 }
 
 void GameObjectManager::DeleteObjectByName(String name)
@@ -172,22 +152,12 @@ void GameObjectManager::DeleteObjectByName(String name)
         m_objectList.end()
     );
 
-    auto mesh = std::dynamic_pointer_cast<AMeshObject>(gameObject);
-    if (mesh)
-    {
-        m_renderedList.erase(
-            std::remove(m_renderedList.begin(), m_renderedList.end(), mesh),
-            m_renderedList.end()
-        );
-    }
-
     m_objectTable.erase(it);
 }
 
 void GameObjectManager::ClearAllObjects()
 {
     m_objectList.clear();
-    m_renderedList.clear();
     m_objectTable.clear();
 }
 
@@ -206,15 +176,24 @@ void GameObjectManager::UploadObjectConstants(UINT frameIndex)
 {
     m_objectConstantsBuffer->BeginFrame(frameIndex);
 
-    for (const auto& object : m_renderedList)
+    for (const auto& gameObject : m_objectList)
     {
-        if (!object->IsActive()) continue;
-        ObjectConstantsData objData = {};
-        objData.modelMatrix = object->GetLocalMatrix();
-        objData.objectId = 0;
+        if (!gameObject->IsActive()) continue;
 
-        auto cb = m_objectConstantsBuffer->Allocate(sizeof(ObjectConstantsData));
-        memcpy(cb.cpuPtr, &objData, sizeof(ObjectConstantsData));
-        object->SetGPUAddress(frameIndex, cb.gpuAddress);
+        const auto& rendererComponents = gameObject->GetComponentsOfType(AComponent::ComponentType::Renderer);
+
+        for (const auto& component : rendererComponents)
+        {
+            auto meshComponent = std::dynamic_pointer_cast<MeshComponent>(component);
+            if (!meshComponent) continue;
+
+            ObjectConstantsData objData = {};
+            objData.modelMatrix = gameObject->GetLocalMatrix();
+            objData.objectId = 0;
+
+            auto cb = m_objectConstantsBuffer->Allocate(sizeof(ObjectConstantsData));
+            memcpy(cb.cpuPtr, &objData, sizeof(ObjectConstantsData));
+            meshComponent->SetGPUAddress(frameIndex, cb.gpuAddress);
+        }
     }
 }

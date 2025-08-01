@@ -17,5 +17,4 @@ private:
     void GameObjects();
     void DisplayFPS();
     void Windows();
-    void ShaderSelector();
 };

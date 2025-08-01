@@ -118,12 +118,6 @@
     <Filter Include="App\Entities\CameraSystem">
       <UniqueIdentifier>{9945129f-188c-43a8-8880-b462990c3f69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="App\Entities\Mesh">
-      <UniqueIdentifier>{1d1582e5-48b1-4713-99b1-e2f55bb39140}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\Entities\Mesh\3DPrimitives">
-      <UniqueIdentifier>{1e3c48b4-7ef3-4d66-afc2-258e9a834c39}</UniqueIdentifier>
-    </Filter>
     <Filter Include="App\ComponentSystem">
       <UniqueIdentifier>{86f45cfa-d9ed-47c6-b1d1-f33c9763936f}</UniqueIdentifier>
     </Filter>
@@ -204,12 +198,6 @@
     <ClCompile Include="src\EngineTime.cpp">
       <Filter>Engine\EngineTime</Filter>
     </ClCompile>
-    <ClCompile Include="src\Cube.cpp">
-      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Plane.cpp">
-      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
-    </ClCompile>
     <ClCompile Include="src\DepthBuffer.cpp">
       <Filter>Engine\GraphicsEngine\RenderSystem\DepthBuffer</Filter>
     </ClCompile>
@@ -227,12 +215,6 @@
     </ClCompile>
     <ClCompile Include="src\SceneCamera.cpp">
       <Filter>App\Entities\CameraSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AMeshObject.cpp">
-      <Filter>App\Entities\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Sphere.cpp">
-      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineGUIManager.cpp">
       <Filter>Engine\EngineGUI</Filter>
@@ -267,9 +249,6 @@
     <ClCompile Include="src\Toolbar.cpp">
       <Filter>Engine\EngineGUI\UIScreens\Toolbar</Filter>
     </ClCompile>
-    <ClCompile Include="src\NameRegistry.cpp">
-      <Filter>Engine\GameObjectManager</Filter>
-    </ClCompile>
     <ClCompile Include="src\Inspector.cpp">
       <Filter>Engine\EngineGUI\UIScreens\Inspector</Filter>
     </ClCompile>
@@ -288,9 +267,6 @@
     <ClCompile Include="src\PointLight.cpp">
       <Filter>App\Entities\Light</Filter>
     </ClCompile>
-    <ClCompile Include="src\Cylinder.cpp">
-      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
-    </ClCompile>
     <ClCompile Include="src\PhysicsSystem.cpp">
       <Filter>Engine\PhysicsSystem</Filter>
     </ClCompile>
@@ -303,8 +279,17 @@
     <ClCompile Include="src\MeshManager.cpp">
       <Filter>Engine\GraphicsEngine\MeshManager</Filter>
     </ClCompile>
-    <ClCompile Include="src\CustomMesh.cpp">
-      <Filter>App\Entities\Mesh</Filter>
+    <ClCompile Include="src\MeshComponent.cpp">
+      <Filter>App\ComponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NameRegistry.cpp">
+      <Filter>Engine\GameObjectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEntity.cpp">
+      <Filter>App\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObjectBuilder.cpp">
+      <Filter>Engine\EngineGUI\UIScreens\Toolbar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -389,12 +374,6 @@
     <ClInclude Include="src\Random.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Cube.h">
-      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Plane.h">
-      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
-    </ClInclude>
     <ClInclude Include="src\DepthBuffer.h">
       <Filter>Engine\GraphicsEngine\RenderSystem\DepthBuffer</Filter>
     </ClInclude>
@@ -421,12 +400,6 @@
     </ClInclude>
     <ClInclude Include="src\SceneCamera.h">
       <Filter>App\Entities\CameraSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AMeshObject.h">
-      <Filter>App\Entities\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Sphere.h">
-      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
     </ClInclude>
     <ClInclude Include="src\EngineGUIManager.h">
       <Filter>Engine\EngineGUI</Filter>
@@ -497,9 +470,6 @@
     <ClInclude Include="src\PointLight.h">
       <Filter>App\Entities\Light</Filter>
     </ClInclude>
-    <ClInclude Include="src\Cylinder.h">
-      <Filter>App\Entities\Mesh\3DPrimitives</Filter>
-    </ClInclude>
     <ClInclude Include="src\PhysicsSystem.h">
       <Filter>Engine\PhysicsSystem</Filter>
     </ClInclude>
@@ -518,8 +488,14 @@
     <ClInclude Include="src\tiny_obj_loader.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\CustomMesh.h">
-      <Filter>App\Entities\Mesh</Filter>
+    <ClInclude Include="src\MeshComponent.h">
+      <Filter>App\ComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEntity.h">
+      <Filter>App\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObjectBuilder.h">
+      <Filter>Engine\EngineGUI\UIScreens\Toolbar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

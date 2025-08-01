@@ -116,7 +116,7 @@ void PhysicsSystem::UpdateAllComponents(float deltaTime)
 
         for (PhysicsPtr physics : this->m_componentList)
         {
-            physics->Perform(deltaTime);
+            physics->Perform();
         }
     }
 

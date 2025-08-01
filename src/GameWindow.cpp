@@ -74,10 +74,11 @@ void GameWindow::OnRender()
 void GameWindow::OnDestroy()
 {
 	NameRegistry::Destroy();
-	PhysicsSystem::Destroy();
+
 	EngineGUIManager::Destroy();
 	CameraManager::Destroy();
 	InputSystem::Destroy();
 	GameObjectManager::Destroy();
+	PhysicsSystem::Destroy();
 	GraphicsEngine::Destroy();
 }
