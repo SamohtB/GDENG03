@@ -12,12 +12,11 @@
 #include "MaterialManager.h"
 #include "LightManager.h"
 #include "MeshManager.h"
-#include "DeviceContext.h"
 
 #include "Debug.h"
 
 MeshComponent::MeshComponent(String name, String mesh, std::weak_ptr<AGameObject> owner) 
-	: AComponent(name, ComponentType::Renderer, owner), m_mesh(mesh)
+	: AComponent(name, ComponentType::Renderer, owner), m_mesh(mesh), m_context(nullptr)
 {
 	m_material = MaterialType::DEFAULT;
 	m_gpuAddresses.resize(FRAME_COUNT);
@@ -54,6 +53,55 @@ void MeshComponent::DrawUI()
 {
     if (ImGui::CollapsingHeader("Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen))
     {
+        static int selectedMeshIndex = 0;
+        static int selectedMaterialIndex = 0;
+
+		auto meshManager = GraphicsEngine::GetInstance()->GetMeshManager();
+        auto materialManager = GraphicsEngine::GetInstance()->GetMaterialManager();
+
+        // === Mesh Dropdown ===
+        const auto& meshNames = meshManager->GetAllMeshNames();
+
+        for (int i = 0; i < meshNames.size(); ++i)
+        {
+            if (this->m_mesh == meshNames[i])
+            {
+                selectedMeshIndex = i;
+                break;
+            }
+        }
+
+        if (!meshNames.empty()) 
+        {
+            if (ImGui::Combo("Mesh", &selectedMeshIndex, meshNames.data(), static_cast<int>(meshNames.size()))) 
+            {
+                m_mesh = meshNames[selectedMeshIndex];
+            }
+        }
+
+        // === Material Dropdown ===
+        const auto& materialNames = materialManager->GetAllMaterialNames();
+
+        for (int i = 0; i < materialNames.size(); ++i)
+        {
+            if (this->m_material == materialNames[i])
+            {
+                selectedMaterialIndex = i;
+                break;
+            }
+        }
+
+        if (!materialNames.empty()) 
+        {
+            if (ImGui::Combo("Material", &selectedMaterialIndex, materialNames.data(), static_cast<int>(materialNames.size()))) 
+            {
+                m_material = materialNames[selectedMaterialIndex];
+            }
+
+            if (ImGui::Button("Edit Material"))
+            {
+            }
+        }
 
         // === Detach Component Button ===
         ImGui::Spacing();
