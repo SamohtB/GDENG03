@@ -19,7 +19,7 @@ void LightManager::CreateLight(const String& lightName, const Vector3& color, fl
     auto light = std::make_shared<PointLight>(lightName, color, intensity, range);
 
     PointLightData data;
-    data.position = light->GetLocalPosition();
+    data.position = light->Transform()->GetLocalPosition();
     data.range = light->GetRange();
     data.color = light->GetColor();
     data.intensity = light->GetIntensity();
@@ -59,7 +59,7 @@ void LightManager::UploadLightConstants(UINT currentFrameIndex)
         if (i >= MaxPointLights) break;
 
         PointLightData data;
-        data.position = pointLight->GetLocalPosition();
+        data.position = pointLight->Transform()->GetLocalPosition();
         data.range = pointLight->GetRange();
         data.color = pointLight->GetColor();
         data.intensity = pointLight->GetIntensity();

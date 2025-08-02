@@ -48,6 +48,7 @@ void Toolbar::GameObjects()
                 auto name = NameRegistry::GetInstance()->GenerateUniqueName("Cube");
                 auto cube = GameObjectBuilder()
                     .SetName(name)
+                    .AddTransformComponent(name)
                     .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT)
                     .Build();
 
@@ -66,6 +67,7 @@ void Toolbar::GameObjects()
                 auto name = NameRegistry::GetInstance()->GenerateUniqueName("Plane");
                 auto plane = GameObjectBuilder()
                     .SetName(name)
+                    .AddTransformComponent(name)
                     .AddMeshComponent(MeshType::PRIMITIVE_PLANE, MaterialType::DEFAULT)
                     .Build();
 
@@ -84,6 +86,7 @@ void Toolbar::GameObjects()
                 auto name = NameRegistry::GetInstance()->GenerateUniqueName("Sphere");
                 auto sphere = GameObjectBuilder()
                     .SetName(name)
+                    .AddTransformComponent(name)
                     .AddMeshComponent(MeshType::PRIMITIVE_SPHERE, MaterialType::DEFAULT)
                     .Build();
 
@@ -102,6 +105,7 @@ void Toolbar::GameObjects()
                 auto name = NameRegistry::GetInstance()->GenerateUniqueName("Cylinder");
                 auto cylinder = GameObjectBuilder()
                     .SetName(name)
+                    .AddTransformComponent(name)
                     .AddMeshComponent(MeshType::PRIMITIVE_CYLINDER, MaterialType::DEFAULT)
                     .Build();
 
@@ -126,6 +130,7 @@ void Toolbar::GameObjects()
 
                 auto obj = GameObjectBuilder()
                     .SetName(name)
+                    .AddTransformComponent(name)
                     .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT)
                     .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
                     .Build();
@@ -141,6 +146,7 @@ void Toolbar::GameObjects()
 
                     auto obj = GameObjectBuilder()
                         .SetName(name)
+                        .AddTransformComponent(name)
                         .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT)
                         .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
                         .Build();
@@ -155,6 +161,7 @@ void Toolbar::GameObjects()
 
                 auto obj = GameObjectBuilder()
                     .SetName(name)
+                    .AddTransformComponent(name)
                     .AddMeshComponent(MeshType::PRIMITIVE_PLANE, MaterialType::DEFAULT)
                     .AddPhysicsComponent(MeshType::PRIMITIVE_PLANE, true)
                     .Build();
@@ -173,6 +180,7 @@ void Toolbar::GameObjects()
 
                 auto obj = GameObjectBuilder()
                     .SetName(name)
+                    .AddTransformComponent(name)
                     .AddMeshComponent(MeshType::UTAH_TEAPOT, MaterialType::BRICK_TEX)
                     .Build();
 
@@ -185,6 +193,7 @@ void Toolbar::GameObjects()
 
                 auto obj = GameObjectBuilder()
                     .SetName(name)
+                    .AddTransformComponent(name)
                     .AddMeshComponent(MeshType::STANFORD_BUNNY, MaterialType::DEFAULT)
                     .Build();
 
@@ -197,6 +206,7 @@ void Toolbar::GameObjects()
 
                 auto obj = GameObjectBuilder()
                     .SetName(name)
+                    .AddTransformComponent(name)
                     .AddMeshComponent(MeshType::STANFORD_ARMADILLO, MaterialType::DEFAULT)
                     .Build();
 

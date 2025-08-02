@@ -291,6 +291,9 @@
     <ClCompile Include="src\GameObjectBuilder.cpp">
       <Filter>Engine\EngineGUI\UIScreens\Toolbar</Filter>
     </ClCompile>
+    <ClCompile Include="src\TransformComponent.cpp">
+      <Filter>App\ComponentSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DescriptorHeapManager.h">
@@ -496,6 +499,9 @@
     </ClInclude>
     <ClInclude Include="src\GameObjectBuilder.h">
       <Filter>Engine\EngineGUI\UIScreens\Toolbar</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TransformComponent.h">
+      <Filter>App\ComponentSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

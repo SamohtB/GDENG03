@@ -9,6 +9,22 @@ SceneCamera::SceneCamera(UINT viewportWidth, UINT viewportHeight) : Camera("Scen
 	this->m_lastMousePosition = Vector2(0.0f, 0.0f);
 }
 
+std::shared_ptr<SceneCamera> SceneCamera::Create(UINT width, UINT height)
+{
+    auto cam = std::make_shared<SceneCamera>(width, height);
+    cam->Initialize();
+    return cam;
+}
+
+void SceneCamera::Initialize()
+{
+    auto transform = std::make_shared<TransformComponent>("SceneCamera Transform", shared_from_this());
+    this->AttachComponent(transform);
+    this->m_transform = transform;
+
+    transform->SetPosition(0, 0, -10);
+}
+
 void SceneCamera::Update(float deltaTime)
 {
 	Camera::Update(deltaTime);
@@ -66,19 +82,19 @@ void SceneCamera::FlyCamMode(float deltaTime)
 {
     Vector3 moveDirection = Vector3(0.0f, 0.0f, 0.0f);
 
-    if (m_heldKeys.contains('W')) moveDirection += this->GetForwardVector();
-    if (m_heldKeys.contains('S')) moveDirection -= this->GetForwardVector();
-    if (m_heldKeys.contains('D')) moveDirection += this->GetRightVector();
-    if (m_heldKeys.contains('A')) moveDirection -= this->GetRightVector();
-    if (m_heldKeys.contains('E')) moveDirection += this->GetUpVector();
-    if (m_heldKeys.contains('Q')) moveDirection -= this->GetUpVector();
+    if (m_heldKeys.contains('W')) moveDirection += this->Transform()->GetForwardVector();
+    if (m_heldKeys.contains('S')) moveDirection -= this->Transform()->GetForwardVector();
+    if (m_heldKeys.contains('D')) moveDirection += this->Transform()->GetRightVector();
+    if (m_heldKeys.contains('A')) moveDirection -= this->Transform()->GetRightVector();
+    if (m_heldKeys.contains('E')) moveDirection += this->Transform()->GetUpVector();
+    if (m_heldKeys.contains('Q')) moveDirection -= this->Transform()->GetUpVector();
 
     float speedMultiplier = m_heldKeys.contains(VK_LSHIFT) ? 4.0f : 1.0f;
 
     if (moveDirection != Vector3::Zero)
     {
         moveDirection.Normalize();
-        this->Move(moveDirection * this->m_cameraMoveSpeed * speedMultiplier * deltaTime);
+        this->Transform()->Move(moveDirection * this->m_cameraMoveSpeed * speedMultiplier * deltaTime);
     }
 }
 
@@ -88,10 +104,10 @@ void SceneCamera::ZoomMode(float deltaTime)
 
     if (this->m_isPerspectiveView)
     {
-        Vector3 zoomDirection = this->GetForwardVector();
+        Vector3 zoomDirection = this->Transform()->GetForwardVector();
         float zoomAmount = m_scrollDelta * m_cameraMoveSpeed * deltaTime;
 
-        this->Move(zoomDirection * zoomAmount);
+        this->Transform()->Move(zoomDirection * zoomAmount);
     }
 
     m_scrollDelta = 0.0f;
@@ -115,7 +131,7 @@ void SceneCamera::MouseMovement(float deltaTime)
 
     rp3d::Quaternion finalRotation = yawQuat * pitchQuat;
 
-    SetRotation(finalRotation);
+    Transform()->SetRotation(finalRotation);
 
     m_mouseDelta = Vector2(0.0f, 0.0f);
 }

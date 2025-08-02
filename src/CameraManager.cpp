@@ -16,7 +16,6 @@ void CameraManager::Initialize(UINT width, UINT height)
 {
 	try 
 	{
-		sharedInstance.reset();
 		sharedInstance = std::make_unique<CameraManager>(width, height);
 	}
 	catch (...)
@@ -32,8 +31,7 @@ void CameraManager::Destroy()
 
 CameraManager::CameraManager(UINT width, UINT height)
 {
-	this->m_sceneCamera = std::make_shared<SceneCamera>(width, height);
-	this->m_sceneCamera->SetPosition(0.0f, 0.0f, -10.0f);
+	this->m_sceneCamera = SceneCamera::Create(width, height);
 	this->AddCamera(this->m_sceneCamera);
 	this->PossessCamera(this->m_sceneCamera);
 
@@ -80,8 +78,8 @@ void CameraManager::ResumePossess()
 
 void CameraManager::CopyPositionToSceneCamera(const CameraPtr& reference)
 {
-	this->m_sceneCamera->SetPosition(reference->GetLocalPosition());
-	this->m_sceneCamera->SetRotation(reference->GetLocalRotation());
+	this->m_sceneCamera->Transform()->SetPosition(reference->Transform()->GetLocalPosition());
+	this->m_sceneCamera->Transform()->SetRotation(reference->Transform()->GetLocalRotation());
 }
 
 int CameraManager::AddCamera(const CameraPtr& reference, bool setMain)
@@ -120,7 +118,7 @@ Matrix CameraManager::GetActiveCameraProjMatrix()
 
 Vector3 CameraManager::GetActiveCameraPosition()
 {
-	return this->m_activeCamera->GetLocalPosition();
+	return this->m_activeCamera->Transform()->GetLocalPosition();
 }
 
 void CameraManager::UpdateViewportSize(UINT width, UINT height)

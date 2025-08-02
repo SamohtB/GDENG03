@@ -7,6 +7,9 @@ public:
 	SceneCamera(UINT viewportWidth, UINT viewportHeight);
 	~SceneCamera() = default;
 
+	static std::shared_ptr<SceneCamera> Create(UINT width, UINT height);
+	void Initialize();
+
 	void Update(float deltaTime) override final;
 
 	virtual void OnKeyPressed(int key) override;

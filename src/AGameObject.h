@@ -1,6 +1,7 @@
 #pragma once
 #include "Math.h"
 #include "AComponent.h"
+#include "TransformComponent.h"
 
 class DeviceContext;
 
@@ -24,32 +25,6 @@ public:
     String GetName() const;
     void SetName(String name);
 
-    void SetPosition(float x, float y, float z);
-    void SetPosition(Vector3 vector);
-    void Move(float x, float y, float z);
-    void Move(Vector3 vector);
-    Vector3 GetLocalPosition();
-
-    void SetRotation(float pitch, float yaw, float roll);
-    void SetRotation(Vector3 vector);
-	void SetRotation(rp3d::Quaternion quaternion);
-    void Rotate(float pitch, float yaw, float roll);
-    Vector3 GetLocalRotation();
-	rp3d::Quaternion GetLocalQuaternion() const;
-
-    void SetScale(float x, float y, float z);
-    void SetScale(Vector3 vector);
-    void Scale(float scale);
-    Vector3 GetLocalScale();
-
-    Matrix GetLocalMatrix();
-    Matrix GetPhysicsLocalMatrix(); //Transposed
-    void SetLocalMatrix(const float* matrixData);
-
-    Vector3 GetForwardVector() const;
-    Vector3 GetRightVector() const;
-    Vector3 GetUpVector() const;
-
     void AttachComponent(std::shared_ptr<AComponent> component);
     void DetachComponent(std::shared_ptr<AComponent> component);
 
@@ -59,16 +34,14 @@ public:
     ComponentList GetComponentsOfTypeRecursive(AComponent::ComponentType type);
     ComponentList GetAllComponents();
 
+    std::shared_ptr<TransformComponent> Transform() const;
+    void SetTransform(const std::shared_ptr<TransformComponent>& transform);
+
 protected:
     unsigned int m_id;
     String m_name;
     bool m_active;
-    bool m_dirty;
 
-    Vector3 m_localPosition;
-    rp3d::Quaternion m_localRotation;
-    Vector3 m_localScale;
-    Matrix m_localMatrix;
-
+    std::shared_ptr<TransformComponent> m_transform;
     ComponentList m_componentList;
 };

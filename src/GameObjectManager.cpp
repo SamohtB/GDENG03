@@ -188,7 +188,7 @@ void GameObjectManager::UploadObjectConstants(UINT frameIndex)
             if (!meshComponent) continue;
 
             ObjectConstantsData objData = {};
-            objData.modelMatrix = gameObject->GetLocalMatrix();
+            objData.modelMatrix = gameObject->Transform()->GetLocalMatrix();
             objData.objectId = 0;
 
             auto cb = m_objectConstantsBuffer->Allocate(sizeof(ObjectConstantsData));

@@ -10,7 +10,7 @@ PhysicsComponent::PhysicsComponent(String name, String meshType, std::weak_ptr<A
     auto* physicsCommon = PhysicsSystem::GetInstance()->GetPhysicsCommon();
     auto* physicsWorld = PhysicsSystem::GetInstance()->GetPhysicsWorld();
 
-    Vector3 scale = m_owner.lock()->GetLocalScale();
+    Vector3 scale = m_owner.lock()->Transform()->GetLocalScale();
     rp3d::BoxShape* boxShape;
 
     // Todo: Fix Shape Setting
@@ -25,8 +25,8 @@ PhysicsComponent::PhysicsComponent(String name, String meshType, std::weak_ptr<A
         boxShape = physicsCommon->createBoxShape(rp3d::Vector3(half * scale.x, half * scale.y, half * scale.z));
     }
 
-    Vector3 pos = m_owner.lock()->GetLocalPosition();
-    rp3d::Quaternion rot = m_owner.lock()->GetLocalQuaternion();
+    Vector3 pos = m_owner.lock()->Transform()->GetLocalPosition();
+    rp3d::Quaternion rot = m_owner.lock()->Transform()->GetLocalQuaternion();
     rp3d::Transform startTransform(rp3d::Vector3(pos.x, pos.y, pos.z), rot);
 
     m_rigidbody = physicsWorld->createRigidBody(startTransform);
@@ -62,10 +62,10 @@ void PhysicsComponent::Perform()
     const reactphysics3d::Transform transform = this->m_rigidbody->getTransform();
 
     rp3d::Vector3 position = transform.getPosition();
-    this->GetOwner()->SetPosition(position.x, position.y, position.z);
+    this->GetOwner()->Transform()->SetPosition(position.x, position.y, position.z);
 
     rp3d::Quaternion orientation = transform.getOrientation();
-    this->GetOwner()->SetRotation(orientation);
+    this->GetOwner()->Transform()->SetRotation(orientation);
 }
 
 void PhysicsComponent::DrawUI()

@@ -5,7 +5,7 @@
 class PhysicsComponent : public AComponent
 {
 public:
-    PhysicsComponent(String name, String meshType,  std::weak_ptr<AGameObject> owner);
+    PhysicsComponent(String name, String meshType, std::weak_ptr<AGameObject> owner);
     ~PhysicsComponent();
 
     void Perform() override;

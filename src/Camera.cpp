@@ -18,7 +18,7 @@ void Camera::Update(float deltaTime)
 
 Matrix Camera::GetViewMatrix()
 {
-	return this->GetLocalMatrix().Invert();
+	return this->Transform()->GetLocalMatrix().Invert();
 }
 
 Matrix Camera::GetProjectionMatrix()
@@ -40,13 +40,13 @@ void Camera::SetViewportSize(UINT width, UINT height)
 
 void Camera::SetLookAt(Vector3 lookat)
 {
-    Vector3 forward = lookat - this->m_localPosition;
+    Vector3 forward = lookat - this->Transform()->GetLocalPosition();
     forward.Normalize();
 
-	Matrix::CreateLookAt(this->m_localPosition, lookat, Vector3::Up);
+	Matrix::CreateLookAt(this->Transform()->GetLocalPosition(), lookat, Vector3::Up);
 
     float yaw = atan2f(forward.x, forward.z);
     float pitch = asinf(-forward.y);
 
-	this->SetRotation(pitch, yaw, 0.0f);
+	this->Transform()->SetRotation(pitch, yaw, 0.0f);
 }

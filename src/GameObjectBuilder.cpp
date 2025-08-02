@@ -16,9 +16,18 @@ GameObjectBuilder& GameObjectBuilder::SetName(const String& name)
 	return *this;
 }
 
+GameObjectBuilder& GameObjectBuilder::AddTransformComponent(String name)
+{
+	auto componentName = m_entity->GetName() + " Transform";
+	auto transform = std::make_shared<TransformComponent>(componentName, m_entity);
+	m_entity->AttachComponent(transform);
+	m_entity->SetTransform(transform);
+	return *this;
+}
+
 GameObjectBuilder& GameObjectBuilder::AddMeshComponent(String mesh, String material)
 {
-	auto name = m_entity->GetName() + "_MeshComponent";
+	auto name = m_entity->GetName() + " Mesh Component";
 	auto meshComponent = std::make_shared<MeshComponent>(name, mesh, m_entity);
 	meshComponent->SetMaterial(material);
 	m_entity->AttachComponent(meshComponent);
@@ -27,7 +36,7 @@ GameObjectBuilder& GameObjectBuilder::AddMeshComponent(String mesh, String mater
 
 GameObjectBuilder& GameObjectBuilder::AddPhysicsComponent(String meshType, bool isStatic)
 {
-	auto name = m_entity->GetName() + "_PhysicsComponent";
+	auto name = m_entity->GetName() + " Physics Component";
 	auto physicsComponent = std::make_shared<PhysicsComponent>(name, meshType, m_entity);
 	m_entity->AttachComponent(physicsComponent);
 	PhysicsSystem::GetInstance()->RegisterComponent(physicsComponent);

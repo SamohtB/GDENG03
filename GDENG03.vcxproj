@@ -216,6 +216,7 @@
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Toolbar.cpp" />
+    <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameObjectBuilder.h" />
@@ -286,6 +287,7 @@
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\TextureTypes.h" />
     <ClInclude Include="src\Toolbar.h" />
+    <ClInclude Include="src\TransformComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\DefaultVertexShader.hlsl">
