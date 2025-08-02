@@ -10,6 +10,12 @@ GameObjectBuilder::GameObjectBuilder()
 	this->m_entity = std::make_shared<GameEntity>("");
 }
 
+GameObjectBuilder& GameObjectBuilder::SetExisting(std::shared_ptr<GameEntity> gameObject)
+{
+	m_entity = gameObject;
+	return *this;
+}
+
 GameObjectBuilder& GameObjectBuilder::SetName(const String& name)
 {
 	m_entity->SetName(name);

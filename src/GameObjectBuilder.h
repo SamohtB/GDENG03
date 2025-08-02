@@ -8,6 +8,7 @@ public:
 	GameObjectBuilder();
 	~GameObjectBuilder() = default;
 
+	GameObjectBuilder& SetExisting(std::shared_ptr<GameEntity> gameObject);
 	GameObjectBuilder& SetName(const String& name);
 	GameObjectBuilder& AddTransformComponent(String name);
 	GameObjectBuilder& AddMeshComponent(String mesh, String material);
