@@ -93,11 +93,11 @@ AComponent* AGameObject::FindComponentByName(String name)
 	return nullptr;
 }
 
-AComponent* AGameObject::FindComponentOfType(AComponent::ComponentType type, String name)
+AComponent* AGameObject::FindComponentOfType(AComponent::ComponentType type)
 {
 	for (const auto& comp : m_componentList)
 	{
-		if (comp->GetType() == type && comp->GetName() == name)
+		if (comp->GetType() == type)
 		{
 			return comp.get();
 		}		

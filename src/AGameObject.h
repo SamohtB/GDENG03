@@ -29,7 +29,7 @@ public:
     void DetachComponent(std::shared_ptr<AComponent> component);
 
     AComponent* FindComponentByName(String name);
-    AComponent* FindComponentOfType(AComponent::ComponentType type, String name);
+    AComponent* FindComponentOfType(AComponent::ComponentType type);
     ComponentList GetComponentsOfType(AComponent::ComponentType type);
     ComponentList GetComponentsOfTypeRecursive(AComponent::ComponentType type);
     ComponentList GetAllComponents();

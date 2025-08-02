@@ -13,6 +13,10 @@
 #include "LightManager.h"
 #include "MeshManager.h"
 
+#include "EngineGUIManager.h"
+#include "AUIScreen.h"
+#include "MaterialEditor.h"
+
 #include "Debug.h"
 
 MeshComponent::MeshComponent(String name, String mesh, std::weak_ptr<AGameObject> owner) 
@@ -100,6 +104,14 @@ void MeshComponent::DrawUI()
 
             if (ImGui::Button("Edit Material"))
             {
+                auto materialEditorBase = EngineGUIManager::GetInstance()->GetUI(UINames::MATERIAL_EDITOR);
+                auto* materialEditor = static_cast<MaterialEditor*>(materialEditorBase);
+
+                if (materialEditor)
+                {
+                    materialEditor->SetVisible(true);
+                    materialEditor->SetCurrentMaterial(this->m_material);
+                }
             }
         }
 

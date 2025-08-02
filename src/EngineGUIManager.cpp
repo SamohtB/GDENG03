@@ -11,6 +11,7 @@
 #include "Hierarchy.h"
 #include "Toolbar.h"
 #include "Inspector.h"
+#include "MaterialEditor.h"
 
 std::unique_ptr<EngineGUIManager> EngineGUIManager::sharedInstance = nullptr;
 
@@ -58,6 +59,21 @@ std::vector<AUIScreen*> EngineGUIManager::GetAllScreens()
 	}
 
 	return allScreens;
+}
+
+AUIScreen* EngineGUIManager::GetUI(const String& name)
+{
+	auto it = m_uiTable.find(name);
+
+	if (it != m_uiTable.end())
+	{
+		return it->second.get();
+	}
+	else
+	{
+		Debug::LogWarning("EngineGUIManager::GetUI: UI with name '" + name + "' not found.");
+		return nullptr;
+	}
 }
 
 EngineGUIManager::EngineGUIManager(HWND hwnd)
@@ -120,6 +136,10 @@ void EngineGUIManager::PopulateGUI()
 	auto inspector = std::make_shared<Inspector>();
 	this->m_uiTable[UINames::INSPECTOR] = inspector;
 	this->m_uiList.push_back(inspector);
+
+	auto materialEditor = std::make_shared<MaterialEditor>();
+	this->m_uiTable[UINames::MATERIAL_EDITOR] = materialEditor;
+	this->m_uiList.push_back(materialEditor);
 }
 
 EngineGUIManager::~EngineGUIManager()

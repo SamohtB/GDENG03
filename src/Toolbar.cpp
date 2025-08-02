@@ -8,6 +8,7 @@
 #include "RenderSystem.h"
 #include "NameRegistry.h"
 #include "GameObjectBuilder.h"
+#include "TransformComponent.h"
 
 Toolbar::Toolbar() : AUIScreen("TOOLBAR")
 {
@@ -135,6 +136,7 @@ void Toolbar::GameObjects()
                     .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
                     .Build();
 
+				obj->Transform()->SetPosition(Vector3(0.0f, 10.0f, 0.0f)); // Set initial position above ground
                 GameObjectManager::GetInstance()->AddGameObject(obj);
             }
 
@@ -151,6 +153,7 @@ void Toolbar::GameObjects()
                         .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
                         .Build();
 
+                    obj->Transform()->SetPosition(Vector3(0.0f, 10.0f, 0.0f)); // Set initial position above ground
                     GameObjectManager::GetInstance()->AddGameObject(obj);
                 }
             }

@@ -6,6 +6,8 @@ public:
     inline static const std::string TOOLBAR = "TOOLBAR";
     inline static const std::string HIERARCHY = "HIERARCHY";
     inline static const std::string INSPECTOR = "INSPECTOR";
+    inline static const std::string DEBUG = "DEBUG";
+    inline static const std::string MATERIAL_EDITOR = "MATERIAL_EDITOR";
 };
 
 class AUIScreen;

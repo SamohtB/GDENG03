@@ -127,6 +127,9 @@
     <Filter Include="Engine\GraphicsEngine\MeshManager">
       <UniqueIdentifier>{42cb3123-bed4-4d42-84c5-3ec2bde4ba62}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\EngineGUI\UIScreens\MaterialEditor">
+      <UniqueIdentifier>{d979c148-8ed4-4df1-bfe6-e0c943a18565}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -293,6 +296,9 @@
     </ClCompile>
     <ClCompile Include="src\TransformComponent.cpp">
       <Filter>App\ComponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MaterialEditor.cpp">
+      <Filter>Engine\EngineGUI\UIScreens\MaterialEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -502,6 +508,9 @@
     </ClInclude>
     <ClInclude Include="src\TransformComponent.h">
       <Filter>App\ComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MaterialEditor.h">
+      <Filter>Engine\EngineGUI\UIScreens\MaterialEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

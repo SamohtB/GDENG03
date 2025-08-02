@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\MaterialEditor.cpp" />
     <ClCompile Include="src\GameObjectBuilder.cpp" />
     <ClCompile Include="src\GameEntity.cpp" />
     <ClCompile Include="src\MeshComponent.cpp" />
@@ -219,6 +220,7 @@
     <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\MaterialEditor.h" />
     <ClInclude Include="src\GameObjectBuilder.h" />
     <ClInclude Include="src\GameEntity.h" />
     <ClInclude Include="src\MeshComponent.h" />
