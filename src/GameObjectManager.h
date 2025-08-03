@@ -5,6 +5,7 @@
 class DeviceContext;
 class AGameObject;
 class AMeshObject;
+class EditorAction;
 
 class GameObjectManager
 {
@@ -34,6 +35,8 @@ public:
     void SetSelectedObject(AGameObject* object);
 
     void UploadObjectConstants(UINT frameIndex);
+
+	void ApplyEditorAction(EditorAction* action);
 
     GameObjectManager(ID3D12Device* device);
     ~GameObjectManager() = default;

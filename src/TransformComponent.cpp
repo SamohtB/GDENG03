@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "TransformComponent.h"
+#include "ActionHistory.h"
 
 TransformComponent::TransformComponent(String name, std::weak_ptr<AGameObject> owner) 
 	: AComponent(name, ComponentType::Transform, owner)
@@ -233,8 +234,22 @@ void TransformComponent::DrawUI()
 		Vector3 rotation = this->GetLocalRotation();
 		Vector3 scale = this->GetLocalScale();
 
-		if (ImGui::DragFloat3("Position", &position.x, 0.1f)) { this->SetPosition(position); }
-		if (ImGui::DragFloat3("Rotation", &rotation.x, 0.1f)) { this->SetRotation(rotation); }
-		if (ImGui::DragFloat3("Scale", &scale.x, 0.1f)) { this->SetScale(scale); }
+		if (ImGui::DragFloat3("Position", &position.x, 0.1f)) 
+		{ 
+			ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+			this->SetPosition(position);
+		}
+
+		if (ImGui::DragFloat3("Rotation", &rotation.x, 0.1f)) 
+		{ 
+			ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+			this->SetRotation(rotation);
+		}
+
+		if (ImGui::DragFloat3("Scale", &scale.x, 0.1f)) 
+		{ 
+			ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+			this->SetScale(scale); 
+		}
 	}
 }

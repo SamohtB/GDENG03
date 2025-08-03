@@ -1,14 +1,21 @@
 #include "pch.h"
+
 #include "Toolbar.h"
-#include "GameObjectSpawner.h"
+#include "EngineGUIManager.h"
+
 #include "Win32App.h"
 #include "EngineTime.h"
-#include "EngineGUIManager.h"
+
 #include "GraphicsEngine.h"
 #include "RenderSystem.h"
-#include "NameRegistry.h"
+
+#include "GameObjectManager.h"
+#include "GameObjectSpawner.h"
 #include "GameObjectBuilder.h"
 #include "TransformComponent.h"
+
+#include "NameRegistry.h"
+#include "ActionHistory.h"
 
 Toolbar::Toolbar() : AUIScreen("TOOLBAR")
 {
@@ -21,6 +28,7 @@ void Toolbar::DrawUI()
         FileMenu();
         GameObjects();
         Lighting();
+        UndoRedo();
         Windows();
         DisplayFPS();
     }
@@ -272,5 +280,32 @@ void Toolbar::Windows()
         }
 
         ImGui::EndMenu();
+    }
+}
+
+void Toolbar::UndoRedo()
+{
+    float windowWidth = ImGui::GetWindowWidth();
+
+    ImGui::SameLine((windowWidth / 2.0f) - 60.0f);
+
+    if (ImGui::Button("Undo"))
+    {
+        if (ActionHistory::GetInstance()->HasRemainingUndoActions())
+        {
+            auto action = ActionHistory::GetInstance()->UndoAction();
+            GameObjectManager::GetInstance()->ApplyEditorAction(action);
+        }
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Redo"))
+    {
+        if (ActionHistory::GetInstance()->HasRemainingRedoActions())
+        {
+            auto action = ActionHistory::GetInstance()->RedoAction();
+            GameObjectManager::GetInstance()->ApplyEditorAction(action);
+        }
     }
 }

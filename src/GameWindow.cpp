@@ -15,6 +15,8 @@
 #include "MaterialManager.h"
 #include "TextureManager.h"
 
+#include "ActionHistory.h"
+
 #include "Debug.h"
 #include "Random.h"
 
@@ -30,6 +32,7 @@ void GameWindow::OnCreate(HWND hwnd)
 	EngineGUIManager::Initialize(hwnd, this->m_width, this->m_height);
 	PhysicsSystem::Initialize();
 	NameRegistry::Initialize();
+	ActionHistory::Initialize();
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 
@@ -74,7 +77,7 @@ void GameWindow::OnRender()
 void GameWindow::OnDestroy()
 {
 	NameRegistry::Destroy();
-
+	ActionHistory::Destroy();
 	EngineGUIManager::Destroy();
 	CameraManager::Destroy();
 	InputSystem::Destroy();

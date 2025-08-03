@@ -5,6 +5,7 @@
 #include "RenderSystem.h"
 #include "AGameObject.h"
 #include "MeshComponent.h"
+#include "EditorAction.h"
 #include "Debug.h"
 
 std::unique_ptr<GameObjectManager> GameObjectManager::sharedInstance = nullptr;
@@ -196,4 +197,17 @@ void GameObjectManager::UploadObjectConstants(UINT frameIndex)
             meshComponent->SetGPUAddress(frameIndex, cb.gpuAddress);
         }
     }
+}
+
+void GameObjectManager::ApplyEditorAction(EditorAction* action)
+{
+    if (!action) return;
+
+    AGameObject* gameObject = FindObjectByName(action->GetOwnerName());
+
+    if (!gameObject) return;
+
+    gameObject->Transform()->SetPosition(action->GetStorePos());
+    gameObject->Transform()->SetRotation(action->GetStoredOrientation());
+    gameObject->Transform()->SetScale(action->GetStoredScale());
 }

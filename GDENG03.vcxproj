@@ -157,6 +157,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ActionHistory.cpp" />
+    <ClCompile Include="src\EditorAction.cpp" />
     <ClCompile Include="src\MaterialEditor.cpp" />
     <ClCompile Include="src\GameObjectBuilder.cpp" />
     <ClCompile Include="src\GameEntity.cpp" />
@@ -220,6 +222,8 @@
     <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ActionHistory.h" />
+    <ClInclude Include="src\EditorAction.h" />
     <ClInclude Include="src\MaterialEditor.h" />
     <ClInclude Include="src\GameObjectBuilder.h" />
     <ClInclude Include="src\GameEntity.h" />

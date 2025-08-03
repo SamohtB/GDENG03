@@ -130,6 +130,9 @@
     <Filter Include="Engine\EngineGUI\UIScreens\MaterialEditor">
       <UniqueIdentifier>{d979c148-8ed4-4df1-bfe6-e0c943a18565}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\ObjectStates">
+      <UniqueIdentifier>{108b20e1-d8e9-493a-a692-48747690d7ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -299,6 +302,12 @@
     </ClCompile>
     <ClCompile Include="src\MaterialEditor.cpp">
       <Filter>Engine\EngineGUI\UIScreens\MaterialEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorAction.cpp">
+      <Filter>Engine\ObjectStates</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ActionHistory.cpp">
+      <Filter>Engine\ObjectStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -511,6 +520,12 @@
     </ClInclude>
     <ClInclude Include="src\MaterialEditor.h">
       <Filter>Engine\EngineGUI\UIScreens\MaterialEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorAction.h">
+      <Filter>Engine\ObjectStates</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ActionHistory.h">
+      <Filter>Engine\ObjectStates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

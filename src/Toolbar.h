@@ -17,4 +17,5 @@ private:
     void GameObjects();
     void DisplayFPS();
     void Windows();
+	void UndoRedo();
 };
