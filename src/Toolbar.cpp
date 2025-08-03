@@ -218,6 +218,37 @@ void Toolbar::GameObjects()
             ImGui::EndMenu();
         }
 
+        // -------------------- Test --------------------
+        if (ImGui::BeginMenu("Parented"))
+        {
+            if (ImGui::MenuItem("Level: 2"))
+            {
+                auto name = NameRegistry::GetInstance()->GenerateUniqueName("Parent");
+
+                auto obj = GameObjectBuilder()
+                    .SetName(name)
+                    .AddTransformComponent(name)
+                    .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT)
+                    .Build();
+
+                GameObjectManager::GetInstance()->AddGameObject(obj);
+
+                for (int i = 0; i < 2; ++i)
+                {
+                    auto childName = NameRegistry::GetInstance()->GenerateUniqueName("Child_" + std::to_string(i));
+                    auto childObj = GameObjectBuilder()
+                        .SetName(childName)
+                        .AddTransformComponent(childName)
+                        .AddMeshComponent(MeshType::PRIMITIVE_SPHERE, MaterialType::DEFAULT)
+                        .Build();
+                    childObj->Transform()->SetPosition(Vector3(0.0f, 2.0f * (i + 1), 0.0f));
+					obj->AttachChild(childObj);
+				}
+            }
+
+            ImGui::EndMenu();
+        }
+
         ImGui::EndMenu();
     }
 }

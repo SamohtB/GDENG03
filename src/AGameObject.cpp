@@ -2,6 +2,7 @@
 #include "AGameObject.h"
 #include "PhysicsSystem.h"
 #include "PhysicsComponent.h"
+#include "GameObjectManager.h"
 #include "Debug.h"
 
 AGameObject::AGameObject(String name) : m_id(0), m_name(name), m_active(true)
@@ -23,6 +24,8 @@ AGameObject::~AGameObject()
 
 		component->DetachOwner();
 	}
+
+	this->ReparentOrPromoteChildren();
 }
 
 bool AGameObject::IsActive() const
@@ -53,6 +56,73 @@ String AGameObject::GetName() const
 void AGameObject::SetName(String name)
 {
 	this->m_name = name;
+}
+
+void AGameObject::AttachChild(AGameObjectPtr child)
+{
+	if (!child || child.get() == this) return;
+	if (child->IsAncestorOf(shared_from_this())) return;
+
+	// Detach from previous parent if necessary
+	if (auto oldParent = child->GetParent())
+	{
+		oldParent->DetachChild(child);
+	}
+
+	child->m_parent = shared_from_this();
+	m_childrenList.push_back(child);
+}
+
+void AGameObject::DetachChild(AGameObjectPtr child)
+{
+	if (!child)	return;
+
+	auto it = std::find(m_childrenList.begin(), m_childrenList.end(), child);
+
+	if (it != m_childrenList.end())
+	{
+		child->m_parent.reset();
+		m_childrenList.erase(it);
+	}
+}
+
+std::shared_ptr<AGameObject> AGameObject::GetParent() const
+{
+	return m_parent.lock();
+}
+
+void AGameObject::SetParent(const std::shared_ptr<AGameObject>& parent)
+{
+	if (parent.get() == this || IsAncestorOf(parent)) return;
+
+	auto currentParent = GetParent();
+
+	if (currentParent)
+	{
+		currentParent->DetachChild(shared_from_this());
+	}
+		
+	m_parent = parent;
+
+	if (parent)
+	{
+		parent->AttachChild(shared_from_this());
+	}
+}
+
+AGameObject::GameObjectList AGameObject::GetChildren() const
+{
+	return m_childrenList;
+}
+
+void AGameObject::UpdateWorldTransform()
+{
+	Transform()->UpdateWorldMatrix();
+
+	for (const auto& child : m_childrenList)
+	{
+		child->UpdateWorldTransform();
+	}
 }
 
 void AGameObject::AttachComponent(std::shared_ptr<AComponent> component)
@@ -133,11 +203,11 @@ AGameObject::ComponentList AGameObject::GetComponentsOfTypeRecursive(AComponent:
 	}
 
 	// Recurse if you have children
-	/*for (const auto& child : m_children)
+	for (const auto& child : m_childrenList)
 	{
-		ComponentList childList = child->GetComponentsOfTypeRecursive(type);
+		auto childList = child->GetComponentsOfTypeRecursive(type);
 		foundList.insert(foundList.end(), childList.begin(), childList.end());
-	}*/
+	}
 
 	return foundList;
 }
@@ -155,4 +225,35 @@ std::shared_ptr<TransformComponent> AGameObject::Transform() const
 void AGameObject::SetTransform(const std::shared_ptr<TransformComponent>& transform)
 {
 	m_transform = transform;
+}
+
+bool AGameObject::IsAncestorOf(const std::shared_ptr<AGameObject>& other) const
+{
+	auto current = other;
+
+	while (current)
+	{
+		if (current.get() == this)
+			return true;
+		current = current->GetParent();
+	}
+
+	return false;
+}
+
+void AGameObject::ReparentOrPromoteChildren()
+{
+	for (auto& child : m_childrenList)
+	{
+		child->SetParent(nullptr);
+
+		auto object = GameObjectManager::GetInstance()->FindObjectByName(child->GetName());
+
+		if (object == nullptr)
+		{
+			GameObjectManager::GetInstance()->AddGameObject(child);
+		}
+	}
+
+	m_childrenList.clear();
 }

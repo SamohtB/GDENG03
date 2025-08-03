@@ -28,7 +28,11 @@ public:
 
     Matrix GetLocalMatrix();
     Matrix GetPhysicsLocalMatrix(); //Transposed
-    void SetLocalMatrix(const float* matrixData);
+
+    const Matrix& GetWorldMatrix() const;
+	void UpdateWorldMatrix();
+	void PropagateWorldDirtyFlag();
+    void MarkDirty();
 
     Vector3 GetForwardVector() const;
     Vector3 GetRightVector() const;
@@ -39,13 +43,13 @@ private:
     rp3d::Quaternion m_localRotation;
     Vector3 m_localScale;
 
-    mutable Matrix m_localMatrix;
-    mutable bool m_dirty;
-
+    Matrix m_localMatrix;
+	Matrix m_worldMatrix;
+    bool m_dirty;
+	bool m_worldDirty;
 
     // Inherited via AComponent
     void Perform() override;
-
     void DrawUI() override;
 
 };

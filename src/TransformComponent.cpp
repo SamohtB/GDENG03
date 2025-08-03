@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "TransformComponent.h"
+#include "AGameObject.h"
 
 TransformComponent::TransformComponent(String name, std::weak_ptr<AGameObject> owner) 
 	: AComponent(name, ComponentType::Transform, owner)
@@ -8,30 +9,31 @@ TransformComponent::TransformComponent(String name, std::weak_ptr<AGameObject> o
 	this->m_localRotation = rp3d::Quaternion::identity();
 	this->m_localScale = Vector3(1, 1, 1);
 	this->m_localMatrix = GetLocalMatrix();
+	this->m_worldMatrix = GetLocalMatrix();
 }
 
 void TransformComponent::SetPosition(float x, float y, float z)
 {
 	this->m_localPosition = Vector3(x, y, z);
-	this->m_dirty = true;
+	this->MarkDirty();
 }
 
 void TransformComponent::SetPosition(Vector3 vector)
 {
 	this->m_localPosition = vector;
-	this->m_dirty = true;
+	this->MarkDirty();
 }
 
 void TransformComponent::Move(float x, float y, float z)
 {
 	this->m_localPosition += Vector3(x, y, z);
-	this->m_dirty = true;
+	this->MarkDirty();
 }
 
 void TransformComponent::Move(Vector3 vector)
 {
 	this->m_localPosition += vector;
-	this->m_dirty = true;
+	this->MarkDirty();
 }
 
 Vector3 TransformComponent::GetLocalPosition()
@@ -56,7 +58,7 @@ void TransformComponent::SetRotation(float pitch, float yaw, float roll)
 		XMVectorGetW(q)
 	);
 
-	m_dirty = true;
+	this->MarkDirty();
 }
 
 void TransformComponent::SetRotation(Vector3 vector)
@@ -67,7 +69,7 @@ void TransformComponent::SetRotation(Vector3 vector)
 void TransformComponent::SetRotation(rp3d::Quaternion quaternion)
 {
 	this->m_localRotation = quaternion;
-	this->m_dirty = true;
+	this->MarkDirty();
 }
 
 void TransformComponent::Rotate(float pitch, float yaw, float roll)
@@ -89,7 +91,7 @@ void TransformComponent::Rotate(float pitch, float yaw, float roll)
 	m_localRotation = q * m_localRotation;
 	m_localRotation.normalize();
 
-	m_dirty = true;
+	this->MarkDirty();
 }
 
 Vector3 TransformComponent::GetLocalRotation()
@@ -119,19 +121,19 @@ rp3d::Quaternion TransformComponent::GetLocalQuaternion() const
 void TransformComponent::SetScale(float x, float y, float z)
 {
 	this->m_localScale = Vector3(x, y, z);
-	this->m_dirty = true;
+	this->MarkDirty();
 }
 
 void TransformComponent::SetScale(Vector3 vector)
 {
 	this->m_localScale = vector;
-	this->m_dirty = true;
+	this->MarkDirty();
 }
 
 void TransformComponent::Scale(float scale)
 {
 	this->m_localScale += Vector3(scale, scale, scale);
-	this->m_dirty = true;
+	this->MarkDirty();
 }
 
 Vector3 TransformComponent::GetLocalScale()
@@ -169,11 +171,60 @@ Matrix TransformComponent::GetPhysicsLocalMatrix()
 	return localMatrix.Transpose();
 }
 
-void TransformComponent::SetLocalMatrix(const float* matrixData)
+const Matrix& TransformComponent::GetWorldMatrix() const
 {
-	Matrix rawMatrix = *reinterpret_cast<const Matrix*>(matrixData);
-	this->m_localMatrix = rawMatrix.Transpose();
-	this->m_dirty = false;
+	if (m_worldDirty)
+	{			
+		m_owner.lock()->UpdateWorldTransform();
+	}
+
+	return m_worldMatrix;
+}
+
+void TransformComponent::UpdateWorldMatrix()
+{
+	if (!m_worldDirty) return;
+
+	auto parent = this->GetOwner()->GetParent();
+
+	if (parent)
+	{
+		this->m_worldMatrix = parent->Transform()->GetWorldMatrix() * this->GetLocalMatrix();
+	}
+	else
+	{
+		this->m_worldMatrix = this->GetLocalMatrix();
+	}
+
+	this->m_worldDirty = false;
+}
+
+void TransformComponent::PropagateWorldDirtyFlag()
+{
+	if (m_worldDirty) return; 
+
+	m_worldDirty = true;
+
+	for (const auto& child : m_owner.lock()->GetChildren())
+	{
+		child->Transform()->PropagateWorldDirtyFlag();
+	}
+}
+
+void TransformComponent::MarkDirty()
+{
+	if (m_dirty) return;
+	m_dirty = true;
+	m_worldDirty = true;
+
+	auto owner = m_owner.lock();
+	if (owner)
+	{
+		for (const auto& child : owner->GetChildren())
+		{
+			child->Transform()->MarkDirty();
+		}
+	}
 }
 
 Vector3 TransformComponent::GetForwardVector() const
@@ -228,7 +279,7 @@ void TransformComponent::Perform()
 void TransformComponent::DrawUI()
 {
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
-	{
+	{ 
 		Vector3 position = this->GetLocalPosition();
 		Vector3 rotation = this->GetLocalRotation();
 		Vector3 scale = this->GetLocalScale();

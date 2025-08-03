@@ -82,6 +82,11 @@ void GameObjectManager::UpdateAll(float deltaTime)
         if (object->IsActive())
         {
             object->Update(deltaTime);
+
+            for (const auto& child : object->GetChildren())
+            {
+                child->Update(deltaTime);
+            }
         }
     }
 }
@@ -92,7 +97,7 @@ void GameObjectManager::RenderAll(DeviceContext* context)
     {
         if (!object->IsActive()) continue;
 
-        const auto& rendererComponents = object->GetComponentsOfType(AComponent::ComponentType::Renderer);
+        const auto& rendererComponents = object->GetComponentsOfTypeRecursive(AComponent::ComponentType::Renderer);
 
         for (const auto& component : rendererComponents)
         {
@@ -180,7 +185,7 @@ void GameObjectManager::UploadObjectConstants(UINT frameIndex)
     {
         if (!gameObject->IsActive()) continue;
 
-        const auto& rendererComponents = gameObject->GetComponentsOfType(AComponent::ComponentType::Renderer);
+        const auto& rendererComponents = gameObject->GetComponentsOfTypeRecursive(AComponent::ComponentType::Renderer);
 
         for (const auto& component : rendererComponents)
         {
@@ -188,7 +193,7 @@ void GameObjectManager::UploadObjectConstants(UINT frameIndex)
             if (!meshComponent) continue;
 
             ObjectConstantsData objData = {};
-            objData.modelMatrix = gameObject->Transform()->GetLocalMatrix();
+            objData.modelMatrix = gameObject->Transform()->GetWorldMatrix();
             objData.objectId = 0;
 
             auto cb = m_objectConstantsBuffer->Allocate(sizeof(ObjectConstantsData));
