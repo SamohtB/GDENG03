@@ -27,15 +27,6 @@ void Debug::Destroy()
     sharedInstance = nullptr;
 }
 
-Debug::Debug()
-{
-}
-
-Debug::~Debug()
-{
-    delete m_window;
-}
-
 void Debug::AssignWindow(DebugWindow* window)
 {
 	this->m_window = window;

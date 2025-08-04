@@ -37,9 +37,7 @@ void GameWindow::OnCreate(HWND hwnd)
 	ActionHistory::Initialize();
 
 	auto debugWindow = (DebugWindow*)(EngineGUIManager::GetInstance()->GetUI(UINames::DEBUG));
-
 	Debug::GetInstance()->AssignWindow(debugWindow);
-	debugWindow->ClearLog();
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 

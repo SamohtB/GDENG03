@@ -32,8 +32,8 @@ public:
 
 	void AssignWindow(DebugWindow* window);
 
-    Debug();
-    ~Debug();
+    Debug() = default;
+    ~Debug() = default;
     Debug(Debug const&) = delete;
     Debug& operator=(Debug const&) = delete;
 

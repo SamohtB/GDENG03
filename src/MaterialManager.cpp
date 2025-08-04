@@ -111,7 +111,7 @@ void MaterialManager::CreateMaterial(const String& materialName, MaterialDescrip
         perFrameAddress[i] = cb.gpuAddress;
     }
     m_materialMap[materialName] = std::make_unique<Material>(materialName, perFrameAddress, materialDesc);
-    Debug::Log(materialName + " Material Created");
+    Debug::Log("TextureManager: Created " + materialName);
 }
 
 void MaterialManager::UpdateMaterialDescription(const String& materialName, MaterialDescription materialDesc)
