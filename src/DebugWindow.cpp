@@ -6,11 +6,6 @@ DebugWindow::DebugWindow() : AUIScreen("Debug")
 	this->m_logLimit = 100; // Default log limit
 }
 
-DebugWindow::~DebugWindow()
-{
-	this->ClearLog();
-}
-
 void DebugWindow::DrawUI()
 {
     ImGui::Begin("Debug Log");

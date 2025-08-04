@@ -27,6 +27,8 @@ public:
 
 	void SetGPUAddress(UINT frameIndex, D3D12_GPU_VIRTUAL_ADDRESS address);
 	void SetTopology(D3D12_PRIMITIVE_TOPOLOGY topology);
+
+	String GetMeshType() const;
 private:
 	std::vector<D3D12_GPU_VIRTUAL_ADDRESS> m_gpuAddresses;
 

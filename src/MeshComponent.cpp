@@ -150,3 +150,8 @@ void MeshComponent::SetTopology(D3D12_PRIMITIVE_TOPOLOGY topology)
 {
     this->m_topology = topology;
 }
+
+String MeshComponent::GetMeshType() const
+{
+    return this->m_mesh;
+}

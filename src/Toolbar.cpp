@@ -19,6 +19,7 @@
 
 Toolbar::Toolbar() : AUIScreen("TOOLBAR")
 {
+	
 }
 
 void Toolbar::DrawUI()
@@ -28,8 +29,8 @@ void Toolbar::DrawUI()
         FileMenu();
         GameObjects();
         Lighting();
-        UndoRedo();
         Windows();
+        UndoRedo();
         DisplayFPS();
     }
 
@@ -235,12 +236,17 @@ void Toolbar::FileMenu()
     /* File Menus*/
     if (ImGui::BeginMenu("File"))
     {
-        if (ImGui::MenuItem("Clear Scene"))
+        if (ImGui::MenuItem("New Scene"))
         {
             GameObjectManager::GetInstance()->ClearAllObjects();
         }
 
-        if (ImGui::MenuItem("Close"))
+        if(ImGui::MenuItem("Save Scene"))
+        {
+            EngineGUIManager::GetInstance()->GetUI(UINames::SAVE_SCENE)->SetVisible(true);
+		}
+
+        if (ImGui::MenuItem("Exit"))
         {
             Win32App::Quit();
         }
@@ -269,7 +275,9 @@ void Toolbar::Windows()
 
         for (const auto& screen : uiList)
         {
-            if (screen->GetName() == "TOOLBAR") continue; //exclude self
+            if (screen->GetName() == UINames::TOOLBAR) continue; //exclude self
+			if (screen->GetName() == UINames::SAVE_SCENE) continue; //exclude save window
+			if (screen->GetName() == UINames::LOAD_SCENE) continue; //exclude load window
 
             bool visible = screen->IsVisible();
 

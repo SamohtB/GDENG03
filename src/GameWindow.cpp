@@ -36,7 +36,10 @@ void GameWindow::OnCreate(HWND hwnd)
 	NameRegistry::Initialize();
 	ActionHistory::Initialize();
 
-	Debug::GetInstance()->AssignWindow((DebugWindow*)(EngineGUIManager::GetInstance()->GetUI(UINames::DEBUG)));
+	auto debugWindow = (DebugWindow*)(EngineGUIManager::GetInstance()->GetUI(UINames::DEBUG));
+
+	Debug::GetInstance()->AssignWindow(debugWindow);
+	debugWindow->ClearLog();
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 
@@ -88,4 +91,5 @@ void GameWindow::OnDestroy()
 	GameObjectManager::Destroy();
 	PhysicsSystem::Destroy();
 	GraphicsEngine::Destroy();
+	Debug::Destroy();
 }

@@ -21,6 +21,7 @@
 #include <ctime>
 #include <thread>
 #include <type_traits>
+#include <fstream>
 
 // === DirectX 12 core === 
 #include <d3d12.h>

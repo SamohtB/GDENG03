@@ -8,6 +8,8 @@ public:
     inline static const std::string INSPECTOR = "INSPECTOR";
     inline static const std::string DEBUG = "DEBUG";
     inline static const std::string MATERIAL_EDITOR = "MATERIAL_EDITOR";
+	inline static const std::string SAVE_SCENE = "SAVE_SCENE";
+	inline static const std::string LOAD_SCENE = "LOAD_SCENE";
 };
 
 class AUIScreen;

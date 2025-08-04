@@ -157,6 +157,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\SaveScene.cpp" />
+    <ClCompile Include="src\SceneReader.cpp" />
+    <ClCompile Include="src\SceneWriter.cpp" />
     <ClCompile Include="src\Debug.cpp" />
     <ClCompile Include="src\DebugWindow.cpp" />
     <ClCompile Include="src\ActionHistory.cpp" />
@@ -224,6 +227,9 @@
     <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\SaveScene.h" />
+    <ClInclude Include="src\SceneReader.h" />
+    <ClInclude Include="src\SceneWriter.h" />
     <ClInclude Include="src\DebugWindow.h" />
     <ClInclude Include="src\ActionHistory.h" />
     <ClInclude Include="src\EditorAction.h" />

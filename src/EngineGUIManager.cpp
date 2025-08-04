@@ -13,6 +13,8 @@
 #include "Inspector.h"
 #include "MaterialEditor.h"
 #include "DebugWindow.h"
+#include "SaveScene.h"
+
 #include "Debug.h"
 
 std::unique_ptr<EngineGUIManager> EngineGUIManager::sharedInstance = nullptr;
@@ -146,6 +148,10 @@ void EngineGUIManager::PopulateGUI()
 	auto debugWindow = std::make_shared<DebugWindow>();
 	this->m_uiTable[UINames::DEBUG] = debugWindow;
 	this->m_uiList.push_back(debugWindow);
+
+	auto saveScene = std::make_shared<SaveScene>();
+	this->m_uiTable[UINames::SAVE_SCENE] = saveScene;
+	this->m_uiList.push_back(saveScene);
 }
 
 EngineGUIManager::~EngineGUIManager()
