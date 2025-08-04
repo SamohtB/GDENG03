@@ -300,6 +300,7 @@
     <ClCompile Include="src\MaterialEditor.cpp">
       <Filter>Engine\EngineGUI\UIScreens\MaterialEditor</Filter>
     </ClCompile>
+    <ClCompile Include="src\EditorState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DescriptorHeapManager.h">
@@ -512,6 +513,7 @@
     <ClInclude Include="src\MaterialEditor.h">
       <Filter>Engine\EngineGUI\UIScreens\MaterialEditor</Filter>
     </ClInclude>
+    <ClInclude Include="src\EditorState.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\DefaultVertexShader.hlsl">

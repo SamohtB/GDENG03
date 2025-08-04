@@ -22,6 +22,13 @@ GameObjectBuilder& GameObjectBuilder::SetName(const String& name)
 	return *this;
 }
 
+GameObjectBuilder& GameObjectBuilder::SetType(const String& type)
+{
+	m_entity->SetObjectType(type);
+	return *this;
+}
+
+
 GameObjectBuilder& GameObjectBuilder::AddTransformComponent(String name)
 {
 	auto componentName = m_entity->GetName() + " Transform";
@@ -39,6 +46,7 @@ GameObjectBuilder& GameObjectBuilder::AddMeshComponent(String mesh, String mater
 	m_entity->AttachComponent(meshComponent);
 	return *this;
 }
+
 
 GameObjectBuilder& GameObjectBuilder::AddPhysicsComponent(String meshType, bool isStatic)
 {

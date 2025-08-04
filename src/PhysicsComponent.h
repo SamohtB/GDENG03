@@ -14,6 +14,7 @@ public:
     void SetSelf(std::shared_ptr<PhysicsComponent> self) { m_self = self; }
 
     reactphysics3d::RigidBody* GetRigidBody();
+    void UpdateTransformFromOwner();
 
     void SetBodyType(reactphysics3d::BodyType type);
 	void SetMass(float mass);

@@ -7,14 +7,15 @@ public:
     Toolbar();
     ~Toolbar() = default;
 
-    // Inherited via AUIScreen
     void DrawUI() override;
-
-    void Lighting();
 
 private:
     void FileMenu();
     void GameObjects();
-    void DisplayFPS();
+    void Lighting();
     void Windows();
+    void DisplayFPS();
+
+    // Function to draw the playback controls
+    void DrawPlaybackControls();
 };

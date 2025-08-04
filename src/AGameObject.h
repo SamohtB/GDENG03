@@ -8,7 +8,7 @@ class DeviceContext;
 class AGameObject : public std::enable_shared_from_this<AGameObject>
 {
 public:
-	using ComponentPtr = std::shared_ptr<AComponent>;
+    using ComponentPtr = std::shared_ptr<AComponent>;
     using ComponentList = std::vector<ComponentPtr>;
 
     AGameObject(String name);
@@ -25,6 +25,11 @@ public:
     String GetName() const;
     void SetName(String name);
 
+    // --- NEWLY ADDED METHODS ---
+    String GetObjectType() const;
+    void SetObjectType(const String& type);
+    // --- END NEWLY ADDED METHODS ---
+
     void AttachComponent(std::shared_ptr<AComponent> component);
     void DetachComponent(std::shared_ptr<AComponent> component);
 
@@ -40,6 +45,7 @@ public:
 protected:
     unsigned int m_id;
     String m_name;
+    String m_objectType; // <-- NEW MEMBER VARIABLE
     bool m_active;
 
     std::shared_ptr<TransformComponent> m_transform;

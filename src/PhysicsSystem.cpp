@@ -122,6 +122,14 @@ void PhysicsSystem::UpdateAllComponents(float deltaTime)
 
 }
 
+void PhysicsSystem::SynchronizeTransformsToRigidBodies()
+{
+    for (PhysicsPtr& physicsComp : this->m_componentList)
+    {
+        physicsComp->UpdateTransformFromOwner();
+    }
+}
+
 reactphysics3d::PhysicsWorld* PhysicsSystem::GetPhysicsWorld()
 {
     return this->m_physicsWorld;
