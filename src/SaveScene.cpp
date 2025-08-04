@@ -9,7 +9,7 @@ SaveScene::SaveScene() : AUIScreen("Save Scene")
 
 void SaveScene::DrawUI()
 {
-    if(ImGui::Begin("Save Scene"))
+    if(ImGui::Begin("Save Scene"), &this->m_visible, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize)
     {
         ImGui::Text("Enter scene name:");
         ImGui::InputText("##SceneName", m_sceneNameBuffer, IM_ARRAYSIZE(m_sceneNameBuffer));

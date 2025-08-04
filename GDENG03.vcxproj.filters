@@ -133,6 +133,12 @@
     <Filter Include="Engine\ObjectStates">
       <UniqueIdentifier>{108b20e1-d8e9-493a-a692-48747690d7ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\FileSystem">
+      <UniqueIdentifier>{752093f1-ffae-467d-9d0f-26d758262222}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\EngineGUI\UIScreens\SceneManager">
+      <UniqueIdentifier>{a705c011-d679-4912-9308-b721b895941a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -314,6 +320,18 @@
     </ClCompile>
     <ClCompile Include="src\DebugWindow.cpp">
       <Filter>Engine\EngineGUI\UIScreens\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneReader.cpp">
+      <Filter>Engine\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneWriter.cpp">
+      <Filter>Engine\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SaveScene.cpp">
+      <Filter>Engine\EngineGUI\UIScreens\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LoadScene.cpp">
+      <Filter>Engine\EngineGUI\UIScreens\SceneManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -535,6 +553,18 @@
     </ClInclude>
     <ClInclude Include="src\DebugWindow.h">
       <Filter>Engine\EngineGUI\UIScreens\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SceneReader.h">
+      <Filter>Engine\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SceneWriter.h">
+      <Filter>Engine\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SaveScene.h">
+      <Filter>Engine\EngineGUI\UIScreens\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LoadScene.h">
+      <Filter>Engine\EngineGUI\UIScreens\SceneManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

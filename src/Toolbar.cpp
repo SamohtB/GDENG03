@@ -246,6 +246,11 @@ void Toolbar::FileMenu()
             EngineGUIManager::GetInstance()->GetUI(UINames::SAVE_SCENE)->SetVisible(true);
 		}
 
+        if (ImGui::MenuItem("Load Scene"))
+        {
+            EngineGUIManager::GetInstance()->GetUI(UINames::LOAD_SCENE)->SetVisible(true);
+        }
+
         if (ImGui::MenuItem("Exit"))
         {
             Win32App::Quit();

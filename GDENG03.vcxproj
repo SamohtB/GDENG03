@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\LoadScene.cpp" />
     <ClCompile Include="src\SaveScene.cpp" />
     <ClCompile Include="src\SceneReader.cpp" />
     <ClCompile Include="src\SceneWriter.cpp" />
@@ -227,6 +228,7 @@
     <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\LoadScene.h" />
     <ClInclude Include="src\SaveScene.h" />
     <ClInclude Include="src\SceneReader.h" />
     <ClInclude Include="src\SceneWriter.h" />

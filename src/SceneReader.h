@@ -7,7 +7,8 @@ public:
     SceneReader(String directory);
     ~SceneReader() = default;
 
-    void ReadFromFile();
+    void ReadFromFile(const String& fileName);
+    void ParseGameObject(std::ifstream& file);
 
 private:
     String m_directory;
@@ -21,7 +22,5 @@ private:
         Vector3 scale;
         bool hasRigidbody;
     };
-
-    std::vector<String> SplitString(const String& s, char delim);
 };
 

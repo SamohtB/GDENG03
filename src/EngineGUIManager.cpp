@@ -14,6 +14,7 @@
 #include "MaterialEditor.h"
 #include "DebugWindow.h"
 #include "SaveScene.h"
+#include "LoadScene.h"
 
 #include "Debug.h"
 
@@ -152,6 +153,10 @@ void EngineGUIManager::PopulateGUI()
 	auto saveScene = std::make_shared<SaveScene>();
 	this->m_uiTable[UINames::SAVE_SCENE] = saveScene;
 	this->m_uiList.push_back(saveScene);
+
+	auto loadScene = std::make_shared<LoadScene>();
+	this->m_uiTable[UINames::LOAD_SCENE] = loadScene;
+	this->m_uiList.push_back(loadScene);
 }
 
 EngineGUIManager::~EngineGUIManager()
