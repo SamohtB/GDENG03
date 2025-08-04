@@ -309,6 +309,12 @@
     <ClCompile Include="src\ActionHistory.cpp">
       <Filter>Engine\ObjectStates</Filter>
     </ClCompile>
+    <ClCompile Include="src\Debug.cpp">
+      <Filter>Engine\EngineGUI\UIScreens\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DebugWindow.cpp">
+      <Filter>Engine\EngineGUI\UIScreens\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DescriptorHeapManager.h">
@@ -346,9 +352,6 @@
     </ClInclude>
     <ClInclude Include="src\GraphicsEngine.h">
       <Filter>Engine\GraphicsEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Debug.h">
-      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\DeviceContext.h">
       <Filter>Engine\GraphicsEngine\RenderSystem\DeviceContext</Filter>
@@ -526,6 +529,12 @@
     </ClInclude>
     <ClInclude Include="src\ActionHistory.h">
       <Filter>Engine\ObjectStates</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Debug.h">
+      <Filter>Engine\EngineGUI\UIScreens\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugWindow.h">
+      <Filter>Engine\EngineGUI\UIScreens\Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

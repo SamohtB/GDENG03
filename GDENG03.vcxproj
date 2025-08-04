@@ -157,6 +157,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Debug.cpp" />
+    <ClCompile Include="src\DebugWindow.cpp" />
     <ClCompile Include="src\ActionHistory.cpp" />
     <ClCompile Include="src\EditorAction.cpp" />
     <ClCompile Include="src\MaterialEditor.cpp" />
@@ -222,6 +224,7 @@
     <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\DebugWindow.h" />
     <ClInclude Include="src\ActionHistory.h" />
     <ClInclude Include="src\EditorAction.h" />
     <ClInclude Include="src\MaterialEditor.h" />

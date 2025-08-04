@@ -12,6 +12,8 @@
 #include "Toolbar.h"
 #include "Inspector.h"
 #include "MaterialEditor.h"
+#include "DebugWindow.h"
+#include "Debug.h"
 
 std::unique_ptr<EngineGUIManager> EngineGUIManager::sharedInstance = nullptr;
 
@@ -140,6 +142,10 @@ void EngineGUIManager::PopulateGUI()
 	auto materialEditor = std::make_shared<MaterialEditor>();
 	this->m_uiTable[UINames::MATERIAL_EDITOR] = materialEditor;
 	this->m_uiList.push_back(materialEditor);
+
+	auto debugWindow = std::make_shared<DebugWindow>();
+	this->m_uiTable[UINames::DEBUG] = debugWindow;
+	this->m_uiList.push_back(debugWindow);
 }
 
 EngineGUIManager::~EngineGUIManager()

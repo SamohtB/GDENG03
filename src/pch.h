@@ -20,6 +20,7 @@
 #include <chrono>
 #include <ctime>
 #include <thread>
+#include <type_traits>
 
 // === DirectX 12 core === 
 #include <d3d12.h>

@@ -16,6 +16,7 @@
 #include "TextureManager.h"
 
 #include "ActionHistory.h"
+#include "DebugWindow.h"
 
 #include "Debug.h"
 #include "Random.h"
@@ -24,6 +25,7 @@ GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
 
 void GameWindow::OnCreate(HWND hwnd)
 {
+	Debug::Initialize();
 	GraphicsEngine::Initialize(this->m_width, this->m_height, hwnd);
 	GameObjectManager::Initialize(GraphicsEngine::GetInstance()->GetRenderSystem()->GetD3DDevicePtr().Get());
 	EngineTime::Initialize(60);
@@ -33,6 +35,8 @@ void GameWindow::OnCreate(HWND hwnd)
 	PhysicsSystem::Initialize();
 	NameRegistry::Initialize();
 	ActionHistory::Initialize();
+
+	Debug::GetInstance()->AssignWindow((DebugWindow*)(EngineGUIManager::GetInstance()->GetUI(UINames::DEBUG)));
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 

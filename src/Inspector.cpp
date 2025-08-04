@@ -46,7 +46,7 @@ void Inspector::DrawUI()
 
             if (selected == "MeshComponent")
             {
-                builder.AddMeshComponent(MeshType::PRIMITIVE_CUBE, "Default");
+                builder.AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT);
             }
             else if (selected == "PhysicsComponent")
             {
