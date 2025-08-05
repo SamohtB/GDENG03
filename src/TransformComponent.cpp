@@ -96,21 +96,20 @@ void TransformComponent::Rotate(float pitch, float yaw, float roll)
 
 Vector3 TransformComponent::GetLocalRotation()
 {
-	float x = m_localRotation.x;
-	float y = m_localRotation.y;
-	float z = m_localRotation.z;
-	float w = m_localRotation.w;
+	using namespace DirectX;
+	auto q = this->m_localRotation;
+	
+	SimpleMath::Quaternion dxQuaternion = SimpleMath::Quaternion(q.x, q.y, q.z, q.w);
+	dxQuaternion.Normalize();
 
-	// Convert quaternion to Euler angles (pitch, yaw, roll)
-	float pitch = std::asin(Clamp(2.0f * (w * y - z * x), -1.0f, 1.0f));
-	float roll = std::atan2(2.0f * (w * x + y * z), 1.0f - 2.0f * (x * x + y * y));
-	float yaw = std::atan2(2.0f * (w * z + x * y), 1.0f - 2.0f * (y * y + z * z));
+	Vector3 euler = dxQuaternion.ToEuler();
 
 	return Vector3(
-		DirectX::XMConvertToDegrees(pitch),
-		DirectX::XMConvertToDegrees(yaw),
-		DirectX::XMConvertToDegrees(roll)
+		XMConvertToDegrees(euler.x),
+		XMConvertToDegrees(euler.y),
+		XMConvertToDegrees(euler.z)
 	);
+
 }
 
 rp3d::Quaternion TransformComponent::GetLocalQuaternion() const
