@@ -2,6 +2,7 @@
 #include "PhysicsComponent.h"
 #include "PhysicsSystem.h"
 #include "AGameObject.h"
+#include "TransformComponent.h" // [NEW] Include TransformComponent for scale access
 #include "Debug.h"
 
 PhysicsComponent::PhysicsComponent(String name, String meshType, std::weak_ptr<AGameObject> owner)
@@ -11,18 +12,17 @@ PhysicsComponent::PhysicsComponent(String name, String meshType, std::weak_ptr<A
     auto* physicsWorld = PhysicsSystem::GetInstance()->GetPhysicsWorld();
 
     Vector3 scale = m_owner.lock()->Transform()->GetLocalScale();
-    rp3d::BoxShape* boxShape;
 
     // Todo: Fix Shape Setting
     if (meshType == MeshType::PRIMITIVE_PLANE)
     {
         float half = 5.0f;
-        boxShape = physicsCommon->createBoxShape(rp3d::Vector3(half * scale.x, 0.10f , half * scale.z));
+        m_boxShape = physicsCommon->createBoxShape(rp3d::Vector3(half * scale.x, 0.10f, half * scale.z)); // [CHANGE] Assign to m_boxShape
     }
     else
     {
         float half = 0.5f;
-        boxShape = physicsCommon->createBoxShape(rp3d::Vector3(half * scale.x, half * scale.y, half * scale.z));
+        m_boxShape = physicsCommon->createBoxShape(rp3d::Vector3(half * scale.x, half * scale.y, half * scale.z)); // [CHANGE] Assign to m_boxShape
     }
 
     Vector3 pos = m_owner.lock()->Transform()->GetLocalPosition();
@@ -32,14 +32,14 @@ PhysicsComponent::PhysicsComponent(String name, String meshType, std::weak_ptr<A
     m_rigidbody = physicsWorld->createRigidBody(startTransform);
     m_rigidbody->setType(m_bodyType);
     m_rigidbody->enableGravity(true);
-	m_rigidbody->setIsAllowedToSleep(true);
-	m_rigidbody->setAngularDamping(0.8f);
-	m_rigidbody->setLinearDamping(0.5f);
+    m_rigidbody->setIsAllowedToSleep(true);
+    m_rigidbody->setAngularDamping(0.8f);
+    m_rigidbody->setLinearDamping(0.5f);
 
     rp3d::Transform identity = rp3d::Transform::identity();
-    rp3d::Collider* collider = m_rigidbody->addCollider(boxShape, identity);
-    collider->getMaterial().setFrictionCoefficient(1.0f);
-    collider->getMaterial().setBounciness(0.0f);
+    m_collider = m_rigidbody->addCollider(m_boxShape, identity); // [CHANGE] Assign to m_collider
+    m_collider->getMaterial().setFrictionCoefficient(1.0f);
+    m_collider->getMaterial().setBounciness(0.0f);
 
     m_rigidbody->updateMassPropertiesFromColliders();
     m_rigidbody->setMass(this->m_mass);
@@ -47,6 +47,8 @@ PhysicsComponent::PhysicsComponent(String name, String meshType, std::weak_ptr<A
 
 PhysicsComponent::~PhysicsComponent()
 {
+    // The destructor doesn't need changes.
+    // The physics world will destroy the rigid body, which in turn destroys the attached colliders and shapes.
     if (this->m_rigidbody)
     {
         auto* physicsWorld = PhysicsSystem::GetInstance()->GetPhysicsWorld();
@@ -56,6 +58,44 @@ PhysicsComponent::~PhysicsComponent()
         }
     }
 }
+
+// [NEW] Implement the collider update function
+void PhysicsComponent::UpdateColliderShape()
+{
+    if (!m_owner.lock() || !m_boxShape) return;
+
+    Vector3 scale = m_owner.lock()->Transform()->GetLocalScale();
+    std::string meshType = "SOME_DEFAULT"; // You need a way to get the mesh type here.
+    // For this example, we assume we can recalculate without it,
+    // but ideally, you'd store the mesh type in the component.
+
+// A simple way to differentiate between plane and other objects without storing meshType
+// This is a bit of a hack; storing the mesh type or shape parameters would be cleaner.
+    bool isPlane = (m_boxShape->getHalfExtents().y < 0.5f); // Inferring based on initial small height
+
+    if (isPlane)
+    {
+        float half = 5.0f;
+        m_boxShape->setHalfExtents(rp3d::Vector3(half * scale.x, 0.10f, half * scale.z));
+    }
+    else
+    {
+        float half = 0.5f;
+        m_boxShape->setHalfExtents(rp3d::Vector3(half * scale.x, half * scale.y, half * scale.z));
+    }
+
+    // After changing the shape, we need to recompute the mass properties of the rigid body
+    m_rigidbody->updateMassPropertiesFromColliders();
+
+    // You might need to re-apply the mass if it's not dynamic or if you want to override the computed inertia tensor
+    if (m_bodyType == reactphysics3d::BodyType::DYNAMIC)
+    {
+        m_rigidbody->setMass(m_mass);
+    }
+
+    Debug::Log("Collider shape updated.");
+}
+
 
 void PhysicsComponent::Perform()
 {
