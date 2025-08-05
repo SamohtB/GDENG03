@@ -269,22 +269,52 @@ void TransformComponent::DrawUI()
 		Vector3 rotation = this->GetLocalRotation();
 		Vector3 scale = this->GetLocalScale();
 
-		if (ImGui::DragFloat3("Position", &position.x, 0.1f)) 
-		{ 
-			ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+		if (ImGui::DragFloat3("Position", &position.x, 0.1f))
+		{
+			if (!m_recordedPosition)
+			{
+				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+				m_recordedPosition = true;
+			}
 			this->SetPosition(position);
+		}
+
+		if (ImGui::IsItemDeactivatedAfterEdit())
+		{
+			ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+			m_recordedPosition = false;
 		}
 
 		if (ImGui::DragFloat3("Rotation", &rotation.x, 0.1f)) 
 		{ 
-			ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+			if (!m_recordedRotation)
+			{
+				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+				m_recordedRotation = true;
+			}
 			this->SetRotation(rotation);
+		}
+
+		if (ImGui::IsItemDeactivatedAfterEdit())
+		{
+			ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+			m_recordedRotation = false;
 		}
 
 		if (ImGui::DragFloat3("Scale", &scale.x, 0.1f)) 
 		{ 
-			ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+			if (!m_recordedScale)
+			{
+				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+				m_recordedScale = true;
+			}
 			this->SetScale(scale); 
+		}
+
+		if (ImGui::IsItemDeactivatedAfterEdit())
+		{
+			ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+			m_recordedScale = false;
 		}
 	}
 }

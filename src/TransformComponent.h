@@ -1,5 +1,6 @@
 #pragma once
 #include "AComponent.h"
+#include "InputListener.h"
 #include "Math.h"
 
 class TransformComponent : public AComponent
@@ -49,6 +50,10 @@ private:
 
     Matrix m_worldMatrix;
 	bool m_worldDirty;
+
+    bool m_recordedPosition = false;
+    bool m_recordedRotation = false;
+    bool m_recordedScale = false;
 
     // Inherited via AComponent
     void Perform() override;

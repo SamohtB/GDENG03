@@ -25,6 +25,20 @@ inline static Matrix IdentityMatrix()
     );
 }
 
+inline std::string Vec3ToStr(const Vector3& v)
+{
+    std::stringstream ss;
+    ss << "(" << v.x << ", " << v.y << ", " << v.z << ")";
+    return ss.str();
+}
+
+inline std::string QuatToStr(const rp3d::Quaternion& q)
+{
+    std::stringstream ss;
+    ss << "(" << q.x << ", " << q.y << ", " << q.z << ", " << q.w << ")";
+    return ss.str();
+}
+
 namespace GeoMath
 {
     static void CalculateTangentFrame(const std::vector<unsigned int>& indices, const Vector3* positions, const Vector3* normals,

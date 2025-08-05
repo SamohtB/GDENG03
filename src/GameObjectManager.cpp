@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "GameObjectManager.h"
 #include "GraphicsEngine.h"
 #include "FrameConstants.h"
@@ -220,7 +220,13 @@ void GameObjectManager::ApplyEditorAction(EditorAction* action)
 
     if (!gameObject) return;
 
-    gameObject->Transform()->SetPosition(action->GetStorePos());
-    gameObject->Transform()->SetRotation(action->GetStoredOrientation());
-    gameObject->Transform()->SetScale(action->GetStoredScale());
+    auto transform = gameObject->Transform();
+
+    Vector3 newPos = action->GetStorePos();
+    rp3d::Quaternion newRot = action->GetStoredOrientation();
+    Vector3 newScale = action->GetStoredScale();
+
+    transform->SetPosition(newPos);
+    transform->SetRotation(newRot);
+    transform->SetScale(newScale);
 }

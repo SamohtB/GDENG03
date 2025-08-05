@@ -19,6 +19,7 @@
 #include "ActionHistory.h"
 #include "EditorState.h" // <-- Required include for the editor state controls
 #include "SceneStateManager.h"
+#include "EditorAction.h"
 
 Toolbar::Toolbar() : AUIScreen("TOOLBAR")
 {
@@ -417,10 +418,30 @@ void Toolbar::DrawRightSideInfo()
     // Undo Button
     if (ImGui::Button("Undo"))
     {
-        if (ActionHistory::GetInstance()->HasRemainingUndoActions())
+        bool actionApplied = false;
+
+        while (ActionHistory::GetInstance()->HasRemainingUndoActions())
         {
             auto action = ActionHistory::GetInstance()->UndoAction();
+            auto go = GameObjectManager::GetInstance()->FindObjectByName(action->GetOwnerName());
+
+            if (!go) continue;
+
+            auto transform = go->Transform();
+            bool same = transform->GetLocalPosition() == action->GetStorePos() &&
+                transform->GetLocalQuaternion() == action->GetStoredOrientation() &&
+                transform->GetLocalScale() == action->GetStoredScale();
+
+            if (same) continue;
+
             GameObjectManager::GetInstance()->ApplyEditorAction(action);
+            actionApplied = true;
+            break;
+        }
+
+        if (!actionApplied)
+        {
+            Debug::LogWarning("No undo actions remaining.");
         }
     }
 
@@ -429,10 +450,30 @@ void Toolbar::DrawRightSideInfo()
     // Redo Button
     if (ImGui::Button("Redo"))
     {
-        if (ActionHistory::GetInstance()->HasRemainingRedoActions())
+        bool actionApplied = false;
+
+        while (ActionHistory::GetInstance()->HasRemainingRedoActions())
         {
             auto action = ActionHistory::GetInstance()->RedoAction();
+            auto go = GameObjectManager::GetInstance()->FindObjectByName(action->GetOwnerName());
+
+            if (!go) continue;
+
+            auto transform = go->Transform();
+            bool same = transform->GetLocalPosition() == action->GetStorePos() &&
+                transform->GetLocalQuaternion() == action->GetStoredOrientation() &&
+                transform->GetLocalScale() == action->GetStoredScale();
+
+            if (same) continue;
+
             GameObjectManager::GetInstance()->ApplyEditorAction(action);
+            actionApplied = true;
+            break;
+        }
+
+        if (!actionApplied)
+        {
+            Debug::LogWarning("No redo actions remaining.");
         }
     }
 
