@@ -26,49 +26,67 @@ void SceneWriter::WriteToFile(String fileName)
 
     for(const auto& object : allObjects)
     {
-        if (!object) continue;
-		if (dynamic_pointer_cast<GameEntity>(object) == nullptr) continue; // Ensure the object is a GameEntity
-
-		// === Write Object Data ===
-        sceneFile << "[GameObject]\n";
-        sceneFile << "Name: " << object->GetName() << "\n";
-
-		// === Transform Data ===
-        auto transform = object->Transform();
-        if (transform)
-        {
-            Vector3 pos = transform->GetLocalPosition();
-            Vector3 scale = transform->GetLocalScale();
-            rp3d::Quaternion rot = transform->GetLocalQuaternion();
-
-            sceneFile << "Position: " << pos.x << " " << pos.y << " " << pos.z << "\n";
-            sceneFile << "Rotation: " << rot.x << " " << rot.y << " " << rot.z << " " << rot.w << "\n";
-            sceneFile << "Scale: " << scale.x << " " << scale.y << " " << scale.z << "\n";
-        }
-        
-        // === Mesh Data ===
-        if (auto meshCompBase = object->FindComponentOfType(AComponent::ComponentType::Renderer))
-        {
-            if (auto meshComp = dynamic_cast<MeshComponent*>(meshCompBase))
-            {
-                sceneFile << "MeshType: " << meshComp->GetMeshType() << "\n";
-            }
-            else
-            {
-                sceneFile << "MeshType: UnknownRenderer\n";
-            }
-        }
-        else
-        {
-            sceneFile << "MeshType: None\n";
-        }
-
-		// === Physics Data ===
-        bool hasRB = object->FindComponentOfType(AComponent::ComponentType::Physics) != nullptr;
-        sceneFile << "HasRigidbody: " << (hasRB ? "true" : "false") << "\n";
-        sceneFile << "\n";
+        SaveObjectData(object, sceneFile);
     }
 
     sceneFile.close();
 	Debug::Log("Scene Successfully Saved at: " + fullPath);
+}
+
+void SceneWriter::SaveObjectData(std::shared_ptr<AGameObject> object, std::ofstream& sceneFile)
+{
+    if (!object) return;
+    if (dynamic_pointer_cast<GameEntity>(object) == nullptr)  return;  // Ensure the object is a GameEntity
+
+    // === Write Object Data ===
+    sceneFile << "[GameObject]\n";
+    sceneFile << "Name: " << object->GetName() << "\n";
+
+    // Write Parent Name
+    if (auto parent = object->GetParent(); parent)
+        sceneFile << "ParentName: " << parent->GetName() << "\n";
+    else
+        sceneFile << "ParentName: None\n";
+
+    // === Transform Data ===
+    auto transform = object->Transform();
+    if (transform)
+    {
+        Vector3 pos = transform->GetLocalPosition();
+        Vector3 scale = transform->GetLocalScale();
+        rp3d::Quaternion rot = transform->GetLocalQuaternion();
+
+        sceneFile << "Position: " << pos.x << " " << pos.y << " " << pos.z << "\n";
+        sceneFile << "Rotation: " << rot.x << " " << rot.y << " " << rot.z << " " << rot.w << "\n";
+        sceneFile << "Scale: " << scale.x << " " << scale.y << " " << scale.z << "\n";
+    }
+
+    // === Mesh Data ===
+    if (auto meshCompBase = object->FindComponentOfType(AComponent::ComponentType::Renderer))
+    {
+        if (auto meshComp = dynamic_cast<MeshComponent*>(meshCompBase))
+        {
+            sceneFile << "MeshType: " << meshComp->GetMeshType() << "\n";
+        }
+        else
+        {
+            sceneFile << "MeshType: UnknownRenderer\n";
+        }
+    }
+    else
+    {
+        sceneFile << "MeshType: None\n";
+    }
+
+    // === Physics Data ===
+    bool hasRB = object->FindComponentOfType(AComponent::ComponentType::Physics) != nullptr;
+    sceneFile << "HasRigidbody: " << (hasRB ? "true" : "false") << "\n";
+    sceneFile << "\n";
+
+    auto children = object->GetChildren();
+
+    for (const auto& child : children)
+    {
+        SaveObjectData(child, sceneFile);
+    }
 }

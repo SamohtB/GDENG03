@@ -30,6 +30,7 @@ public:
 	void DetachChild(std::shared_ptr<AGameObject> child);
 	ObjectList GetChildren() const;
     std::shared_ptr<AGameObject> GetParent() const;
+	void SetParent(std::shared_ptr<AGameObject> parent) { m_parent = parent; }
 
     void AttachComponent(std::shared_ptr<AComponent> component);
     void DetachComponent(std::shared_ptr<AComponent> component);

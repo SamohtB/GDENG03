@@ -22,89 +22,115 @@ void SceneReader::ReadFromFile(const String& fileName)
         return;
     }
 
-    String line;
-    while (std::getline(file, line))
-    {
-        if (line == "[GameObject]")
-        {
-            ParseGameObject(file);
-        }
-    }
+    ParseGameObject(file);
 
     Debug::Log("Scene Loaded from: " + fileName);
 }
 
 void SceneReader::ParseGameObject(std::ifstream& file)
 {
-    String name;
-    Vector3 position = { 0, 0, 0 };
-    Vector3 scale = { 1, 1, 1 };
-    rp3d::Quaternion rotation = { 0, 0, 0, 1 };
-    String meshType = "None";
-    bool hasRigidbody = false;
+    if (!file.is_open()) return;
 
+    std::unordered_map<String, ObjectData> parsedObjects;
     String line;
+    ObjectData current;
+    bool readingObject = false;
+
     while (std::getline(file, line))
     {
-        if (line.empty()) break;
-
-        std::istringstream iss(line);
-        String label;
-        iss >> label;
-
-        if (label == "Name:")
-        {
-            iss >> name;
+        if (line == "[GameObject]") {
+            current = ObjectData();
+            readingObject = true;
         }
-        else if (label == "Position:")
-        {
-            iss >> position.x >> position.y >> position.z;
+        else if (line.find("Name:") == 0) {
+            current.name = line.substr(6);
         }
-        else if (label == "Rotation:")
-        {
-            iss >> rotation.x >> rotation.y >> rotation.z >> rotation.w;
+        else if (line.find("ParentName:") == 0) {
+            current.parentName = line.substr(12);
         }
-        else if (label == "Scale:")
-        {
-            iss >> scale.x >> scale.y >> scale.z;
+        else if (line.find("Position:") == 0) {
+            std::stringstream ss(line.substr(9));
+            ss >> current.position.x >> current.position.y >> current.position.z;
         }
-        else if (label == "MeshType:")
-        {
-            iss >> meshType;
+        else if (line.find("Rotation:") == 0) {
+            std::stringstream ss(line.substr(9));
+            ss >> current.rotation.x >> current.rotation.y >> current.rotation.z >> current.rotation.w;
         }
-        else if (label == "HasRigidbody:")
-        {
-            String value;
-            iss >> value;
-            hasRigidbody = (value == "true");
+        else if (line.find("Scale:") == 0) {
+            std::stringstream ss(line.substr(7));
+            ss >> current.scale.x >> current.scale.y >> current.scale.z;
+        }
+        else if (line.find("MeshType:") == 0) {
+            current.meshType = line.substr(10);
+        }
+        else if (line.find("HasRigidbody:") == 0) {
+            current.hasRigidbody = (line.substr(14) == "true");
+        }
+        else if (line.empty() && readingObject) {
+            parsedObjects[current.name] = current;
+            readingObject = false;
         }
     }
 
-    // === Use GameObjectBuilder ===
-    GameObjectBuilder builder;
+    // Handle case where last object has no trailing newline
+    if (readingObject && !current.name.empty())
+        parsedObjects[current.name] = current;
 
-    builder.SetName(name).AddTransformComponent(name);
+    // === Pass 1: Create all objects with transform ===
+    std::unordered_map<String, std::shared_ptr<AGameObject>> createdObjects;
 
-    // === Check Mesh ===
-    if (meshType != "None" && meshType != "UnknownRenderer")
+    for (auto& [name, data] : parsedObjects)
     {
-        builder.AddMeshComponent(meshType, MaterialType::DEFAULT);
+        auto builder = GameObjectBuilder()
+            .SetName(name)
+            .AddTransformComponent(name);
+
+        auto obj = builder.Build();
+        obj->Transform()->SetPosition(data.position);
+        obj->Transform()->SetScale(data.scale);
+        obj->Transform()->SetRotation(data.rotation);
+
+        createdObjects[name] = obj;
     }
 
-    if (hasRigidbody)
+    // === Pass 2: Add mesh & physics ===
+    for (auto& [name, data] : parsedObjects)
     {
-        builder.AddPhysicsComponent(meshType, true);
+        auto obj = std::dynamic_pointer_cast<GameEntity>(createdObjects[name]);
+        if (!obj) continue;
+
+        auto builder = GameObjectBuilder().SetExisting(obj);
+
+        if (data.meshType != "None" && data.meshType != "UnknownRenderer")
+            builder.AddMeshComponent(data.meshType, MaterialType::DEFAULT);
+
+        if (data.hasRigidbody)
+            builder.AddPhysicsComponent(data.meshType, false);
+
+        createdObjects[name] = builder.Build();
     }
 
-    auto gameObject = std::dynamic_pointer_cast<GameEntity>(builder.Build());
-
-    // Set transform values after it's built
-    if (auto transform = gameObject->Transform())
+    // === Pass 3: Rebuild parent hierarchy and add to manager ===
+    for (auto& [name, data] : parsedObjects)
     {
-        transform->SetPosition(position);
-        transform->SetRotation(rotation);
-        transform->SetScale(scale);
+        auto child = createdObjects[name];
+        if (!child) continue;
+
+        if (data.parentName != "None")
+        {
+            auto parentIt = createdObjects.find(data.parentName);
+            if (parentIt != createdObjects.end())
+            {
+                auto parent = parentIt->second;
+                parent->AttachChild(child);
+            }
+                
+        }
+        else if (data.parentName == "None")
+        {
+            GameObjectManager::GetInstance()->AddGameObject(child);
+        }
     }
 
-    GameObjectManager::GetInstance()->AddGameObject(gameObject);
+    Debug::Log("Scene loaded successfully.");
 }

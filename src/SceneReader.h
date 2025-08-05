@@ -15,11 +15,12 @@ private:
 
     struct ObjectData 
     {
-        String objectName;
-        String meshType;
+        String name;
+        String parentName;
         Vector3 position;
-        rp3d::Quaternion rotation;
         Vector3 scale;
+        rp3d::Quaternion rotation;
+        String meshType;
         bool hasRigidbody;
     };
 };

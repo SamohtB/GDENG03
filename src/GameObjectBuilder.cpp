@@ -59,7 +59,7 @@ GameObjectBuilder& GameObjectBuilder::AddPhysicsComponent(String meshType, bool 
 	return *this;
 }
 
-std::shared_ptr<AGameObject> GameObjectBuilder::Build()
+std::shared_ptr<GameEntity> GameObjectBuilder::Build()
 {
 	return m_entity;
 }

@@ -13,6 +13,7 @@
 #include "GameObjectSpawner.h"
 #include "GameObjectBuilder.h"
 #include "TransformComponent.h"
+#include "GameEntity.h"
 
 #include "NameRegistry.h"
 #include "ActionHistory.h"
@@ -138,15 +139,20 @@ void Toolbar::GameObjects()
             {
                 auto name = NameRegistry::GetInstance()->GenerateUniqueName("PhysicsCube");
 
-                auto obj = GameObjectBuilder()
+                auto entity = GameObjectBuilder()
                     .SetName(name)
                     .AddTransformComponent(name)
+                    .Build();
+
+                entity->Transform()->SetPosition(Vector3(0.0f, 10.0f, 0.0f)); // Set initial position before physics
+
+                GameObjectBuilder()
+                    .SetExisting(entity)
                     .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT)
                     .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
                     .Build();
-
-				obj->Transform()->SetPosition(Vector3(0.0f, 10.0f, 0.0f)); // Set initial position above ground
-                GameObjectManager::GetInstance()->AddGameObject(obj);
+				
+                GameObjectManager::GetInstance()->AddGameObject(entity);
             }
 
             if (ImGui::MenuItem("Dynamic Physics Cube x 16"))
@@ -155,15 +161,20 @@ void Toolbar::GameObjects()
                 {
                     auto name = NameRegistry::GetInstance()->GenerateUniqueName("PhysicsCube");
 
-                    auto obj = GameObjectBuilder()
+                    auto entity = GameObjectBuilder()
                         .SetName(name)
                         .AddTransformComponent(name)
+                        .Build();
+
+                    entity->Transform()->SetPosition(Vector3(0.0f, 10.0f, 0.0f)); // Set initial position before physics
+
+                    GameObjectBuilder()
+                        .SetExisting(entity)
                         .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT)
                         .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
                         .Build();
 
-                    obj->Transform()->SetPosition(Vector3(0.0f, 10.0f, 0.0f)); // Set initial position above ground
-                    GameObjectManager::GetInstance()->AddGameObject(obj);
+                    GameObjectManager::GetInstance()->AddGameObject(entity);
                 }
             }
 

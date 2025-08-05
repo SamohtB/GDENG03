@@ -14,7 +14,7 @@ public:
 	GameObjectBuilder& AddMeshComponent(String mesh, String material);
 	GameObjectBuilder& AddPhysicsComponent(String meshType, bool isStatic);
 
-	std::shared_ptr<AGameObject> Build();
+	std::shared_ptr<GameEntity> Build();
 
 private:
 	std::shared_ptr<GameEntity> m_entity;
