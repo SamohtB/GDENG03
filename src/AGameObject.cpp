@@ -82,10 +82,9 @@ AGameObject::ObjectList AGameObject::GetChildren() const
 	return this->m_children;
 }
 
-AGameObject* AGameObject::GetParent() const
+std::shared_ptr<AGameObject> AGameObject::GetParent() const
 {
-	auto parent = this->m_parent.lock();
-	return parent ? parent.get() : nullptr;
+	return this->m_parent ? m_parent : nullptr;
 }
 
 void AGameObject::AttachComponent(std::shared_ptr<AComponent> component)
@@ -186,4 +185,25 @@ std::shared_ptr<TransformComponent> AGameObject::Transform() const
 void AGameObject::SetTransform(const std::shared_ptr<TransformComponent>& transform)
 {
 	m_transform = transform;
+}
+
+bool AGameObject::IsDescendantOf(std::shared_ptr<AGameObject> potentialAncestor)
+{
+	std::shared_ptr<AGameObject> parent = this->GetParent();
+	while (parent != nullptr)
+	{
+		if (parent == potentialAncestor)
+			return true;
+		parent = parent->GetParent();
+	}
+	return false;
+}
+
+void AGameObject::DetachFromParent()
+{
+	if (m_parent != nullptr)
+	{
+		m_parent->DetachChild(shared_from_this());
+		m_parent = nullptr;
+	}
 }

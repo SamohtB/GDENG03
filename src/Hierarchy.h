@@ -13,8 +13,8 @@ public:
     void DrawUI() override;
 
 private:
-    void DrawGameObjectNode(AGameObject* gameObject);
-	void DrawGameObjectNodeRecursive(AGameObject* gameObject);
-	void ReparentOrPromote(std::shared_ptr<AGameObject> gameObject, AGameObject* parent = nullptr);
+    void DrawGameObjectNode(std::shared_ptr<AGameObject> gameObject);
+	void DrawGameObjectNodeRecursive(std::shared_ptr<AGameObject> gameObject);
+	void ReparentOrPromote(std::shared_ptr<AGameObject> gameObject, std::shared_ptr<AGameObject> parent = nullptr);
 };
 

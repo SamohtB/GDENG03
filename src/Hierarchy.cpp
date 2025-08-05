@@ -16,12 +16,33 @@ void Hierarchy::DrawUI()
 
     if (ImGui::Begin("Hierarchy", nullptr, window_flags))
     {
-
         auto objectList = GameObjectManager::GetInstance()->GetAllObjects();
 
-        for (AGameObject* gameObject : objectList)
+        for (auto gameObject : objectList)
         {
             DrawGameObjectNodeRecursive(gameObject);
+        }
+
+        // === Create an invisible drop target for root ===
+        ImVec2 availableSpace = ImGui::GetContentRegionAvail();
+        if (availableSpace.y > 0)
+        {
+            ImGui::Dummy(ImVec2(availableSpace.x, availableSpace.y));
+            if (ImGui::BeginDragDropTarget())
+            {
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT"))
+                {
+                    auto draggedShared = *(std::shared_ptr<AGameObject>*)payload->Data;
+                    std::shared_ptr<AGameObject> draggedObject = draggedShared;
+
+                    if (draggedObject->GetParent() != nullptr)
+                    {
+                        draggedObject->DetachFromParent();
+                        GameObjectManager::GetInstance()->AddGameObject(draggedObject);
+                    }
+                }
+                ImGui::EndDragDropTarget();
+            }
         }
     }
 
@@ -30,7 +51,7 @@ void Hierarchy::DrawUI()
     ImGui::PopStyleColor();
 }
 
-void Hierarchy::DrawGameObjectNode(AGameObject* gameObject)
+void Hierarchy::DrawGameObjectNode(std::shared_ptr<AGameObject> gameObject)
 {
     bool isSelected = GameObjectManager::GetInstance()->GetSelectedObject() == gameObject;
 
@@ -73,7 +94,7 @@ void Hierarchy::DrawGameObjectNode(AGameObject* gameObject)
     ImGui::PopStyleColor(2);
 }
 
-void Hierarchy::DrawGameObjectNodeRecursive(AGameObject* gameObject)
+void Hierarchy::DrawGameObjectNodeRecursive(std::shared_ptr<AGameObject> gameObject)
 {
     bool isSelected = GameObjectManager::GetInstance()->GetSelectedObject() == gameObject;
 
@@ -84,24 +105,49 @@ void Hierarchy::DrawGameObjectNodeRecursive(AGameObject* gameObject)
     if (isSelected)
         flags |= ImGuiTreeNodeFlags_Selected;
 
-    std::string label = gameObject->GetName() + "###" + std::to_string(reinterpret_cast<uintptr_t>(gameObject));
+    bool nodeOpen = ImGui::TreeNodeEx(gameObject->GetName().c_str(), flags);
 
-    bool nodeOpen = ImGui::TreeNodeEx(label.c_str(), flags);
-
-    // === Selection handling ===
+    // === Handle Selection ===
     if (ImGui::IsItemClicked())
     {
         GameObjectManager::GetInstance()->SetSelectedObject(isSelected ? nullptr : gameObject);
     }
 
+    // === Drag Source ===
+    if (ImGui::BeginDragDropSource())
+    {
+        std::shared_ptr<AGameObject> sharedGameObject = gameObject;
+        ImGui::SetDragDropPayload("GAMEOBJECT", &sharedGameObject, sizeof(std::shared_ptr<AGameObject>));
+        ImGui::Text("Move %s", gameObject->GetName().c_str());
+        ImGui::EndDragDropSource();
+    }
+
+    // === Drop Target ===
+    if (ImGui::BeginDragDropTarget())
+    {
+        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT"))
+        {
+            auto draggedShared = *(std::shared_ptr<AGameObject>*)payload->Data;
+            std::shared_ptr<AGameObject> draggedObject = draggedShared;
+
+            if (draggedObject != gameObject && !draggedObject->IsDescendantOf(gameObject))
+            {
+                draggedObject->DetachFromParent();
+                gameObject->AttachChild(draggedShared);
+                GameObjectManager::GetInstance()->DeleteObject(draggedShared);
+            }
+        }
+        ImGui::EndDragDropTarget();
+    }
+
+    // === Right-click context menu (Delete) ===
     ImGui::SameLine(ImGui::GetContentRegionAvail().x - 20.0f);
-    std::string buttonID = "##btn" + std::to_string(reinterpret_cast<uintptr_t>(gameObject));
+    std::string buttonID = "##btn" + std::to_string(reinterpret_cast<uintptr_t>(gameObject.get()));
     if (ImGui::Button(buttonID.c_str(), ImVec2(20, 0)))
     {
         ImGui::OpenPopup(buttonID.c_str());
     }
 
-    // === Context menu for deletion ===
     if (ImGui::BeginPopup(buttonID.c_str()))
     {
         if (ImGui::MenuItem("Delete"))
@@ -120,26 +166,26 @@ void Hierarchy::DrawGameObjectNodeRecursive(AGameObject* gameObject)
                 ImGui::TreePop();
             return;
         }
-
         ImGui::EndPopup();
     }
 
-    // === Draw children ===
+    // === Children Recursion ===
     if (nodeOpen)
     {
         for (const auto& child : gameObject->GetChildren())
         {
-            DrawGameObjectNodeRecursive(child.get());
+            DrawGameObjectNodeRecursive(child);
         }
         ImGui::TreePop();
     }
 }
 
-void Hierarchy::ReparentOrPromote(std::shared_ptr<AGameObject> gameObject, AGameObject* parent)
+
+void Hierarchy::ReparentOrPromote(std::shared_ptr<AGameObject> gameObject, std::shared_ptr<AGameObject> parent)
 {
     if (parent != nullptr)
     {
-        AGameObject* grandParent = parent->GetParent();
+        auto grandParent = parent->GetParent();
 
         if (grandParent != nullptr)
         {

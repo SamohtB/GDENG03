@@ -13,7 +13,7 @@ void Inspector::DrawUI()
 {
     ImGui::Begin("Inspector", &this->m_visible);
 
-    AGameObject* object = GameObjectManager::GetInstance()->GetSelectedObject();
+    std::shared_ptr<AGameObject> object = GameObjectManager::GetInstance()->GetSelectedObject();
     if (object != nullptr)
     {
         ImGui::Text("Name: %s", object->GetName().c_str());
@@ -37,9 +37,9 @@ void Inspector::DrawUI()
         {
             GameObjectBuilder builder;
 
-            if (auto gameEntity = dynamic_cast<GameEntity*>(object))
+            if (auto gameEntity = dynamic_pointer_cast<GameEntity>(object))
             {
-                builder.SetExisting(std::shared_ptr<GameEntity>(gameEntity, [](GameEntity*) {}));
+                builder.SetExisting(gameEntity);
             }
 
             const std::string selected = componentOptions[selectedComponentIndex];

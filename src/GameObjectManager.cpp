@@ -37,28 +37,21 @@ GameObjectManager::GameObjectManager(ID3D12Device* device)
     this->m_objectConstantsBuffer = std::make_unique<DynamicConstantBufferPool>(device, POOL_SIZE_MEDIUM);
 }
 
-AGameObject* GameObjectManager::FindObjectByName(String name)
+std::shared_ptr<AGameObject> GameObjectManager::FindObjectByName(String name)
 {
     auto it = m_objectTable.find(name);
 
     if (it != m_objectTable.end())
     {
-        return it->second.get();
+        return it->second;
     }
 
     return nullptr;
 }
 
-std::vector<AGameObject*> GameObjectManager::GetAllObjects()
+std::vector<std::shared_ptr<AGameObject>> GameObjectManager::GetAllObjects()
 {
-    std::vector<AGameObject*> allObjects;
-
-    for (const auto& obj : m_objectList)
-    {
-        allObjects.push_back(obj.get());
-    }
-
-    return allObjects;
+    return m_objectList;
 }
 
 int GameObjectManager::ActiveObjects()
@@ -119,7 +112,7 @@ void GameObjectManager::AddGameObject(GameObjectPtr gameObject, bool isRendered)
     this->m_objectList.push_back(gameObject);
 }
 
-void GameObjectManager::DeleteObject(AGameObject* gameObject)
+void GameObjectManager::DeleteObject(std::shared_ptr<AGameObject> gameObject)
 {
     if (!gameObject) return;
 
@@ -135,7 +128,7 @@ void GameObjectManager::DeleteObject(AGameObject* gameObject)
             m_objectList.end(),
             [gameObject](const GameObjectPtr& ptr)
             {
-                return ptr.get() == gameObject;
+                return ptr == gameObject;
             }),
         m_objectList.end()
     );
@@ -162,12 +155,12 @@ void GameObjectManager::ClearAllObjects()
     m_objectTable.clear();
 }
 
-AGameObject* GameObjectManager::GetSelectedObject() const
+std::shared_ptr<AGameObject> GameObjectManager::GetSelectedObject() const
 {
     return this->m_selectedObject;
 }
 
-void GameObjectManager::SetSelectedObject(AGameObject* object)
+void GameObjectManager::SetSelectedObject(std::shared_ptr<AGameObject> object)
 {
     if (object == this->m_selectedObject) return; // No change
     this->m_selectedObject = object;
@@ -205,7 +198,7 @@ void GameObjectManager::ApplyEditorAction(EditorAction* action)
 {
     if (!action) return;
 
-    AGameObject* gameObject = FindObjectByName(action->GetOwnerName());
+    auto gameObject = FindObjectByName(action->GetOwnerName());
 
     if (!gameObject) return;
 

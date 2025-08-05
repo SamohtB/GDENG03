@@ -8,7 +8,6 @@ class DeviceContext;
 class AGameObject : public std::enable_shared_from_this<AGameObject>
 {
 public:
-	using Parent = std::weak_ptr<AGameObject>;
 	using ObjectList = std::vector<std::shared_ptr<AGameObject>>;
 	using ComponentPtr = std::shared_ptr<AComponent>;
     using ComponentList = std::vector<ComponentPtr>;
@@ -30,7 +29,7 @@ public:
 	void AttachChild(std::shared_ptr<AGameObject> child);
 	void DetachChild(std::shared_ptr<AGameObject> child);
 	ObjectList GetChildren() const;
-    AGameObject* GetParent() const;
+    std::shared_ptr<AGameObject> GetParent() const;
 
     void AttachComponent(std::shared_ptr<AComponent> component);
     void DetachComponent(std::shared_ptr<AComponent> component);
@@ -44,6 +43,9 @@ public:
     std::shared_ptr<TransformComponent> Transform() const;
     void SetTransform(const std::shared_ptr<TransformComponent>& transform);
 
+    bool IsDescendantOf(std::shared_ptr<AGameObject> potentialAncestor);
+    void DetachFromParent();
+
 protected:
     unsigned int m_id;
     String m_name;
@@ -53,5 +55,5 @@ protected:
     ComponentList m_componentList;
 	ObjectList m_children;
 
-    Parent m_parent;
+    std::shared_ptr<AGameObject> m_parent;
 };

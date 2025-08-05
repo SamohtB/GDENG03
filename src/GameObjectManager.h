@@ -20,19 +20,19 @@ public:
     static void Initialize(ID3D12Device* device);
     static void Destroy();
 
-    AGameObject* FindObjectByName(String name);
-    std::vector<AGameObject*> GetAllObjects();
+    std::shared_ptr<AGameObject> FindObjectByName(String name);
+    std::vector<std::shared_ptr<AGameObject>> GetAllObjects();
     int ActiveObjects();
     void UpdateAll(float deltaTime);
     void RenderAll(DeviceContext* context);
 
     void AddGameObject(GameObjectPtr gameObject, bool isRendered = true);
-    void DeleteObject(AGameObject* game_object);
+    void DeleteObject(std::shared_ptr<AGameObject> game_object);
     void DeleteObjectByName(String name);
     void ClearAllObjects();
 
-    AGameObject* GetSelectedObject() const;
-    void SetSelectedObject(AGameObject* object);
+    std::shared_ptr<AGameObject> GetSelectedObject() const;
+    void SetSelectedObject(std::shared_ptr<AGameObject> object);
 
     void UploadObjectConstants(UINT frameIndex);
 
@@ -51,7 +51,7 @@ private:
     ObjectList m_objectList;
     Table m_objectTable;
 
-    AGameObject* m_selectedObject = nullptr;
+    GameObjectPtr m_selectedObject = nullptr;
 
     friend class AGameObject;
 };

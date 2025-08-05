@@ -27,7 +27,7 @@ void SceneWriter::WriteToFile(String fileName)
     for(const auto& object : allObjects)
     {
         if (!object) continue;
-		if (dynamic_cast<GameEntity*>(object) == nullptr) continue; // Ensure the object is a GameEntity
+		if (dynamic_pointer_cast<GameEntity>(object) == nullptr) continue; // Ensure the object is a GameEntity
 
 		// === Write Object Data ===
         sceneFile << "[GameObject]\n";
