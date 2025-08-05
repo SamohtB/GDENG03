@@ -14,7 +14,7 @@ private:
     void GameObjects();
     void Lighting();
     void Windows();
-	void UndoRedo();
+    void DrawRightSideInfo();
     void DisplayFPS();
     // Function to draw the playback controls
     void DrawPlaybackControls();

@@ -33,13 +33,12 @@ void Toolbar::DrawUI()
         GameObjects();
         Lighting();
         Windows();
-        //UndoRedo();
 
         // --- Centered Playback Controls ---
         DrawPlaybackControls();
 
         // --- Right-aligned FPS Counter ---
-        DisplayFPS();
+        DrawRightSideInfo();
     }
 
     ImGui::EndMainMenuBar();
@@ -392,12 +391,19 @@ void Toolbar::Windows()
     }
 }
 
-void Toolbar::UndoRedo()
+void Toolbar::DrawRightSideInfo()
 {
     float windowWidth = ImGui::GetWindowWidth();
 
-    ImGui::SameLine((windowWidth / 2.0f) - 60.0f);
+    // Reserve space for Undo, Redo and FPS
+    float fpsTextWidth = ImGui::CalcTextSize("FPS: 000").x;
+    float buttonWidth = 60.0f; // Approx width of Undo/Redo buttons
+    float spacing = 10.0f;
 
+    float totalWidth = (buttonWidth * 2) + spacing + fpsTextWidth + 10.0f;
+    ImGui::SetCursorPosX(windowWidth - totalWidth);
+
+    // Undo Button
     if (ImGui::Button("Undo"))
     {
         if (ActionHistory::GetInstance()->HasRemainingUndoActions())
@@ -409,6 +415,7 @@ void Toolbar::UndoRedo()
 
     ImGui::SameLine();
 
+    // Redo Button
     if (ImGui::Button("Redo"))
     {
         if (ActionHistory::GetInstance()->HasRemainingRedoActions())
@@ -417,4 +424,11 @@ void Toolbar::UndoRedo()
             GameObjectManager::GetInstance()->ApplyEditorAction(action);
         }
     }
+
+    ImGui::SameLine();
+
+    // FPS Text
+    int fps = EngineTime::GetFPS();
+    std::string fpsText = "FPS: " + std::to_string(fps);
+    ImGui::Text("%s", fpsText.c_str());
 }
