@@ -217,7 +217,6 @@ void Toolbar::GameObjects()
 
                     auto entity = GameObjectBuilder()
                         .SetName(name)
-                        .SetType("DynamicPhysicsCube")
                         .AddTransformComponent(name)
                         .Build();
 
@@ -240,7 +239,6 @@ void Toolbar::GameObjects()
                 auto obj = GameObjectBuilder()
                     .SetName(name)
                     .AddTransformComponent(name)
-                    .SetType("StaticPhysicsPlane")
                     .AddMeshComponent(MeshType::PRIMITIVE_PLANE, MaterialType::DEFAULT)
                     .AddPhysicsComponent(MeshType::PRIMITIVE_PLANE, true)
                     .Build();
