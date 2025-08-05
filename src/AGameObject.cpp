@@ -4,9 +4,12 @@
 #include "PhysicsComponent.h"
 #include "Debug.h"
 
+// Initialize the static ID counter. We start at 1.
+unsigned int AGameObject::s_nextId = 1;
+
 AGameObject::AGameObject(String name) : m_id(0), m_name(name), m_active(true)
 {
-	
+
 }
 
 AGameObject::~AGameObject()
@@ -23,6 +26,12 @@ AGameObject::~AGameObject()
 
 		component->DetachOwner();
 	}
+}
+
+// This is the implementation for our new static function
+unsigned int AGameObject::GetNextId()
+{
+	return s_nextId++;
 }
 
 bool AGameObject::IsActive() const
@@ -141,7 +150,7 @@ AComponent* AGameObject::FindComponentOfType(AComponent::ComponentType type)
 		if (comp->GetType() == type)
 		{
 			return comp.get();
-		}		
+		}
 	}
 
 	return nullptr;
@@ -156,7 +165,7 @@ AGameObject::ComponentList AGameObject::GetComponentsOfType(AComponent::Componen
 		if (comp->GetType() == type)
 		{
 			foundList.push_back(comp);
-		}		
+		}
 	}
 
 	return foundList;

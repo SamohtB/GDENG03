@@ -165,6 +165,7 @@
     <ClCompile Include="src\DebugWindow.cpp" />
     <ClCompile Include="src\ActionHistory.cpp" />
     <ClCompile Include="src\EditorAction.cpp" />
+    <ClCompile Include="src\SceneStateManager.cpp" />
     <ClCompile Include="src\EditorState.cpp" />
     <ClCompile Include="src\MaterialEditor.cpp" />
     <ClCompile Include="src\GameObjectBuilder.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="src\DebugWindow.h" />
     <ClInclude Include="src\ActionHistory.h" />
     <ClInclude Include="src\EditorAction.h" />
+    <ClInclude Include="src\SceneStateManager.h" />
     <ClInclude Include="src\EditorState.h" />
     <ClInclude Include="src\MaterialEditor.h" />
     <ClInclude Include="src\GameObjectBuilder.h" />

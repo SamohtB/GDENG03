@@ -18,6 +18,7 @@
 #include "NameRegistry.h"
 #include "ActionHistory.h"
 #include "EditorState.h" // <-- Required include for the editor state controls
+#include "SceneStateManager.h"
 
 Toolbar::Toolbar() : AUIScreen("TOOLBAR")
 {
@@ -47,7 +48,7 @@ void Toolbar::DrawPlaybackControls()
 {
     // Calculate the center of the viewport
     float viewportWidth = ImGui::GetMainViewport()->Size.x;
-    float controlsWidth = 150.0f; // Approximate width of our buttons
+    float controlsWidth = 200.0f; // Increased width to accommodate Reset button
     ImGui::SetCursorPosX((viewportWidth - controlsWidth) * 0.5f);
 
     EditorState currentState = EditorStateManager::GetState();
@@ -70,14 +71,23 @@ void Toolbar::DrawPlaybackControls()
 
     ImGui::SameLine();
 
-    // --- Stop Button (triggers Reset) ---
-    if (currentState == EditorState::PLAY || currentState == EditorState::PAUSED)
-    {        {
+    // --- Reset Button ---
+    // Only enable if we have a saved state (i.e., we've played before)
+    if (!SceneStateManager::GetInstance()->HasSavedState())
+        ImGui::BeginDisabled();
 
-        if (ImGui::Button("Stop"))
+    if (ImGui::Button("Reset"))
+    {
+        EditorStateManager::ResetScene();
+        // Optionally, you can also set state back to EDIT if currently playing
+        if (currentState != EditorState::EDIT)
+        {
             EditorStateManager::SetState(EditorState::EDIT);
         }
     }
+
+    if (!SceneStateManager::GetInstance()->HasSavedState())
+        ImGui::EndDisabled();
 
     ImGui::SameLine();
 
@@ -89,6 +99,7 @@ void Toolbar::DrawPlaybackControls()
     }
     if (currentState != EditorState::PAUSED) ImGui::EndDisabled();
 }
+
 
 
 void Toolbar::Lighting()

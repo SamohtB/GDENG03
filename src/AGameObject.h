@@ -34,7 +34,6 @@ public:
     // --- NEWLY ADDED METHODS ---
     String GetObjectType() const;
     void SetObjectType(const String& type);
-    // --- END NEWLY ADDED METHODS ---
 
     void AttachComponent(std::shared_ptr<AComponent> component);
     void DetachComponent(std::shared_ptr<AComponent> component);
@@ -50,11 +49,13 @@ public:
 
     bool IsDescendantOf(std::shared_ptr<AGameObject> potentialAncestor);
     void DetachFromParent();
+    // This is the new static function to get the next ID
+    static unsigned int GetNextId();
 
 protected:
     unsigned int m_id;
     String m_name;
-    String m_objectType; // <-- NEW MEMBER VARIABLE
+    String m_objectType;
     bool m_active;
 
     std::shared_ptr<TransformComponent> m_transform;
@@ -62,4 +63,8 @@ protected:
 	ObjectList m_children;
 
     std::shared_ptr<AGameObject> m_parent;
+
+private:
+    // This is the new static counter
+    static unsigned int s_nextId;
 };

@@ -22,6 +22,7 @@
 #include "Random.h"
 
 #include "EditorState.h"
+#include "SceneStateManager.h"
 
 GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
 
@@ -37,6 +38,7 @@ void GameWindow::OnCreate(HWND hwnd)
 	PhysicsSystem::Initialize();
 	NameRegistry::Initialize();
 	ActionHistory::Initialize();
+	SceneStateManager::Initialize();
 
 	auto debugWindow = (DebugWindow*)(EngineGUIManager::GetInstance()->GetUI(UINames::DEBUG));
 	Debug::GetInstance()->AssignWindow(debugWindow);
