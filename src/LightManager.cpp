@@ -16,7 +16,7 @@ void LightManager::CreateLight(const String& lightName, const Vector3& color, fl
         return;
     }
 
-    auto light = std::make_shared<PointLight>(lightName, color, intensity, range);
+    auto light = PointLight::Create(lightName, color, intensity, range);
 
     PointLightData data;
     data.position = light->Transform()->GetLocalPosition();

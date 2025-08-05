@@ -29,8 +29,6 @@ class GameObjectSpawner
 public:
     static void CreateLight()
     {
-        std::string name = NameRegistry::GetInstance()->GenerateUniqueName("PointLight");
-        GraphicsEngine::GetInstance()->GetLightManager()->CreateLight(
-            name, Vector3(1.0f, 1.0f, 1.0f), 2.0f, 50.0f);
+        
     }
 };

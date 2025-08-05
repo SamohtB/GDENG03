@@ -363,12 +363,12 @@ void MeshManager::LoadSpherePrimitive()
             uint32_t index3 = nextI * stride + nextJ;
 
             indices.push_back(index0);
-            indices.push_back(index1);
             indices.push_back(index2);
+            indices.push_back(index1);
 
             indices.push_back(index1);
-            indices.push_back(index3);
             indices.push_back(index2);
+            indices.push_back(index3);
         }
     }
 

@@ -107,7 +107,12 @@ void Toolbar::Lighting()
 {
     if (ImGui::BeginMenu("Lighting"))
     {
-        if (ImGui::MenuItem("Point Light")) { GameObjectSpawner::CreateLight(); }
+        if (ImGui::MenuItem("Point Light")) 
+        { 
+            std::string name = NameRegistry::GetInstance()->GenerateUniqueName("PointLight");
+            GraphicsEngine::GetInstance()->GetLightManager()->CreateLight(
+                name, Vector3(1.0f, 1.0f, 1.0f), 2.0f, 50.0f);
+        }
         ImGui::EndMenu();
     }
 }
