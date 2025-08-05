@@ -31,6 +31,10 @@ public:
 	ObjectList GetChildren() const;
     std::shared_ptr<AGameObject> GetParent() const;
 	void SetParent(std::shared_ptr<AGameObject> parent) { m_parent = parent; }
+    // --- NEWLY ADDED METHODS ---
+    String GetObjectType() const;
+    void SetObjectType(const String& type);
+    // --- END NEWLY ADDED METHODS ---
 
     void AttachComponent(std::shared_ptr<AComponent> component);
     void DetachComponent(std::shared_ptr<AComponent> component);
@@ -50,6 +54,7 @@ public:
 protected:
     unsigned int m_id;
     String m_name;
+    String m_objectType; // <-- NEW MEMBER VARIABLE
     bool m_active;
 
     std::shared_ptr<TransformComponent> m_transform;

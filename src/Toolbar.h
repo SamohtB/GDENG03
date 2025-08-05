@@ -7,7 +7,6 @@ public:
     Toolbar();
     ~Toolbar() = default;
 
-    // Inherited via AUIScreen
     void DrawUI() override;
 
 private:
@@ -17,4 +16,6 @@ private:
     void Windows();
 	void UndoRedo();
     void DisplayFPS();
+    // Function to draw the playback controls
+    void DrawPlaybackControls();
 };

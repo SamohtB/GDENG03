@@ -333,6 +333,7 @@
     <ClCompile Include="src\LoadScene.cpp">
       <Filter>Engine\EngineGUI\UIScreens\SceneManager</Filter>
     </ClCompile>
+    <ClCompile Include="src\EditorState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DescriptorHeapManager.h">
@@ -566,6 +567,7 @@
     <ClInclude Include="src\LoadScene.h">
       <Filter>Engine\EngineGUI\UIScreens\SceneManager</Filter>
     </ClInclude>
+    <ClInclude Include="src\EditorState.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\DefaultVertexShader.hlsl">

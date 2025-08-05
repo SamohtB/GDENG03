@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "EngineTime.h"
 #include "Debug.h"
+#include "EditorState.h" 
 
 std::unique_ptr<EngineTime> EngineTime::sharedInstance = nullptr;
 int EngineTime::currentFPS = 0;
@@ -85,6 +86,19 @@ void EngineTime::UpdateFPSCounter()
         frameCount = 0;
         lastTime = now;
     }
+}
+
+float EngineTime::GetGameDeltaTime()
+{
+    // Game time progresses if we are in PLAY mode,
+    // OR if a single time step has been requested while PAUSED.
+    if (EditorStateManager::GetState() == EditorState::PLAY || EditorStateManager::IsTimeStepRequested())
+    {
+        return static_cast<float>(sharedInstance->m_deltaTime);
+    }
+
+    // Otherwise, game time is frozen.
+    return 0.0f;
 }
 
 int EngineTime::GetFPS()

@@ -87,6 +87,15 @@ std::shared_ptr<AGameObject> AGameObject::GetParent() const
 	return this->m_parent ? m_parent : nullptr;
 }
 
+String AGameObject::GetObjectType() const
+{
+	return this->m_objectType;
+}
+
+void AGameObject::SetObjectType(const String& type)
+{
+	this->m_objectType = type;
+}
 void AGameObject::AttachComponent(std::shared_ptr<AComponent> component)
 {
 	this->m_componentList.push_back(component);

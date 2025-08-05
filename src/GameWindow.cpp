@@ -21,6 +21,8 @@
 #include "Debug.h"
 #include "Random.h"
 
+#include "EditorState.h"
+
 GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
 
 void GameWindow::OnCreate(HWND hwnd)
@@ -50,13 +52,18 @@ void GameWindow::OnCreate(HWND hwnd)
 void GameWindow::OnUpdate()
 {
 	auto deltaTime = EngineTime::GetDeltaTime();
-	m_ticks += deltaTime;
+	auto gameDeltaTime = EngineTime::GetGameDeltaTime();
 
+	// Editor systems always update
 	InputSystem::GetInstance()->ProcessInput();
-
 	CameraManager::GetInstance()->Update(deltaTime);
-	GameObjectManager::GetInstance()->UpdateAll(deltaTime);
-	PhysicsSystem::GetInstance()->UpdateAllComponents(deltaTime);
+
+	// Game logic systems only update when gameDeltaTime is greater than 0
+	if (gameDeltaTime > 0.0f)
+	{
+		GameObjectManager::GetInstance()->UpdateAll(gameDeltaTime);
+		PhysicsSystem::GetInstance()->UpdateAllComponents(gameDeltaTime);
+	}
 
 	FrameConstantsData frameData = {};
 	frameData.viewMatrix = CameraManager::GetInstance()->GetActiveCameraViewMatrix();

@@ -12,6 +12,7 @@ public:
     static float GetDeltaTime();
     static float GetFixedDeltaTime();
     static float GetTimeSinceStart();
+    static float GetGameDeltaTime(); // This must be static
 
     static void UpdateFPSCounter();
     static int GetFPS();
@@ -20,6 +21,7 @@ public:
     ~EngineTime() = default;
     EngineTime(EngineTime const&) = delete;
     EngineTime& operator=(EngineTime const&) = delete;
+
 private:
     static std::unique_ptr<EngineTime> sharedInstance;
 
@@ -38,7 +40,6 @@ private:
     static void LogFrameStart();
     static void LogFrameEnd();
 
-   
     friend class Win32App;
+    friend class GameWindow; // Add GameWindow as a friend if it calls private members
 };
-

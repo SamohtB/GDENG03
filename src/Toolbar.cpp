@@ -17,6 +17,7 @@
 
 #include "NameRegistry.h"
 #include "ActionHistory.h"
+#include "EditorState.h" // <-- Required include for the editor state controls
 
 Toolbar::Toolbar() : AUIScreen("TOOLBAR")
 {
@@ -27,16 +28,69 @@ void Toolbar::DrawUI()
 {
     if (ImGui::BeginMainMenuBar())
     {
+        // --- Left-aligned Menus ---
         FileMenu();
         GameObjects();
         Lighting();
         Windows();
-        UndoRedo();
+        //UndoRedo();
+
+        // --- Centered Playback Controls ---
+        DrawPlaybackControls();
+
+        // --- Right-aligned FPS Counter ---
         DisplayFPS();
     }
 
     ImGui::EndMainMenuBar();
 }
+void Toolbar::DrawPlaybackControls()
+{
+    // Calculate the center of the viewport
+    float viewportWidth = ImGui::GetMainViewport()->Size.x;
+    float controlsWidth = 150.0f; // Approximate width of our buttons
+    ImGui::SetCursorPosX((viewportWidth - controlsWidth) * 0.5f);
+
+    EditorState currentState = EditorStateManager::GetState();
+
+    // --- Play / Pause Button ---
+    if (currentState == EditorState::PLAY)
+    {
+        if (ImGui::Button("Pause"))
+        {
+            EditorStateManager::SetState(EditorState::PAUSED);
+        }
+    }
+    else // State is EDIT or PAUSED
+    {
+        if (ImGui::Button("Play"))
+        {
+            EditorStateManager::SetState(EditorState::PLAY);
+        }
+    }
+
+    ImGui::SameLine();
+
+    // --- Stop Button (triggers Reset) ---
+    if (currentState == EditorState::PLAY || currentState == EditorState::PAUSED)
+    {        {
+
+        if (ImGui::Button("Stop"))
+            EditorStateManager::SetState(EditorState::EDIT);
+        }
+    }
+
+    ImGui::SameLine();
+
+    // --- Time Step Button ---
+    if (currentState != EditorState::PAUSED) ImGui::BeginDisabled();
+    if (ImGui::Button("Time Step"))
+    {
+        EditorStateManager::RequestTimeStep();
+    }
+    if (currentState != EditorState::PAUSED) ImGui::EndDisabled();
+}
+
 
 void Toolbar::Lighting()
 {
@@ -163,6 +217,7 @@ void Toolbar::GameObjects()
 
                     auto entity = GameObjectBuilder()
                         .SetName(name)
+                        .SetType("DynamicPhysicsCube")
                         .AddTransformComponent(name)
                         .Build();
 
@@ -185,6 +240,7 @@ void Toolbar::GameObjects()
                 auto obj = GameObjectBuilder()
                     .SetName(name)
                     .AddTransformComponent(name)
+                    .SetType("StaticPhysicsPlane")
                     .AddMeshComponent(MeshType::PRIMITIVE_PLANE, MaterialType::DEFAULT)
                     .AddPhysicsComponent(MeshType::PRIMITIVE_PLANE, true)
                     .Build();
@@ -306,9 +362,10 @@ void Toolbar::DisplayFPS()
     int fps = EngineTime::GetFPS();
     std::string fpsText = "FPS: " + std::to_string(fps);
 
+    // This positions the text on the far right of the menu bar
     float windowWidth = ImGui::GetWindowWidth();
     float textWidth = ImGui::CalcTextSize(fpsText.c_str()).x;
-    ImGui::SameLine(windowWidth - textWidth - 20.0f);
+    ImGui::SetCursorPosX(windowWidth - textWidth - 20.0f);
 
     ImGui::Text("%s", fpsText.c_str());
 }

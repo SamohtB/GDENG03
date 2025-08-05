@@ -133,6 +133,14 @@ reactphysics3d::RigidBody* PhysicsComponent::GetRigidBody()
     return this->m_rigidbody;
 }
 
+void PhysicsComponent::UpdateTransformFromOwner()
+{
+    Vector3 pos = m_owner.lock()->Transform()->GetLocalPosition();
+    rp3d::Quaternion rot = m_owner.lock()->Transform()->GetLocalQuaternion();
+    rp3d::Transform newTransform(rp3d::Vector3(pos.x, pos.y, pos.z), rot);
+    m_rigidbody->setTransform(newTransform);
+}
+
 void PhysicsComponent::SetBodyType(reactphysics3d::BodyType type)
 {
     this->m_rigidbody->setType(type);

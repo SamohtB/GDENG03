@@ -18,6 +18,8 @@ public:
     PhysicsComponent* FindComponentByName(String name);
     PhysicsComponentList GetAllComponents();
 
+    void SynchronizeTransformsToRigidBodies();
+
     void UpdateAllComponents(float deltaTime);
     reactphysics3d::PhysicsWorld* GetPhysicsWorld();
     reactphysics3d::PhysicsCommon* GetPhysicsCommon();
