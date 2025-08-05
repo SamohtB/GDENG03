@@ -36,11 +36,11 @@ void SceneStateManager::SaveSceneState()
 
     auto allObjects = GameObjectManager::GetInstance()->GetAllObjects();
 
-    for (AGameObject* gameObject : allObjects)
+    for (auto gameObject : allObjects)
     {
         if (gameObject)
         {
-            GameObjectState state = CaptureGameObjectState(gameObject);
+            GameObjectState state = CaptureGameObjectState(gameObject.get());
             m_savedStates[gameObject->GetId()] = state;
         }
     }
@@ -59,14 +59,14 @@ void SceneStateManager::RestoreSceneState()
 
     auto allObjects = GameObjectManager::GetInstance()->GetAllObjects();
 
-    for (AGameObject* gameObject : allObjects)
+    for (auto gameObject : allObjects)
     {
         if (gameObject)
         {
             auto it = m_savedStates.find(gameObject->GetId());
             if (it != m_savedStates.end())
             {
-                RestoreGameObjectState(gameObject, it->second);
+                RestoreGameObjectState(gameObject.get(), it->second);
             }
         }
     }
