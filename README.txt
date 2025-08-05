@@ -1,5 +1,8 @@
 Owner: Thomas Bryle Banatin
 
+Special Thanks To:
+Jose Romulo Guzman (GDENG03 Scene Editor)
+
 How To Run Program:
 - Dependencies:
   - DirectXShaderCompiler (directx-dxc)
@@ -26,50 +29,10 @@ Notes:
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 	and
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
+
 This is due to vertex buffers, index buffers, and texture buffers are passed to a BatchResourceUploader that uses a different command queue than the one for drawing
 
-* Due to my limitations, the render system only supports 128 objects with constant buffers.
-This is due the program using only 1 centralized constant buffer for all per-object constant buffers
-for logic only game objects (no need for constant buffers/ no need to be rendered), a boolean can be added when adding the object to the GameObjectManager
-	ex. GameObjectManager::GetInstance()->AddGameObject(object, false);
-this would not allocate a constant buffer for the added game object
-
-
-Recreating Test Cases:
-
-* Comment/Remove unrelated logic in GameWindow::OnCreate/Cube::Cube/Cube::OnUpdate
-
-Test Case 1
-	uncomment Load Single Cube in GameWindow::OnCreate inside GameWindow.cpp
-	uncomment Rainbow Shader Cube (1 & 3) in Cube::Cube inside Cube.cpp
-
-Test Case 2
-	uncomment Load Single Cube in GameWindow::OnCreate inside GameWindow.cpp
-	uncomment Single Color (Default = white) (2 & 6) in Cube::Cube inside Cube.cpp
-	uncomment Rotate On All Axis Behaviour (2 & 4) in Cube::OnUpdate inside Cube.cpp
-
-Test Case 3
-	uncomment Load Single Cube in GameWindow::OnCreate inside GameWindow.cpp
-	uncomment Rainbow Shader Cube (1 & 3) in Cube::Cube inside Cube.cpp
-	uncomment Move Along X and Y axis + Lerp Scale (3) in Cube::OnUpdate inside Cube.cpp
-
-Test Case 4:
-	uncomment Load_4 in GameWindow::OnCreate inside GameWindow.cpp
-	uncomment Rainbow Shader Cube (1 & 3) in Cube::Cube inside Cube.cpp
-	uncomment Rotate On All Axis Behaviour (2 & 4) in Cube::OnUpdate inside Cube.cpp
-
-Test Case 5:
-	uncomment Load Single Cube in GameWindow::OnCreate inside GameWindow.cpp
-	uncomment Rainbow Shader Cube (1 & 3) in Cube::Cube inside Cube.cpp
-	uncomment Warping Animation (5) behaviour in Cube::OnUpdate inside Cube.cpp
-
-Test Case 6:
-	uncomment Load_6 in GameWindow::OnCreate inside GameWindow.cpp
-	uncomment Single Color (Default = white) (2 & 6) in Cube::Cube inside Cube.cpp
-
-Test Case 7: (Loaded by Default)
-	uncomment Load_7 in GameWindow::OnCreate inside GameWindow.cpp
-	uncomment Card Blue and White Colors (7) in Cube::Cube inside Cube.cpp
+GDrive Link to Test Cases and Asset Folder: https://drive.google.com/drive/folders/1qlJDlBZe4FXhACQ4wmM7yOEjfh9H1t2H?usp=drive_link 
 
 
 	
