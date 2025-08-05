@@ -32,7 +32,7 @@ void MaterialManager::LoadInitialMaterials()
 
     CreateMaterial(MaterialType::ROCK,
         {
-        ShaderType::LIT,
+        ShaderType::UNLIT,
         TextureType::ROCK_COLOR,    Vector4(1, 1, 1, 1),
         TextureType::ROCK_NORMAL,   1.0f,
         TextureType::DEFAULT,       0.0f,
@@ -46,7 +46,7 @@ void MaterialManager::LoadInitialMaterials()
 
     CreateMaterial(MaterialType::METAL_PLATE,
         {
-        ShaderType::LIT,
+        ShaderType::UNLIT,
         TextureType::METAL_COLOR,   Vector4(1, 1, 1, 1),
         TextureType::METAL_NORMAL,  1.0f,
         TextureType::METAL_METAL,   0.8f,
@@ -60,7 +60,7 @@ void MaterialManager::LoadInitialMaterials()
 
     CreateMaterial(MaterialType::BRICKS,
         {
-        ShaderType::LIT,
+        ShaderType::UNLIT,
         TextureType::BRICKS_COLOR,  Vector4(1, 1, 1, 1),
         TextureType::BRICKS_NORMAL, 1.0f,
         TextureType::DEFAULT,       0.0f,
@@ -72,8 +72,34 @@ void MaterialManager::LoadInitialMaterials()
         Vector2(0.0f, 0.0f)
         });
 
-    CreateBlankMaterial(MaterialType::BLANK_1);
-    CreateBlankMaterial(MaterialType::BLANK_2);
+    CreateMaterial(MaterialType::BLANK_1,
+        {
+        ShaderType::UNLIT,
+        TextureType::FABRIC,  Vector4(1, 1, 1, 1),
+        TextureType::DEFAULT,       1.0f,
+        TextureType::DEFAULT,       0.0f,
+        TextureType::DEFAULT,       1.0f,
+        TextureType::DEFAULT,       1.0f,
+        TextureType::DEFAULT,       0.0f,
+        TextureType::DEFAULT,       1.0f,
+        Vector2(1.0f, 1.0f),
+        Vector2(0.0f, 0.0f)
+        });
+
+    CreateMaterial(MaterialType::BLANK_2,
+        {
+        ShaderType::UNLIT,
+        TextureType::TILE,  Vector4(1, 1, 1, 1),
+        TextureType::DEFAULT,       1.0f,
+        TextureType::DEFAULT,       0.0f,
+        TextureType::DEFAULT,       1.0f,
+        TextureType::DEFAULT,       1.0f,
+        TextureType::DEFAULT,       0.0f,
+        TextureType::DEFAULT,       1.0f,
+        Vector2(1.0f, 1.0f),
+        Vector2(0.0f, 0.0f)
+        });
+
     CreateBlankMaterial(MaterialType::BLANK_3);
 }
 

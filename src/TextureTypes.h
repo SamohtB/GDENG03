@@ -24,4 +24,7 @@ public:
     inline static const std::string BRICKS_ROUGH = "BRICKS_ROUGH";
     inline static const std::string BRICKS_AO = "BRICKS_AO";
     inline static const std::string BRICKS_HEIGHT = "BRICKS_HEIGHT";
+
+    inline static const std::string FABRIC = "FABRIC";
+    inline static const std::string TILE = "TILE";
 };

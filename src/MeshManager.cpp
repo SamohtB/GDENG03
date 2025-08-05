@@ -18,6 +18,7 @@ void MeshManager::LoadInitialMeshes()
     LoadMesh(MeshType::UTAH_TEAPOT, L"Assets/Meshes/teapot.obj");
     LoadMesh(MeshType::STANFORD_BUNNY, L"Assets/Meshes/bunny.obj");
     LoadMesh(MeshType::STANFORD_ARMADILLO, L"Assets/Meshes/armadillo.obj");
+    LoadMesh(MeshType::LUCY, L"Assets/Meshes/lucy.obj");
 }
 
 void MeshManager::LoadMesh(const String& meshName, const std::wstring& filePath)

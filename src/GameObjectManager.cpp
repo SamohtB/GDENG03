@@ -7,8 +7,8 @@
 #include "MeshComponent.h"
 #include "EditorAction.h"
 #include "Debug.h"
-#include "SceneStateManager.h" // Add this include
-#include "EditorState.h"       // Add this include
+#include "SceneStateManager.h"
+#include "EditorState.h"       
 
 std::unique_ptr<GameObjectManager> GameObjectManager::sharedInstance = nullptr;
 

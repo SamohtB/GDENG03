@@ -300,6 +300,19 @@ void Toolbar::GameObjects()
 
                 GameObjectManager::GetInstance()->AddGameObject(obj);
             }
+
+            if (ImGui::MenuItem("Lucy"))
+            {
+                auto name = NameRegistry::GetInstance()->GenerateUniqueName("Lucy");
+
+                auto obj = GameObjectBuilder()
+                    .SetName(name)
+                    .AddTransformComponent(name)
+                    .AddMeshComponent(MeshType::LUCY, MaterialType::DEFAULT)
+                    .Build();
+
+                GameObjectManager::GetInstance()->AddGameObject(obj);
+            }
             ImGui::EndMenu();
         }
 

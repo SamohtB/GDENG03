@@ -30,6 +30,9 @@ void TextureManager::LoadInitialTextures()
     LoadTexture(TextureType::BRICKS_ROUGH, L"Assets/Textures/bricks_r.png");
     LoadTexture(TextureType::BRICKS_AO, L"Assets/Textures/bricks_ao.png");
     LoadTexture(TextureType::BRICKS_HEIGHT, L"Assets/Textures/bricks_h.png");
+
+    LoadTexture(TextureType::FABRIC, L"Assets/Textures/Fabric.jpg");
+    LoadTexture(TextureType::TILE, L"Assets/Textures/Tile.jpg");
 }
 
 void TextureManager::LoadTexture(const String& textureName, const std::wstring& filePath)

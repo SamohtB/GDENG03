@@ -12,4 +12,5 @@ public:
     inline static const std::string UTAH_TEAPOT = "UTAH_TEAPOT";
     inline static const std::string STANFORD_BUNNY = "STANFORD_BUNNY";
     inline static const std::string STANFORD_ARMADILLO = "STANFORD_ARMADILLO";
+	inline static const std::string LUCY = "LUCY";
 };
