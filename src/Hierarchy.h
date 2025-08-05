@@ -14,5 +14,7 @@ public:
 
 private:
     void DrawGameObjectNode(AGameObject* gameObject);
+	void DrawGameObjectNodeRecursive(AGameObject* gameObject);
+	void ReparentOrPromote(std::shared_ptr<AGameObject> gameObject, AGameObject* parent = nullptr);
 };
 

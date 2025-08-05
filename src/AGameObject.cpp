@@ -84,7 +84,8 @@ AGameObject::ObjectList AGameObject::GetChildren() const
 
 AGameObject* AGameObject::GetParent() const
 {
-	return this->m_parent.lock().get();
+	auto parent = this->m_parent.lock();
+	return parent ? parent.get() : nullptr;
 }
 
 void AGameObject::AttachComponent(std::shared_ptr<AComponent> component)
