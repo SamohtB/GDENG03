@@ -22,6 +22,10 @@ public:
     Vector3 GetLocalRotation();
     rp3d::Quaternion GetLocalQuaternion() const;
 
+    void UpdateOwnerPhysicsShape();
+
+    void UpdateOwnerPhysics();
+
     void SetScale(float x, float y, float z);
     void SetScale(Vector3 vector);
     void Scale(float scale);

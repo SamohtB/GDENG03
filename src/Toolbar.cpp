@@ -220,21 +220,33 @@ void Toolbar::GameObjects()
                 GameObjectManager::GetInstance()->AddGameObject(entity);
             }
 
-            if (ImGui::MenuItem("Dynamic Physics Cube x 16"))
+            if (ImGui::MenuItem("Dynamic Physics Cube x 100"))
             {
-                for (int i = 0; i < 16; ++i)
+                // Define the properties for our spawning grid
+                const int numPerRow = 10;
+                const float spacing = 2.0f; // 2 units between the center of each cube
+                const float startY = 10.0f;
+
+                for (int i = 0; i < 100; ++i)
                 {
                     auto name = NameRegistry::GetInstance()->GenerateUniqueName("PhysicsCube");
 
+                    // Create the base game entity with a transform
                     auto entity = GameObjectBuilder()
                         .SetName(name)
                         .AddTransformComponent(name)
                         .Build();
 
-                    entity->Transform()->SetPosition(Vector3(0.0f, 10.0f, 0.0f)); // Set initial position before physics
+                    // Calculate the cube's position in a 10x10 grid on the X-Z plane
+                    float x = (i % numPerRow) * spacing;
+                    float z = (i / numPerRow) * spacing;
+                    entity->Transform()->SetPosition(Vector3(x, startY, z)); // Set unique position
 
+                    // Use a new builder to add more components to the *existing* entity.
+                    // We use static_pointer_cast to safely convert the base AGameObject pointer
+                    // to the GameEntity pointer required by SetExisting.
                     GameObjectBuilder()
-                        .SetExisting(entity)
+                        .SetExisting(std::static_pointer_cast<GameEntity>(entity))
                         .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT)
                         .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
                         .Build();

@@ -2,6 +2,7 @@
 #include "TransformComponent.h"
 #include "ActionHistory.h"
 #include "AGameObject.h"
+#include "PhysicsComponent.h"
 
 TransformComponent::TransformComponent(String name, std::weak_ptr<AGameObject> owner) 
 	: AComponent(name, ComponentType::Transform, owner)
@@ -117,22 +118,55 @@ rp3d::Quaternion TransformComponent::GetLocalQuaternion() const
 	return this->m_localRotation;
 }
 
+void TransformComponent::UpdateOwnerPhysicsShape()
+{
+	if (auto owner = m_owner.lock())
+	{
+		auto physicsComp = static_cast<PhysicsComponent*>(owner->FindComponentOfType(AComponent::ComponentType::Physics));
+		if (physicsComp)
+		{
+			physicsComp->UpdateColliderShape();
+		}
+	}
+}
+
+void TransformComponent::UpdateOwnerPhysics()
+{
+	if (auto owner = m_owner.lock())
+	{
+		// Find the physics component on the owner object
+		auto physicsComp = static_cast<PhysicsComponent*>(owner->FindComponentOfType(AComponent::ComponentType::Physics));
+		if (physicsComp)
+		{
+			// If it exists, tell it to update its rigid body's transform
+			physicsComp->UpdateTransformFromOwner();
+		}
+	}
+}
+
+
 void TransformComponent::SetScale(float x, float y, float z)
 {
 	this->m_localScale = Vector3(x, y, z);
 	PropagateDirtyFlag();
+	UpdateOwnerPhysics();
+	UpdateOwnerPhysicsShape(); // [NEW] Notify physics of scale change
 }
 
 void TransformComponent::SetScale(Vector3 vector)
 {
 	this->m_localScale = vector;
 	PropagateDirtyFlag();
+	UpdateOwnerPhysics();
+	UpdateOwnerPhysicsShape(); // [NEW] Notify physics of scale change
 }
 
 void TransformComponent::Scale(float scale)
 {
-	this->m_localScale += Vector3(scale, scale, scale);
+	this->m_localScale = this->m_localScale * scale;
 	PropagateDirtyFlag();
+	UpdateOwnerPhysics();
+	UpdateOwnerPhysicsShape(); // [NEW] Notify physics of scale change
 }
 
 Vector3 TransformComponent::GetLocalScale()
