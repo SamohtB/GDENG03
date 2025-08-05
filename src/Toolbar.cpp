@@ -227,6 +227,36 @@ void Toolbar::GameObjects()
             ImGui::EndMenu();
         }
 
+        // -------------------- Nested Objects --------------------
+        if (ImGui::BeginMenu("Nested Objects"))
+        {
+            if (ImGui::MenuItem("Level 1"))
+            {
+                auto name = NameRegistry::GetInstance()->GenerateUniqueName("Nested");
+
+                auto parent = GameObjectBuilder()
+                    .SetName(name)
+                    .AddTransformComponent(name)
+                    .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT)
+                    .Build();
+
+                GameObjectManager::GetInstance()->AddGameObject(parent);
+
+				name = NameRegistry::GetInstance()->GenerateUniqueName("Nested Child");
+
+				auto child = GameObjectBuilder()
+                    .SetName(name)
+                    .AddTransformComponent(name)
+					.AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT)
+					.Build();
+
+				child->Transform()->SetPosition(Vector3(2.0f, 0.0f, 0.0f));
+                parent->AttachChild(child);
+            }
+
+			ImGui::EndMenu();
+        }
+
         ImGui::EndMenu();
     }
 }

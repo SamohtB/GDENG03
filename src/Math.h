@@ -15,6 +15,16 @@ inline T Clamp(const T& value, const T& min, const T& max)
     return (value < min) ? min : (value > max) ? max : value;
 }
 
+inline static Matrix IdentityMatrix()
+{
+    return Matrix(
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    );
+}
+
 namespace GeoMath
 {
     static void CalculateTangentFrame(const std::vector<unsigned int>& indices, const Vector3* positions, const Vector3* normals,

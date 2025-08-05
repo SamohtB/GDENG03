@@ -55,6 +55,38 @@ void AGameObject::SetName(String name)
 	this->m_name = name;
 }
 
+void AGameObject::AttachChild(std::shared_ptr<AGameObject> child)
+{
+	if (child->GetParent() != nullptr)
+	{
+		Debug::Log("Child already has a parent. Detaching from current parent.");
+		child->GetParent()->DetachChild(child);
+	}
+
+	this->m_children.push_back(child);
+	child->m_parent = shared_from_this();
+	Debug::Log("Attached child: " + child->GetName() + " to parent: " + this->GetName());
+}
+
+void AGameObject::DetachChild(std::shared_ptr<AGameObject> child)
+{
+	auto it = std::find(m_children.begin(), m_children.end(), child);
+	if (it == m_children.end()) return;
+	child->m_parent.reset();
+	m_children.erase(it);
+	Debug::Log("Detached child: " + child->GetName() + " from parent: " + this->GetName());
+}
+
+AGameObject::ObjectList AGameObject::GetChildren() const
+{
+	return this->m_children;
+}
+
+AGameObject* AGameObject::GetParent() const
+{
+	return this->m_parent.lock().get();
+}
+
 void AGameObject::AttachComponent(std::shared_ptr<AComponent> component)
 {
 	this->m_componentList.push_back(component);
@@ -125,19 +157,17 @@ AGameObject::ComponentList AGameObject::GetComponentsOfTypeRecursive(AComponent:
 {
 	ComponentList foundList;
 
-	// Add from this object
 	for (const auto& comp : m_componentList)
 	{
 		if (comp->GetType() == type)
 			foundList.push_back(comp);
 	}
 
-	// Recurse if you have children
-	/*for (const auto& child : m_children)
+	for (const auto& child : m_children)
 	{
 		ComponentList childList = child->GetComponentsOfTypeRecursive(type);
 		foundList.insert(foundList.end(), childList.begin(), childList.end());
-	}*/
+	}
 
 	return foundList;
 }

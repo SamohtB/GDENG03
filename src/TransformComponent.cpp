@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "TransformComponent.h"
 #include "ActionHistory.h"
+#include "AGameObject.h"
 
 TransformComponent::TransformComponent(String name, std::weak_ptr<AGameObject> owner) 
 	: AComponent(name, ComponentType::Transform, owner)
@@ -8,31 +9,31 @@ TransformComponent::TransformComponent(String name, std::weak_ptr<AGameObject> o
 	this->m_localPosition = Vector3(0, 0, 0);
 	this->m_localRotation = rp3d::Quaternion::identity();
 	this->m_localScale = Vector3(1, 1, 1);
-	this->m_localMatrix = GetLocalMatrix();
+	this->m_localMatrix = this->m_worldMatrix = GetLocalMatrix();
 }
 
 void TransformComponent::SetPosition(float x, float y, float z)
 {
 	this->m_localPosition = Vector3(x, y, z);
-	this->m_dirty = true;
+	PropagateDirtyFlag();
 }
 
 void TransformComponent::SetPosition(Vector3 vector)
 {
 	this->m_localPosition = vector;
-	this->m_dirty = true;
+	PropagateDirtyFlag();
 }
 
 void TransformComponent::Move(float x, float y, float z)
 {
 	this->m_localPosition += Vector3(x, y, z);
-	this->m_dirty = true;
+	PropagateDirtyFlag();
 }
 
 void TransformComponent::Move(Vector3 vector)
 {
 	this->m_localPosition += vector;
-	this->m_dirty = true;
+	PropagateDirtyFlag();
 }
 
 Vector3 TransformComponent::GetLocalPosition()
@@ -57,7 +58,7 @@ void TransformComponent::SetRotation(float pitch, float yaw, float roll)
 		XMVectorGetW(q)
 	);
 
-	m_dirty = true;
+	PropagateDirtyFlag();
 }
 
 void TransformComponent::SetRotation(Vector3 vector)
@@ -68,7 +69,7 @@ void TransformComponent::SetRotation(Vector3 vector)
 void TransformComponent::SetRotation(rp3d::Quaternion quaternion)
 {
 	this->m_localRotation = quaternion;
-	this->m_dirty = true;
+	PropagateDirtyFlag();
 }
 
 void TransformComponent::Rotate(float pitch, float yaw, float roll)
@@ -90,7 +91,7 @@ void TransformComponent::Rotate(float pitch, float yaw, float roll)
 	m_localRotation = q * m_localRotation;
 	m_localRotation.normalize();
 
-	m_dirty = true;
+	PropagateDirtyFlag();
 }
 
 Vector3 TransformComponent::GetLocalRotation()
@@ -120,19 +121,19 @@ rp3d::Quaternion TransformComponent::GetLocalQuaternion() const
 void TransformComponent::SetScale(float x, float y, float z)
 {
 	this->m_localScale = Vector3(x, y, z);
-	this->m_dirty = true;
+	PropagateDirtyFlag();
 }
 
 void TransformComponent::SetScale(Vector3 vector)
 {
 	this->m_localScale = vector;
-	this->m_dirty = true;
+	PropagateDirtyFlag();
 }
 
 void TransformComponent::Scale(float scale)
 {
 	this->m_localScale += Vector3(scale, scale, scale);
-	this->m_dirty = true;
+	PropagateDirtyFlag();
 }
 
 Vector3 TransformComponent::GetLocalScale()
@@ -174,7 +175,29 @@ void TransformComponent::SetLocalMatrix(const float* matrixData)
 {
 	Matrix rawMatrix = *reinterpret_cast<const Matrix*>(matrixData);
 	this->m_localMatrix = rawMatrix.Transpose();
-	this->m_dirty = false;
+	PropagateDirtyFlag();
+}
+
+Matrix TransformComponent::GetWorldMatrix()
+{
+	return this->m_worldMatrix;
+}
+
+void TransformComponent::UpdateWorldMatrix(Matrix parentMatrix)
+{
+	if (this->m_worldDirty) 
+	{
+		this->m_worldMatrix = parentMatrix * this->GetLocalMatrix();
+		this->m_worldDirty = false;
+	}
+
+	auto children = this->GetOwner()->GetChildren();
+
+	for (const auto& child : children)
+	{
+		child->Transform()->UpdateWorldMatrix(this->m_worldMatrix);
+	}
+	
 }
 
 Vector3 TransformComponent::GetForwardVector() const
@@ -220,6 +243,19 @@ Vector3 TransformComponent::GetUpVector() const
 	Vector3 up = Vector3(rotationMatrix._21, rotationMatrix._22, rotationMatrix._23);
 	up.Normalize();
 	return up;
+}
+
+void TransformComponent::PropagateDirtyFlag()
+{
+	this->m_dirty = true;
+	this->m_worldDirty = true;
+
+	auto children = this->GetOwner()->GetChildren();
+
+	for (const auto& child : children)
+	{
+		child->Transform()->PropagateDirtyFlag();
+	}
 }
 
 void TransformComponent::Perform()

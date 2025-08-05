@@ -30,22 +30,28 @@ public:
     Matrix GetPhysicsLocalMatrix(); //Transposed
     void SetLocalMatrix(const float* matrixData);
 
+	Matrix GetWorldMatrix();
+	void UpdateWorldMatrix(Matrix parentMatrix);
+
     Vector3 GetForwardVector() const;
     Vector3 GetRightVector() const;
     Vector3 GetUpVector() const;
+
+	void PropagateDirtyFlag();
 
 private:
     Vector3 m_localPosition;
     rp3d::Quaternion m_localRotation;
     Vector3 m_localScale;
 
-    mutable Matrix m_localMatrix;
-    mutable bool m_dirty;
+    Matrix m_localMatrix;
+    bool m_dirty;
 
+    Matrix m_worldMatrix;
+	bool m_worldDirty;
 
     // Inherited via AComponent
     void Perform() override;
-
     void DrawUI() override;
 
 };
