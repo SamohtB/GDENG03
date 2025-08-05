@@ -301,6 +301,7 @@
       <Filter>Engine\EngineGUI\UIScreens\MaterialEditor</Filter>
     </ClCompile>
     <ClCompile Include="src\EditorState.cpp" />
+    <ClCompile Include="src\SceneStateManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DescriptorHeapManager.h">
@@ -514,6 +515,7 @@
       <Filter>Engine\EngineGUI\UIScreens\MaterialEditor</Filter>
     </ClInclude>
     <ClInclude Include="src\EditorState.h" />
+    <ClInclude Include="src\SceneStateManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\DefaultVertexShader.hlsl">

@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\SceneStateManager.cpp" />
     <ClCompile Include="src\EditorState.cpp" />
     <ClCompile Include="src\MaterialEditor.cpp" />
     <ClCompile Include="src\GameObjectBuilder.cpp" />
@@ -221,6 +222,7 @@
     <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\SceneStateManager.h" />
     <ClInclude Include="src\EditorState.h" />
     <ClInclude Include="src\MaterialEditor.h" />
     <ClInclude Include="src\GameObjectBuilder.h" />

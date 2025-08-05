@@ -6,6 +6,8 @@
 #include "AGameObject.h"
 #include "MeshComponent.h"
 #include "Debug.h"
+#include "SceneStateManager.h" // Add this include
+#include "EditorState.h"       // Add this include
 
 std::unique_ptr<GameObjectManager> GameObjectManager::sharedInstance = nullptr;
 
@@ -116,7 +118,15 @@ void GameObjectManager::AddGameObject(GameObjectPtr gameObject, bool isRendered)
 
     this->m_objectTable[name] = gameObject;
     this->m_objectList.push_back(gameObject);
+
+    // Clear saved state when adding objects in edit mode
+    // This ensures the reset button works correctly with new objects
+    if (EditorStateManager::GetState() == EditorState::EDIT)
+    {
+        SceneStateManager::GetInstance()->ClearSavedState();
+    }
 }
+
 
 void GameObjectManager::DeleteObject(AGameObject* gameObject)
 {
@@ -138,6 +148,12 @@ void GameObjectManager::DeleteObject(AGameObject* gameObject)
             }),
         m_objectList.end()
     );
+
+    // Clear saved state when deleting objects in edit mode
+    if (EditorStateManager::GetState() == EditorState::EDIT)
+    {
+        SceneStateManager::GetInstance()->ClearSavedState();
+    }
 }
 
 void GameObjectManager::DeleteObjectByName(String name)
@@ -159,6 +175,9 @@ void GameObjectManager::ClearAllObjects()
 {
     m_objectList.clear();
     m_objectTable.clear();
+
+    // Clear saved state when clearing all objects
+    SceneStateManager::GetInstance()->ClearSavedState();
 }
 
 AGameObject* GameObjectManager::GetSelectedObject() const

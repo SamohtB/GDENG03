@@ -19,6 +19,7 @@
 #include "Random.h"
 
 #include "EditorState.h"
+#include "SceneStateManager.h"
 
 GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
 
@@ -32,6 +33,8 @@ void GameWindow::OnCreate(HWND hwnd)
 	EngineGUIManager::Initialize(hwnd, this->m_width, this->m_height);
 	PhysicsSystem::Initialize();
 	NameRegistry::Initialize();
+	SceneStateManager::Initialize();
+
 
 	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
 

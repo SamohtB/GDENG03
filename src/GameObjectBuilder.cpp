@@ -8,6 +8,9 @@
 GameObjectBuilder::GameObjectBuilder()
 {
 	this->m_entity = std::make_shared<GameEntity>("");
+
+	// Set the ID right when the builder is created
+	this->m_entity->SetId(AGameObject::GetNextId());
 }
 
 GameObjectBuilder& GameObjectBuilder::SetExisting(std::shared_ptr<GameEntity> gameObject)
@@ -66,4 +69,3 @@ std::shared_ptr<AGameObject> GameObjectBuilder::Build()
 {
 	return m_entity;
 }
-
