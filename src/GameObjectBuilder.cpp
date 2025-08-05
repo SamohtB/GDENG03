@@ -22,11 +22,6 @@ GameObjectBuilder& GameObjectBuilder::SetName(const String& name)
 	return *this;
 }
 
-GameObjectBuilder& GameObjectBuilder::SetType(const String& type)
-{
-	m_entity->SetObjectType(type);
-	return *this;
-}
 
 
 GameObjectBuilder& GameObjectBuilder::AddTransformComponent(String name)
