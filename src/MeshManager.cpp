@@ -15,10 +15,11 @@ void MeshManager::LoadInitialMeshes()
 	LoadPlanePrimitive();
 	LoadSpherePrimitive();
 	LoadCylinderPrimitive();
-    LoadMesh(MeshType::UTAH_TEAPOT, L"Assets/Meshes/teapot.obj");
-    LoadMesh(MeshType::STANFORD_BUNNY, L"Assets/Meshes/bunny.obj");
-    LoadMesh(MeshType::STANFORD_ARMADILLO, L"Assets/Meshes/armadillo.obj");
-    LoadMesh(MeshType::LUCY, L"Assets/Meshes/lucy.obj");
+	LoadCapsulePrimitive();
+    //LoadMesh(MeshType::UTAH_TEAPOT, L"Assets/Meshes/teapot.obj");
+    //LoadMesh(MeshType::STANFORD_BUNNY, L"Assets/Meshes/bunny.obj");
+    //LoadMesh(MeshType::STANFORD_ARMADILLO, L"Assets/Meshes/armadillo.obj");
+    //LoadMesh(MeshType::LUCY, L"Assets/Meshes/lucy.obj");
 }
 
 void MeshManager::LoadMesh(const String& meshName, const std::wstring& filePath)
@@ -516,4 +517,133 @@ void MeshManager::LoadCylinderPrimitive()
 
 	m_meshMap[MeshType::PRIMITIVE_CYLINDER] = std::move(cylinderData);
 	Debug::Log("MeshManager: Loaded cylinder primitive.");
+}
+
+void MeshManager::LoadCapsulePrimitive()
+{
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+
+    const int ringsPerHemisphere = m_capsuleRings;
+    const int ringsOnBody = m_capsuleRings;
+    const int totalRings = ringsPerHemisphere * 2 + ringsOnBody;
+    const int segments = m_capsuleSegments;
+    const float radius = m_capsuleRadius;
+    const float halfBodyHeight = (m_capsuleHeight * 0.5f) - radius;
+
+    const int vertexPerRing = segments + 1;
+
+    const float verticalStep = 1.0f / totalRings;
+    const float horizontalStep = 1.0f / segments;
+
+    // Precompute trig tables
+    std::vector<float> sinTable(segments + 1);
+    std::vector<float> cosTable(segments + 1);
+    for (int i = 0; i <= segments; ++i)
+    {
+        float angle = (2.0f * M_PI * i) / segments;
+        sinTable[i] = sinf(angle);
+        cosTable[i] = cosf(angle);
+    }
+
+    // Generate vertices
+    for (int ring = 0; ring <= totalRings; ++ring)
+    {
+        float t = static_cast<float>(ring) / totalRings;
+        float y = 0.0f;
+        float r = 0.0f;
+        float yOffset = 0.0f;
+
+        if (ring < ringsPerHemisphere) // top hemisphere
+        {
+            float v = static_cast<float>(ring) / ringsPerHemisphere;
+            float theta = (v * 0.5f) * M_PI; 
+            y = halfBodyHeight + radius * cosf(theta);
+            r = radius * sinf(theta);
+            yOffset = halfBodyHeight;
+        }
+        else if (ring >= ringsPerHemisphere + ringsOnBody) // bottom hemisphere
+        {
+            int relRing = ring - (ringsPerHemisphere + ringsOnBody);
+            float v = static_cast<float>(relRing) / ringsPerHemisphere;
+            float theta = (v * 0.5f + 0.5f) * M_PI; 
+            y = -halfBodyHeight + radius * cosf(theta);
+            r = radius * sinf(theta);
+            yOffset = -halfBodyHeight;
+        }
+        else // cylinder body
+        {
+            int bodyRing = ring - ringsPerHemisphere;
+            float v = static_cast<float>(bodyRing) / ringsOnBody;
+            y = halfBodyHeight - v * (2.0f * halfBodyHeight);
+            r = radius;
+            yOffset = 0.0f;
+        }
+
+        for (int seg = 0; seg <= segments; ++seg)
+        {
+            float x = r * cosTable[seg];
+            float z = r * sinTable[seg];
+
+            Vector3 position = { x, y, z };
+            Vector3 normal = Vector3(x, y - yOffset, z);
+            normal.Normalize();
+
+            Vector2 texcoord = { seg * horizontalStep, t };
+
+            vertices.emplace_back(Vertex{ position, texcoord, normal, { 0, 0, 0 } });
+        }
+    }
+
+    // Generate indices (triangle strips between each ring pair)
+    for (int ring = 0; ring < totalRings; ++ring)
+    {
+        int ringStart = ring * vertexPerRing;
+        int nextRingStart = (ring + 1) * vertexPerRing;
+
+        for (int seg = 0; seg < segments; ++seg)
+        {
+            indices.push_back(ringStart + seg);
+            indices.push_back(nextRingStart + seg);
+            indices.push_back(nextRingStart + seg + 1);
+
+            indices.push_back(ringStart + seg);
+            indices.push_back(nextRingStart + seg + 1);
+            indices.push_back(ringStart + seg + 1);
+        }
+    }
+
+    // Calculate tangents
+    std::vector<Vector3> positions(vertices.size());
+    std::vector<Vector3> normals(vertices.size());
+    std::vector<Vector2> texcoords(vertices.size());
+    std::vector<Vector3> tangents(vertices.size());
+
+    for (size_t i = 0; i < vertices.size(); ++i)
+    {
+        positions[i] = vertices[i].position;
+        normals[i] = vertices[i].normal;
+        texcoords[i] = vertices[i].texcoord;
+    }
+
+    GeoMath::CalculateTangentFrame(
+        indices,
+        positions.data(),
+        normals.data(),
+        texcoords.data(),
+        vertices.size(),
+        tangents.data()
+    );
+
+    for (size_t i = 0; i < vertices.size(); ++i)
+        vertices[i].tangent = tangents[i];
+
+    // Build mesh
+    MeshData capsuleData;
+    capsuleData.m_vertexBuffer = std::make_unique<VertexBuffer>(vertices);
+    capsuleData.m_indexBuffer = std::make_unique<IndexBuffer>(indices);
+    capsuleData.m_indicesSize = static_cast<UINT>(indices.size());
+
+    m_meshMap[MeshType::PRIMITIVE_CAPSULE] = std::move(capsuleData);
+    Debug::Log("MeshManager: Loaded capsule primitive.");
 }

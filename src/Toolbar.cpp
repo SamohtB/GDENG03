@@ -199,6 +199,25 @@ void Toolbar::GameObjects()
                     Debug::LogError("Cylinder not created! Error in primitive spawn menu");
                 }
             }
+
+            if (ImGui::MenuItem("Capsule"))
+            {
+                auto name = NameRegistry::GetInstance()->GenerateUniqueName("Capsule");
+                auto capsule = GameObjectBuilder()
+                    .SetName(name)
+                    .AddTransformComponent(name)
+                    .AddMeshComponent(MeshType::PRIMITIVE_CAPSULE, MaterialType::DEFAULT)
+                    .Build();
+
+                if (capsule)
+                {
+                    GameObjectManager::GetInstance()->AddGameObject(capsule);
+                }
+                else
+                {
+                    Debug::LogError("Cylinder not created! Error in primitive spawn menu");
+                }
+            }
             ImGui::EndMenu();
         }
 

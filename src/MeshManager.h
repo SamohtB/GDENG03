@@ -30,6 +30,7 @@ private:
 	void LoadPlanePrimitive();
 	void LoadSpherePrimitive();
 	void LoadCylinderPrimitive();
+	void LoadCapsulePrimitive();
 
 	/* Cube Properties */ 
 	float m_cubeSize = 1.0f;
@@ -45,6 +46,12 @@ private:
     int m_cylinderSegments = 20;
     float m_cylinderRadius = 0.5f;
     float m_cylinderHeight = 2.0f;
+
+    /* Capsule Properties */
+    float m_capsuleRadius = 0.5f;           
+    float m_capsuleHeight = 2.0f;           
+    int   m_capsuleSegments = 24;          
+    int   m_capsuleRings = 12;
 
     std::shared_ptr<BatchUploader> m_uploader;
     MeshMap m_meshMap;
