@@ -122,7 +122,7 @@ void PhysicsComponent::DrawUI()
 
         // === Set Body Type ===
         static const char* bodyTypeNames[] = { "Static", "Kinematic", "Dynamic" };
-        static int selectedBodyType = static_cast<int>(this->m_bodyType);
+        int selectedBodyType = static_cast<int>(this->m_bodyType);
         ImGui::Text("Body Type:");
         if (ImGui::Combo("##BodyType", &selectedBodyType, bodyTypeNames, IM_ARRAYSIZE(bodyTypeNames)))
         {

@@ -36,7 +36,7 @@ void GameObjectManager::Destroy()
 
 GameObjectManager::GameObjectManager(ID3D12Device* device)
 {
-    this->m_objectConstantsBuffer = std::make_unique<DynamicConstantBufferPool>(device, POOL_SIZE_HUGE);
+    this->m_objectConstantsBuffer = std::make_unique<DynamicConstantBufferPool>(device, POOL_SIZE_MEDIUM);
 }
 
 std::shared_ptr<AGameObject> GameObjectManager::FindObjectByName(String name)

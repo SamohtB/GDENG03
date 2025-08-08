@@ -244,43 +244,62 @@ void Toolbar::GameObjects()
                 GameObjectManager::GetInstance()->AddGameObject(entity);
             }
 
-            if (ImGui::MenuItem("Dynamic Physics Cube x 50 (Stacked)"))
+            if (ImGui::MenuItem("Dynamic Physics Cube 5 Stacks (X Pattern)"))
             {
-                const int gridSize = 4;
-                const float cubeScale = 0.5f; // [NEW] Control the size of the cubes here.
-                const float spacing = cubeScale;  // [MODIFIED] Spacing now matches the cube size.
-                const float startX = 0.0f;
-                const float startY = 5.0f;
-                const float startZ = 0.0f;
+                const int stackCount = 5;       // Number of stacks
+                const int gridX = 2;            // width
+                const int gridY = 3;            // height
+                const int gridZ = 2;            // depth
+                const float cubeScale = 0.5f;
+                const float spacing = cubeScale * 1.1f;
 
-                for (int i = 0; i < gridSize; ++i)
+                const float stackGap = cubeScale * 10.0f;  // distance from center for X arms
+                const float baseY = cubeScale * 0.5f;
+
+                // Predefined X-shape offsets (center + 4 corners of an X)
+                Vector3 stackPositions[stackCount] =
                 {
-                    for (int j = 0; j < gridSize; ++j)
+                    Vector3(0.0f, 0.0f, 0.0f),                         // center stack
+                    Vector3(-stackGap, 0.0f, -stackGap),               // bottom-left
+                    Vector3(stackGap, 0.0f, -stackGap),                // bottom-right
+                    Vector3(-stackGap, 0.0f, stackGap),                 // top-left
+                    Vector3(stackGap, 0.0f, stackGap)                   // top-right
+                };
+
+                for (int stackIndex = 0; stackIndex < stackCount; ++stackIndex)
+                {
+                    Vector3 stackBasePos = stackPositions[stackIndex];
+
+                    for (int i = 0; i < gridX; ++i)
                     {
-                        for (int k = 0; k < gridSize; ++k)
+                        for (int j = 0; j < gridY; ++j)
                         {
-                            auto name = NameRegistry::GetInstance()->GenerateUniqueName("GridCube");
+                            for (int k = 0; k < gridZ; ++k)
+                            {
+                                auto name = NameRegistry::GetInstance()->GenerateUniqueName("StackCube");
 
-                            auto entity = GameObjectBuilder()
-                                .SetName(name)
-                                .AddTransformComponent(name)
-                                .Build();
+                                auto entity = GameObjectBuilder()
+                                    .SetName(name)
+                                    .AddTransformComponent(name)
+                                    .Build();
 
-                            // [NEW] Set the scale of the cube.
-                            entity->Transform()->SetScale(Vector3(cubeScale, cubeScale, cubeScale));
+                                entity->Transform()->SetScale(Vector3(cubeScale, cubeScale, cubeScale));
 
-                            float x = startX + (i * spacing);
-                            float y = startY + (j * spacing);
-                            float z = startZ + (k * spacing);
-                            entity->Transform()->SetPosition(Vector3(x, y, z));
+                                // Offset inside stack
+                                float x = stackBasePos.x + (i * spacing) - (gridX - 1) * spacing / 2.0f;
+                                float y = baseY + (j * spacing);
+                                float z = stackBasePos.z + (k * spacing) - (gridZ - 1) * spacing / 2.0f;
 
-                            GameObjectBuilder()
-                                .SetExisting(std::static_pointer_cast<GameEntity>(entity))
-                                .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::BRICKS)
-                                .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
-                                .Build();
+                                entity->Transform()->SetPosition(Vector3(x, y, z));
 
-                            GameObjectManager::GetInstance()->AddGameObject(entity);
+                                GameObjectBuilder()
+                                    .SetExisting(std::static_pointer_cast<GameEntity>(entity))
+                                    .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::BRICKS)
+                                    .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
+                                    .Build();
+
+                                GameObjectManager::GetInstance()->AddGameObject(entity);
+                            }
                         }
                     }
                 }
