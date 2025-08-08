@@ -55,6 +55,7 @@ void GameWindow::OnUpdate()
 {
 	auto deltaTime = EngineTime::GetDeltaTime();
 	auto gameDeltaTime = EngineTime::GetGameDeltaTime();
+	auto fixedDeltaTime = EngineTime::GetFixedDeltaTime();
 
 	// Editor systems always update
 	InputSystem::GetInstance()->ProcessInput();
@@ -64,7 +65,7 @@ void GameWindow::OnUpdate()
 	if (gameDeltaTime > 0.0f)
 	{
 		GameObjectManager::GetInstance()->UpdateAll(gameDeltaTime);
-		PhysicsSystem::GetInstance()->UpdateAllComponents(gameDeltaTime);
+		PhysicsSystem::GetInstance()->UpdateAllComponents(fixedDeltaTime);
 	}
 
 	FrameConstantsData frameData = {};

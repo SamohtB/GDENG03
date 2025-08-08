@@ -1,0 +1,585 @@
+[GameObject]
+Name: StackCube_0
+ParentName: None
+Position: -0.275 0.25 -0.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_1
+ParentName: None
+Position: -0.275 0.25 0.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_2
+ParentName: None
+Position: -0.275 0.8 -0.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_3
+ParentName: None
+Position: -0.275 0.8 0.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_4
+ParentName: None
+Position: -0.275 1.35 -0.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_5
+ParentName: None
+Position: -0.275 1.35 0.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_6
+ParentName: None
+Position: 0.275 0.25 -0.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_7
+ParentName: None
+Position: 0.275 0.25 0.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_8
+ParentName: None
+Position: 0.275 0.8 -0.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_9
+ParentName: None
+Position: 0.275 0.8 0.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_10
+ParentName: None
+Position: 0.275 1.35 -0.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_11
+ParentName: None
+Position: 0.275 1.35 0.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_12
+ParentName: None
+Position: -5.275 0.25 -5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_13
+ParentName: None
+Position: -5.275 0.25 -4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_14
+ParentName: None
+Position: -5.275 0.8 -5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_15
+ParentName: None
+Position: -5.275 0.8 -4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_16
+ParentName: None
+Position: -5.275 1.35 -5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_17
+ParentName: None
+Position: -5.275 1.35 -4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_18
+ParentName: None
+Position: -4.725 0.25 -5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_19
+ParentName: None
+Position: -4.725 0.25 -4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_20
+ParentName: None
+Position: -4.725 0.8 -5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_21
+ParentName: None
+Position: -4.725 0.8 -4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_22
+ParentName: None
+Position: -4.725 1.35 -5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_23
+ParentName: None
+Position: -4.725 1.35 -4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_24
+ParentName: None
+Position: 4.725 0.25 -5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_25
+ParentName: None
+Position: 4.725 0.25 -4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_26
+ParentName: None
+Position: 4.725 0.8 -5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_27
+ParentName: None
+Position: 4.725 0.8 -4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_28
+ParentName: None
+Position: 4.725 1.35 -5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_29
+ParentName: None
+Position: 4.725 1.35 -4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_30
+ParentName: None
+Position: 5.275 0.25 -5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_31
+ParentName: None
+Position: 5.275 0.25 -4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_32
+ParentName: None
+Position: 5.275 0.8 -5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_33
+ParentName: None
+Position: 5.275 0.8 -4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_34
+ParentName: None
+Position: 5.275 1.35 -5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_35
+ParentName: None
+Position: 5.275 1.35 -4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_36
+ParentName: None
+Position: -5.275 0.25 4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_37
+ParentName: None
+Position: -5.275 0.25 5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_38
+ParentName: None
+Position: -5.275 0.8 4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_39
+ParentName: None
+Position: -5.275 0.8 5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_40
+ParentName: None
+Position: -5.275 1.35 4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_41
+ParentName: None
+Position: -5.275 1.35 5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_42
+ParentName: None
+Position: -4.725 0.25 4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_43
+ParentName: None
+Position: -4.725 0.25 5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_44
+ParentName: None
+Position: -4.725 0.8 4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_45
+ParentName: None
+Position: -4.725 0.8 5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_46
+ParentName: None
+Position: -4.725 1.35 4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_47
+ParentName: None
+Position: -4.725 1.35 5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_48
+ParentName: None
+Position: 4.725 0.25 4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_49
+ParentName: None
+Position: 4.725 0.25 5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_50
+ParentName: None
+Position: 4.725 0.8 4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_51
+ParentName: None
+Position: 4.725 0.8 5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_52
+ParentName: None
+Position: 4.725 1.35 4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_53
+ParentName: None
+Position: 4.725 1.35 5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_54
+ParentName: None
+Position: 5.275 0.25 4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_55
+ParentName: None
+Position: 5.275 0.25 5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_56
+ParentName: None
+Position: 5.275 0.8 4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_57
+ParentName: None
+Position: 5.275 0.8 5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_58
+ParentName: None
+Position: 5.275 1.35 4.725
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: StackCube_59
+ParentName: None
+Position: 5.275 1.35 5.275
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.5 0.5 0.5
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Dynamic
+
+[GameObject]
+Name: PhysicsPlane_0
+ParentName: None
+Position: 0.0 -10.0 0.0
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 2.0 1.0 2.0
+MeshType: PRIMITIVE_PLANE
+RigidbodyType: Static
+
+[GameObject]
+Name: PhysicsCube_0
+ParentName: None
+Position: 10.0 -5.0 0.0
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 1.0 10.0 20.0
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Static
+
+[GameObject]
+Name: PhysicsCube_1
+ParentName: None
+Position: -10.0 -5.0 0.0
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 1.0 10.0 20.0
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Static
+
+[GameObject]
+Name: PhysicsCube_2
+ParentName: None
+Position: 0.0 -5.0 10.0
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 20.0 10.0 1.0
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Static
+
+[GameObject]
+Name: PhysicsCube_3
+ParentName: None
+Position: 0.0 -5.0 -10.0
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 20.0 10.0 1.0
+MeshType: PRIMITIVE_CUBE
+RigidbodyType: Static
+

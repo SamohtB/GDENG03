@@ -220,26 +220,64 @@ void Toolbar::GameObjects()
                 GameObjectManager::GetInstance()->AddGameObject(entity);
             }
 
-            if (ImGui::MenuItem("Dynamic Physics Cube x 16"))
+            if (ImGui::MenuItem("Dynamic Physics Cube 5 Stacks (X Pattern)"))
             {
-                for (int i = 0; i < 16; ++i)
+                const int stackCount = 5;       // Number of stacks
+                const int gridX = 2;            // width
+                const int gridY = 3;            // height
+                const int gridZ = 2;            // depth
+                const float cubeScale = 0.5f;
+                const float spacing = cubeScale * 1.1f;
+
+                const float stackGap = cubeScale * 10.0f;  // distance from center for X arms
+                const float baseY = cubeScale * 0.5f;
+
+                // Predefined X-shape offsets (center + 4 corners of an X)
+                Vector3 stackPositions[stackCount] =
                 {
-                    auto name = NameRegistry::GetInstance()->GenerateUniqueName("PhysicsCube");
+                    Vector3(0.0f, 0.0f, 0.0f),                         // center stack
+                    Vector3(-stackGap, 0.0f, -stackGap),               // bottom-left
+                    Vector3(stackGap, 0.0f, -stackGap),                // bottom-right
+                    Vector3(-stackGap, 0.0f, stackGap),                 // top-left
+                    Vector3(stackGap, 0.0f, stackGap)                   // top-right
+                };
 
-                    auto entity = GameObjectBuilder()
-                        .SetName(name)
-                        .AddTransformComponent(name)
-                        .Build();
+                for (int stackIndex = 0; stackIndex < stackCount; ++stackIndex)
+                {
+                    Vector3 stackBasePos = stackPositions[stackIndex];
 
-                    entity->Transform()->SetPosition(Vector3(0.0f, 10.0f, 0.0f)); // Set initial position before physics
+                    for (int i = 0; i < gridX; ++i)
+                    {
+                        for (int j = 0; j < gridY; ++j)
+                        {
+                            for (int k = 0; k < gridZ; ++k)
+                            {
+                                auto name = NameRegistry::GetInstance()->GenerateUniqueName("StackCube");
 
-                    GameObjectBuilder()
-                        .SetExisting(entity)
-                        .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT)
-                        .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
-                        .Build();
+                                auto entity = GameObjectBuilder()
+                                    .SetName(name)
+                                    .AddTransformComponent(name)
+                                    .Build();
 
-                    GameObjectManager::GetInstance()->AddGameObject(entity);
+                                entity->Transform()->SetScale(Vector3(cubeScale, cubeScale, cubeScale));
+
+                                // Offset inside stack
+                                float x = stackBasePos.x + (i * spacing) - (gridX - 1) * spacing / 2.0f;
+                                float y = baseY + (j * spacing);
+                                float z = stackBasePos.z + (k * spacing) - (gridZ - 1) * spacing / 2.0f;
+
+                                entity->Transform()->SetPosition(Vector3(x, y, z));
+
+                                GameObjectBuilder()
+                                    .SetExisting(std::static_pointer_cast<GameEntity>(entity))
+                                    .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::BRICKS)
+                                    .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
+                                    .Build();
+
+                                GameObjectManager::GetInstance()->AddGameObject(entity);
+                            }
+                        }
+                    }
                 }
             }
 
