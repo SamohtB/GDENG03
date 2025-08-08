@@ -1,0 +1,99 @@
+[GameObject]
+Name: Plane
+ParentName: None
+Position: 0 0 0
+Rotation: 0 0 0 1
+Scale: 1 1 1
+MeshType: PRIMITIVE_PLANE
+HasRigidbody: true
+
+[GameObject]
+Name: Cube
+ParentName: None
+Position: 0 0.5 -5.5
+Rotation: 0 0 0 1
+Scale: 10 1 1
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: false
+
+[GameObject]
+Name: Cube (2)
+ParentName: None
+Position: 5.5 0.5 0
+Rotation: 0 0 0 1
+Scale: 1 1 10
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: false
+
+[GameObject]
+Name: Cube (3)
+ParentName: None
+Position: -5.5 0.5 0
+Rotation: 0 0 0 1
+Scale: 1 1 10
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: false
+
+[GameObject]
+Name: Cube (1)
+ParentName: None
+Position: 0 0.5 5.5
+Rotation: 0 0 0 1
+Scale: 10 1 1
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: false
+
+[GameObject]
+Name: Sphere
+ParentName: None
+Position: 0 5 0
+Rotation: 0 0 0 1
+Scale: 5 5 5
+MeshType: PRIMITIVE_SPHERE
+HasRigidbody: false
+
+[GameObject]
+Name: Capsule
+ParentName: None
+Position: -5.5 4 5.5
+Rotation: 0 0 0 1
+Scale: 1 5 1
+MeshType: PRIMITIVE_CAPSULE
+HasRigidbody: false
+
+[GameObject]
+Name: Capsule (1)
+ParentName: None
+Position: 5.5 4 5.5
+Rotation: 0 0 0 1
+Scale: 1 5 1
+MeshType: PRIMITIVE_CAPSULE
+HasRigidbody: false
+
+[GameObject]
+Name: Capsule (2)
+ParentName: None
+Position: 5.5 4 -5.5
+Rotation: 0 0 0 1
+Scale: 1 5 1
+MeshType: PRIMITIVE_CAPSULE
+HasRigidbody: false
+
+[GameObject]
+Name: Capsule (3)
+ParentName: None
+Position: -5.5 4 -5.5
+Rotation: 0 0 0 1
+Scale: 1 5 1
+MeshType: PRIMITIVE_CAPSULE
+HasRigidbody: false
+
+[GameObject]
+Name: Cube (4)
+ParentName: None
+Position: 0 13 0
+Rotation: 0 0 0 1
+Scale: 1 1 1
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: true
+
