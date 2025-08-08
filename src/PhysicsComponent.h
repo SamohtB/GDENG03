@@ -27,6 +27,8 @@ public:
     void SetBodyType(reactphysics3d::BodyType type);
     void SetMass(float mass);
 
+    reactphysics3d::BodyType GetBodyType() const;
+
 private:
     float m_deltaTime;
     float m_mass;

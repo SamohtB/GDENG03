@@ -8,7 +8,7 @@
 
 MaterialManager::MaterialManager(ID3D12Device* device)
 {
-    this->m_materialBuffer = std::make_unique<DynamicConstantBufferPool>(device, POOL_SIZE_MEDIUM);
+    this->m_materialBuffer = std::make_unique<DynamicConstantBufferPool>(device, POOL_SIZE_HUGE);
 }
 
 void MaterialManager::LoadInitialMaterials()

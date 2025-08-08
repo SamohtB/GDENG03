@@ -5,6 +5,7 @@
 #include "TransformComponent.h"
 #include "MeshComponent.h"
 #include "Debug.h"
+#include "PhysicsComponent.h"
 
 SceneWriter::SceneWriter(String directory) : m_directory(directory)
 {
@@ -78,15 +79,38 @@ void SceneWriter::SaveObjectData(std::shared_ptr<AGameObject> object, std::ofstr
         sceneFile << "MeshType: None\n";
     }
 
-    // === Physics Data ===
-    bool hasRB = object->FindComponentOfType(AComponent::ComponentType::Physics) != nullptr;
-    sceneFile << "HasRigidbody: " << (hasRB ? "true" : "false") << "\n";
+    // === Physics Data (MODIFIED) ===
+    if (auto physicsCompBase = object->FindComponentOfType(AComponent::ComponentType::Physics))
+    {
+        if (auto physicsComp = dynamic_cast<PhysicsComponent*>(physicsCompBase))
+        {
+            // Use the new GetBodyType() method
+            reactphysics3d::BodyType bodyType = physicsComp->GetBodyType();
+            switch (bodyType)
+            {
+            case reactphysics3d::BodyType::STATIC:
+                sceneFile << "RigidbodyType: Static\n";
+                break;
+            case reactphysics3d::BodyType::KINEMATIC:
+                sceneFile << "RigidbodyType: Kinematic\n";
+                break;
+            case reactphysics3d::BodyType::DYNAMIC:
+                sceneFile << "RigidbodyType: Dynamic\n";
+                break;
+            }
+        }
+    }
+    else
+    {
+        sceneFile << "RigidbodyType: None\n";
+    }
     sceneFile << "\n";
 
+    // Recursively save children
     auto children = object->GetChildren();
-
     for (const auto& child : children)
     {
         SaveObjectData(child, sceneFile);
     }
 }
+

@@ -1,0 +1,54 @@
+[GameObject]
+Name: Capsule
+ParentName: None
+Position: 0.0 0.1 0.0
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.05 0.05 0.05
+MeshType: PRIMITIVE_CAPSULE
+HasRigidbody: false
+
+[GameObject]
+Name: Plane
+ParentName: None
+Position: 0.0 0.0 0.0
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.1 0.1 0.1
+MeshType: PRIMITIVE_PLANE
+HasRigidbody: false
+
+[GameObject]
+Name: Cube
+ParentName: None
+Position: 0.0 0.1 0.2
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.42499999050050974 0.25 0.019999999552965164
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: false
+
+[GameObject]
+Name: Cube2
+ParentName: None
+Position: 0.0 0.1 -0.2
+Rotation: -0.0 0.0 0.0 1.0
+Scale: 0.425 0.18499999586492777 0.02
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: false
+
+[GameObject]
+Name: Cube3
+ParentName: None
+Position: -0.2 0.1 0.0
+Rotation: 0.0 -0.7071067768845223 -0.0 0.7071067854885729
+Scale: 0.4274999904446304 0.1924999956972897 0.02
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: false
+
+[GameObject]
+Name: Cube4
+ParentName: None
+Position: 0.2 0.1 0.0
+Rotation: 0.0 -0.7071067750158768 -0.0 0.7071067873572183
+Scale: 0.425 0.25 0.02
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: false
+

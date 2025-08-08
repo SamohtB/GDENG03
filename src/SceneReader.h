@@ -1,6 +1,9 @@
 #pragma once
 #include "Math.h"
 
+// Forward-declare ifstream
+#include <fstream>
+
 class SceneReader
 {
 public:
@@ -8,12 +11,13 @@ public:
     ~SceneReader() = default;
 
     void ReadFromFile(const String& fileName);
-    void ParseGameObject(std::ifstream& file);
 
 private:
+    void ParseFile(std::ifstream& file);
+
     String m_directory;
 
-    struct ObjectData 
+    struct ObjectData
     {
         String name;
         String parentName;
@@ -21,7 +25,6 @@ private:
         Vector3 scale;
         rp3d::Quaternion rotation;
         String meshType;
-        bool hasRigidbody;
+        String rigidbodyType; // [MODIFIED] Changed from bool to String
     };
 };
-

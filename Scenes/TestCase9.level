@@ -1,0 +1,126 @@
+[GameObject]
+Name: Cube_2
+ParentName: None
+Position: 6.7 0 -0.6
+Rotation: 0 0 0 1
+Scale: 1 2.9 12.2
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: false
+
+[GameObject]
+Name: Sphere_2
+ParentName: None
+Position: 5.8 14.6 18.3
+Rotation: 0 0 0 1
+Scale: 9 6 8.3
+MeshType: PRIMITIVE_SPHERE
+HasRigidbody: false
+
+[GameObject]
+Name: Cube_1
+ParentName: None
+Position: 6.4 0 -7
+Rotation: 0 0 0 1
+Scale: 1 7.8 1
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: false
+
+[GameObject]
+Name: Sphere_1
+ParentName: None
+Position: 13.5 14.5 -13.9
+Rotation: 0 0 0 1
+Scale: 7.4 6.5 7.8
+MeshType: PRIMITIVE_SPHERE
+HasRigidbody: false
+
+[GameObject]
+Name: Cube_0
+ParentName: None
+Position: 0.9 0 -6.9
+Rotation: 0 0 0 1
+Scale: 10.1 5.3 1
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: false
+
+[GameObject]
+Name: Sphere_0
+ParentName: None
+Position: -9.1 19.7 0
+Rotation: 0 0 0 1
+Scale: 10.1 9.1 10.3
+MeshType: PRIMITIVE_SPHERE
+HasRigidbody: false
+
+[GameObject]
+Name: Cube_5
+ParentName: None
+Position: -21.2 9.4 -6.5
+Rotation: 0 0 0 1
+Scale: 3.5 2.6 36.9
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: false
+
+[GameObject]
+Name: Cube_4
+ParentName: None
+Position: -23.4 0 -6.3
+Rotation: 0 0 0 1
+Scale: 3.2 26.3 37.2
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: false
+
+[GameObject]
+Name: Cylinder_2
+ParentName: None
+Position: 13.1 6.6 18.1
+Rotation: 0 0 0 1
+Scale: 8 6.3 8
+MeshType: PRIMITIVE_CYLINDER
+HasRigidbody: false
+
+[GameObject]
+Name: Cylinder_1
+ParentName: None
+Position: 13.6 5.8 -13.8
+Rotation: 0 0 0 1
+Scale: 8 6.2 8
+MeshType: PRIMITIVE_CYLINDER
+HasRigidbody: false
+
+[GameObject]
+Name: Cylinder_0
+ParentName: None
+Position: 0 8.4 0
+Rotation: 0 0 0 1
+Scale: 10 8.9 10
+MeshType: PRIMITIVE_CYLINDER
+HasRigidbody: false
+
+[GameObject]
+Name: Cube_3
+ParentName: None
+Position: -18.8 0 18.7
+Rotation: 0 0 0 1
+Scale: 12.7 7.6 11.7
+MeshType: PRIMITIVE_CUBE
+HasRigidbody: false
+
+[GameObject]
+Name: Plane_0
+ParentName: None
+Position: 0 0 0
+Rotation: 0 0 0 1
+Scale: 5 5 5
+MeshType: PRIMITIVE_PLANE
+HasRigidbody: false
+
+[GameObject]
+Name: Capsule_0
+ParentName: None
+Position: 28.2 0 0
+Rotation: 0 0 0 1
+Scale: 1 1 1
+MeshType: PRIMITIVE_CAPSULE
+HasRigidbody: false
+

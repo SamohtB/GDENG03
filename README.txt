@@ -1,7 +1,4 @@
-Owner: Thomas Bryle Banatin
-
-Special Thanks To:
-Jose Romulo Guzman (GDENG03 Scene Editor)
+Jose Romulo Guzman
 
 How To Run Program:
 - Dependencies:
@@ -24,15 +21,9 @@ Scene Camera Controls:
   -While not holding right click
 	- scroll mouse wheel to move forward/backward
 
-Notes:
-* Currently, all loading of objects/resources must be done between
-	GraphicsEngine::GetInstance()->GetBatchUploader()->StartUpload();
-	and
-	GraphicsEngine::GetInstance()->GetBatchUploader()->StopAndWaitUpload();
+For Unreal, use Python to run the scripts.
+For Unity, add the script into the project.
 
-This is due to vertex buffers, index buffers, and texture buffers are passed to a BatchResourceUploader that uses a different command queue than the one for drawing
-
-GDrive Link to Test Cases and Asset Folder: https://drive.google.com/drive/folders/1qlJDlBZe4FXhACQ4wmM7yOEjfh9H1t2H?usp=drive_link 
 
 
 	

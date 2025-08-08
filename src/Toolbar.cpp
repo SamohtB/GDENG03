@@ -244,38 +244,45 @@ void Toolbar::GameObjects()
                 GameObjectManager::GetInstance()->AddGameObject(entity);
             }
 
-            if (ImGui::MenuItem("Dynamic Physics Cube x 100"))
+            if (ImGui::MenuItem("Dynamic Physics Cube x 50 (Stacked)"))
             {
-                // Define the properties for our spawning grid
-                const int numPerRow = 10;
-                const float spacing = 2.0f; // 2 units between the center of each cube
-                const float startY = 10.0f;
+                const int gridSize = 4;
+                const float cubeScale = 0.5f; // [NEW] Control the size of the cubes here.
+                const float spacing = cubeScale;  // [MODIFIED] Spacing now matches the cube size.
+                const float startX = 0.0f;
+                const float startY = 5.0f;
+                const float startZ = 0.0f;
 
-                for (int i = 0; i < 100; ++i)
+                for (int i = 0; i < gridSize; ++i)
                 {
-                    auto name = NameRegistry::GetInstance()->GenerateUniqueName("PhysicsCube");
+                    for (int j = 0; j < gridSize; ++j)
+                    {
+                        for (int k = 0; k < gridSize; ++k)
+                        {
+                            auto name = NameRegistry::GetInstance()->GenerateUniqueName("GridCube");
 
-                    // Create the base game entity with a transform
-                    auto entity = GameObjectBuilder()
-                        .SetName(name)
-                        .AddTransformComponent(name)
-                        .Build();
+                            auto entity = GameObjectBuilder()
+                                .SetName(name)
+                                .AddTransformComponent(name)
+                                .Build();
 
-                    // Calculate the cube's position in a 10x10 grid on the X-Z plane
-                    float x = (i % numPerRow) * spacing;
-                    float z = (i / numPerRow) * spacing;
-                    entity->Transform()->SetPosition(Vector3(x, startY, z)); // Set unique position
+                            // [NEW] Set the scale of the cube.
+                            entity->Transform()->SetScale(Vector3(cubeScale, cubeScale, cubeScale));
 
-                    // Use a new builder to add more components to the *existing* entity.
-                    // We use static_pointer_cast to safely convert the base AGameObject pointer
-                    // to the GameEntity pointer required by SetExisting.
-                    GameObjectBuilder()
-                        .SetExisting(std::static_pointer_cast<GameEntity>(entity))
-                        .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::DEFAULT)
-                        .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
-                        .Build();
+                            float x = startX + (i * spacing);
+                            float y = startY + (j * spacing);
+                            float z = startZ + (k * spacing);
+                            entity->Transform()->SetPosition(Vector3(x, y, z));
 
-                    GameObjectManager::GetInstance()->AddGameObject(entity);
+                            GameObjectBuilder()
+                                .SetExisting(std::static_pointer_cast<GameEntity>(entity))
+                                .AddMeshComponent(MeshType::PRIMITIVE_CUBE, MaterialType::BRICKS)
+                                .AddPhysicsComponent(MeshType::PRIMITIVE_CUBE, false)
+                                .Build();
+
+                            GameObjectManager::GetInstance()->AddGameObject(entity);
+                        }
+                    }
                 }
             }
 

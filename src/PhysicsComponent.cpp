@@ -193,3 +193,8 @@ void PhysicsComponent::SetMass(float mass)
     this->m_mass = mass;
 }
 
+reactphysics3d::BodyType PhysicsComponent::GetBodyType() const
+{
+    return m_bodyType;
+}
+
