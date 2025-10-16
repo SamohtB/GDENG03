@@ -44,5 +44,5 @@ private:
 	CD3DX12_VIEWPORT m_viewport;
 	CD3DX12_RECT m_scissorRect;
 
-	std::vector<float> m_clearColor = { 0.0f, 0.2f, 0.4f, 1.0f };
+	std::vector<float> m_clearColor = { 0.278f, 0.278f, 0.278f, 1.0f };
 };

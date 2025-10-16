@@ -30,6 +30,8 @@ void Toolbar::DrawUI()
 {
     if (ImGui::BeginMainMenuBar())
     {
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.0f)); // Dark gray background
+
         // --- Left-aligned Menus ---
         FileMenu();
         GameObjects();
@@ -41,6 +43,8 @@ void Toolbar::DrawUI()
 
         // --- Right-aligned FPS Counter ---
         DrawRightSideInfo();
+
+        ImGui::PopStyleColor();
     }
 
     ImGui::EndMainMenuBar();
@@ -395,6 +399,7 @@ void Toolbar::GameObjects()
 
 void Toolbar::FileMenu()
 {
+
     /* File Menus*/
     if (ImGui::BeginMenu("File"))
     {

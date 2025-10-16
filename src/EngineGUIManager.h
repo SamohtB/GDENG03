@@ -40,4 +40,5 @@ private:
     UITable m_uiTable;
 
     void PopulateGUI();
+	void setupStyle();
 };

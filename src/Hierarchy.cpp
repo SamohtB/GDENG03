@@ -10,8 +10,6 @@ Hierarchy::Hierarchy() : AUIScreen("Hierarchy")
 
 void Hierarchy::DrawUI()
 {
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f, 0.2f, 0.2f, 0.9f));
-
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
 
     if (ImGui::Begin("Hierarchy", nullptr, window_flags))
@@ -47,24 +45,11 @@ void Hierarchy::DrawUI()
     }
 
     ImGui::End();
-
-    ImGui::PopStyleColor();
 }
 
 void Hierarchy::DrawGameObjectNode(std::shared_ptr<AGameObject> gameObject)
 {
     bool isSelected = GameObjectManager::GetInstance()->GetSelectedObject() == gameObject;
-
-    if (isSelected)
-    {
-        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.3f, 0.6f, 0.3f, 1.0f)); // Green for selected
-        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.5f, 0.8f, 0.5f, 1.0f)); // Hover effect
-    }
-    else
-    {
-        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.2f, 0.2f, 0.2f, 1.0f)); // Default color
-        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.4f, 0.4f, 0.4f, 1.0f)); // Hover effect
-    }
 
     if (ImGui::Selectable(gameObject->GetName().c_str(), isSelected))
     {
