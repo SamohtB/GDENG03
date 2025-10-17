@@ -7,11 +7,13 @@
 #include "GameObjectBuilder.h"
 #include "GameEntity.h"
 
+#include "IconsMaterialDesign.h"
+
 Inspector::Inspector() : AUIScreen("Inspector") {}
 
 void Inspector::DrawUI()
 {
-    ImGui::Begin("Inspector", &this->m_visible);
+    ImGui::Begin(("Inspector " + static_cast<String>(ICON_MD_ADD_ROAD)).c_str(), &this->m_visible);
 
     std::shared_ptr<AGameObject> object = GameObjectManager::GetInstance()->GetSelectedObject();
     if (object != nullptr)

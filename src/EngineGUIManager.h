@@ -29,6 +29,8 @@ public:
     std::vector<AUIScreen*> GetAllScreens();
     AUIScreen* GetUI(const String& name);
 
+	ImFont* GetIconFont() const { return m_IconFont; }
+
     EngineGUIManager(HWND hwnd);
     ~EngineGUIManager();
     EngineGUIManager(EngineGUIManager const&) = delete;
@@ -38,6 +40,9 @@ private:
 
     UIList m_uiList;
     UITable m_uiTable;
+
+	ImFont* m_defaultFont = nullptr;
+	ImFont* m_IconFont = nullptr;
 
     void PopulateGUI();
 	void setupStyle();

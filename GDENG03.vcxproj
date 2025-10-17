@@ -128,6 +128,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Lib\ReactPhysics3D\Include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -230,6 +231,9 @@
     <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\DarkModeConstants.h" />
+    <ClInclude Include="src\IconsLucide.h" />
+    <ClInclude Include="src\IconsMaterialDesign.h" />
     <ClInclude Include="src\LoadScene.h" />
     <ClInclude Include="src\SaveScene.h" />
     <ClInclude Include="src\SceneReader.h" />

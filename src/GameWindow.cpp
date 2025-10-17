@@ -23,6 +23,7 @@
 
 #include "EditorState.h"
 #include "SceneStateManager.h"
+#include "IconsMaterialDesign.h"
 
 GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
 

@@ -3,6 +3,7 @@
 #include "ActionHistory.h"
 #include "AGameObject.h"
 #include "PhysicsComponent.h"
+#include "Debug.h"
 
 TransformComponent::TransformComponent(String name, std::weak_ptr<AGameObject> owner) 
 	: AComponent(name, ComponentType::Transform, owner)
@@ -11,6 +12,7 @@ TransformComponent::TransformComponent(String name, std::weak_ptr<AGameObject> o
 	this->m_localRotation = rp3d::Quaternion::identity();
 	this->m_localScale = Vector3(1, 1, 1);
 	this->m_localMatrix = this->m_worldMatrix = GetLocalMatrix();
+	this->isLinked = false;
 }
 
 void TransformComponent::SetPosition(float x, float y, float z)
@@ -297,13 +299,45 @@ void TransformComponent::Perform()
 
 void TransformComponent::DrawUI()
 {
+	float dragWindowWidth = 50.0f;
+	float textWidth = 250.0f;
+
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		Vector3 position = this->GetLocalPosition();
 		Vector3 rotation = this->GetLocalRotation();
 		Vector3 scale = this->GetLocalScale();
+		Vector3 oldScale = scale;
 
-		if (ImGui::DragFloat3("Position", &position.x, 0.1f))
+		ImGui::AlignTextToFramePadding();
+		ImGui::PushItemWidth(textWidth);
+		ImGui::TextUnformatted("Position");
+		ImGui::SameLine();
+		ImGui::PushItemWidth(dragWindowWidth);
+
+		if (ImGui::DragFloat("##PosX", &position.x, 0.1f))
+		{
+			if (!m_recordedPosition)
+			{
+				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+				m_recordedPosition = true;
+			}
+			this->SetPosition(position);
+		}
+		ImGui::SameLine();
+
+		if (ImGui::DragFloat("##PosY", &position.y, 0.1f))
+		{
+			if (!m_recordedPosition)
+			{
+				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+				m_recordedPosition = true;
+			}
+			this->SetPosition(position);
+		}
+		ImGui::SameLine();
+
+		if (ImGui::DragFloat("##PosZ", &position.z, 0.1f))
 		{
 			if (!m_recordedPosition)
 			{
@@ -319,8 +353,37 @@ void TransformComponent::DrawUI()
 			m_recordedPosition = false;
 		}
 
-		if (ImGui::DragFloat3("Rotation", &rotation.x, 0.1f)) 
-		{ 
+		ImGui::PopItemWidth();
+
+		/* Rot */
+		ImGui::AlignTextToFramePadding();
+		ImGui::PushItemWidth(textWidth);
+		ImGui::TextUnformatted("Rotation");
+		ImGui::SameLine();
+		ImGui::PushItemWidth(dragWindowWidth);
+
+		if (ImGui::DragFloat("##RotX", &rotation.x, 0.1f))
+		{
+			if (!m_recordedRotation)
+			{
+				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+				m_recordedRotation = true;
+			}
+			this->SetRotation(rotation);
+		}
+		ImGui::SameLine();
+		if (ImGui::DragFloat("##RotY", &rotation.y, 0.1f))
+		{
+			if (!m_recordedRotation)
+			{
+				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+				m_recordedRotation = true;
+			}
+			this->SetRotation(rotation);
+		}
+		ImGui::SameLine();
+		if (ImGui::DragFloat("##RotZ", &rotation.z, 0.1f))
+		{
 			if (!m_recordedRotation)
 			{
 				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
@@ -335,15 +398,86 @@ void TransformComponent::DrawUI()
 			m_recordedRotation = false;
 		}
 
-		if (ImGui::DragFloat3("Scale", &scale.x, 0.1f)) 
+		ImGui::PopItemWidth();
+
+		/* Scale */
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::PushItemWidth(textWidth - 50);
+		ImGui::TextUnformatted("Scale");
+		ImGui::SameLine();
+
+		ImGui::PushItemWidth(50);
+		if (ImGui::Button("O"))
+		{
+			isLinked = !isLinked;
+			Debug::Log("Scale Linked");
+		}
+
+		ImGui::SameLine();
+		ImGui::PushItemWidth(dragWindowWidth);
+
+		if (ImGui::DragFloat("##ScaleX", &scale.x, 0.1f)) 
 		{ 
 			if (!m_recordedScale)
 			{
 				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
 				m_recordedScale = true;
 			}
+
+			if (isLinked)
+			{
+				float ratio = scale.x / oldScale.x;
+				scale.y = oldScale.y * ratio;
+				scale.z = oldScale.z * ratio;
+			}
+
 			this->SetScale(scale); 
 		}
+
+		ImGui::SameLine();
+
+		if (ImGui::DragFloat("##ScaleY", &scale.y, 0.1f))
+		{
+			if (!m_recordedScale)
+			{
+				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+				m_recordedScale = true;
+			}
+
+			if (isLinked)
+			{
+				float ratio = scale.y / oldScale.y;
+				scale.x = oldScale.x * ratio;
+				scale.z = oldScale.z * ratio;
+			}
+
+			this->SetScale(scale);
+		}
+
+
+		ImGui::SameLine();
+
+		if (ImGui::DragFloat("##ScaleZ", &scale.z, 0.1f))
+		{
+			if (!m_recordedScale)
+			{
+				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+				m_recordedScale = true;
+			}
+
+			if (isLinked)
+			{
+				float ratio = scale.z / oldScale.z;
+				scale.y = oldScale.y * ratio;
+				scale.x = oldScale.x * ratio;
+			}
+
+			this->SetScale(scale);
+		}
+
+
+		ImGui::PopItemWidth();
 
 		if (ImGui::IsItemDeactivatedAfterEdit())
 		{

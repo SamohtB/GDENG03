@@ -51,6 +51,7 @@ private:
 
     Matrix m_localMatrix;
     bool m_dirty;
+    bool isLinked;
 
     Matrix m_worldMatrix;
 	bool m_worldDirty;
