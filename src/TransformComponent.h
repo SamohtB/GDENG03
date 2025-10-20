@@ -2,6 +2,7 @@
 #include "AComponent.h"
 #include "InputListener.h"
 #include "Math.h"
+#include "ActionHistory.h"
 
 class TransformComponent : public AComponent
 {
@@ -64,5 +65,6 @@ private:
     void Perform() override;
     void DrawUI() override;
 
+    void DrawVector3Field(const char* label, Vector3& value);
 };
 

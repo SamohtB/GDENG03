@@ -1,9 +1,11 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "TransformComponent.h"
 #include "ActionHistory.h"
 #include "AGameObject.h"
 #include "PhysicsComponent.h"
 #include "Debug.h"
+#include "IconsMaterialDesign.h"
+#include "EngineGUIManager.h"
 
 TransformComponent::TransformComponent(String name, std::weak_ptr<AGameObject> owner) 
 	: AComponent(name, ComponentType::Transform, owner)
@@ -299,190 +301,125 @@ void TransformComponent::Perform()
 
 void TransformComponent::DrawUI()
 {
-	float dragWindowWidth = 50.0f;
-	float textWidth = 250.0f;
-
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		Vector3 position = this->GetLocalPosition();
-		Vector3 rotation = this->GetLocalRotation();
-		Vector3 scale = this->GetLocalScale();
-		Vector3 oldScale = scale;
+		Vector3 position = GetLocalPosition();
+		Vector3 rotation = GetLocalRotation();
+		Vector3 scale = GetLocalScale();
 
-		ImGui::AlignTextToFramePadding();
-		ImGui::PushItemWidth(textWidth);
-		ImGui::TextUnformatted("Position");
-		ImGui::SameLine();
-		ImGui::PushItemWidth(dragWindowWidth);
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 4));
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(3, 3));
 
-		if (ImGui::DragFloat("##PosX", &position.x, 0.1f))
+		if (ImGui::BeginTable("TransformTable", 3, ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoBordersInBody))
 		{
-			if (!m_recordedPosition)
-			{
-				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
-				m_recordedPosition = true;
-			}
-			this->SetPosition(position);
-		}
-		ImGui::SameLine();
+			ImGui::TableSetupColumn("Label", ImGuiTableColumnFlags_WidthFixed, 100.0f);
+			ImGui::TableSetupColumn("Button", ImGuiTableColumnFlags_WidthFixed, 28.0f); // reserve space for link button
+			ImGui::TableSetupColumn("Fields", ImGuiTableColumnFlags_WidthStretch);
 
-		if (ImGui::DragFloat("##PosY", &position.y, 0.1f))
-		{
-			if (!m_recordedPosition)
-			{
-				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
-				m_recordedPosition = true;
-			}
-			this->SetPosition(position);
-		}
-		ImGui::SameLine();
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::TextUnformatted("Position");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::Dummy(ImVec2(24.0f, 0.0f)); // placeholder to keep alignment
+			ImGui::TableSetColumnIndex(2);
+			DrawVector3Field("Pos", position);
 
-		if (ImGui::DragFloat("##PosZ", &position.z, 0.1f))
-		{
-			if (!m_recordedPosition)
-			{
-				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
-				m_recordedPosition = true;
-			}
-			this->SetPosition(position);
-		}
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::TextUnformatted("Rotation");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::Dummy(ImVec2(24.0f, 0.0f));
+			ImGui::TableSetColumnIndex(2);
+			DrawVector3Field("Rot", rotation);
 
-		if (ImGui::IsItemDeactivatedAfterEdit())
-		{
-			ActionHistory::GetInstance()->RecordAction(this->GetOwner());
-			m_recordedPosition = false;
-		}
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::TextUnformatted("Scale");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::PushID("ScaleLink");
 
-		ImGui::PopItemWidth();
+			ImGui::PushFont(EngineGUIManager::GetInstance()->GetIconFont());
+			if (ImGui::Button(isLinked ? ICON_MD_LINK : ICON_MD_LINK_OFF, ImVec2(24.0f, 24.0f)))
+				isLinked = !isLinked;
+			ImGui::PopFont();
+			ImGui::PopID();
 
-		/* Rot */
-		ImGui::AlignTextToFramePadding();
-		ImGui::PushItemWidth(textWidth);
-		ImGui::TextUnformatted("Rotation");
-		ImGui::SameLine();
-		ImGui::PushItemWidth(dragWindowWidth);
+			ImGui::TableSetColumnIndex(2);
+			DrawVector3Field("Scale", scale);
 
-		if (ImGui::DragFloat("##RotX", &rotation.x, 0.1f))
-		{
-			if (!m_recordedRotation)
-			{
-				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
-				m_recordedRotation = true;
-			}
-			this->SetRotation(rotation);
-		}
-		ImGui::SameLine();
-		if (ImGui::DragFloat("##RotY", &rotation.y, 0.1f))
-		{
-			if (!m_recordedRotation)
-			{
-				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
-				m_recordedRotation = true;
-			}
-			this->SetRotation(rotation);
-		}
-		ImGui::SameLine();
-		if (ImGui::DragFloat("##RotZ", &rotation.z, 0.1f))
-		{
-			if (!m_recordedRotation)
-			{
-				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
-				m_recordedRotation = true;
-			}
-			this->SetRotation(rotation);
+			ImGui::EndTable();
 		}
 
-		if (ImGui::IsItemDeactivatedAfterEdit())
-		{
-			ActionHistory::GetInstance()->RecordAction(this->GetOwner());
-			m_recordedRotation = false;
-		}
-
-		ImGui::PopItemWidth();
-
-		/* Scale */
-
-		ImGui::AlignTextToFramePadding();
-		ImGui::PushItemWidth(textWidth - 50);
-		ImGui::TextUnformatted("Scale");
-		ImGui::SameLine();
-
-		ImGui::PushItemWidth(50);
-		if (ImGui::Button("O"))
-		{
-			isLinked = !isLinked;
-			Debug::Log("Scale Linked");
-		}
-
-		ImGui::SameLine();
-		ImGui::PushItemWidth(dragWindowWidth);
-
-		if (ImGui::DragFloat("##ScaleX", &scale.x, 0.1f)) 
-		{ 
-			if (!m_recordedScale)
-			{
-				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
-				m_recordedScale = true;
-			}
-
-			if (isLinked)
-			{
-				float ratio = scale.x / oldScale.x;
-				scale.y = oldScale.y * ratio;
-				scale.z = oldScale.z * ratio;
-			}
-
-			this->SetScale(scale); 
-		}
-
-		ImGui::SameLine();
-
-		if (ImGui::DragFloat("##ScaleY", &scale.y, 0.1f))
-		{
-			if (!m_recordedScale)
-			{
-				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
-				m_recordedScale = true;
-			}
-
-			if (isLinked)
-			{
-				float ratio = scale.y / oldScale.y;
-				scale.x = oldScale.x * ratio;
-				scale.z = oldScale.z * ratio;
-			}
-
-			this->SetScale(scale);
-		}
-
-
-		ImGui::SameLine();
-
-		if (ImGui::DragFloat("##ScaleZ", &scale.z, 0.1f))
-		{
-			if (!m_recordedScale)
-			{
-				ActionHistory::GetInstance()->RecordAction(this->GetOwner());
-				m_recordedScale = true;
-			}
-
-			if (isLinked)
-			{
-				float ratio = scale.z / oldScale.z;
-				scale.y = oldScale.y * ratio;
-				scale.x = oldScale.x * ratio;
-			}
-
-			this->SetScale(scale);
-		}
-
-
-		ImGui::PopItemWidth();
-
-		if (ImGui::IsItemDeactivatedAfterEdit())
-		{
-			ActionHistory::GetInstance()->RecordAction(this->GetOwner());
-			m_recordedScale = false;
-		}
+		ImGui::PopStyleVar(2);
 	}
+
+
+}
+
+void TransformComponent::DrawVector3Field(const char* label, Vector3& value)
+{
+	float fieldWidth = 60.0f;
+	ImGui::PushID(label);
+
+	auto axisInput = [&](const char* name, float& v)
+		{
+			ImGui::TextUnformatted(name);
+			ImGui::SameLine();
+			ImGui::PushItemWidth(fieldWidth);
+
+			std::string id = "##";
+			id += label;
+			id += name;
+
+			if (ImGui::DragFloat(id.c_str(), &v, 0.1f))
+			{
+				if (std::strcmp(label, "Pos") == 0)
+				{
+					if (!m_recordedPosition)
+					{
+						ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+						m_recordedPosition = true;
+					}
+					this->SetPosition(value);
+				}
+
+				else if (std::strcmp(label, "Rot") == 0)
+				{
+					if (!m_recordedRotation)
+					{
+						ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+						m_recordedRotation = true;
+					}
+					this->SetRotation(value);
+				}
+
+				else if (std::strcmp(label, "Scale") == 0)
+				{
+					if (!m_recordedScale)
+					{
+						ActionHistory::GetInstance()->RecordAction(this->GetOwner());
+						m_recordedScale = true;
+					}
+					this->SetScale(value);
+				}
+			}
+
+			ImGui::PopItemWidth();
+
+			if (ImGui::IsItemDeactivatedAfterEdit())
+			{
+				if (std::strcmp(label, "Pos") == 0) m_recordedPosition = false;
+				else if (std::strcmp(label, "Rot") == 0) m_recordedRotation = false;
+				else if (std::strcmp(label, "Scale") == 0) m_recordedScale = false;
+			}
+
+			ImGui::SameLine();
+		};
+
+	axisInput("X", value.x);
+	axisInput("Y", value.y);
+	axisInput("Z", value.z);
+
+	ImGui::NewLine();
+	ImGui::PopID();
 }
