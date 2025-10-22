@@ -19,6 +19,7 @@
 #include "Debug.h"
 #include "DarkModeConstants.h"
 #include "IconsMaterialDesign.h"
+#include "EditorTheme.h"
 
 #include <filesystem>
 #include <fstream>
@@ -109,7 +110,8 @@ EngineGUIManager::EngineGUIManager(HWND hwnd)
 	ImFontConfig icons_config;
 	icons_config.MergeMode = true;
 	icons_config.PixelSnapH = true;
-	icons_config.GlyphMinAdvanceX = 16.0f;
+	icons_config.GlyphOffset = ImVec2(1.0f, 4.0f);
+
 	io.Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_MD, 16.0f, &icons_config, icons_ranges);
 
 
@@ -138,11 +140,7 @@ EngineGUIManager::EngineGUIManager(HWND hwnd)
 	init_info.SrvDescriptorFreeFn = 
 		+[](ImGui_ImplDX12_InitInfo* info, D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle, D3D12_GPU_DESCRIPTOR_HANDLE gpu_handle)
 		{
-			auto* heapManager = static_cast<DescriptorHeapManager*>(info->UserData);
-			SIZE_T base = heapManager->GetSRVCPUHandleAt(0).ptr;
-			UINT stride = heapManager->GetSRVDescriptorSize();
-			UINT index = static_cast<UINT>((cpu_handle.ptr - base) / stride);
-			heapManager->FreeSRVSlot(index);
+			
 		};
 
 	ImGui_ImplDX12_Init(&init_info);
@@ -187,69 +185,115 @@ void EngineGUIManager::PopulateGUI()
 
 void EngineGUIManager::setupStyle()
 {
-	// Tokyo Night Storm style from ImThemes
 	ImGuiStyle& style = ImGui::GetStyle();
 
 	style.Alpha = 1.0f;
 	style.DisabledAlpha = 0.6000000238418579f;
-	style.WindowPadding = ImVec2(8.0f, 8.0f);
-	style.WindowRounding = 0.0f;
+	style.WindowPadding = ImVec2(15.0f, 10.10000038146973f);
+	style.WindowRounding = 10.0f;
 	style.WindowBorderSize = 1.0f;
 	style.WindowMinSize = ImVec2(32.0f, 32.0f);
 	style.WindowTitleAlign = ImVec2(0.0f, 0.5f);
 	style.WindowMenuButtonPosition = ImGuiDir_Left;
-	style.ChildRounding = 4.0f;
+	style.ChildRounding = 5.0f;
 	style.ChildBorderSize = 1.0f;
-	style.PopupRounding = 4.0f;
+	style.PopupRounding = 5.0f;
 	style.PopupBorderSize = 1.0f;
-	style.FramePadding = ImVec2(6.0f, 4.0f);
-	style.FrameRounding = 3.0f;
-	style.FrameBorderSize = 1.0f;
-	style.ItemSpacing = ImVec2(8.0f, 6.0f);
+	style.FramePadding = ImVec2(3.0f, 3.0f);
+	style.FrameRounding = 4.0f;
+	style.FrameBorderSize = 0.0f;
+	style.ItemSpacing = ImVec2(4.0f, 4.0f);
 	style.ItemInnerSpacing = ImVec2(4.0f, 4.0f);
 	style.CellPadding = ImVec2(4.0f, 2.0f);
-	style.IndentSpacing = 20.0f;
+	style.IndentSpacing = 21.0f;
 	style.ColumnsMinSpacing = 6.0f;
-	style.ScrollbarSize = 14.0f;
-	style.ScrollbarRounding = 6.0f;
+	style.ScrollbarSize = 12.0f;
+	style.ScrollbarRounding = 9.0f;
 	style.GrabMinSize = 10.0f;
-	style.GrabRounding = 3.0f;
-	style.TabRounding = 3.0f;
-	style.TabBorderSize = 1.0f;
+	style.GrabRounding = 10.0f;
+	style.TabRounding = 4.0f;
+	style.TabBorderSize = 0.0f;
 	//style.TabMinWidthForCloseButton = 0.0f;
 	style.ColorButtonPosition = ImGuiDir_Left;
+	style.ButtonTextAlign = ImVec2(0.5f, 0.5f);
+	style.SelectableTextAlign = ImVec2(0.0f, 0.0f);
 
+	style.Colors[ImGuiCol_Text] = DarkTheme.TEXT;
+	style.Colors[ImGuiCol_TextDisabled] = DarkTheme.TEXT_DISABLED;
 
-	style.Colors[ImGuiCol_Text] = DarkModeGUIConstants::TEXT;
-	style.Colors[ImGuiCol_WindowBg] = DarkModeGUIConstants::WINDOW_BG;
-	style.Colors[ImGuiCol_ChildBg] = DarkModeGUIConstants::CHILD_BG;
-	style.Colors[ImGuiCol_PopupBg] = DarkModeGUIConstants::POPUP_BG;
-	style.Colors[ImGuiCol_Border] = DarkModeGUIConstants::BORDER;
-	style.Colors[ImGuiCol_BorderShadow] = ImVec4(1, 1, 1, 1);
-	style.Colors[ImGuiCol_FrameBg] = DarkModeGUIConstants::FRAME_BG;
-	style.Colors[ImGuiCol_FrameBgHovered] = DarkModeGUIConstants::FRAME_BG_HOVERED;
-	style.Colors[ImGuiCol_FrameBgActive] = DarkModeGUIConstants::FRAME_BG_ACTIVE;
-	style.Colors[ImGuiCol_TitleBg] = DarkModeGUIConstants::TITLE_BG;
-	style.Colors[ImGuiCol_TitleBgActive] = DarkModeGUIConstants::TITLE_BG_ACTIVE;
-	style.Colors[ImGuiCol_TitleBgCollapsed] = DarkModeGUIConstants::TITLE_BG_COLLAPSED;
-	style.Colors[ImGuiCol_MenuBarBg] = DarkModeGUIConstants::MENU_BAR_BG;
-	style.Colors[ImGuiCol_Button] = DarkModeGUIConstants::BUTTON;
-	style.Colors[ImGuiCol_ButtonHovered] = DarkModeGUIConstants::BUTTON_HOVERED;
-	style.Colors[ImGuiCol_ButtonActive] = DarkModeGUIConstants::BUTTON_ACTIVE;
-	style.Colors[ImGuiCol_Header] = DarkModeGUIConstants::HEADER;
-	style.Colors[ImGuiCol_HeaderHovered] = DarkModeGUIConstants::HEADER_HOVERED;
-	style.Colors[ImGuiCol_HeaderActive] = DarkModeGUIConstants::HEADER_ACTIVE;
-	style.Colors[ImGuiCol_Tab] = DarkModeGUIConstants::TAB;
-	style.Colors[ImGuiCol_TabUnfocused] = DarkModeGUIConstants::TAB_UNFOCUSED;
-	style.Colors[ImGuiCol_TabUnfocusedActive] = DarkModeGUIConstants::TAB_UNFOCUSED_ACTIVE;
-	style.Colors[ImGuiCol_TabActive] = DarkModeGUIConstants::TAB_ACTIVE;
-	style.Colors[ImGuiCol_TabHovered] = DarkModeGUIConstants::TAB_HOVERED;
-	style.Colors[ImGuiCol_TextSelectedBg] = DarkModeGUIConstants::TEXT_SELECTED_BG;
+	style.Colors[ImGuiCol_WindowBg] = DarkTheme.WINDOW_BG;
+	style.Colors[ImGuiCol_ChildBg] = DarkTheme.CHILD_BG;
+	style.Colors[ImGuiCol_PopupBg] = DarkTheme.POPUP_BG;
+
+	style.Colors[ImGuiCol_Border] = DarkTheme.BORDER;
+	style.Colors[ImGuiCol_BorderShadow] = DarkTheme.BORDER_SHADOW;
+
+	style.Colors[ImGuiCol_FrameBg] = DarkTheme.FRAME_BG;
+	style.Colors[ImGuiCol_FrameBgHovered] = DarkTheme.FRAME_BG_HOVERED;
+	style.Colors[ImGuiCol_FrameBgActive] = DarkTheme.FRAME_BG_ACTIVE;
+
+	style.Colors[ImGuiCol_TitleBg] = DarkTheme.TITLE_BG;
+	style.Colors[ImGuiCol_TitleBgActive] = DarkTheme.TITLE_BG_ACTIVE;
+	style.Colors[ImGuiCol_TitleBgCollapsed] = DarkTheme.TITLE_BG_COLLAPSED;
+
+	style.Colors[ImGuiCol_MenuBarBg] = DarkTheme.MENU_BAR_BG;
+
+	style.Colors[ImGuiCol_ScrollbarBg] = DarkTheme.SCROLLBAR_BG;
+	style.Colors[ImGuiCol_ScrollbarGrab] = DarkTheme.SCROLLBAR_GRAB;
+	style.Colors[ImGuiCol_ScrollbarGrabHovered] = DarkTheme.SCROLLBAR_GRAB_HOVERED;
+	style.Colors[ImGuiCol_ScrollbarGrabActive] = DarkTheme.SCROLLBAR_GRAB_ACTIVE;
+
+	style.Colors[ImGuiCol_CheckMark] = DarkTheme.CHECKMARK;
+
+	style.Colors[ImGuiCol_SliderGrab] = DarkTheme.SLIDER_GRAB;
+	style.Colors[ImGuiCol_SliderGrabActive] = DarkTheme.SLIDER_GRAB_ACTIVE;
+
+	style.Colors[ImGuiCol_Button] = DarkTheme.BUTTON;
+	style.Colors[ImGuiCol_ButtonHovered] = DarkTheme.BUTTON_HOVERED;
+	style.Colors[ImGuiCol_ButtonActive] = DarkTheme.BUTTON_ACTIVE;
+
+	style.Colors[ImGuiCol_Header] = DarkTheme.HEADER;
+	style.Colors[ImGuiCol_HeaderHovered] = DarkTheme.HEADER_HOVERED;
+	style.Colors[ImGuiCol_HeaderActive] = DarkTheme.HEADER_ACTIVE;
+
+	style.Colors[ImGuiCol_Separator] = DarkTheme.SEPARATOR;
+	style.Colors[ImGuiCol_SeparatorHovered] = DarkTheme.SEPARATOR_HOVERED;
+	style.Colors[ImGuiCol_SeparatorActive] = DarkTheme.SEPARATOR_ACTIVE;
+
+	style.Colors[ImGuiCol_ResizeGrip] = DarkTheme.RESIZE_GRIP;
+	style.Colors[ImGuiCol_ResizeGripHovered] = DarkTheme.RESIZE_GRIP_HOVERED;
+	style.Colors[ImGuiCol_ResizeGripActive] = DarkTheme.RESIZE_GRIP_ACTIVE;
+
+	style.Colors[ImGuiCol_Tab] = DarkTheme.TAB;
+	style.Colors[ImGuiCol_TabHovered] = DarkTheme.TAB_HOVERED;
+	style.Colors[ImGuiCol_TabActive] = DarkTheme.TAB_ACTIVE;
+	style.Colors[ImGuiCol_TabUnfocused] = DarkTheme.TAB_UNFOCUSED;
+	style.Colors[ImGuiCol_TabUnfocusedActive] = DarkTheme.TAB_UNFOCUSED_ACTIVE;
+
+	style.Colors[ImGuiCol_PlotLines] = DarkTheme.PLOT_LINES;
+	style.Colors[ImGuiCol_PlotLinesHovered] = DarkTheme.PLOT_LINES_HOVERED;
+	style.Colors[ImGuiCol_PlotHistogram] = DarkTheme.PLOT_HISTOGRAM;
+	style.Colors[ImGuiCol_PlotHistogramHovered] = DarkTheme.PLOT_HISTOGRAM_HOVERED;
+
+	style.Colors[ImGuiCol_TableHeaderBg] = DarkTheme.TABLE_HEADER_BG;
+	style.Colors[ImGuiCol_TableBorderStrong] = DarkTheme.TABLE_BORDER_STRONG;
+	style.Colors[ImGuiCol_TableBorderLight] = DarkTheme.TABLE_BORDER_LIGHT;
+	style.Colors[ImGuiCol_TableRowBg] = DarkTheme.TABLE_ROW_BG;
+	style.Colors[ImGuiCol_TableRowBgAlt] = DarkTheme.TABLE_ROW_BG_ALT;
+
+	style.Colors[ImGuiCol_TextSelectedBg] = DarkTheme.TEXT_SELECTED_BG;
+	style.Colors[ImGuiCol_DragDropTarget] = DarkTheme.DRAG_DROP_TARGET;
+
+	style.Colors[ImGuiCol_NavHighlight] = DarkTheme.NAV_HIGHLIGHT;
+	style.Colors[ImGuiCol_NavWindowingHighlight] = DarkTheme.NAV_WINDOWING_HIGHLIGHT;
+	style.Colors[ImGuiCol_NavWindowingDimBg] = DarkTheme.NAV_WINDOWING_DIM_BG;
+	style.Colors[ImGuiCol_ModalWindowDimBg] = DarkTheme.MODAL_WINDOW_DIM_BG;
 }
 
 
 EngineGUIManager::~EngineGUIManager()
 {
+	ImGui::DestroyPlatformWindows();
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();

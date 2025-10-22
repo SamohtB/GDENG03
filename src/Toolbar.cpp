@@ -28,9 +28,11 @@ Toolbar::Toolbar() : AUIScreen("TOOLBAR")
 
 void Toolbar::DrawUI()
 {
+    ImGui::ShowMetricsWindow();
+
     if (ImGui::BeginMainMenuBar())
     {
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.0f)); // Dark gray background
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
 
         // --- Left-aligned Menus ---
         FileMenu();
@@ -44,7 +46,7 @@ void Toolbar::DrawUI()
         // --- Right-aligned FPS Counter ---
         DrawRightSideInfo();
 
-        ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
     }
 
     ImGui::EndMainMenuBar();

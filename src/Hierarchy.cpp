@@ -2,6 +2,7 @@
 #include "Hierarchy.h"
 #include "GameObjectManager.h"
 #include "AGameObject.h"
+#include "EngineGUIManager.h"
 
 Hierarchy::Hierarchy() : AUIScreen("Hierarchy")
 {
@@ -14,34 +15,73 @@ void Hierarchy::DrawUI()
 
     if (ImGui::Begin("Hierarchy", nullptr, window_flags))
     {
+        EngineGUIManager::BeginToolbarRegion("Heirarchy Toolbar", 28.0f);
+
+        if (ImGui::Button("+", ImVec2(28.0f, 0.0f)))
+        {
+        }
+
+        ImGui::SameLine();
+
+        {
+            const float searchWidth = 150.0f;
+            // remaining width after the button
+            float avail = ImGui::GetContentRegionAvail().x;
+            // current cursor X inside the window (after the button)
+            float curX = ImGui::GetCursorPosX();
+            // compute target X so the input's right edge aligns with the right content edge
+            float targetX = curX + avail - searchWidth;
+            // clamp so we don't move backwards past current X
+            if (targetX < curX) targetX = curX;
+            ImGui::SetCursorPosX(targetX);
+
+            ImGui::SetNextItemWidth(searchWidth);
+            static char searchBuffer[128] = "";
+            ImGui::InputText("##Search", searchBuffer, IM_ARRAYSIZE(searchBuffer));
+        }
+
+        EngineGUIManager::EndToolbarRegion();
+
         auto objectList = GameObjectManager::GetInstance()->GetAllObjects();
 
-        for (auto gameObject : objectList)
+        if (ImGui::BeginTable("HierarchyTable", 3, ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody))
         {
-            DrawGameObjectNodeRecursive(gameObject);
-        }
+            ImGui::TableSetupColumn("Visible", ImGuiTableColumnFlags_WidthFixed, 30.0f);
+            ImGui::TableSetupColumn("Clickable", ImGuiTableColumnFlags_WidthFixed, 30.0f);
+            ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthStretch);
 
-        // === Create an invisible drop target for root ===
-        ImVec2 availableSpace = ImGui::GetContentRegionAvail();
-        if (availableSpace.y > 0)
-        {
-            ImGui::Dummy(ImVec2(availableSpace.x, availableSpace.y));
-            if (ImGui::BeginDragDropTarget())
+            auto objectList = GameObjectManager::GetInstance()->GetAllObjects();
+
+            for (auto gameObject : objectList)
             {
-                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT"))
-                {
-                    auto draggedShared = *(std::shared_ptr<AGameObject>*)payload->Data;
-                    std::shared_ptr<AGameObject> draggedObject = draggedShared;
-
-                    if (draggedObject->GetParent() != nullptr)
-                    {
-                        draggedObject->DetachFromParent();
-                        GameObjectManager::GetInstance()->AddGameObject(draggedObject);
-                    }
-                }
-                ImGui::EndDragDropTarget();
+                DrawGameObjectNodeRecursive(gameObject);
             }
+
+            ImGui::EndTable();
         }
+
+
+        //// === Create an invisible drop target for root ===
+        //ImVec2 availableSpace = ImGui::GetContentRegionAvail();
+        //if (availableSpace.y > 0)
+        //{
+        //    ImGui::Dummy(ImVec2(availableSpace.x, availableSpace.y));
+        //    if (ImGui::BeginDragDropTarget())
+        //    {
+        //        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT"))
+        //        {
+        //            auto draggedShared = *(std::shared_ptr<AGameObject>*)payload->Data;
+        //            std::shared_ptr<AGameObject> draggedObject = draggedShared;
+
+        //            if (draggedObject->GetParent() != nullptr)
+        //            {
+        //                draggedObject->DetachFromParent();
+        //                GameObjectManager::GetInstance()->AddGameObject(draggedObject);
+        //            }
+        //        }
+        //        ImGui::EndDragDropTarget();
+        //    }
+        //}
     }
 
     ImGui::End();
@@ -81,86 +121,36 @@ void Hierarchy::DrawGameObjectNode(std::shared_ptr<AGameObject> gameObject)
 
 void Hierarchy::DrawGameObjectNodeRecursive(std::shared_ptr<AGameObject> gameObject)
 {
-    bool isSelected = GameObjectManager::GetInstance()->GetSelectedObject() == gameObject;
+    ImGui::TableNextRow();
 
-    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-    if (gameObject->GetChildren().empty())
-        flags |= ImGuiTreeNodeFlags_Leaf;
+    // --- Visibility toggle ---
+    ImGui::TableSetColumnIndex(0);
+    bool visible = true;
+    if (ImGui::Checkbox(("##vis" + gameObject->GetName()).c_str(), &visible))
+    {
+    }
 
-    if (isSelected)
-        flags |= ImGuiTreeNodeFlags_Selected;
 
-    bool nodeOpen = ImGui::TreeNodeEx(gameObject->GetName().c_str(), flags);
+    // --- Clickable toggle ---
+    ImGui::TableSetColumnIndex(1);
+    bool clickable = true;
+    if (ImGui::Checkbox(("##click" + gameObject->GetName()).c_str(), &clickable))
+    {
 
-    // === Handle Selection ===
+    }
+
+    // --- Name / Tree node ---
+    ImGui::TableSetColumnIndex(2);
+    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
+    bool nodeOpen = ImGui::TreeNodeEx((void*)gameObject.get(), nodeFlags, "%s", gameObject->GetName().c_str());
+
     if (ImGui::IsItemClicked())
-    {
-        GameObjectManager::GetInstance()->SetSelectedObject(isSelected ? nullptr : gameObject);
-    }
+        GameObjectManager::GetInstance()->SetSelectedObject(gameObject);
 
-    // === Drag Source ===
-    if (ImGui::BeginDragDropSource())
-    {
-        std::shared_ptr<AGameObject> sharedGameObject = gameObject;
-        ImGui::SetDragDropPayload("GAMEOBJECT", &sharedGameObject, sizeof(std::shared_ptr<AGameObject>));
-        ImGui::Text("Move %s", gameObject->GetName().c_str());
-        ImGui::EndDragDropSource();
-    }
-
-    // === Drop Target ===
-    if (ImGui::BeginDragDropTarget())
-    {
-        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT"))
-        {
-            auto draggedShared = *(std::shared_ptr<AGameObject>*)payload->Data;
-            std::shared_ptr<AGameObject> draggedObject = draggedShared;
-
-            if (draggedObject != gameObject && !draggedObject->IsDescendantOf(gameObject))
-            {
-                draggedObject->DetachFromParent();
-                gameObject->AttachChild(draggedShared);
-                GameObjectManager::GetInstance()->DeleteObject(draggedShared);
-            }
-        }
-        ImGui::EndDragDropTarget();
-    }
-
-    // === Right-click context menu (Delete) ===
-    ImGui::SameLine(ImGui::GetContentRegionAvail().x - 20.0f);
-    std::string buttonID = "##btn" + std::to_string(reinterpret_cast<uintptr_t>(gameObject.get()));
-    if (ImGui::Button(buttonID.c_str(), ImVec2(20, 0)))
-    {
-        ImGui::OpenPopup(buttonID.c_str());
-    }
-
-    if (ImGui::BeginPopup(buttonID.c_str()))
-    {
-        if (ImGui::MenuItem("Delete"))
-        {
-            auto children = gameObject->GetChildren();
-
-            for (const auto& child : children)
-            {
-                this->ReparentOrPromote(child, gameObject->GetParent());
-            }
-
-            GameObjectManager::GetInstance()->DeleteObject(gameObject);
-            GameObjectManager::GetInstance()->SetSelectedObject(nullptr);
-            ImGui::EndPopup();
-            if (nodeOpen)
-                ImGui::TreePop();
-            return;
-        }
-        ImGui::EndPopup();
-    }
-
-    // === Children Recursion ===
     if (nodeOpen)
     {
-        for (const auto& child : gameObject->GetChildren())
-        {
+        for (auto child : gameObject->GetChildren())
             DrawGameObjectNodeRecursive(child);
-        }
         ImGui::TreePop();
     }
 }

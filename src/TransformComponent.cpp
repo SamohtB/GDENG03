@@ -307,9 +307,6 @@ void TransformComponent::DrawUI()
 		Vector3 rotation = GetLocalRotation();
 		Vector3 scale = GetLocalScale();
 
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 4));
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(3, 3));
-
 		if (ImGui::BeginTable("TransformTable", 3, ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoBordersInBody))
 		{
 			ImGui::TableSetupColumn("Label", ImGuiTableColumnFlags_WidthFixed, 100.0f);
@@ -318,7 +315,8 @@ void TransformComponent::DrawUI()
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0);
-			ImGui::TextUnformatted("Position");
+			ImGui::AlignTextToFramePadding();
+			ImGui::Text("Position");
 			ImGui::TableSetColumnIndex(1);
 			ImGui::Dummy(ImVec2(24.0f, 0.0f)); // placeholder to keep alignment
 			ImGui::TableSetColumnIndex(2);
@@ -339,21 +337,22 @@ void TransformComponent::DrawUI()
 			ImGui::PushID("ScaleLink");
 
 			ImGui::PushFont(EngineGUIManager::GetInstance()->GetIconFont());
-			if (ImGui::Button(isLinked ? ICON_MD_LINK : ICON_MD_LINK_OFF, ImVec2(24.0f, 24.0f)))
+
+			/* Aligns text inside button to centered */
+			float offset = (ImGui::GetFrameHeight() - 28.0f) * 0.5f;
+			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + offset);
+			if (ImGui::Button(isLinked ? ICON_MD_INSERT_LINK : ICON_MD_LINK, ImVec2(28.0f, 28.0f)))
 				isLinked = !isLinked;
+
 			ImGui::PopFont();
 			ImGui::PopID();
-
+			 
 			ImGui::TableSetColumnIndex(2);
 			DrawVector3Field("Scale", scale);
 
 			ImGui::EndTable();
 		}
-
-		ImGui::PopStyleVar(2);
 	}
-
-
 }
 
 void TransformComponent::DrawVector3Field(const char* label, Vector3& value)
@@ -363,7 +362,8 @@ void TransformComponent::DrawVector3Field(const char* label, Vector3& value)
 
 	auto axisInput = [&](const char* name, float& v)
 		{
-			ImGui::TextUnformatted(name);
+			ImGui::AlignTextToFramePadding();
+			ImGui::Text(name);
 			ImGui::SameLine();
 			ImGui::PushItemWidth(fieldWidth);
 

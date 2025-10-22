@@ -158,6 +158,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\EditorTheme.cpp" />
     <ClCompile Include="src\LoadScene.cpp" />
     <ClCompile Include="src\SaveScene.cpp" />
     <ClCompile Include="src\SceneReader.cpp" />
@@ -231,8 +232,8 @@
     <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\EditorTheme.h" />
     <ClInclude Include="src\DarkModeConstants.h" />
-    <ClInclude Include="src\IconsLucide.h" />
     <ClInclude Include="src\IconsMaterialDesign.h" />
     <ClInclude Include="src\LoadScene.h" />
     <ClInclude Include="src\SaveScene.h" />

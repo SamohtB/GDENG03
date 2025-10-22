@@ -335,6 +335,7 @@
     </ClCompile>
     <ClCompile Include="src\EditorState.cpp" />
     <ClCompile Include="src\SceneStateManager.cpp" />
+    <ClCompile Include="src\EditorTheme.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DescriptorHeapManager.h">
@@ -570,9 +571,9 @@
     </ClInclude>
     <ClInclude Include="src\EditorState.h" />
     <ClInclude Include="src\SceneStateManager.h" />
-    <ClInclude Include="src\IconsLucide.h" />
     <ClInclude Include="src\DarkModeConstants.h" />
     <ClInclude Include="src\IconsMaterialDesign.h" />
+    <ClInclude Include="src\EditorTheme.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\DefaultVertexShader.hlsl">
