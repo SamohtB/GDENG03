@@ -139,6 +139,9 @@
     <Filter Include="Engine\EngineGUI\UIScreens\SceneManager">
       <UniqueIdentifier>{a705c011-d679-4912-9308-b721b895941a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\EngineGUI\UIScreens\ProjectWindow">
+      <UniqueIdentifier>{2cbd2627-daa8-4938-bedc-02f864b5a83c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -336,6 +339,9 @@
     <ClCompile Include="src\EditorState.cpp" />
     <ClCompile Include="src\SceneStateManager.cpp" />
     <ClCompile Include="src\EditorTheme.cpp" />
+    <ClCompile Include="src\Project.cpp">
+      <Filter>Engine\EngineGUI\UIScreens\ProjectWindow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DescriptorHeapManager.h">
@@ -445,9 +451,6 @@
     </ClInclude>
     <ClInclude Include="src\EngineGUIManager.h">
       <Filter>Engine\EngineGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AUIScreen.h">
-      <Filter>Engine\EngineGUI\UIScreens</Filter>
     </ClInclude>
     <ClInclude Include="src\Hierarchy.h">
       <Filter>Engine\EngineGUI\UIScreens\Hierarchy</Filter>
@@ -574,6 +577,12 @@
     <ClInclude Include="src\DarkModeConstants.h" />
     <ClInclude Include="src\IconsMaterialDesign.h" />
     <ClInclude Include="src\EditorTheme.h" />
+    <ClInclude Include="src\Project.h">
+      <Filter>Engine\EngineGUI\UIScreens\ProjectWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AUIScreen.h">
+      <Filter>Engine\EngineGUI\UIScreens</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\DefaultVertexShader.hlsl">

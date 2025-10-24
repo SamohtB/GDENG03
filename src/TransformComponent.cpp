@@ -303,13 +303,16 @@ void TransformComponent::DrawUI()
 {
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		float maxWidth = ImGui::GetWindowWidth();
+		float labelWidth = std::max(60.0f, maxWidth * 0.25f);
+
 		Vector3 position = GetLocalPosition();
 		Vector3 rotation = GetLocalRotation();
 		Vector3 scale = GetLocalScale();
 
 		if (ImGui::BeginTable("TransformTable", 3, ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoBordersInBody))
 		{
-			ImGui::TableSetupColumn("Label", ImGuiTableColumnFlags_WidthFixed, 100.0f);
+			ImGui::TableSetupColumn("Label", ImGuiTableColumnFlags_WidthFixed, labelWidth);
 			ImGui::TableSetupColumn("Button", ImGuiTableColumnFlags_WidthFixed, 28.0f); // reserve space for link button
 			ImGui::TableSetupColumn("Fields", ImGuiTableColumnFlags_WidthStretch);
 
@@ -318,7 +321,7 @@ void TransformComponent::DrawUI()
 			ImGui::AlignTextToFramePadding();
 			ImGui::Text("Position");
 			ImGui::TableSetColumnIndex(1);
-			ImGui::Dummy(ImVec2(24.0f, 0.0f)); // placeholder to keep alignment
+			ImGui::Dummy(ImVec2(28.0f, 0.0f)); // placeholder to keep alignment
 			ImGui::TableSetColumnIndex(2);
 			DrawVector3Field("Pos", position);
 
@@ -326,7 +329,7 @@ void TransformComponent::DrawUI()
 			ImGui::TableSetColumnIndex(0);
 			ImGui::TextUnformatted("Rotation");
 			ImGui::TableSetColumnIndex(1);
-			ImGui::Dummy(ImVec2(24.0f, 0.0f));
+			ImGui::Dummy(ImVec2(28.0f, 0.0f));
 			ImGui::TableSetColumnIndex(2);
 			DrawVector3Field("Rot", rotation);
 
@@ -357,21 +360,36 @@ void TransformComponent::DrawUI()
 
 void TransformComponent::DrawVector3Field(const char* label, Vector3& value)
 {
-	float fieldWidth = 60.0f;
 	ImGui::PushID(label);
+
+	float totalAvail = ImGui::GetContentRegionAvail().x;
+	float spacing = ImGui::GetStyle().ItemSpacing.x;
+
+	float labelWidth = ImGui::CalcTextSize("X").x;
+	labelWidth = std::max(labelWidth, ImGui::CalcTextSize("Y").x);
+	labelWidth = std::max(labelWidth, ImGui::CalcTextSize("Z").x);
+
+	labelWidth += ImGui::GetStyle().ItemInnerSpacing.x;
+
+	float totalLabelSpace = (labelWidth + spacing) * 3.0f - spacing;
+
+	// Divide remaining width equally among the three input fields
+	float inputWidth = (totalAvail - totalLabelSpace) / 3.0f;
+	if (inputWidth < 1.0f) inputWidth = 1.0f; // safety clamp
 
 	auto axisInput = [&](const char* name, float& v)
 		{
 			ImGui::AlignTextToFramePadding();
 			ImGui::Text(name);
 			ImGui::SameLine();
-			ImGui::PushItemWidth(fieldWidth);
+		
+			ImGui::PushItemWidth(inputWidth);
 
 			std::string id = "##";
 			id += label;
 			id += name;
 
-			if (ImGui::DragFloat(id.c_str(), &v, 0.1f))
+			if (ImGui::InputFloat(id.c_str(), &v, 0))
 			{
 				if (std::strcmp(label, "Pos") == 0)
 				{
@@ -420,6 +438,5 @@ void TransformComponent::DrawVector3Field(const char* label, Vector3& value)
 	axisInput("Y", value.y);
 	axisInput("Z", value.z);
 
-	ImGui::NewLine();
 	ImGui::PopID();
 }

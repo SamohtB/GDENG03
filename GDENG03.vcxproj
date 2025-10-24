@@ -158,6 +158,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Project.cpp" />
     <ClCompile Include="src\EditorTheme.cpp" />
     <ClCompile Include="src\LoadScene.cpp" />
     <ClCompile Include="src\SaveScene.cpp" />
@@ -232,6 +233,7 @@
     <ClCompile Include="src\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Project.h" />
     <ClInclude Include="src\EditorTheme.h" />
     <ClInclude Include="src\DarkModeConstants.h" />
     <ClInclude Include="src\IconsMaterialDesign.h" />

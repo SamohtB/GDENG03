@@ -20,6 +20,7 @@
 #include "EditorState.h" // <-- Required include for the editor state controls
 #include "SceneStateManager.h"
 #include "EditorAction.h"
+#include "Project.h"
 
 Toolbar::Toolbar() : AUIScreen("TOOLBAR")
 {
@@ -28,8 +29,6 @@ Toolbar::Toolbar() : AUIScreen("TOOLBAR")
 
 void Toolbar::DrawUI()
 {
-    ImGui::ShowMetricsWindow();
-
     if (ImGui::BeginMainMenuBar())
     {
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));

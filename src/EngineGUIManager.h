@@ -10,6 +10,7 @@ public:
     inline static const std::string MATERIAL_EDITOR = "MATERIAL_EDITOR";
 	inline static const std::string SAVE_SCENE = "SAVE_SCENE";
 	inline static const std::string LOAD_SCENE = "LOAD_SCENE";
+	inline static const std::string PROJECT_WINDOW = "PROJECT_WINDOW";
 };
 
 class AUIScreen;

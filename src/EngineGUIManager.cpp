@@ -15,6 +15,7 @@
 #include "DebugWindow.h"
 #include "SaveScene.h"
 #include "LoadScene.h"
+#include "Project.h"
 
 #include "Debug.h"
 #include "DarkModeConstants.h"
@@ -173,6 +174,10 @@ void EngineGUIManager::PopulateGUI()
 	this->m_uiTable[UINames::DEBUG] = debugWindow;
 	this->m_uiList.push_back(debugWindow);
 
+	auto projectWinow = std::make_shared<ProjectWindow>();
+	this->m_uiTable[UINames::PROJECT_WINDOW] = projectWinow;
+	this->m_uiList.push_back(projectWinow);
+
 	auto saveScene = std::make_shared<SaveScene>();
 	this->m_uiTable[UINames::SAVE_SCENE] = saveScene;
 	this->m_uiList.push_back(saveScene);
@@ -180,6 +185,7 @@ void EngineGUIManager::PopulateGUI()
 	auto loadScene = std::make_shared<LoadScene>();
 	this->m_uiTable[UINames::LOAD_SCENE] = loadScene;
 	this->m_uiList.push_back(loadScene);
+
 
 }
 
@@ -190,17 +196,17 @@ void EngineGUIManager::setupStyle()
 	style.Alpha = 1.0f;
 	style.DisabledAlpha = 0.6000000238418579f;
 	style.WindowPadding = ImVec2(15.0f, 10.10000038146973f);
-	style.WindowRounding = 10.0f;
+	style.WindowRounding = 0.0f;
 	style.WindowBorderSize = 1.0f;
 	style.WindowMinSize = ImVec2(32.0f, 32.0f);
 	style.WindowTitleAlign = ImVec2(0.0f, 0.5f);
 	style.WindowMenuButtonPosition = ImGuiDir_Left;
 	style.ChildRounding = 5.0f;
-	style.ChildBorderSize = 1.0f;
+	style.ChildBorderSize = 0.0f;
 	style.PopupRounding = 5.0f;
 	style.PopupBorderSize = 1.0f;
-	style.FramePadding = ImVec2(3.0f, 3.0f);
-	style.FrameRounding = 4.0f;
+	style.FramePadding = ImVec2(1.0f, 1.0f);
+	style.FrameRounding = 0.0f;
 	style.FrameBorderSize = 0.0f;
 	style.ItemSpacing = ImVec2(4.0f, 4.0f);
 	style.ItemInnerSpacing = ImVec2(4.0f, 4.0f);
@@ -211,7 +217,7 @@ void EngineGUIManager::setupStyle()
 	style.ScrollbarRounding = 9.0f;
 	style.GrabMinSize = 10.0f;
 	style.GrabRounding = 10.0f;
-	style.TabRounding = 4.0f;
+	style.TabRounding = 0.0f;
 	style.TabBorderSize = 0.0f;
 	//style.TabMinWidthForCloseButton = 0.0f;
 	style.ColorButtonPosition = ImGuiDir_Left;
