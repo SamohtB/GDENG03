@@ -1,4 +1,4 @@
-Jose Romulo Guzman
+Thomas Banatin
 
 How To Run Program:
 - Dependencies:
