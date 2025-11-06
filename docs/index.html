@@ -9,12 +9,12 @@ title: AnitoCrossHatch
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    max-width: 600px;
+    max-width: 900px;
     margin: auto;
   }
 
   .flex-item {
-    flex: 1 1 48%; /* Two items per row with some spacing */
+    flex: 1fr 1fr 1fr ;
   }
 
   .flex-item img {
@@ -72,8 +72,11 @@ title: AnitoCrossHatch
 		<h2> Materials & Textures </h2>
 	
 	<h1> Gallery </h1>
-		<p> I AM A PHOTO </p>
-		<p> I AM A PHOTO </p>
-		<p> I AM A PHOTO </p>
+	<div class="flex-container">
+		<div class="flex-item"><img src="assets/Sponza_1.png"></div>
+		<div class="flex-item"><img src="assets/Sponza_2.png"></div>
+		<div class="flex-item"><img src="assets/San_Miguel_1.png"></div>
+		<div class="flex-item"><img src="assets/San_Miguel_2.png"></div>
+	</div>
 </body>
 </html>
