@@ -52,6 +52,7 @@ void EngineGUIManager::Destroy()
 
 void EngineGUIManager::DrawAllUI()
 {
+	ImGui::ShowDemoWindow();
 	for (const auto& screen : m_uiList)
 	{
 		if (screen->IsVisible())

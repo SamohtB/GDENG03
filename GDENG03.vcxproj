@@ -158,6 +158,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\HotkeySystem.cpp" />
     <ClCompile Include="src\Project.cpp" />
     <ClCompile Include="src\EditorTheme.cpp" />
     <ClCompile Include="src\LoadScene.cpp" />
@@ -231,8 +232,14 @@
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Toolbar.cpp" />
     <ClCompile Include="src\TransformComponent.cpp" />
+    <ClCompile Include="src\WindowsInputAdapter.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\KeyCodes.hpp" />
+    <ClInclude Include="src\InputEvent.h" />
+    <ClInclude Include="src\ActionMap.hpp" />
+    <ClInclude Include="src\HotkeyListener.hpp" />
+    <ClInclude Include="src\HotkeySystem.hpp" />
     <ClInclude Include="src\Project.h" />
     <ClInclude Include="src\EditorTheme.h" />
     <ClInclude Include="src\DarkModeConstants.h" />
@@ -316,6 +323,7 @@
     <ClInclude Include="src\TextureTypes.h" />
     <ClInclude Include="src\Toolbar.h" />
     <ClInclude Include="src\TransformComponent.h" />
+    <ClInclude Include="src\WindowsInputAdapter.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shaders\DefaultVertexShader.hlsl">
