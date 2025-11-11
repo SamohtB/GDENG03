@@ -14,8 +14,6 @@ void DebugWindow::DrawUI()
     ImGui::Begin(ICON_MD_TEXT_SNIPPET "Console");
 	ImGui::PopFont();
 
-	EngineGUIManager::BeginToolbarRegion("DebugToolbar", 28.0f);
-
     // --- Define sizes ---
     float buttonWidth = 80.0f;
     float buttonSpacing = ImGui::GetStyle().ItemSpacing.x;
@@ -51,9 +49,6 @@ void DebugWindow::DrawUI()
     if (ImGui::Button(ICON_MD_WARNING, ImVec2(buttonWidth, 0))) { /* Warning filter */ }
     ImGui::SameLine();
     if (ImGui::Button(ICON_MD_ERROR, ImVec2(buttonWidth, 0))) { /* Error filter */ }
-
-
-	EngineGUIManager::EndToolbarRegion();
 
     ImGui::BeginChild("LogScrollRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 

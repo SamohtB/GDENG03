@@ -37,17 +37,6 @@ public:
     EngineGUIManager(EngineGUIManager const&) = delete;
     EngineGUIManager& operator=(EngineGUIManager const&) = delete;
 
-    static void BeginToolbarRegion(const char* id, float height = 32.0f)
-    {
-        ImGui::BeginChild(id, ImVec2(0, height), false, ImGuiWindowFlags_NoScrollbar);
-    }
-
-    static void EndToolbarRegion()
-    {
-        ImGui::EndChild();
-        ImGui::Separator();
-    }
-
 private:
     static std::unique_ptr<EngineGUIManager> sharedInstance;
 

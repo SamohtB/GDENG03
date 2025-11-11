@@ -9,6 +9,7 @@
 #include "EngineGUIManager.h"
 #include "PhysicsSystem.h"
 #include "NameRegistry.h"
+#include "HotkeySystem.hpp"
 
 #include "RenderSystem.h"
 #include "BatchUploader.h"
@@ -34,6 +35,7 @@ void GameWindow::OnCreate(HWND hwnd)
 	GameObjectManager::Initialize(GraphicsEngine::GetInstance()->GetRenderSystem()->GetD3DDevicePtr().Get());
 	EngineTime::Initialize(60);
 	InputSystem::Initialize();
+	HotkeySystem::initialize();
 	CameraManager::Initialize(this->m_width, this->m_height);
 	EngineGUIManager::Initialize(hwnd, this->m_width, this->m_height);
 	PhysicsSystem::Initialize();

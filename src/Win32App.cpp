@@ -4,6 +4,7 @@
 #include "InputSystem.h"
 #include "ABaseWindow.h"
 #include "Debug.h"
+#include "WindowsInputAdapter.h"
 
 HWND Win32App::m_hwnd = nullptr;
 
@@ -61,6 +62,8 @@ bool Win32App::IsRun()
 
 LRESULT Win32App::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	static WindowsInputAdapter* inputAdapter = nullptr;
+
 	extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
 		return true;
@@ -70,6 +73,7 @@ LRESULT Win32App::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		auto* createStruct = reinterpret_cast<LPCREATESTRUCT>(lparam);
 		auto* app = reinterpret_cast<Win32App*>(createStruct->lpCreateParams);
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(app));
+		inputAdapter = new WindowsInputAdapter(hwnd);
 		return 0;
 	}
 
@@ -78,6 +82,15 @@ LRESULT Win32App::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 	switch (msg)
 	{
+
+	case WM_INPUT:
+	{
+		if (inputAdapter)
+		{
+			inputAdapter->processMessage(msg, wparam, lparam);
+		}
+		break;
+	}
 
 	case WM_MOUSEWHEEL:
 	{
@@ -92,6 +105,7 @@ LRESULT Win32App::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 			app->m_isRun = false;
 			app->m_window->OnDestroy();
 		}
+		delete inputAdapter;
 		::PostQuitMessage(0);
 		return 0;
 	}

@@ -116,7 +116,6 @@ EngineGUIManager::EngineGUIManager(HWND hwnd)
 
 	io.Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_MD, 16.0f, &icons_config, icons_ranges);
 
-
 	auto renderSystem = GraphicsEngine::GetInstance()->GetRenderSystem();
 
 	// Setup Platform/Renderer backends
@@ -197,19 +196,19 @@ void EngineGUIManager::setupStyle()
 	style.Alpha = 1.0f;
 	style.DisabledAlpha = 0.6000000238418579f;
 	style.WindowPadding = ImVec2(15.0f, 10.10000038146973f);
-	style.WindowRounding = 0.0f;
+	style.WindowRounding = 10.0f;
 	style.WindowBorderSize = 1.0f;
 	style.WindowMinSize = ImVec2(32.0f, 32.0f);
 	style.WindowTitleAlign = ImVec2(0.0f, 0.5f);
 	style.WindowMenuButtonPosition = ImGuiDir_Left;
 	style.ChildRounding = 5.0f;
-	style.ChildBorderSize = 0.0f;
+	style.ChildBorderSize = 1.0f;
 	style.PopupRounding = 5.0f;
 	style.PopupBorderSize = 1.0f;
-	style.FramePadding = ImVec2(1.0f, 1.0f);
-	style.FrameRounding = 0.0f;
+	style.FramePadding = ImVec2(4.0f, 3.0f);
+	style.FrameRounding = 4.0f;
 	style.FrameBorderSize = 0.0f;
-	style.ItemSpacing = ImVec2(4.0f, 4.0f);
+	style.ItemSpacing = ImVec2(8.0f, 4.0f);
 	style.ItemInnerSpacing = ImVec2(4.0f, 4.0f);
 	style.CellPadding = ImVec2(4.0f, 2.0f);
 	style.IndentSpacing = 21.0f;
@@ -218,7 +217,7 @@ void EngineGUIManager::setupStyle()
 	style.ScrollbarRounding = 9.0f;
 	style.GrabMinSize = 10.0f;
 	style.GrabRounding = 10.0f;
-	style.TabRounding = 0.0f;
+	style.TabRounding = 4.0f;
 	style.TabBorderSize = 0.0f;
 	//style.TabMinWidthForCloseButton = 0.0f;
 	style.ColorButtonPosition = ImGuiDir_Left;

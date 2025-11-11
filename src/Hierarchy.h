@@ -1,16 +1,21 @@
 #pragma once
 #include "AUIScreen.h"
+#include "HotkeyListener.hpp"
 
 class AGameObject;
 
-class Hierarchy : public AUIScreen
+class Hierarchy : public AUIScreen, public HotkeyListener
 {
 public:
     Hierarchy();
-    ~Hierarchy() = default;
+    ~Hierarchy();
 
     // Inherited via AUIScreen
     void DrawUI() override;
+
+    void CreateObjectPopup();
+
+	void OnActionPressed(Hotkey::Action action) override;
 
 private:
     void DrawGameObjectNode(std::shared_ptr<AGameObject> gameObject);

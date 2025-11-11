@@ -3,42 +3,49 @@
 #include "GameObjectManager.h"
 #include "AGameObject.h"
 #include "EngineGUIManager.h"
+#include "HotkeySystem.hpp"
+#include "IconsMaterialDesign.h"
+#include "Debug.h"
 
 Hierarchy::Hierarchy() : AUIScreen("Hierarchy")
 {
+    HotkeySystem::getInstance()->addListener(this);
+}
 
+Hierarchy::~Hierarchy()
+{
+    HotkeySystem::getInstance()->removeListener(this);
 }
 
 void Hierarchy::DrawUI()
 {
     if (ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_MenuBar))
     {
-        EngineGUIManager::BeginToolbarRegion("Heirarchy Toolbar", 28.0f);
+        static char searchBuffer[128] = "";
 
-        if (ImGui::Button("+", ImVec2(28.0f, 0.0f)))
+        if (ImGui::BeginMenuBar())
         {
+
+            if (ImGui::MenuItem(ICON_MD_ADD ICON_MD_ARROW_DROP_DOWN))
+            {
+                ImGui::OpenPopup("CreateGameObjectsPopup");
+            }
+
+            CreateObjectPopup();
+
+            ImGui::TextUnformatted(ICON_MD_SEARCH);
+            ImGui::SameLine();
+
+            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+            ImGui::InputTextWithHint("##HierarchySearch", "Search...", searchBuffer, IM_ARRAYSIZE(searchBuffer));
+
+            if (strlen(searchBuffer) > 0)
+            {
+                // For example: filter hierarchy items based on searchBuffer
+            }
+
+            ImGui::EndMenuBar();
         }
-
-        ImGui::SameLine();
-
-        {
-            const float searchWidth = 150.0f;
-            // remaining width after the button
-            float avail = ImGui::GetContentRegionAvail().x;
-            // current cursor X inside the window (after the button)
-            float curX = ImGui::GetCursorPosX();
-            // compute target X so the input's right edge aligns with the right content edge
-            float targetX = curX + avail - searchWidth;
-            // clamp so we don't move backwards past current X
-            if (targetX < curX) targetX = curX;
-            ImGui::SetCursorPosX(targetX);
-
-            ImGui::SetNextItemWidth(searchWidth);
-            static char searchBuffer[128] = "";
-            ImGui::InputText("##Search", searchBuffer, IM_ARRAYSIZE(searchBuffer));
-        }
-
-        EngineGUIManager::EndToolbarRegion();
 
         auto objectList = GameObjectManager::GetInstance()->GetAllObjects();
 
@@ -60,6 +67,44 @@ void Hierarchy::DrawUI()
     }
 
     ImGui::End();
+}
+
+void Hierarchy::CreateObjectPopup()
+{
+    if (ImGui::BeginPopup("CreateGameObjectsPopup"))
+    {
+        if (ImGui::MenuItem("Cut"))
+        {
+            Debug::Log("Cut Command Selected");
+        }
+
+        if (ImGui::MenuItem("Copy"))
+        {
+            Debug::Log("Copy Command Selected");
+        }
+
+        if (ImGui::MenuItem("Paste"))
+        {
+            Debug::Log("Paste Command Selected");
+        }
+
+        if (ImGui::MenuItem("Duplicate"))
+        {
+            Debug::Log("Duplicate Command Selected");
+        }
+
+        if (ImGui::MenuItem("Delete"))
+        {
+            Debug::Log("Delete Command Selected");
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+void Hierarchy::OnActionPressed(Hotkey::Action action)
+{
+ 
 }
 
 void Hierarchy::DrawGameObjectNode(std::shared_ptr<AGameObject> gameObject)
@@ -90,8 +135,6 @@ void Hierarchy::DrawGameObjectNode(std::shared_ptr<AGameObject> gameObject)
             GameObjectManager::GetInstance()->SetSelectedObject(nullptr);
         }
     }
-
-    ImGui::PopStyleColor(2);
 }
 
 void Hierarchy::DrawGameObjectNodeRecursive(std::shared_ptr<AGameObject> gameObject)

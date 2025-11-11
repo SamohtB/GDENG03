@@ -344,8 +344,10 @@ void TransformComponent::DrawUI()
 			/* Aligns text inside button to centered */
 			float offset = (ImGui::GetFrameHeight() - 28.0f) * 0.5f;
 			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + offset);
-			if (ImGui::Button(isLinked ? ICON_MD_INSERT_LINK : ICON_MD_LINK, ImVec2(28.0f, 28.0f)))
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
+			if (ImGui::Button(isLinked ? ICON_MD_INSERT_LINK : ICON_MD_LINK, ImVec2(24.0f, 0)))
 				isLinked = !isLinked;
+			ImGui::PopStyleVar();
 
 			ImGui::PopFont();
 			ImGui::PopID();

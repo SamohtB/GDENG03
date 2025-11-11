@@ -13,7 +13,7 @@ EditorTheme DarkTheme =
 	ImVec4(0.196f, 0.196f, 0.196f, 1.0f), // CHILD_BG
 	ImVec4(0.235f, 0.235f, 0.235f, 1.0f), //PopupBG
 
-	ImVec4(0.f, 0.f, 0.f, 0.f), //Border
+	ImVec4(0.f, 0.f, 0.f, 1.f), //Border
 	ImVec4(0.165f, 0.165f, 0.165f, 1.0f), //BorderShadow
 
 	ImVec4(0.165f, 0.165f, 0.165f, 1.0f), //Frame BG
@@ -58,8 +58,8 @@ EditorTheme DarkTheme =
 	ImVec4(0.063f, 0.063f, 0.063f, 1.0f), //Tab Unfocused
 	ImVec4(0.235f, 0.235f, 0.235f, 1.0f), //Tab Unfocused Active
 
-	ImVec4(0.486f, 0.095f, 0.095f, 1.0f),		//Plot Lines
-	ImVec4(0.486f, 0.095f, 0.095f, 1.0f),		//PLot Lines Hoverered
+	ImVec4(0.486f, 0.095f, 0.095f, 1.0f),	//Plot Lines
+	ImVec4(0.486f, 0.095f, 0.095f, 1.0f),	//PLot Lines Hoverered
 	ImVec4(0.486f, 0.095f, 0.095f, 0.75f),	//Plot Histogram
 	ImVec4(0.486f, 0.095f, 0.095f, 0.75f),	// Plot Histogram Hoverered
 
