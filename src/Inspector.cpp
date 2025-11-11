@@ -16,28 +16,47 @@ void Inspector::DrawUI()
     ImGui::Begin(("Inspector " + static_cast<String>(ICON_MD_ADD_ROAD)).c_str(), &this->m_visible);	
 
     std::shared_ptr<AGameObject> object = GameObjectManager::GetInstance()->GetSelectedObject();
+
     if (object != nullptr)
     {
-        bool tempActive = GameObjectManager::GetInstance()->GetSelectedObject()->IsActive();
-        ImGui::Checkbox("##Active", &tempActive);
-
-        ImGui::SameLine();
-
-        char nameBuf[256];
-        std::strncpy(nameBuf, GameObjectManager::GetInstance()->GetSelectedObject()->GetName().c_str(), sizeof(nameBuf));
-        nameBuf[sizeof(nameBuf) - 1] = '\0';
-        String tempName = GameObjectManager::GetInstance()->GetSelectedObject()->GetName();
-        ImGui::PushItemWidth(300.0f);
-
-        if (ImGui::InputText("##Name", nameBuf, sizeof(nameBuf), ImGuiInputTextFlags_EnterReturnsTrue))
+		ImGui::BeginTable("GameObject_Properties", 3, ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoBordersInBody);
         {
-            GameObjectManager::GetInstance()->GetSelectedObject()->SetName(String(nameBuf));
+            float toggleWidth = 24.0f;
+            float labelWidth = ImGui::CalcTextSize("Static").x;
+			ImGui::TableSetupColumn("Active", ImGuiTableColumnFlags_WidthFixed, toggleWidth);
+			ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("Static", ImGuiTableColumnFlags_WidthFixed, labelWidth + toggleWidth);
+
+			ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+
+            bool tempActive = GameObjectManager::GetInstance()->GetSelectedObject()->IsActive();
+            ImGui::Checkbox("##Active", &tempActive);
+
+            ImGui::TableNextColumn();
+            ImGui::TableSetColumnIndex(1);
+
+            char nameBuf[256];
+            std::strncpy(nameBuf, GameObjectManager::GetInstance()->GetSelectedObject()->GetName().c_str(), sizeof(nameBuf));
+            nameBuf[sizeof(nameBuf) - 1] = '\0';
+            String tempName = GameObjectManager::GetInstance()->GetSelectedObject()->GetName();
+
+            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+            bool nameEdited = ImGui::InputText("##Name", nameBuf, sizeof(nameBuf), ImGuiInputTextFlags_EnterReturnsTrue);
+
+            if (nameEdited || ImGui::IsItemDeactivatedAfterEdit())
+            {
+                GameObjectManager::GetInstance()->GetSelectedObject()->SetName(String(nameBuf));
+            }
+
+            ImGui::TableNextColumn();
+            ImGui::TableSetColumnIndex(2);
+
+            bool tempStatic = true;
+            ImGui::Checkbox("Static", &tempStatic);
+
+            ImGui::EndTable();
         }
-
-        ImGui::SameLine();
-
-        bool tempStatic = true;
-        ImGui::Checkbox("Static", &tempStatic);
 
 		ImGui::AlignTextToFramePadding();
         ImGui::Text("Tag");

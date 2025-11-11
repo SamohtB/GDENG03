@@ -11,9 +11,7 @@ Hierarchy::Hierarchy() : AUIScreen("Hierarchy")
 
 void Hierarchy::DrawUI()
 {
-    ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
-
-    if (ImGui::Begin("Hierarchy", nullptr, window_flags))
+    if (ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_MenuBar))
     {
         EngineGUIManager::BeginToolbarRegion("Heirarchy Toolbar", 28.0f);
 
@@ -48,7 +46,7 @@ void Hierarchy::DrawUI()
         {
             ImGui::TableSetupColumn("Visible", ImGuiTableColumnFlags_WidthFixed, 30.0f);
             ImGui::TableSetupColumn("Clickable", ImGuiTableColumnFlags_WidthFixed, 30.0f);
-            ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthStretch);
+            ImGui::TableSetupColumn("Tree", ImGuiTableColumnFlags_WidthStretch);
 
             auto objectList = GameObjectManager::GetInstance()->GetAllObjects();
 
@@ -59,29 +57,6 @@ void Hierarchy::DrawUI()
 
             ImGui::EndTable();
         }
-
-
-        //// === Create an invisible drop target for root ===
-        //ImVec2 availableSpace = ImGui::GetContentRegionAvail();
-        //if (availableSpace.y > 0)
-        //{
-        //    ImGui::Dummy(ImVec2(availableSpace.x, availableSpace.y));
-        //    if (ImGui::BeginDragDropTarget())
-        //    {
-        //        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT"))
-        //        {
-        //            auto draggedShared = *(std::shared_ptr<AGameObject>*)payload->Data;
-        //            std::shared_ptr<AGameObject> draggedObject = draggedShared;
-
-        //            if (draggedObject->GetParent() != nullptr)
-        //            {
-        //                draggedObject->DetachFromParent();
-        //                GameObjectManager::GetInstance()->AddGameObject(draggedObject);
-        //            }
-        //        }
-        //        ImGui::EndDragDropTarget();
-        //    }
-        //}
     }
 
     ImGui::End();
