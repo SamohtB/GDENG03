@@ -57,6 +57,7 @@ private:
 	bool m_isFirstFrame = true;
 	bool m_isLeftMouseDown = false;
     bool m_isRecording = false;
+    bool m_recordNextFrame = false;
 
     void PopulateGUI();
     std::string GetIniDump();

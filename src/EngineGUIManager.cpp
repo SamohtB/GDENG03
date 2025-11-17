@@ -108,19 +108,27 @@ void EngineGUIManager::OnLeftMousePressed(const Vector2& mousePos)
 void EngineGUIManager::OnLeftMouseReleased(const Vector2& mousePos)
 {
 	m_isLeftMouseDown = false;
+	m_recordNextFrame = true;
 }
 
 void EngineGUIManager::DetectAndRecordLayoutChanges()
 {
+	if (m_recordNextFrame)
+	{
+		m_recordNextFrame = false;
+		return;
+	}
+
 	if (!this->m_isFirstFrame && !this->m_isLeftMouseDown && this->m_isRecording)
 	{
-		this->m_isRecording = false;
 		std::string currentLayoutSnapshot = GetIniDump();
+		this->m_isRecording = false;
 
 		if (currentLayoutSnapshot != this->m_lastLayoutSnapshot)
 		{
 			CommandManager::getInstance()->executeCommand(new ModifyLayoutCommand(this->m_lastLayoutSnapshot, currentLayoutSnapshot));
 			this->m_lastLayoutSnapshot = currentLayoutSnapshot;
+
 		}
 	}
 }
