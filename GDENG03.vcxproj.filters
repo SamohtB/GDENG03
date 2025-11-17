@@ -142,6 +142,12 @@
     <Filter Include="Engine\EngineGUI\UIScreens\ProjectWindow">
       <UniqueIdentifier>{2cbd2627-daa8-4938-bedc-02f864b5a83c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HotkeySystem">
+      <UniqueIdentifier>{8616975f-d065-48c4-9e78-0a0a5386ed65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateManagement">
+      <UniqueIdentifier>{19cb29b7-ea90-40bf-8c3c-7b567d96b2c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -341,6 +347,18 @@
     <ClCompile Include="src\EditorTheme.cpp" />
     <ClCompile Include="src\Project.cpp">
       <Filter>Engine\EngineGUI\UIScreens\ProjectWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HotkeySystem.cpp">
+      <Filter>HotkeySystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WindowsInputAdapter.cpp">
+      <Filter>HotkeySystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommandManager.cpp">
+      <Filter>StateManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUICommands.cpp">
+      <Filter>StateManagement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -582,6 +600,33 @@
     </ClInclude>
     <ClInclude Include="src\AUIScreen.h">
       <Filter>Engine\EngineGUI\UIScreens</Filter>
+    </ClInclude>
+    <ClInclude Include="src\HotkeyListener.hpp">
+      <Filter>HotkeySystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\HotkeySystem.hpp">
+      <Filter>HotkeySystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InputEvent.h">
+      <Filter>HotkeySystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KeyCodes.hpp">
+      <Filter>HotkeySystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ActionMap.hpp">
+      <Filter>HotkeySystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WindowsInputAdapter.h">
+      <Filter>HotkeySystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CommandManager.hpp">
+      <Filter>StateManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ICommand.hpp">
+      <Filter>StateManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUICommands.h">
+      <Filter>StateManagement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

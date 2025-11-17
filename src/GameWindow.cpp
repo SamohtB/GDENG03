@@ -24,7 +24,7 @@
 
 #include "EditorState.h"
 #include "SceneStateManager.h"
-#include "IconsMaterialDesign.h"
+#include "CommandManager.hpp"
 
 GameWindow::GameWindow(UINT width, UINT height) : ABaseWindow(width, height) {}
 
@@ -42,6 +42,7 @@ void GameWindow::OnCreate(HWND hwnd)
 	NameRegistry::Initialize();
 	ActionHistory::Initialize();
 	SceneStateManager::Initialize();
+	CommandManager::initialize();
 
 	auto debugWindow = (DebugWindow*)(EngineGUIManager::GetInstance()->GetUI(UINames::DEBUG));
 	Debug::GetInstance()->AssignWindow(debugWindow);
@@ -89,10 +90,13 @@ void GameWindow::OnRender()
 	EngineGUIManager::GetInstance()->DrawAllUI();
 
 	GraphicsEngine::GetInstance()->GetRenderSystem()->EndFrame();
+
+	EngineGUIManager::GetInstance()->DetectAndRecordLayoutChanges();
 }
 
 void GameWindow::OnDestroy()
 {
+	CommandManager::destroy();
 	NameRegistry::Destroy();
 	ActionHistory::Destroy();
 	EngineGUIManager::Destroy();

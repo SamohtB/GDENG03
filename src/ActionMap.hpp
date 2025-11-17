@@ -47,7 +47,10 @@ namespace Hotkey
 		Hierarchy_ToggleVisibilityWithDescendants,
 		Hierarchy_TogglePickabilityWithDescendants,
 
-		GameObject_MoveToView
+		GameObject_MoveToView,
+
+		Undo,
+		Redo
 
 		
 	};

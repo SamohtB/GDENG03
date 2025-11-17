@@ -119,6 +119,9 @@ void HotkeySystem::setupDefaultBindings()
     bindMouseHotkey({ KeyCode::MiddleMouse, Modifiers::Alt }, Action::Camera_SlowPanMode);
     bindMouseHotkey({ KeyCode::RightMouse, Modifiers::Alt }, Action::Camera_ZoomMode);
     bindMouseHotkey({ KeyCode::LeftMouse, Modifiers::Alt }, Action::Camera_OrbitMode);
+
+	bindHotkey({ KeyCode::Z, Modifiers::Ctrl }, Action::Undo);
+	bindHotkey({ KeyCode::Y, Modifiers::Ctrl }, Action::Redo);
 }
 
 

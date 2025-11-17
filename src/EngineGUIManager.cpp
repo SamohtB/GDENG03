@@ -22,6 +22,11 @@
 #include "IconsMaterialDesign.h"
 #include "EditorTheme.h"
 
+#include "CommandManager.hpp"
+#include "GUICommands.h"
+#include "InputSystem.h"
+#include "imgui_internal.h"
+
 #include <filesystem>
 #include <fstream>
 
@@ -52,7 +57,12 @@ void EngineGUIManager::Destroy()
 
 void EngineGUIManager::DrawAllUI()
 {
-	ImGui::ShowDemoWindow();
+	if (this->m_isFirstFrame)
+	{
+		this->m_lastLayoutSnapshot = GetIniDump();
+		this->m_isFirstFrame = false;
+	}
+
 	for (const auto& screen : m_uiList)
 	{
 		if (screen->IsVisible())
@@ -89,8 +99,36 @@ AUIScreen* EngineGUIManager::GetUI(const String& name)
 	}
 }
 
+void EngineGUIManager::OnLeftMousePressed(const Vector2& mousePos)
+{
+	m_isLeftMouseDown = true;
+	m_isRecording = true;
+}
+
+void EngineGUIManager::OnLeftMouseReleased(const Vector2& mousePos)
+{
+	m_isLeftMouseDown = false;
+}
+
+void EngineGUIManager::DetectAndRecordLayoutChanges()
+{
+	if (!this->m_isFirstFrame && !this->m_isLeftMouseDown && this->m_isRecording)
+	{
+		this->m_isRecording = false;
+		std::string currentLayoutSnapshot = GetIniDump();
+
+		if (currentLayoutSnapshot != this->m_lastLayoutSnapshot)
+		{
+			CommandManager::getInstance()->executeCommand(new ModifyLayoutCommand(this->m_lastLayoutSnapshot, currentLayoutSnapshot));
+			this->m_lastLayoutSnapshot = currentLayoutSnapshot;
+		}
+	}
+}
+
 EngineGUIManager::EngineGUIManager(HWND hwnd)
 {
+	InputSystem::GetInstance()->AddListener(this);
+
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -187,6 +225,13 @@ void EngineGUIManager::PopulateGUI()
 	this->m_uiList.push_back(loadScene);
 
 
+}
+
+std::string EngineGUIManager::GetIniDump()
+{
+	size_t size = 0;
+	const char* data = ImGui::SaveIniSettingsToMemory(&size);
+	return std::string(data, size);
 }
 
 void EngineGUIManager::setupStyle()
@@ -299,6 +344,8 @@ void EngineGUIManager::setupStyle()
 
 EngineGUIManager::~EngineGUIManager()
 {
+	InputSystem::GetInstance()->RemoveListener(this);
+
 	ImGui::DestroyPlatformWindows();
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();

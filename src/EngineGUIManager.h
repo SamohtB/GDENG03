@@ -1,4 +1,5 @@
 #pragma once
+#include "InputListener.h"
 
 class UINames
 {
@@ -15,7 +16,7 @@ public:
 
 class AUIScreen;
 
-class EngineGUIManager
+class EngineGUIManager : public InputListener
 {
 public:
     using UIPtr = std::shared_ptr<AUIScreen>;
@@ -30,7 +31,12 @@ public:
     std::vector<AUIScreen*> GetAllScreens();
     AUIScreen* GetUI(const String& name);
 
+	void OnLeftMousePressed(const Vector2& mousePos) override;
+	void OnLeftMouseReleased(const Vector2& mousePos) override;
+
 	ImFont* GetIconFont() const { return m_IconFont; }
+
+	void DetectAndRecordLayoutChanges();
 
     EngineGUIManager(HWND hwnd);
     ~EngineGUIManager();
@@ -46,8 +52,13 @@ private:
 	ImFont* m_defaultFont = nullptr;
 	ImFont* m_IconFont = nullptr;
 
+	std::string m_lastLayoutSnapshot;
+
+	bool m_isFirstFrame = true;
+	bool m_isLeftMouseDown = false;
+    bool m_isRecording = false;
+
     void PopulateGUI();
+    std::string GetIniDump();
 	void setupStyle();
-
-
 };
